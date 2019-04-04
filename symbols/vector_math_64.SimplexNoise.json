@@ -1,0 +1,169 @@
+{
+    "name": "vector_math_64.SimplexNoise",
+    "extends": [],
+    "memberOf": "vector_math_64",
+    "events": [],
+    "methods": [
+        {
+            "name": "SimplexNoise",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "vector_math_64.SimplexNoise",
+            "sig": "",
+            "params": [
+                {
+                    "name": "r",
+                    "type": "dart:math.Random",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "vector_math_64\/SimplexNoise\/SimplexNoise.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">SimplexNoise([math.Random r]) {\n  r ??= new math.Random();\n  final List&lt;int&gt; p =\n      new List&lt;int&gt;.generate(256, (_) =&gt; r.nextInt(256), growable: false);\n  _perm = new List&lt;int&gt;.generate(p.length * 2, (int i) =&gt; p[i % p.length],\n      growable: false);\n  _permMod12 = new List&lt;int&gt;.generate(_perm.length, (int i) =&gt; _perm[i] % 12,\n      growable: false);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "noise2D",
+            "type": "dart:core.double",
+            "desc": "",
+            "static": false,
+            "memberOf": "vector_math_64.SimplexNoise",
+            "sig": "",
+            "params": [
+                {
+                    "name": "xin",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "yin",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "vector_math_64\/SimplexNoise\/noise2D.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double noise2D(double xin, double yin) {\n  double n0, n1, n2; \/\/ Noise contributions from the three corners\n  \/\/ Skew the input space to determine which simplex cell we're in\n  final double s = (xin + yin) * _F2; \/\/ Hairy factor for 2D\n  final int i = (xin + s).floor();\n  final int j = (yin + s).floor();\n  final double t = (i + j) * _G2;\n  final double X0 = i - t; \/\/ Unskew the cell origin back to (x,y) space\n  final double Y0 = j - t;\n  final double x0 = xin - X0; \/\/ The x,y distances from the cell origin\n  final double y0 = yin - Y0;\n  \/\/ For the 2D case, the simplex shape is an equilateral triangle.\n  \/\/ Determine which simplex we are in.\n  int i1, j1; \/\/ Offsets for second (middle) corner of simplex in (i,j) coords\n  if (x0 &gt; y0) {\n    i1 = 1;\n    j1 = 0;\n  } \/\/ lower triangle, XY order: (0,0)-&gt;(1,0)-&gt;(1,1)\n  else {\n    i1 = 0;\n    j1 = 1;\n  } \/\/ upper triangle, YX order: (0,0)-&gt;(0,1)-&gt;(1,1)\n  \/\/ A step of (1,0) in (i,j) means a step of (1-c,-c) in (x,y), and\n  \/\/ a step of (0,1) in (i,j) means a step of (-c,1-c) in (x,y), where\n  \/\/ c = (3-sqrt(3))\/6\n  final double x1 =\n      x0 - i1 + _G2; \/\/ Offsets for middle corner in (x,y) unskewed coords\n  final double y1 = y0 - j1 + _G2;\n  final double x2 = x0 -\n      1.0 +\n      2.0 * _G2; \/\/ Offsets for last corner in (x,y) unskewed coords\n  final double y2 = y0 - 1.0 + 2.0 * _G2;\n  \/\/ Work out the hashed gradient indices of the three simplex corners\n  final int ii = i &amp; 255;\n  final int jj = j &amp; 255;\n  final int gi0 = _permMod12[ii + _perm[jj]];\n  final int gi1 = _permMod12[ii + i1 + _perm[jj + j1]];\n  final int gi2 = _permMod12[ii + 1 + _perm[jj + 1]];\n  \/\/ Calculate the contribution from the three corners\n  double t0 = 0.5 - x0 * x0 - y0 * y0;\n  if (t0 &lt; 0)\n    n0 = 0.0;\n  else {\n    t0 *= t0;\n    n0 = t0 *\n        t0 *\n        _dot2(_grad3[gi0], x0, y0); \/\/ (x,y) of grad3 used for 2D gradient\n  }\n  double t1 = 0.5 - x1 * x1 - y1 * y1;\n  if (t1 &lt; 0)\n    n1 = 0.0;\n  else {\n    t1 *= t1;\n    n1 = t1 * t1 * _dot2(_grad3[gi1], x1, y1);\n  }\n  double t2 = 0.5 - x2 * x2 - y2 * y2;\n  if (t2 &lt; 0)\n    n2 = 0.0;\n  else {\n    t2 *= t2;\n    n2 = t2 * t2 * _dot2(_grad3[gi2], x2, y2);\n  }\n  \/\/ Add contributions from each corner to get the final noise value.\n  \/\/ The result is scaled to return values in the interval [-1,1].\n  return 70.0 * (n0 + n1 + n2);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "noise3D",
+            "type": "dart:core.double",
+            "desc": "",
+            "static": false,
+            "memberOf": "vector_math_64.SimplexNoise",
+            "sig": "",
+            "params": [
+                {
+                    "name": "xin",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "yin",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "zin",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "vector_math_64\/SimplexNoise\/noise3D.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double noise3D(double xin, double yin, double zin) {\n  double n0, n1, n2, n3; \/\/ Noise contributions from the four corners\n  \/\/ Skew the input space to determine which simplex cell we're in\n  final double s =\n      (xin + yin + zin) * _F3; \/\/ Very nice and simple skew factor for 3D\n  final int i = (xin + s).floor();\n  final int j = (yin + s).floor();\n  final int k = (zin + s).floor();\n  final double t = (i + j + k) * _G3;\n  final double X0 = i - t; \/\/ Unskew the cell origin back to (x,y,z) space\n  final double Y0 = j - t;\n  final double Z0 = k - t;\n  final double x0 = xin - X0; \/\/ The x,y,z distances from the cell origin\n  final double y0 = yin - Y0;\n  final double z0 = zin - Z0;\n  \/\/ For the 3D case, the simplex shape is a slightly irregular tetrahedron.\n  \/\/ Determine which simplex we are in.\n  int i1, j1, k1; \/\/ Offsets for second corner of simplex in (i,j,k) coords\n  int i2, j2, k2; \/\/ Offsets for third corner of simplex in (i,j,k) coords\n  if (x0 &gt;= y0) {\n    if (y0 &gt;= z0) {\n      i1 = 1;\n      j1 = 0;\n      k1 = 0;\n      i2 = 1;\n      j2 = 1;\n      k2 = 0;\n    } \/\/ X Y Z order\n    else if (x0 &gt;= z0) {\n      i1 = 1;\n      j1 = 0;\n      k1 = 0;\n      i2 = 1;\n      j2 = 0;\n      k2 = 1;\n    } \/\/ X Z Y order\n    else {\n      i1 = 0;\n      j1 = 0;\n      k1 = 1;\n      i2 = 1;\n      j2 = 0;\n      k2 = 1;\n    } \/\/ Z X Y order\n  } else {\n    \/\/ x0&lt;y0\n    if (y0 &lt; z0) {\n      i1 = 0;\n      j1 = 0;\n      k1 = 1;\n      i2 = 0;\n      j2 = 1;\n      k2 = 1;\n    } \/\/ Z Y X order\n    else if (x0 &lt; z0) {\n      i1 = 0;\n      j1 = 1;\n      k1 = 0;\n      i2 = 0;\n      j2 = 1;\n      k2 = 1;\n    } \/\/ Y Z X order\n    else {\n      i1 = 0;\n      j1 = 1;\n      k1 = 0;\n      i2 = 1;\n      j2 = 1;\n      k2 = 0;\n    } \/\/ Y X Z order\n  }\n  \/\/ A step of (1,0,0) in (i,j,k) means a step of (1-c,-c,-c) in (x,y,z),\n  \/\/ a step of (0,1,0) in (i,j,k) means a step of (-c,1-c,-c) in (x,y,z), and\n  \/\/ a step of (0,0,1) in (i,j,k) means a step of (-c,-c,1-c) in (x,y,z), where\n  \/\/ c = 1\/6.\n  final double x1 =\n      x0 - i1 + _G3; \/\/ Offsets for second corner in (x,y,z) coords\n  final double y1 = y0 - j1 + _G3;\n  final double z1 = z0 - k1 + _G3;\n  final double x2 =\n      x0 - i2 + 2.0 * _G3; \/\/ Offsets for third corner in (x,y,z) coords\n  final double y2 = y0 - j2 + 2.0 * _G3;\n  final double z2 = z0 - k2 + 2.0 * _G3;\n  final double x3 =\n      x0 - 1.0 + 3.0 * _G3; \/\/ Offsets for last corner in (x,y,z) coords\n  final double y3 = y0 - 1.0 + 3.0 * _G3;\n  final double z3 = z0 - 1.0 + 3.0 * _G3;\n  \/\/ Work out the hashed gradient indices of the four simplex corners\n  final int ii = i &amp; 255;\n  final int jj = j &amp; 255;\n  final int kk = k &amp; 255;\n  final int gi0 = _permMod12[ii + _perm[jj + _perm[kk]]];\n  final int gi1 = _permMod12[ii + i1 + _perm[jj + j1 + _perm[kk + k1]]];\n  final int gi2 = _permMod12[ii + i2 + _perm[jj + j2 + _perm[kk + k2]]];\n  final int gi3 = _permMod12[ii + 1 + _perm[jj + 1 + _perm[kk + 1]]];\n  \/\/ Calculate the contribution from the four corners\n  double t0 = 0.6 - x0 * x0 - y0 * y0 - z0 * z0;\n  if (t0 &lt; 0)\n    n0 = 0.0;\n  else {\n    t0 *= t0;\n    n0 = t0 * t0 * _dot3(_grad3[gi0], x0, y0, z0);\n  }\n  double t1 = 0.6 - x1 * x1 - y1 * y1 - z1 * z1;\n  if (t1 &lt; 0)\n    n1 = 0.0;\n  else {\n    t1 *= t1;\n    n1 = t1 * t1 * _dot3(_grad3[gi1], x1, y1, z1);\n  }\n  double t2 = 0.6 - x2 * x2 - y2 * y2 - z2 * z2;\n  if (t2 &lt; 0)\n    n2 = 0.0;\n  else {\n    t2 *= t2;\n    n2 = t2 * t2 * _dot3(_grad3[gi2], x2, y2, z2);\n  }\n  double t3 = 0.6 - x3 * x3 - y3 * y3 - z3 * z3;\n  if (t3 &lt; 0)\n    n3 = 0.0;\n  else {\n    t3 *= t3;\n    n3 = t3 * t3 * _dot3(_grad3[gi3], x3, y3, z3);\n  }\n  \/\/ Add contributions from each corner to get the final noise value.\n  \/\/ The result is scaled to stay just inside [-1,1]\n  return 32.0 * (n0 + n1 + n2 + n3);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "noise4D",
+            "type": "dart:core.double",
+            "desc": "",
+            "static": false,
+            "memberOf": "vector_math_64.SimplexNoise",
+            "sig": "",
+            "params": [
+                {
+                    "name": "x",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "z",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "w",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "vector_math_64\/SimplexNoise\/noise4D.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double noise4D(double x, double y, double z, double w) {\n  double n0, n1, n2, n3, n4; \/\/ Noise contributions from the five corners\n  \/\/ Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in\n  final double s = (x + y + z + w) * _F4; \/\/ Factor for 4D skewing\n  final int i = (x + s).floor();\n  final int j = (y + s).floor();\n  final int k = (z + s).floor();\n  final int l = (w + s).floor();\n  final double t = (i + j + k + l) * _G4; \/\/ Factor for 4D unskewing\n  final double X0 = i - t; \/\/ Unskew the cell origin back to (x,y,z,w) space\n  final double Y0 = j - t;\n  final double Z0 = k - t;\n  final double W0 = l - t;\n  final double x0 = x - X0; \/\/ The x,y,z,w distances from the cell origin\n  final double y0 = y - Y0;\n  final double z0 = z - Z0;\n  final double w0 = w - W0;\n  \/\/ For the 4D case, the simplex is a 4D shape I won't even try to describe.\n  \/\/ To find out which of the 24 possible simplices we're in, we need to\n  \/\/ determine the magnitude ordering of x0, y0, z0 and w0.\n  \/\/ Six pair-wise comparisons are performed between each possible pair\n  \/\/ of the four coordinates, and the results are used to rank the numbers.\n  int rankx = 0;\n  int ranky = 0;\n  int rankz = 0;\n  int rankw = 0;\n  if (x0 &gt; y0)\n    rankx++;\n  else\n    ranky++;\n  if (x0 &gt; z0)\n    rankx++;\n  else\n    rankz++;\n  if (x0 &gt; w0)\n    rankx++;\n  else\n    rankw++;\n  if (y0 &gt; z0)\n    ranky++;\n  else\n    rankz++;\n  if (y0 &gt; w0)\n    ranky++;\n  else\n    rankw++;\n  if (z0 &gt; w0)\n    rankz++;\n  else\n    rankw++;\n  int i1, j1, k1, l1; \/\/ The integer offsets for the second simplex corner\n  int i2, j2, k2, l2; \/\/ The integer offsets for the third simplex corner\n  int i3, j3, k3, l3; \/\/ The integer offsets for the fourth simplex corner\n  \/\/ simplex[c] is a 4-vector with the numbers 0, 1, 2 and 3 in some order.\n  \/\/ Many values of c will never occur, since e.g. x&gt;y&gt;z&gt;w makes x&lt;z, y&lt;w and x&lt;w\n  \/\/ impossible. Only the 24 indices which have non-zero entries make any sense.\n  \/\/ We use a thresholding to set the coordinates in turn from the largest magnitude.\n  \/\/ Rank 3 denotes the largest coordinate.\n  i1 = rankx &gt;= 3 ? 1 : 0;\n  j1 = ranky &gt;= 3 ? 1 : 0;\n  k1 = rankz &gt;= 3 ? 1 : 0;\n  l1 = rankw &gt;= 3 ? 1 : 0;\n  \/\/ Rank 2 denotes the second largest coordinate.\n  i2 = rankx &gt;= 2 ? 1 : 0;\n  j2 = ranky &gt;= 2 ? 1 : 0;\n  k2 = rankz &gt;= 2 ? 1 : 0;\n  l2 = rankw &gt;= 2 ? 1 : 0;\n  \/\/ Rank 1 denotes the second smallest coordinate.\n  i3 = rankx &gt;= 1 ? 1 : 0;\n  j3 = ranky &gt;= 1 ? 1 : 0;\n  k3 = rankz &gt;= 1 ? 1 : 0;\n  l3 = rankw &gt;= 1 ? 1 : 0;\n  \/\/ The fifth corner has all coordinate offsets = 1, so no need to compute that.\n  final double x1 =\n      x0 - i1 + _G4; \/\/ Offsets for second corner in (x,y,z,w) coords\n  final double y1 = y0 - j1 + _G4;\n  final double z1 = z0 - k1 + _G4;\n  final double w1 = w0 - l1 + _G4;\n  final double x2 =\n      x0 - i2 + 2.0 * _G4; \/\/ Offsets for third corner in (x,y,z,w) coords\n  final double y2 = y0 - j2 + 2.0 * _G4;\n  final double z2 = z0 - k2 + 2.0 * _G4;\n  final double w2 = w0 - l2 + 2.0 * _G4;\n  final double x3 =\n      x0 - i3 + 3.0 * _G4; \/\/ Offsets for fourth corner in (x,y,z,w) coords\n  final double y3 = y0 - j3 + 3.0 * _G4;\n  final double z3 = z0 - k3 + 3.0 * _G4;\n  final double w3 = w0 - l3 + 3.0 * _G4;\n  final double x4 =\n      x0 - 1.0 + 4.0 * _G4; \/\/ Offsets for last corner in (x,y,z,w) coords\n  final double y4 = y0 - 1.0 + 4.0 * _G4;\n  final double z4 = z0 - 1.0 + 4.0 * _G4;\n  final double w4 = w0 - 1.0 + 4.0 * _G4;\n  \/\/ Work out the hashed gradient indices of the five simplex corners\n  final int ii = i &amp; 255;\n  final int jj = j &amp; 255;\n  final int kk = k &amp; 255;\n  final int ll = l &amp; 255;\n  final int gi0 = _perm[ii + _perm[jj + _perm[kk + _perm[ll]]]] % 32;\n  final int gi1 =\n      _perm[ii + i1 + _perm[jj + j1 + _perm[kk + k1 + _perm[ll + l1]]]] % 32;\n  final int gi2 =\n      _perm[ii + i2 + _perm[jj + j2 + _perm[kk + k2 + _perm[ll + l2]]]] % 32;\n  final int gi3 =\n      _perm[ii + i3 + _perm[jj + j3 + _perm[kk + k3 + _perm[ll + l3]]]] % 32;\n  final int gi4 =\n      _perm[ii + 1 + _perm[jj + 1 + _perm[kk + 1 + _perm[ll + 1]]]] % 32;\n  \/\/ Calculate the contribution from the five corners\n  double t0 = 0.6 - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0;\n  if (t0 &lt; 0)\n    n0 = 0.0;\n  else {\n    t0 *= t0;\n    n0 = t0 * t0 * _dot4(_grad4[gi0], x0, y0, z0, w0);\n  }\n  double t1 = 0.6 - x1 * x1 - y1 * y1 - z1 * z1 - w1 * w1;\n  if (t1 &lt; 0)\n    n1 = 0.0;\n  else {\n    t1 *= t1;\n    n1 = t1 * t1 * _dot4(_grad4[gi1], x1, y1, z1, w1);\n  }\n  double t2 = 0.6 - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2;\n  if (t2 &lt; 0)\n    n2 = 0.0;\n  else {\n    t2 *= t2;\n    n2 = t2 * t2 * _dot4(_grad4[gi2], x2, y2, z2, w2);\n  }\n  double t3 = 0.6 - x3 * x3 - y3 * y3 - z3 * z3 - w3 * w3;\n  if (t3 &lt; 0)\n    n3 = 0.0;\n  else {\n    t3 *= t3;\n    n3 = t3 * t3 * _dot4(_grad4[gi3], x3, y3, z3, w3);\n  }\n  double t4 = 0.6 - x4 * x4 - y4 * y4 - z4 * z4 - w4 * w4;\n  if (t4 &lt; 0)\n    n4 = 0.0;\n  else {\n    t4 *= t4;\n    n4 = t4 * t4 * _dot4(_grad4[gi4], x4, y4, z4, w4);\n  }\n  \/\/ Sum up and scale the result to cover the range [-1,1]\n  return 27.0 * (n0 + n1 + n2 + n3 + n4);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "vector_math_64\/SimplexNoise-class.html",
+    "desc": "",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "SimplexNoise"
+}

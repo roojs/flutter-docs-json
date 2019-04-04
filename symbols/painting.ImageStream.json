@@ -1,0 +1,167 @@
+{
+    "name": "painting.ImageStream",
+    "extends": [
+        "foundation.Diagnosticable",
+        "dart:core.Object"
+    ],
+    "memberOf": "painting",
+    "events": [],
+    "methods": [
+        {
+            "name": "ImageStream",
+            "type": "",
+            "desc": "<p>Create an initially unbound image stream.<\/p>\n<p>Once an <a href=\"painting\/ImageStreamCompleter-class.html\">ImageStreamCompleter<\/a> is available, call <a href=\"painting\/ImageStream\/setCompleter.html\">setCompleter<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "painting.ImageStream",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "painting\/ImageStream\/ImageStream.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ImageStream();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "addListener",
+            "type": "",
+            "desc": "<p>Adds a listener callback that is called whenever a new concrete <a href=\"painting\/ImageInfo-class.html\">ImageInfo<\/a>\nobject is available. If a concrete image is already available, this object\nwill call the listener synchronously.<\/p>\n<p>If the assigned <a href=\"painting\/ImageStream\/completer.html\">completer<\/a> completes multiple images over its lifetime,\nthis listener will fire multiple times.<\/p>\n<p>The listener will be passed a flag indicating whether a synchronous call\noccurred. If the listener is added within a render object paint function,\nthen use this flag to avoid calling <a href=\"rendering\/RenderObject\/markNeedsPaint.html\">RenderObject.markNeedsPaint<\/a> during\na paint.<\/p>\n<p>An <a href=\"painting\/ImageErrorListener.html\">ImageErrorListener<\/a> can also optionally be added along with the\n<code>listener<\/code>. If an error occurred, <code>onError<\/code> will be called instead of\n<code>listener<\/code>.<\/p>\n<p>If a <code>listener<\/code> or <code>onError<\/code> handler is registered multiple times, then it\nwill be called multiple times when the image stream completes (whether\nbecause a new image is available or because an error occurs,\nrespectively). In general, registering a listener multiple times is\ndiscouraged because <a href=\"painting\/ImageStream\/removeListener.html\">removeListener<\/a> will remove the first instance that\nwas added, even if it was added with a different <code>onError<\/code> than the\nintended paired <code>addListener<\/code> call.<\/p>\n    ",
+            "static": false,
+            "memberOf": "painting.ImageStream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "listener",
+                    "type": "painting.ImageListener",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "onError",
+                    "type": "painting.ImageErrorListener",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "painting\/ImageStream\/addListener.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addListener(ImageListener listener, { ImageErrorListener onError }) {\n  if (_completer != null)\n    return _completer.addListener(listener, onError: onError);\n  _listeners ??= &lt;_ImageListenerPair&gt;[];\n  _listeners.add(_ImageListenerPair(listener, onError));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugFillProperties",
+            "type": "",
+            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"painting\/ImageStream\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/Diagnosticable\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/Diagnosticable\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "painting.ImageStream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "properties",
+                    "type": "foundation.DiagnosticPropertiesBuilder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "painting\/ImageStream\/debugFillProperties.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(ObjectFlagProperty&lt;ImageStreamCompleter&gt;(\n    'completer',\n    _completer,\n    ifPresent: _completer?.toStringShort(),\n    ifNull: 'unresolved',\n  ));\n  properties.add(ObjectFlagProperty&lt;List&lt;_ImageListenerPair&gt;&gt;(\n    'listeners',\n    _listeners,\n    ifPresent: '${_listeners?.length} listener${_listeners?.length == 1 ? \"\" : \"s\" }',\n    ifNull: 'no listeners',\n    level: _completer != null ? DiagnosticLevel.hidden : DiagnosticLevel.info,\n  ));\n  _completer?.debugFillProperties(properties);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "removeListener",
+            "type": "",
+            "desc": "<p>Stop listening for new concrete <a href=\"painting\/ImageInfo-class.html\">ImageInfo<\/a> objects and errors from\nthe <code>listener<\/code>'s associated <a href=\"painting\/ImageErrorListener.html\">ImageErrorListener<\/a>.<\/p>\n<p>If <code>listener<\/code> has been added multiple times, this removes the first\ninstance of the listener, along with the <code>onError<\/code> listener that was\nregistered with that first instance. This might not be the instance that\nthe <code>addListener<\/code> corresponding to this <code>removeListener<\/code> had added.<\/p>\n<p>For example, if one widget calls <a href=\"painting\/ImageStream\/addListener.html\">addListener<\/a> with a global static\nfunction and a private error handler, and another widget calls\n<a href=\"painting\/ImageStream\/addListener.html\">addListener<\/a> with the same global static function but a different private\nerror handler, then the second widget is disposed and removes the image\nlistener (the aforementioned global static function), it will remove the\nerror handler from the first widget, not the second. If an error later\noccurs, the first widget, which is still supposedly listening, will not\nreceive any messages, while the second, which is supposedly disposed, will\nhave its callback invoked.<\/p>\n    ",
+            "static": false,
+            "memberOf": "painting.ImageStream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "listener",
+                    "type": "painting.ImageListener",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "painting\/ImageStream\/removeListener.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeListener(ImageListener listener) {\n  if (_completer != null)\n    return _completer.removeListener(listener);\n  assert(_listeners != null);\n  for (int i = 0; i &lt; _listeners.length; i += 1) {\n    if (_listeners[i].listener == listener) {\n      _listeners.removeAt(i);\n      break;\n    }\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "setCompleter",
+            "type": "",
+            "desc": "<p>Assigns a particular <a href=\"painting\/ImageStreamCompleter-class.html\">ImageStreamCompleter<\/a> to this <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a>.<\/p>\n<p>This is usually done automatically by the <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> that created the\n<a href=\"painting\/ImageStream-class.html\">ImageStream<\/a>.<\/p>\n<p>This method can only be called once per stream. To have an <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a>\nrepresent multiple images over time, assign it a completer that\ncompletes several images in succession.<\/p>\n    ",
+            "static": false,
+            "memberOf": "painting.ImageStream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "painting.ImageStreamCompleter",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "painting\/ImageStream\/setCompleter.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setCompleter(ImageStreamCompleter value) {\n  assert(_completer == null);\n  _completer = value;\n  if (_listeners != null) {\n    final List&lt;_ImageListenerPair&gt; initialListeners = _listeners;\n    _listeners = null;\n    for (_ImageListenerPair listenerPair in initialListeners) {\n      _completer.addListener(\n        listenerPair.listener,\n        onError: listenerPair.errorListener,\n      );\n    }\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "completer",
+            "type": "painting.ImageStreamCompleter",
+            "types": [],
+            "desc": "<p>The completer that has been assigned to this image stream.<\/p>\n<p>Generally there is no need to deal with the completer directly.<\/p>\n        ",
+            "memberOf": "painting.ImageStream",
+            "isConstant": false,
+            "href": "painting\/ImageStream\/completer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">ImageStreamCompleter get completer =&gt; _completer;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "key",
+            "type": "dart:core.Object",
+            "types": [],
+            "desc": "<p>Returns an object which can be used with <code>==<\/code> to determine if this\n<a href=\"painting\/ImageStream-class.html\">ImageStream<\/a> shares the same listeners list as another <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a>.<\/p>\n<p>This can be used to avoid un-registering and re-registering listeners\nafter calling <a href=\"painting\/ImageProvider\/resolve.html\">ImageProvider.resolve<\/a> on a new, but possibly equivalent,\n<a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a>.<\/p>\n<p>The key may change once in the lifetime of the object. When it changes, it\nwill go from being different than other <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a>'s keys to\npotentially being the same as others'. No notification is sent when this\nhappens.<\/p>\n        ",
+            "memberOf": "painting.ImageStream",
+            "isConstant": false,
+            "href": "painting\/ImageStream\/key.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Object get key =&gt; _completer != null ? _completer : this;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "painting\/ImageStream-class.html",
+    "desc": "<p>A handle to an image resource.<\/p>\n<p>ImageStream represents a handle to a <a href=\"dart-ui\/Image-class.html\">dart:ui.Image<\/a> object and its scale\n(together represented by an <a href=\"painting\/ImageInfo-class.html\">ImageInfo<\/a> object). The underlying image object\nmight change over time, either because the image is animating or because the\nunderlying image resource was mutated.<\/p>\n<p>ImageStream objects can also represent an image that hasn't finished\nloading.<\/p>\n<p>ImageStream objects are backed by <a href=\"painting\/ImageStreamCompleter-class.html\">ImageStreamCompleter<\/a> objects.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a>, which has an example that includes the use of an\n<a href=\"painting\/ImageStream-class.html\">ImageStream<\/a> in a <a href=\"widgets\/Widget-class.html\">Widget<\/a>.<\/li><\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "ImageStream"
+}

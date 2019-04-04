@@ -1,0 +1,119 @@
+{
+    "name": "rendering.RenderSliverHelpers",
+    "extends": [],
+    "memberOf": "rendering",
+    "events": [],
+    "methods": [
+        {
+            "name": "RenderSliverHelpers",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "rendering.RenderSliverHelpers",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "rendering\/RenderSliverHelpers\/RenderSliverHelpers.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "applyPaintTransformForBoxChild",
+            "type": "",
+            "desc": "<p>Utility function for <a href=\"rendering\/RenderSliver\/applyPaintTransform.html\">applyPaintTransform<\/a> for use when the children are\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> widgets.<\/p>\n<p>This function turns the value returned by <a href=\"rendering\/RenderSliver\/childMainAxisPosition.html\">childMainAxisPosition<\/a> and\n<a href=\"rendering\/RenderSliver\/childCrossAxisPosition.html\">childCrossAxisPosition<\/a>for the child in question into a translation that\nit then applies to the given matrix.<\/p>\n<p>Calling this for a child that is not visible is not valid.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderSliverHelpers",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderBox",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "transform",
+                    "type": "vector_math_64.Matrix4",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderSliverHelpers\/applyPaintTransformForBoxChild.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid applyPaintTransformForBoxChild(RenderBox child, Matrix4 transform) {\n  final bool rightWayUp = _getRightWayUp(constraints);\n  double delta = childMainAxisPosition(child);\n  final double crossAxisDelta = childCrossAxisPosition(child);\n  assert(constraints.axis != null);\n  switch (constraints.axis) {\n    case Axis.horizontal:\n      if (!rightWayUp)\n        delta = geometry.paintExtent - child.size.width - delta;\n      transform.translate(delta, crossAxisDelta);\n      break;\n    case Axis.vertical:\n      if (!rightWayUp)\n        delta = geometry.paintExtent - child.size.height - delta;\n      transform.translate(crossAxisDelta, delta);\n      break;\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "hitTestBoxChild",
+            "type": "dart:core.bool",
+            "desc": "<p>Utility function for <a href=\"rendering\/RenderSliver\/hitTestChildren.html\">hitTestChildren<\/a> for use when the children are\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> widgets.<\/p>\n<p>This function takes care of converting the position from the sliver\ncoordinate system to the Cartesian coordinate system used by <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>.<\/p>\n<p>This function relies on <a href=\"rendering\/RenderSliver\/childMainAxisPosition.html\">childMainAxisPosition<\/a> to determine the position of\nchild in question.<\/p>\n<p>Calling this for a child that is not visible is not valid.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderSliverHelpers",
+            "sig": "",
+            "params": [
+                {
+                    "name": "result",
+                    "type": "gestures.HitTestResult",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "child",
+                    "type": "rendering.RenderBox",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "mainAxisPosition",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "crossAxisPosition",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderSliverHelpers\/hitTestBoxChild.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool hitTestBoxChild(HitTestResult result, RenderBox child, { @required double mainAxisPosition, @required double crossAxisPosition }) {\n  final bool rightWayUp = _getRightWayUp(constraints);\n  double absolutePosition = mainAxisPosition - childMainAxisPosition(child);\n  final double absoluteCrossAxisPosition = crossAxisPosition - childCrossAxisPosition(child);\n  assert(constraints.axis != null);\n  switch (constraints.axis) {\n    case Axis.horizontal:\n      if (!rightWayUp)\n        absolutePosition = child.size.width - absolutePosition;\n      return child.hitTest(result, position: Offset(absolutePosition, absoluteCrossAxisPosition));\n    case Axis.vertical:\n      if (!rightWayUp)\n        absolutePosition = child.size.height - absolutePosition;\n      return child.hitTest(result, position: Offset(absoluteCrossAxisPosition, absolutePosition));\n  }\n  return false;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "rendering\/RenderSliverHelpers-class.html",
+    "desc": "<p>Mixin for <a href=\"rendering\/RenderSliver-class.html\">RenderSliver<\/a> subclasses that provides some utility functions.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "RenderSliverHelpers"
+}

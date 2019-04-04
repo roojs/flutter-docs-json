@@ -1,0 +1,171 @@
+{
+    "name": "widgets.ComponentElement",
+    "extends": [
+        "widgets.Element",
+        "foundation.DiagnosticableTree",
+        "foundation.Diagnosticable",
+        "dart:core.Object"
+    ],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "ComponentElement",
+            "type": "",
+            "desc": "<p>Creates an element that uses the given widget as its configuration.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ComponentElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "widget",
+                    "type": "widgets.Widget",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "widgets\/ComponentElement\/ComponentElement.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ComponentElement(Widget widget) : super(widget);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "build",
+            "type": "widgets.Widget",
+            "desc": "<p>Subclasses should override this function to actually call the appropriate\n<code>build<\/code> function (e.g., <a href=\"widgets\/ComponentElement\/build.html\">StatelessWidget.build<\/a> or <a href=\"widgets\/ComponentElement\/build.html\">State.build<\/a>) for\ntheir widget.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ComponentElement",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ComponentElement\/build.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nWidget build();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "forgetChild",
+            "type": "",
+            "desc": "<p>Remove the given child from the element's child list, in preparation for\nthe child being reused elsewhere in the element tree.<\/p>\n<p>This updates the child model such that, e.g., <a href=\"widgets\/ComponentElement\/visitChildren.html\">visitChildren<\/a> does not\nwalk that child anymore.<\/p>\n<p>The element will still have a valid parent when this is called. After this\nis called, <a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a> is called to sever the link to this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ComponentElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "widgets.Element",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ComponentElement\/forgetChild.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid forgetChild(Element child) {\n  assert(child == _child);\n  _child = null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "mount",
+            "type": "",
+            "desc": "<p>Add this element to the tree in the given slot of the given parent.<\/p>\n<p>The framework calls this function when a newly created element is added to\nthe tree for the first time. Use this method to initialize state that\ndepends on having a parent. State that is independent of the parent can\nmore easily be initialized in the constructor.<\/p>\n<p>This method transitions the element from the \"initial\" lifecycle state to\nthe \"active\" lifecycle state.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ComponentElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "parent",
+                    "type": "widgets.Element",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "newSlot",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ComponentElement\/mount.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid mount(Element parent, dynamic newSlot) {\n  super.mount(parent, newSlot);\n  assert(_child == null);\n  assert(_active);\n  _firstBuild();\n  assert(_child != null);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "performRebuild",
+            "type": "",
+            "desc": "<p>Calls the <a href=\"widgets\/ComponentElement\/build.html\">StatelessWidget.build<\/a> method of the <a href=\"widgets\/StatelessWidget-class.html\">StatelessWidget<\/a> object\n(for stateless widgets) or the <a href=\"widgets\/ComponentElement\/build.html\">State.build<\/a> method of the <a href=\"widgets\/State-class.html\">State<\/a> object\n(for stateful widgets) and then updates the widget tree.<\/p>\n<p>Called automatically during <a href=\"widgets\/ComponentElement\/mount.html\">mount<\/a> to generate the first build, and by\n<a href=\"widgets\/Element\/rebuild.html\">rebuild<\/a> when the element needs updating.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ComponentElement",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ComponentElement\/performRebuild.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid performRebuild() {\n  assert(() {\n    if (debugProfileBuildsEnabled)\n      Timeline.startSync('${widget.runtimeType}',  arguments: timelineWhitelistArguments);\n    return true;\n  }());\n\n  assert(_debugSetAllowIgnoredCallsToMarkNeedsBuild(true));\n  Widget built;\n  try {\n    built = build();\n    debugWidgetBuilderValue(widget, built);\n  } catch (e, stack) {\n    built = ErrorWidget.builder(_debugReportException('building $this', e, stack));\n  } finally {\n    \/\/ We delay marking the element as clean until after calling build() so\n    \/\/ that attempts to markNeedsBuild() during build() will be ignored.\n    _dirty = false;\n    assert(_debugSetAllowIgnoredCallsToMarkNeedsBuild(false));\n  }\n  try {\n    _child = updateChild(_child, built, slot);\n    assert(_child != null);\n  } catch (e, stack) {\n    built = ErrorWidget.builder(_debugReportException('building $this', e, stack));\n    _child = updateChild(null, built, slot);\n  }\n\n  assert(() {\n    if (debugProfileBuildsEnabled)\n      Timeline.finishSync();\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "visitChildren",
+            "type": "",
+            "desc": "<p>Calls the argument for each child. Must be overridden by subclasses that\nsupport having children.<\/p>\n<p>There is no guaranteed order in which the children will be visited, though\nit should be consistent over time.<\/p>\n<p>Calling this during build is dangerous: the child list might still be\nbeing updated at that point, so the children might not be constructed yet,\nor might be old children that are going to be replaced. This method should\nonly be called if it is provable that the children are available.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ComponentElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "visitor",
+                    "type": "widgets.ElementVisitor",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ComponentElement\/visitChildren.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid visitChildren(ElementVisitor visitor) {\n  if (_child != null)\n    visitor(_child);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [
+        "widgets.InheritedElement",
+        "widgets.InheritedModelElement",
+        "widgets.ParentDataElement",
+        "widgets.ProxyElement",
+        "widgets.StatefulElement",
+        "widgets.StatelessElement"
+    ],
+    "realImplementors": [
+        "widgets.InheritedElement",
+        "widgets.InheritedModelElement",
+        "widgets.ParentDataElement"
+    ],
+    "cn": [],
+    "href": "widgets\/ComponentElement-class.html",
+    "desc": "<p>An <a href=\"widgets\/Element-class.html\">Element<\/a> that composes other <a href=\"widgets\/Element-class.html\">Element<\/a>s.<\/p>\n<p>Rather than creating a <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> directly, a <a href=\"widgets\/ComponentElement-class.html\">ComponentElement<\/a> creates\n<a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s indirectly by creating other <a href=\"widgets\/Element-class.html\">Element<\/a>s.<\/p>\n<p>Contrast with <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "ComponentElement"
+}

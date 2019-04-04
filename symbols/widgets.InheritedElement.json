@@ -1,0 +1,253 @@
+{
+    "name": "widgets.InheritedElement",
+    "extends": [
+        "widgets.ProxyElement",
+        "widgets.ComponentElement",
+        "widgets.Element",
+        "foundation.DiagnosticableTree",
+        "foundation.Diagnosticable",
+        "dart:core.Object"
+    ],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "InheritedElement",
+            "type": "",
+            "desc": "<p>Creates an element that uses the given widget as its configuration.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.InheritedElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "widget",
+                    "type": "widgets.InheritedWidget",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "widgets\/InheritedElement\/InheritedElement.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">InheritedElement(InheritedWidget widget) : super(widget);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugDeactivated",
+            "type": "",
+            "desc": "<p>Called, in debug mode, after children have been deactivated (see <a href=\"widgets\/Element\/deactivate.html\">deactivate<\/a>).<\/p>\n<p>This method is not called in release builds.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.InheritedElement",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/InheritedElement\/debugDeactivated.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugDeactivated() {\n  assert(() {\n    assert(_dependents.isEmpty);\n    return true;\n  }());\n  super.debugDeactivated();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "getDependencies",
+            "type": "dart:core.Object",
+            "desc": "<p>Returns the dependencies value recorded for <code>dependent<\/code>\nwith <a href=\"widgets\/InheritedElement\/setDependencies.html\">setDependencies<\/a>.<\/p>\n<p>Each dependent element is mapped to a single object value\nwhich represents how the element depends on this\n<a href=\"widgets\/InheritedElement-class.html\">InheritedElement<\/a>. This value is null by default and by default\ndependent elements are rebuilt unconditionally.<\/p>\n<p>Subclasses can manage these values with <a href=\"widgets\/InheritedElement\/updateDependencies.html\">updateDependencies<\/a>\nso that they can selectively rebuild dependents in\n<code>notifyDependents<\/code>.<\/p>\n<p>This method is typically only called in overrides of <a href=\"widgets\/InheritedElement\/updateDependencies.html\">updateDependencies<\/a>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/InheritedElement\/updateDependencies.html\">updateDependencies<\/a>, which is called each time a dependency is\ncreated with <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a>.<\/li>\n<li>\n<a href=\"widgets\/InheritedElement\/setDependencies.html\">setDependencies<\/a>, which sets dependencies value for a dependent\nelement.<\/li>\n<li>\n<a href=\"widgets\/InheritedElement\/notifyDependent.html\">notifyDependent<\/a>, which can be overridden to use a dependent's\ndependencies value to decide if the dependent needs to be rebuilt.<\/li>\n<li>\n<a href=\"widgets\/InheritedModel-class.html\">InheritedModel<\/a>, which is an example of a class that uses this method\nto manage dependency values.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "widgets.InheritedElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "dependent",
+                    "type": "widgets.Element",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/InheritedElement\/getDependencies.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nObject getDependencies(Element dependent) {\n  return _dependents[dependent];\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "notifyClients",
+            "type": "",
+            "desc": "<p>Notifies all dependent elements that this inherited widget has changed, by\ncalling <a href=\"widgets\/Element\/didChangeDependencies.html\">Element.didChangeDependencies<\/a>.<\/p>\n<p>This method must only be called during the build phase. Usually this\nmethod is called automatically when an inherited widget is rebuilt, e.g.\nas a result of calling <a href=\"widgets\/State\/setState.html\">State.setState<\/a> above the inherited widget.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/InheritedNotifier-class.html\">InheritedNotifier<\/a>, a subclass of <a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> that also calls\nthis method when its <a href=\"foundation\/Listenable-class.html\">Listenable<\/a> sends a notification.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "widgets.InheritedElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "oldWidget",
+                    "type": "widgets.InheritedWidget",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/InheritedElement\/notifyClients.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid notifyClients(InheritedWidget oldWidget) {\n  assert(_debugCheckOwnerBuildTargetExists('notifyClients'));\n  for (Element dependent in _dependents.keys) {\n    assert(() {\n      \/\/ check that it really is our descendant\n      Element ancestor = dependent._parent;\n      while (ancestor != this &amp;&amp; ancestor != null)\n        ancestor = ancestor._parent;\n      return ancestor == this;\n    }());\n    \/\/ check that it really depends on us\n    assert(dependent._dependencies.contains(this));\n    notifyDependent(oldWidget, dependent);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "notifyDependent",
+            "type": "",
+            "desc": "<p>Called by <a href=\"widgets\/InheritedElement\/notifyClients.html\">notifyClients<\/a> for each dependent.<\/p>\n<p>Calls <code>dependent.didChangeDependencies()<\/code> by default.<\/p>\n<p>Subclasses can override this method to selectively call\n<a href=\"widgets\/Element\/didChangeDependencies.html\">didChangeDependencies<\/a> based on the value of <a href=\"widgets\/InheritedElement\/getDependencies.html\">getDependencies<\/a>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/InheritedElement\/updateDependencies.html\">updateDependencies<\/a>, which is called each time a dependency is\ncreated with <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a>.<\/li>\n<li>\n<a href=\"widgets\/InheritedElement\/getDependencies.html\">getDependencies<\/a>, which returns the current value for a dependent\nelement.<\/li>\n<li>\n<a href=\"widgets\/InheritedElement\/setDependencies.html\">setDependencies<\/a>, which sets the value for a dependent element.<\/li>\n<li>\n<a href=\"widgets\/InheritedModel-class.html\">InheritedModel<\/a>, which is an example of a class that uses this method\nto manage dependency values.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "widgets.InheritedElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "oldWidget",
+                    "type": "widgets.InheritedWidget",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "dependent",
+                    "type": "widgets.Element",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/InheritedElement\/notifyDependent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid notifyDependent(covariant InheritedWidget oldWidget, Element dependent) {\n  dependent.didChangeDependencies();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "setDependencies",
+            "type": "",
+            "desc": "<p>Sets the value returned by <a href=\"widgets\/InheritedElement\/getDependencies.html\">getDependencies<\/a> value for <code>dependent<\/code>.<\/p>\n<p>Each dependent element is mapped to a single object value\nwhich represents how the element depends on this\n<a href=\"widgets\/InheritedElement-class.html\">InheritedElement<\/a>. The <a href=\"widgets\/InheritedElement\/updateDependencies.html\">updateDependencies<\/a> method sets this value to\nnull by default so that dependent elements are rebuilt unconditionally.<\/p>\n<p>Subclasses can manage these values with <a href=\"widgets\/InheritedElement\/updateDependencies.html\">updateDependencies<\/a>\nso that they can selectively rebuild dependents in <code>notifyDependents<\/code>.<\/p>\n<p>This method is typically only called in overrides of <a href=\"widgets\/InheritedElement\/updateDependencies.html\">updateDependencies<\/a>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/InheritedElement\/updateDependencies.html\">updateDependencies<\/a>, which is called each time a dependency is\ncreated with <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a>.<\/li>\n<li>\n<a href=\"widgets\/InheritedElement\/getDependencies.html\">getDependencies<\/a>, which returns the current value for a dependent\nelement.<\/li>\n<li>\n<a href=\"widgets\/InheritedElement\/notifyDependent.html\">notifyDependent<\/a>, which can be overridden to use a dependent's\n<a href=\"widgets\/InheritedElement\/getDependencies.html\">getDependencies<\/a> value to decide if the dependent needs to be rebuilt.<\/li>\n<li>\n<a href=\"widgets\/InheritedModel-class.html\">InheritedModel<\/a>, which is an example of a class that uses this method\nto manage dependency values.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "widgets.InheritedElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "dependent",
+                    "type": "widgets.Element",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "value",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/InheritedElement\/setDependencies.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid setDependencies(Element dependent, Object value) {\n  _dependents[dependent] = value;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "updateDependencies",
+            "type": "",
+            "desc": "<p>Called by <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> when a new <code>dependent<\/code> is added.<\/p>\n<p>Each dependent element can be mapped to a single object value with\n<a href=\"widgets\/InheritedElement\/setDependencies.html\">setDependencies<\/a>. This method can lookup the existing dependencies with\n<a href=\"widgets\/InheritedElement\/getDependencies.html\">getDependencies<\/a>.<\/p>\n<p>By default this method sets the inherited dependencies for <code>dependent<\/code>\nto null. This only serves to record an unconditional dependency on\n<code>dependent<\/code>.<\/p>\n<p>Subclasses can manage their own dependencies values so that they\ncan selectively rebuild dependents in <code>notifyDependents<\/code>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/InheritedElement\/getDependencies.html\">getDependencies<\/a>, which returns the current value for a dependent\nelement.<\/li>\n<li>\n<a href=\"widgets\/InheritedElement\/setDependencies.html\">setDependencies<\/a>, which sets the value for a dependent element.<\/li>\n<li>\n<a href=\"widgets\/InheritedElement\/notifyDependent.html\">notifyDependent<\/a>, which can be overridden to use a dependent's\ndependencies value to decide if the dependent needs to be rebuilt.<\/li>\n<li>\n<a href=\"widgets\/InheritedModel-class.html\">InheritedModel<\/a>, which is an example of a class that uses this method\nto manage dependency values.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "widgets.InheritedElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "dependent",
+                    "type": "widgets.Element",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "aspect",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/InheritedElement\/updateDependencies.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid updateDependencies(Element dependent, Object aspect) {\n  setDependencies(dependent, null);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "updated",
+            "type": "",
+            "desc": "<p>Calls <a href=\"widgets\/Element\/didChangeDependencies.html\">Element.didChangeDependencies<\/a> of all dependent elements, if\n<a href=\"widgets\/InheritedWidget\/updateShouldNotify.html\">InheritedWidget.updateShouldNotify<\/a> returns true.<\/p>\n<p>Called by <a href=\"widgets\/ProxyElement\/update.html\">update<\/a>, immediately prior to <a href=\"widgets\/ProxyElement\/build.html\">build<\/a>.<\/p>\n<p>Calls <a href=\"widgets\/InheritedElement\/notifyClients.html\">notifyClients<\/a> to actually trigger the notifications.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.InheritedElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "oldWidget",
+                    "type": "widgets.InheritedWidget",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/InheritedElement\/updated.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid updated(InheritedWidget oldWidget) {\n  if (widget.updateShouldNotify(oldWidget))\n    super.updated(oldWidget);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "widget",
+            "type": "widgets.InheritedWidget",
+            "types": [],
+            "desc": "<p>The configuration for this element.<\/p>\n        ",
+            "memberOf": "widgets.InheritedElement",
+            "isConstant": false,
+            "href": "widgets\/InheritedElement\/widget.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nInheritedWidget get widget =&gt; super.widget;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [
+        "widgets.InheritedModelElement"
+    ],
+    "realImplementors": [
+        "widgets.InheritedModelElement"
+    ],
+    "cn": [],
+    "href": "widgets\/InheritedElement-class.html",
+    "desc": "<p>An <a href=\"widgets\/Element-class.html\">Element<\/a> that uses an <a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> as its configuration.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "InheritedElement"
+}

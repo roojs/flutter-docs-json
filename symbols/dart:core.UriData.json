@@ -1,0 +1,314 @@
+{
+    "name": "dart:core.UriData",
+    "extends": [],
+    "memberOf": "dart:core",
+    "events": [],
+    "methods": [
+        {
+            "name": "contentAsBytes",
+            "type": "dart:typed_data.Uint8List",
+            "desc": "<p>The content part of the data URI as bytes.<\/p>\n<p>If the data is Base64 encoded, it will be decoded to bytes.<\/p>\n<p>If the data is not Base64 encoded, it will be decoded by unescaping\npercent-escaped characters and returning byte values of each unescaped\ncharacter. The bytes will not be, e.g., UTF-8 decoded.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:core.UriData",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-core\/UriData\/contentAsBytes.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Uint8List contentAsBytes() {\n  String text = _text;\n  int start = _separatorIndices.last + 1;\n  if (isBase64) {\n    return base64.decoder.convert(text, start);\n  }\n\n  \/\/ Not base64, do percent-decoding and return the remaining bytes.\n  \/\/ Compute result size.\n  const int percent = 0x25;\n  int length = text.length - start;\n  for (int i = start; i &lt; text.length; i++) {\n    var codeUnit = text.codeUnitAt(i);\n    if (codeUnit == percent) {\n      i += 2;\n      length -= 2;\n    }\n  }\n  \/\/ Fill result array.\n  Uint8List result = new Uint8List(length);\n  if (length == text.length) {\n    result.setRange(0, length, text.codeUnits, start);\n    return result;\n  }\n  int index = 0;\n  for (int i = start; i &lt; text.length; i++) {\n    var codeUnit = text.codeUnitAt(i);\n    if (codeUnit != percent) {\n      result[index++] = codeUnit;\n    } else {\n      if (i + 2 &lt; text.length) {\n        int byte = parseHexByte(text, i + 1);\n        if (byte &gt;= 0) {\n          result[index++] = byte;\n          i += 2;\n          continue;\n        }\n      }\n      throw new FormatException(\"Invalid percent escape\", text, i);\n    }\n  }\n  assert(index == result.length);\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "contentAsString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string created from the content of the data URI.<\/p>\n<p>If the content is Base64 encoded, it will be decoded to bytes and then\ndecoded to a string using <code>encoding<\/code>.\nIf encoding is omitted, the value of a <code>charset<\/code> parameter is used\nif it is recognized by <a href=\"dart-convert\/Encoding\/getByName.html\">Encoding.getByName<\/a>, otherwise it defaults to\nthe <a href=\"dart-convert\/ascii-constant.html\">ascii<\/a> encoding, which is the default encoding for data URIs\nthat do not specify an encoding.<\/p>\n<p>If the content is not Base64 encoded, it will first have percent-escapes\nconverted to bytes and then the character codes and byte values are\ndecoded using <code>encoding<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:core.UriData",
+            "sig": "",
+            "params": [
+                {
+                    "name": "encoding",
+                    "type": "dart:convert.Encoding",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-core\/UriData\/contentAsString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String contentAsString({Encoding encoding}) {\n  if (encoding == null) {\n    var charset = this.charset; \/\/ Returns \"US-ASCII\" if not present.\n    encoding = Encoding.getByName(charset);\n    if (encoding == null) {\n      throw new UnsupportedError(\"Unknown charset: $charset\");\n    }\n  }\n  String text = _text;\n  int start = _separatorIndices.last + 1;\n  if (isBase64) {\n    var converter = base64.decoder.fuse(encoding.decoder);\n    return converter.convert(text.substring(start));\n  }\n  return _Uri._uriDecode(text, start, text.length, encoding, false);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "UriData.fromBytes",
+            "type": "",
+            "desc": "<p>Creates a <code>data:<\/code> URI containing an encoding of <code>bytes<\/code>.<\/p>\n<p>Equivalent to <code>new Uri.dataFromBytes(...).data<\/code>, but may\nbe more efficient if the <a href=\"dart-core\/UriData\/uri.html\">uri<\/a> itself isn't used.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:core.UriData",
+            "sig": "",
+            "params": [
+                {
+                    "name": "bytes",
+                    "type": "dart:core.List<dart:core.int>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "dart:core.int"
+                    ]
+                },
+                {
+                    "name": "mimeType",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "parameters",
+                    "type": "dart:core.Map<dart:core.String<dart:core.String>>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.Map",
+                        "dart:core.String",
+                        "dart:core.String"
+                    ]
+                },
+                {
+                    "name": "percentEncoded",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-core\/UriData\/UriData.fromBytes.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory UriData.fromBytes(List&lt;int&gt; bytes,\n    {mimeType: \"application\/octet-stream\",\n    Map&lt;String, String&gt; parameters,\n    percentEncoded: false}) {\n  StringBuffer buffer = new StringBuffer();\n  List&lt;int&gt; indices = [_noScheme];\n  _writeUri(mimeType, null, parameters, buffer, indices);\n  indices.add(buffer.length);\n  if (percentEncoded) {\n    buffer.write(',');\n    _uriEncodeBytes(_uricTable, bytes, buffer);\n  } else {\n    buffer.write(';base64,');\n    indices.add(buffer.length - 1);\n    _base64.encoder\n        .startChunkedConversion(\n            new StringConversionSink.fromStringSink(buffer))\n        .addSlice(bytes, 0, bytes.length, true);\n  }\n\n  return new UriData._(buffer.toString(), indices, null);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "UriData.fromString",
+            "type": "",
+            "desc": "<p>Creates a <code>data:<\/code> URI containing the <code>content<\/code> string.<\/p>\n<p>Equivalent to <code>new Uri.dataFromString(...).data<\/code>, but may\nbe more efficient if the <a href=\"dart-core\/UriData\/uri.html\">uri<\/a> itself isn't used.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:core.UriData",
+            "sig": "",
+            "params": [
+                {
+                    "name": "content",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "mimeType",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "encoding",
+                    "type": "dart:convert.Encoding",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "parameters",
+                    "type": "dart:core.Map<dart:core.String<dart:core.String>>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.Map",
+                        "dart:core.String",
+                        "dart:core.String"
+                    ]
+                },
+                {
+                    "name": "base64",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-core\/UriData\/UriData.fromString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory UriData.fromString(String content,\n    {String mimeType,\n    Encoding encoding,\n    Map&lt;String, String&gt; parameters,\n    bool base64: false}) {\n  StringBuffer buffer = new StringBuffer();\n  List&lt;int&gt; indices = [_noScheme];\n  String charsetName;\n  String encodingName;\n  if (parameters != null) charsetName = parameters[\"charset\"];\n  if (encoding == null) {\n    if (charsetName != null) {\n      encoding = Encoding.getByName(charsetName);\n    }\n  } else if (charsetName == null) {\n    \/\/ Non-null only if parameters does not contain \"charset\".\n    encodingName = encoding.name;\n  }\n  encoding ??= ascii;\n  _writeUri(mimeType, encodingName, parameters, buffer, indices);\n  indices.add(buffer.length);\n  if (base64) {\n    buffer.write(';base64,');\n    indices.add(buffer.length - 1);\n    buffer.write(encoding.fuse(_base64).encode(content));\n  } else {\n    buffer.write(',');\n    _uriEncodeBytes(_uricTable, encoding.encode(content), buffer);\n  }\n  return new UriData._(buffer.toString(), indices, null);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "UriData.fromUri",
+            "type": "",
+            "desc": "<p>Creates a <code>DataUri<\/code> from a <a href=\"dart-core\/Uri-class.html\">Uri<\/a> which must have <code>data<\/code> as <a href=\"dart-core\/Uri\/scheme.html\">Uri.scheme<\/a>.<\/p>\n<p>The <code>uri<\/code> must have scheme <code>data<\/code> and no authority or fragment,\nand the path (concatenated with the query, if there is one) must be valid\nas data URI content with the same rules as <a href=\"dart-core\/UriData\/parse.html\">parse<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:core.UriData",
+            "sig": "",
+            "params": [
+                {
+                    "name": "uri",
+                    "type": "dart:core.Uri",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-core\/UriData\/UriData.fromUri.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory UriData.fromUri(Uri uri) {\n  if (uri.scheme != \"data\") {\n    throw new ArgumentError.value(uri, \"uri\", \"Scheme must be 'data'\");\n  }\n  if (uri.hasAuthority) {\n    throw new ArgumentError.value(\n        uri, \"uri\", \"Data uri must not have authority\");\n  }\n  if (uri.hasFragment) {\n    throw new ArgumentError.value(\n        uri, \"uri\", \"Data uri must not have a fragment part\");\n  }\n  if (!uri.hasQuery) {\n    return _parse(uri.path, 0, uri);\n  }\n  \/\/ Includes path and query (and leading \"data:\").\n  return _parse(\"$uri\", 5, uri);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "parse",
+            "type": "dart:core.UriData",
+            "desc": "<p>Parses a string as a <code>data<\/code> URI.<\/p>\n<p>The string must have the format:<\/p>\n<pre class=\"language-dart\"><code>'data:' (type '\/' subtype)? (';' attribute '=' value)* (';base64')? ',' data\n<\/code><\/pre>\n<p>where <code>type<\/code>, <code>subtype<\/code>, <code>attribute<\/code> and <code>value<\/code> are specified in RFC-2045,\nand <code>data<\/code> is a sequence of URI-characters (RFC-2396 <code>uric<\/code>).<\/p>\n<p>This means that all the characters must be ASCII, but the URI may contain\npercent-escapes for non-ASCII byte values that need an interpretation\nto be converted to the corresponding string.<\/p>\n<p>Parsing checks that Base64 encoded data is valid, and it normalizes it\nto use the default Base64 alphabet and to use padding.\nNon-Base64 data is escaped using percent-escapes as necessary to make\nit valid, and existing escapes are case normalized.<\/p>\n<p>Accessing the individual parts may fail later if they turn out to have\ncontent that can't be decoded successfully as a string, for example if\nexisting percent escapes represent bytes that cannot be decoded\nby the chosen <a href=\"dart-convert\/Encoding-class.html\">Encoding<\/a> (see <a href=\"dart-core\/UriData\/contentAsString.html\">contentAsString<\/a>).<\/p>\n<p>A <a href=\"dart-core\/FormatException-class.html\">FormatException<\/a> is thrown if <code>uri<\/code> is not a valid data URI.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:core.UriData",
+            "sig": "",
+            "params": [
+                {
+                    "name": "uri",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-core\/UriData\/parse.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static UriData parse(String uri) {\n  if (uri.length &gt;= 5) {\n    int dataDelta = _startsWithData(uri, 0);\n    if (dataDelta == 0) {\n      \/\/ Exact match on \"data:\".\n      return _parse(uri, 5, null);\n    }\n    if (dataDelta == 0x20) {\n      \/\/ Starts with a non-normalized \"data\" scheme containing upper-case\n      \/\/ letters. Parse anyway, but throw away the scheme.\n      return _parse(uri.substring(5), 0, null);\n    }\n  }\n  throw new FormatException(\"Does not start with 'data:'\", uri, 0);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:core.UriData",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-core\/UriData\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() =&gt;\n    (_separatorIndices[0] == _noScheme) ? \"data:$_text\" : _text;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "charset",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>The charset parameter of the media type.<\/p>\n<p>If the parameters of the media type contains a <code>charset<\/code> parameter\nthen this returns its value, otherwise it returns <code>US-ASCII<\/code>,\nwhich is the default charset for data URIs.\nIf the value contain non-ASCII percent escapes, they are decoded as UTF-8.<\/p>\n<p>If the MIME type representation in the URI text contains URI escapes,\nthey are unescaped in the returned string.<\/p>\n        ",
+            "memberOf": "dart:core.UriData",
+            "isConstant": false,
+            "href": "dart-core\/UriData\/charset.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get charset {\n  int parameterStart = 1;\n  int parameterEnd = _separatorIndices.length - 1; \/\/ The ',' before data.\n  if (isBase64) {\n    \/\/ There is a \";base64\" separator, so subtract one for that as well.\n    parameterEnd -= 1;\n  }\n  for (int i = parameterStart; i &lt; parameterEnd; i += 2) {\n    var keyStart = _separatorIndices[i] + 1;\n    var keyEnd = _separatorIndices[i + 1];\n    if (keyEnd == keyStart + 7 &amp;&amp; _text.startsWith(\"charset\", keyStart)) {\n      return _Uri._uriDecode(\n          _text, keyEnd + 1, _separatorIndices[i + 2], utf8, false);\n    }\n  }\n  return \"US-ASCII\";\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "contentText",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>The content part of the data URI, as its actual representation.<\/p>\n<p>This string may contain percent escapes.<\/p>\n        ",
+            "memberOf": "dart:core.UriData",
+            "isConstant": false,
+            "href": "dart-core\/UriData\/contentText.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get contentText =&gt; _text.substring(_separatorIndices.last + 1);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isBase64",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether the data is Base64 encoded or not.<\/p>\n        ",
+            "memberOf": "dart:core.UriData",
+            "isConstant": false,
+            "href": "dart-core\/UriData\/isBase64.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isBase64 =&gt; _separatorIndices.length.isOdd;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "mimeType",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>The MIME type of the data URI.<\/p>\n<p>A data URI consists of a \"media type\" followed by data.\nThe media type starts with a MIME type and can be followed by\nextra parameters.\nIf the MIME type representation in the URI text contains URI escapes,\nthey are unescaped in the returned string.\nIf the value contain non-ASCII percent escapes, they are decoded as UTF-8.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>data:text\/plain;charset=utf-8,Hello%20World!\n<\/code><\/pre>\n<p>This data URI has the media type <code>text\/plain;charset=utf-8<\/code>, which is the\nMIME type <code>text\/plain<\/code> with the parameter <code>charset<\/code> with value <code>utf-8<\/code>.\nSee <a href=\"https:\/\/tools.ietf.org\/html\/rfc2045\">RFC 2045<\/a> for more detail.<\/p>\n<p>If the first part of the data URI is empty, it defaults to <code>text\/plain<\/code>.<\/p>\n        ",
+            "memberOf": "dart:core.UriData",
+            "isConstant": false,
+            "href": "dart-core\/UriData\/mimeType.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get mimeType {\n  int start = _separatorIndices[0] + 1;\n  int end = _separatorIndices[1];\n  if (start == end) return \"text\/plain\";\n  return _Uri._uriDecode(_text, start, end, utf8, false);\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "parameters",
+            "type": "dart:core.Map<dart:core.String<dart:core.String>>",
+            "types": [
+                "dart:core.Map",
+                "dart:core.String",
+                "dart:core.String"
+            ],
+            "desc": "<p>A map representing the parameters of the media type.<\/p>\n<p>A data URI may contain parameters between the MIME type and the\ndata. This converts these parameters to a map from parameter name\nto parameter value.\nThe map only contains parameters that actually occur in the URI.\nThe <code>charset<\/code> parameter has a default value even if it doesn't occur\nin the URI, which is reflected by the <a href=\"dart-core\/UriData\/charset.html\">charset<\/a> getter. This means that\n<a href=\"dart-core\/UriData\/charset.html\">charset<\/a> may return a value even if <code>parameters[\"charset\"]<\/code> is <code>null<\/code>.<\/p>\n<p>If the values contain non-ASCII values or percent escapes,\nthey are decoded as UTF-8.<\/p>\n        ",
+            "memberOf": "dart:core.UriData",
+            "isConstant": false,
+            "href": "dart-core\/UriData\/parameters.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Map&lt;String, String&gt; get parameters {\n  var result = &lt;String, String&gt;{};\n  for (int i = 3; i &lt; _separatorIndices.length; i += 2) {\n    var start = _separatorIndices[i - 2] + 1;\n    var equals = _separatorIndices[i - 1];\n    var end = _separatorIndices[i];\n    String key = _Uri._uriDecode(_text, start, equals, utf8, false);\n    String value = _Uri._uriDecode(_text, equals + 1, end, utf8, false);\n    result[key] = value;\n  }\n  return result;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "uri",
+            "type": "dart:core.Uri",
+            "types": [],
+            "desc": "<p>The <a href=\"dart-core\/Uri-class.html\">Uri<\/a> that this <code>UriData<\/code> is giving access to.<\/p>\n<p>Returns a <code>Uri<\/code> with scheme <code>data<\/code> and the remainder of the data URI\nas path.<\/p>\n        ",
+            "memberOf": "dart:core.UriData",
+            "isConstant": false,
+            "href": "dart-core\/UriData\/uri.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Uri get uri {\n  if (_uriCache != null) return _uriCache;\n  String path = _text;\n  String query;\n  int colonIndex = _separatorIndices[0];\n  int queryIndex = _text.indexOf('?', colonIndex + 1);\n  int end = _text.length;\n  if (queryIndex &gt;= 0) {\n    query = _Uri._normalizeOrSubstring(\n        _text, queryIndex + 1, end, _Uri._queryCharTable);\n    end = queryIndex;\n  }\n  path = _Uri._normalizeOrSubstring(\n      _text, colonIndex + 1, end, _Uri._pathCharOrSlashTable);\n  _uriCache = new _DataUri(this, path, query);\n  return _uriCache;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "dart-core\/UriData-class.html",
+    "desc": "<p>A way to access the structure of a <code>data:<\/code> URI.<\/p>\n<p>Data URIs are non-hierarchical URIs that can contain any binary data.\nThey are defined by <a href=\"https:\/\/tools.ietf.org\/html\/rfc2397\">RFC 2397<\/a>.<\/p>\n<p>This class allows parsing the URI text and extracting individual parts of the\nURI, as well as building the URI text from structured parts.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "UriData"
+}

@@ -1,0 +1,399 @@
+{
+    "name": "widgets.RenderObjectElement",
+    "extends": [
+        "widgets.Element",
+        "foundation.DiagnosticableTree",
+        "foundation.Diagnosticable",
+        "dart:core.Object"
+    ],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "RenderObjectElement",
+            "type": "",
+            "desc": "<p>Creates an element that uses the given widget as its configuration.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.RenderObjectElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "widget",
+                    "type": "widgets.RenderObjectWidget",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "widgets\/RenderObjectElement\/RenderObjectElement.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RenderObjectElement(RenderObjectWidget widget) : super(widget);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "attachRenderObject",
+            "type": "",
+            "desc": "<p>Add <a href=\"widgets\/RenderObjectElement\/renderObject.html\">renderObject<\/a> to the render tree at the location specified by <a href=\"widgets\/Element\/slot.html\">slot<\/a>.<\/p>\n<p>The default implementation of this function simply calls\n<a href=\"widgets\/RenderObjectElement\/attachRenderObject.html\">attachRenderObject<\/a> recursively on its child. The\n<a href=\"widgets\/RenderObjectElement\/attachRenderObject.html\">RenderObjectElement.attachRenderObject<\/a> override does the actual work of\nadding <a href=\"widgets\/RenderObjectElement\/renderObject.html\">renderObject<\/a> to the render tree.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.RenderObjectElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "newSlot",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/RenderObjectElement\/attachRenderObject.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid attachRenderObject(dynamic newSlot) {\n  assert(_ancestorRenderObjectElement == null);\n  _slot = newSlot;\n  _ancestorRenderObjectElement = _findAncestorRenderObjectElement();\n  _ancestorRenderObjectElement?.insertChildRenderObject(renderObject, newSlot);\n  final ParentDataElement&lt;RenderObjectWidget&gt; parentDataElement = _findAncestorParentDataElement();\n  if (parentDataElement != null)\n    _updateParentData(parentDataElement.widget);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "deactivate",
+            "type": "",
+            "desc": "<p>Transition from the \"active\" to the \"inactive\" lifecycle state.<\/p>\n<p>The framework calls this method when a previously active element is moved\nto the list of inactive elements. While in the inactive state, the element\nwill not appear on screen. The element can remain in the inactive state\nonly until the end of the current animation frame. At the end of the\nanimation frame, if the element has not be reactivated, the framework will\nunmount the element.<\/p>\n<p>This is (indirectly) called by <a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a>.<\/p>\n<p>See the lifecycle documentation for <a href=\"widgets\/Element-class.html\">Element<\/a> for additional information.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.RenderObjectElement",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/RenderObjectElement\/deactivate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid deactivate() {\n  super.deactivate();\n  assert(!renderObject.attached,\n    'A RenderObject was still attached when attempting to deactivate its '\n    'RenderObjectElement: $renderObject');\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugFillProperties",
+            "type": "",
+            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"widgets\/RenderObjectElement\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTree\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/Diagnosticable\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.RenderObjectElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "properties",
+                    "type": "foundation.DiagnosticPropertiesBuilder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/RenderObjectElement\/debugFillProperties.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(DiagnosticsProperty&lt;RenderObject&gt;('renderObject', renderObject, defaultValue: null));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "detachRenderObject",
+            "type": "",
+            "desc": "<p>Remove <a href=\"widgets\/RenderObjectElement\/renderObject.html\">renderObject<\/a> from the render tree.<\/p>\n<p>The default implementation of this function simply calls\n<a href=\"widgets\/RenderObjectElement\/detachRenderObject.html\">detachRenderObject<\/a> recursively on its child. The\n<a href=\"widgets\/RenderObjectElement\/detachRenderObject.html\">RenderObjectElement.detachRenderObject<\/a> override does the actual work of\nremoving <a href=\"widgets\/RenderObjectElement\/renderObject.html\">renderObject<\/a> from the render tree.<\/p>\n<p>This is called by <a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.RenderObjectElement",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/RenderObjectElement\/detachRenderObject.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid detachRenderObject() {\n  if (_ancestorRenderObjectElement != null) {\n    _ancestorRenderObjectElement.removeChildRenderObject(renderObject);\n    _ancestorRenderObjectElement = null;\n  }\n  _slot = null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "insertChildRenderObject",
+            "type": "",
+            "desc": "<p>Insert the given child into <a href=\"widgets\/RenderObjectElement\/renderObject.html\">renderObject<\/a> at the given slot.<\/p>\n<p>The semantics of <code>slot<\/code> are determined by this element. For example, if\nthis element has a single child, the slot should always be null. If this\nelement has a list of children, the previous sibling is a convenient value\nfor the slot.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.RenderObjectElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "slot",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/RenderObjectElement\/insertChildRenderObject.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid insertChildRenderObject(covariant RenderObject child, covariant dynamic slot);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "mount",
+            "type": "",
+            "desc": "<p>Add this element to the tree in the given slot of the given parent.<\/p>\n<p>The framework calls this function when a newly created element is added to\nthe tree for the first time. Use this method to initialize state that\ndepends on having a parent. State that is independent of the parent can\nmore easily be initialized in the constructor.<\/p>\n<p>This method transitions the element from the \"initial\" lifecycle state to\nthe \"active\" lifecycle state.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.RenderObjectElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "parent",
+                    "type": "widgets.Element",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "newSlot",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/RenderObjectElement\/mount.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid mount(Element parent, dynamic newSlot) {\n  super.mount(parent, newSlot);\n  _renderObject = widget.createRenderObject(this);\n  assert(() { _debugUpdateRenderObjectOwner(); return true; }());\n  assert(_slot == newSlot);\n  attachRenderObject(newSlot);\n  _dirty = false;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "moveChildRenderObject",
+            "type": "",
+            "desc": "<p>Move the given child to the given slot.<\/p>\n<p>The given child is guaranteed to have <a href=\"widgets\/RenderObjectElement\/renderObject.html\">renderObject<\/a> as its parent.<\/p>\n<p>The semantics of <code>slot<\/code> are determined by this element. For example, if\nthis element has a single child, the slot should always be null. If this\nelement has a list of children, the previous sibling is a convenient value\nfor the slot.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.RenderObjectElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "slot",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/RenderObjectElement\/moveChildRenderObject.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid moveChildRenderObject(covariant RenderObject child, covariant dynamic slot);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "performRebuild",
+            "type": "",
+            "desc": "<p>Called by rebuild() after the appropriate checks have been made.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.RenderObjectElement",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/RenderObjectElement\/performRebuild.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid performRebuild() {\n  widget.updateRenderObject(this, renderObject);\n  _dirty = false;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "removeChildRenderObject",
+            "type": "",
+            "desc": "<p>Remove the given child from <a href=\"widgets\/RenderObjectElement\/renderObject.html\">renderObject<\/a>.<\/p>\n<p>The given child is guaranteed to have <a href=\"widgets\/RenderObjectElement\/renderObject.html\">renderObject<\/a> as its parent.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.RenderObjectElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/RenderObjectElement\/removeChildRenderObject.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid removeChildRenderObject(covariant RenderObject child);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "unmount",
+            "type": "",
+            "desc": "<p>Transition from the \"inactive\" to the \"defunct\" lifecycle state.<\/p>\n<p>Called when the framework determines that an inactive element will never\nbe reactivated. At the end of each animation frame, the framework calls\n<a href=\"widgets\/RenderObjectElement\/unmount.html\">unmount<\/a> on any remaining inactive elements, preventing inactive elements\nfrom remaining inactive for longer than a single animation frame.<\/p>\n<p>After this function is called, the element will not be incorporated into\nthe tree again.<\/p>\n<p>See the lifecycle documentation for <a href=\"widgets\/Element-class.html\">Element<\/a> for additional information.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.RenderObjectElement",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/RenderObjectElement\/unmount.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid unmount() {\n  super.unmount();\n  assert(!renderObject.attached,\n    'A RenderObject was still attached when attempting to unmount its '\n    'RenderObjectElement: $renderObject');\n  widget.didUnmountRenderObject(renderObject);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "update",
+            "type": "",
+            "desc": "<p>Change the widget used to configure this element.<\/p>\n<p>The framework calls this function when the parent wishes to use a\ndifferent widget to configure this element. The new widget is guaranteed\nto have the same <a href=\"dart-core\/Object\/runtimeType.html\">runtimeType<\/a> as the old widget.<\/p>\n<p>This function is called only during the \"active\" lifecycle state.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.RenderObjectElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "newWidget",
+                    "type": "widgets.RenderObjectWidget",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/RenderObjectElement\/update.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid update(covariant RenderObjectWidget newWidget) {\n  super.update(newWidget);\n  assert(widget == newWidget);\n  assert(() { _debugUpdateRenderObjectOwner(); return true; }());\n  widget.updateRenderObject(this, renderObject);\n  _dirty = false;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "updateChildren",
+            "type": "dart:core.List<widgets.Element>",
+            "desc": "<p>Updates the children of this element to use new widgets.<\/p>\n<p>Attempts to update the given old children list using the given new\nwidgets, removing obsolete elements and introducing new ones as necessary,\nand then returns the new child list.<\/p>\n<p>During this function the <code>oldChildren<\/code> list must not be modified. If the\ncaller wishes to remove elements from <code>oldChildren<\/code> re-entrantly while\nthis function is on the stack, the caller can supply a <code>forgottenChildren<\/code>\nargument, which can be modified while this function is on the stack.\nWhenever this function reads from <code>oldChildren<\/code>, this function first\nchecks whether the child is in <code>forgottenChildren<\/code>. If it is, the function\nacts as if the child was not in <code>oldChildren<\/code>.<\/p>\n<p>This function is a convenience wrapper around <a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a>, which updates\neach individual child. When calling <a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a>, this function uses the\nprevious element as the <code>newSlot<\/code> argument.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.RenderObjectElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "oldChildren",
+                    "type": "dart:core.List<widgets.Element>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "widgets.Element"
+                    ]
+                },
+                {
+                    "name": "newWidgets",
+                    "type": "dart:core.List<widgets.Widget>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "widgets.Widget"
+                    ]
+                },
+                {
+                    "name": "forgottenChildren",
+                    "type": "dart:core.Set<widgets.Element>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.Set",
+                        "widgets.Element"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/RenderObjectElement\/updateChildren.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nList&lt;Element&gt; updateChildren(List&lt;Element&gt; oldChildren, List&lt;Widget&gt; newWidgets, { Set&lt;Element&gt; forgottenChildren }) {\n  assert(oldChildren != null);\n  assert(newWidgets != null);\n\n  Element replaceWithNullIfForgotten(Element child) {\n    return forgottenChildren != null &amp;&amp; forgottenChildren.contains(child) ? null : child;\n  }\n\n  \/\/ This attempts to diff the new child list (newWidgets) with\n  \/\/ the old child list (oldChildren), and produce a new list of elements to\n  \/\/ be the new list of child elements of this element. The called of this\n  \/\/ method is expected to update this render object accordingly.\n\n  \/\/ The cases it tries to optimize for are:\n  \/\/  - the old list is empty\n  \/\/  - the lists are identical\n  \/\/  - there is an insertion or removal of one or more widgets in\n  \/\/    only one place in the list\n  \/\/ If a widget with a key is in both lists, it will be synced.\n  \/\/ Widgets without keys might be synced but there is no guarantee.\n\n  \/\/ The general approach is to sync the entire new list backwards, as follows:\n  \/\/ 1. Walk the lists from the top, syncing nodes, until you no longer have\n  \/\/    matching nodes.\n  \/\/ 2. Walk the lists from the bottom, without syncing nodes, until you no\n  \/\/    longer have matching nodes. We'll sync these nodes at the end. We\n  \/\/    don't sync them now because we want to sync all the nodes in order\n  \/\/    from beginning to end.\n  \/\/ At this point we narrowed the old and new lists to the point\n  \/\/ where the nodes no longer match.\n  \/\/ 3. Walk the narrowed part of the old list to get the list of\n  \/\/    keys and sync null with non-keyed items.\n  \/\/ 4. Walk the narrowed part of the new list forwards:\n  \/\/     * Sync non-keyed items with null\n  \/\/     * Sync keyed items with the source if it exists, else with null.\n  \/\/ 5. Walk the bottom of the list again, syncing the nodes.\n  \/\/ 6. Sync null with any items in the list of keys that are still\n  \/\/    mounted.\n\n  int newChildrenTop = 0;\n  int oldChildrenTop = 0;\n  int newChildrenBottom = newWidgets.length - 1;\n  int oldChildrenBottom = oldChildren.length - 1;\n\n  final List&lt;Element&gt; newChildren = oldChildren.length == newWidgets.length ?\n      oldChildren : List&lt;Element&gt;(newWidgets.length);\n\n  Element previousChild;\n\n  \/\/ Update the top of the list.\n  while ((oldChildrenTop &lt;= oldChildrenBottom) &amp;&amp; (newChildrenTop &lt;= newChildrenBottom)) {\n    final Element oldChild = replaceWithNullIfForgotten(oldChildren[oldChildrenTop]);\n    final Widget newWidget = newWidgets[newChildrenTop];\n    assert(oldChild == null || oldChild._debugLifecycleState == _ElementLifecycle.active);\n    if (oldChild == null || !Widget.canUpdate(oldChild.widget, newWidget))\n      break;\n    final Element newChild = updateChild(oldChild, newWidget, previousChild);\n    assert(newChild._debugLifecycleState == _ElementLifecycle.active);\n    newChildren[newChildrenTop] = newChild;\n    previousChild = newChild;\n    newChildrenTop += 1;\n    oldChildrenTop += 1;\n  }\n\n  \/\/ Scan the bottom of the list.\n  while ((oldChildrenTop &lt;= oldChildrenBottom) &amp;&amp; (newChildrenTop &lt;= newChildrenBottom)) {\n    final Element oldChild = replaceWithNullIfForgotten(oldChildren[oldChildrenBottom]);\n    final Widget newWidget = newWidgets[newChildrenBottom];\n    assert(oldChild == null || oldChild._debugLifecycleState == _ElementLifecycle.active);\n    if (oldChild == null || !Widget.canUpdate(oldChild.widget, newWidget))\n      break;\n    oldChildrenBottom -= 1;\n    newChildrenBottom -= 1;\n  }\n\n  \/\/ Scan the old children in the middle of the list.\n  final bool haveOldChildren = oldChildrenTop &lt;= oldChildrenBottom;\n  Map&lt;Key, Element&gt; oldKeyedChildren;\n  if (haveOldChildren) {\n    oldKeyedChildren = &lt;Key, Element&gt;{};\n    while (oldChildrenTop &lt;= oldChildrenBottom) {\n      final Element oldChild = replaceWithNullIfForgotten(oldChildren[oldChildrenTop]);\n      assert(oldChild == null || oldChild._debugLifecycleState == _ElementLifecycle.active);\n      if (oldChild != null) {\n        if (oldChild.widget.key != null)\n          oldKeyedChildren[oldChild.widget.key] = oldChild;\n        else\n          deactivateChild(oldChild);\n      }\n      oldChildrenTop += 1;\n    }\n  }\n\n  \/\/ Update the middle of the list.\n  while (newChildrenTop &lt;= newChildrenBottom) {\n    Element oldChild;\n    final Widget newWidget = newWidgets[newChildrenTop];\n    if (haveOldChildren) {\n      final Key key = newWidget.key;\n      if (key != null) {\n        oldChild = oldKeyedChildren[key];\n        if (oldChild != null) {\n          if (Widget.canUpdate(oldChild.widget, newWidget)) {\n            \/\/ we found a match!\n            \/\/ remove it from oldKeyedChildren so we don't unsync it later\n            oldKeyedChildren.remove(key);\n          } else {\n            \/\/ Not a match, let's pretend we didn't see it for now.\n            oldChild = null;\n          }\n        }\n      }\n    }\n    assert(oldChild == null || Widget.canUpdate(oldChild.widget, newWidget));\n    final Element newChild = updateChild(oldChild, newWidget, previousChild);\n    assert(newChild._debugLifecycleState == _ElementLifecycle.active);\n    assert(oldChild == newChild || oldChild == null || oldChild._debugLifecycleState != _ElementLifecycle.active);\n    newChildren[newChildrenTop] = newChild;\n    previousChild = newChild;\n    newChildrenTop += 1;\n  }\n\n  \/\/ We've scanned the whole list.\n  assert(oldChildrenTop == oldChildrenBottom + 1);\n  assert(newChildrenTop == newChildrenBottom + 1);\n  assert(newWidgets.length - newChildrenTop == oldChildren.length - oldChildrenTop);\n  newChildrenBottom = newWidgets.length - 1;\n  oldChildrenBottom = oldChildren.length - 1;\n\n  \/\/ Update the bottom of the list.\n  while ((oldChildrenTop &lt;= oldChildrenBottom) &amp;&amp; (newChildrenTop &lt;= newChildrenBottom)) {\n    final Element oldChild = oldChildren[oldChildrenTop];\n    assert(replaceWithNullIfForgotten(oldChild) != null);\n    assert(oldChild._debugLifecycleState == _ElementLifecycle.active);\n    final Widget newWidget = newWidgets[newChildrenTop];\n    assert(Widget.canUpdate(oldChild.widget, newWidget));\n    final Element newChild = updateChild(oldChild, newWidget, previousChild);\n    assert(newChild._debugLifecycleState == _ElementLifecycle.active);\n    assert(oldChild == newChild || oldChild == null || oldChild._debugLifecycleState != _ElementLifecycle.active);\n    newChildren[newChildrenTop] = newChild;\n    previousChild = newChild;\n    newChildrenTop += 1;\n    oldChildrenTop += 1;\n  }\n\n  \/\/ Clean up any of the remaining middle nodes from the old list.\n  if (haveOldChildren &amp;&amp; oldKeyedChildren.isNotEmpty) {\n    for (Element oldChild in oldKeyedChildren.values) {\n      if (forgottenChildren == null || !forgottenChildren.contains(oldChild))\n        deactivateChild(oldChild);\n    }\n  }\n\n  return newChildren;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:core.List",
+                "widgets.Element"
+            ]
+        }
+    ],
+    "props": [
+        {
+            "name": "renderObject",
+            "type": "rendering.RenderObject",
+            "types": [],
+            "desc": "<p>The underlying <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> for this element.<\/p>\n        ",
+            "memberOf": "widgets.RenderObjectElement",
+            "isConstant": false,
+            "href": "widgets\/RenderObjectElement\/renderObject.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nRenderObject get renderObject =&gt; _renderObject;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "widget",
+            "type": "widgets.RenderObjectWidget",
+            "types": [],
+            "desc": "<p>The configuration for this element.<\/p>\n        ",
+            "memberOf": "widgets.RenderObjectElement",
+            "isConstant": false,
+            "href": "widgets\/RenderObjectElement\/widget.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nRenderObjectWidget get widget =&gt; super.widget;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [
+        "widgets.LeafRenderObjectElement",
+        "widgets.ListWheelElement",
+        "widgets.MultiChildRenderObjectElement",
+        "widgets.RenderObjectToWidgetElement",
+        "widgets.RootRenderObjectElement",
+        "widgets.SingleChildRenderObjectElement",
+        "widgets.SliverMultiBoxAdaptorElement"
+    ],
+    "realImplementors": [
+        "widgets.LeafRenderObjectElement",
+        "widgets.ListWheelElement",
+        "widgets.MultiChildRenderObjectElement",
+        "widgets.RenderObjectToWidgetElement"
+    ],
+    "cn": [],
+    "href": "widgets\/RenderObjectElement-class.html",
+    "desc": "<p>An <a href=\"widgets\/Element-class.html\">Element<\/a> that uses a <a href=\"widgets\/RenderObjectWidget-class.html\">RenderObjectWidget<\/a> as its configuration.<\/p>\n<p><a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> objects have an associated <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> widget in\nthe render tree, which handles concrete operations like laying out,\npainting, and hit testing.<\/p>\n<p>Contrast with <a href=\"widgets\/ComponentElement-class.html\">ComponentElement<\/a>.<\/p>\n<p>For details on the lifecycle of an element, see the discussion at <a href=\"widgets\/Element-class.html\">Element<\/a>.<\/p>\n<h2 id=\"writing-a-renderobjectelement-subclass\">Writing a RenderObjectElement subclass<\/h2>\n<p>There are three common child models used by most <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s:<\/p>\n<ul>\n<li>\n<p>Leaf render objects, with no children: The <a href=\"widgets\/LeafRenderObjectElement-class.html\">LeafRenderObjectElement<\/a> class\nhandles this case.<\/p>\n<\/li>\n<li>\n<p>A single child: The <a href=\"widgets\/SingleChildRenderObjectElement-class.html\">SingleChildRenderObjectElement<\/a> class handles this\ncase.<\/p>\n<\/li>\n<li>\n<p>A linked list of children: The <a href=\"widgets\/MultiChildRenderObjectElement-class.html\">MultiChildRenderObjectElement<\/a> class\nhandles this case.<\/p>\n<\/li>\n<\/ul>\n<p>Sometimes, however, a render object's child model is more complicated. Maybe\nit has a two-dimensional array of children. Maybe it constructs children on\ndemand. Maybe it features multiple lists. In such situations, the\ncorresponding <a href=\"widgets\/Element-class.html\">Element<\/a> for the <a href=\"widgets\/Widget-class.html\">Widget<\/a> that configures that <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>\nwill be a new subclass of <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a>.<\/p>\n<p>Such a subclass is responsible for managing children, specifically the\n<a href=\"widgets\/Element-class.html\">Element<\/a> children of this object, and the <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> children of its\ncorresponding <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>.<\/p>\n<h3 id=\"specializing-the-getters\">Specializing the getters<\/h3>\n<p><a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> objects spend much of their time acting as\nintermediaries between their <a href=\"widgets\/RenderObjectElement\/widget.html\">widget<\/a> and their <a href=\"widgets\/RenderObjectElement\/renderObject.html\">renderObject<\/a>. To make this\nmore tractable, most <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> subclasses override these getters\nso that they return the specific type that the element expects, e.g.:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class FooElement extends RenderObjectElement {\n\n  @override\n  Foo get widget =&gt; super.widget;\n\n  @override\n  RenderFoo get renderObject =&gt; super.renderObject;\n\n  \/\/ ...\n}\n<\/code><\/pre>\n<h3 id=\"slots\">Slots<\/h3>\n<p>Each child <a href=\"widgets\/Element-class.html\">Element<\/a> corresponds to a <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> which should be\nattached to this element's render object as a child.<\/p>\n<p>However, the immediate children of the element may not be the ones that\neventually produce the actual <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> that they correspond to. For\nexample a <a href=\"widgets\/StatelessElement-class.html\">StatelessElement<\/a> (the element of a <a href=\"widgets\/StatelessWidget-class.html\">StatelessWidget<\/a>) simply\ncorresponds to whatever <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> its child (the element returned by\nits <a href=\"widgets\/StatelessWidget\/build.html\">StatelessWidget.build<\/a> method) corresponds to.<\/p>\n<p>Each child is therefore assigned a <em>slot<\/em> token. This is an identifier whose\nmeaning is private to this <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> node. When the descendant\nthat finally produces the <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> is ready to attach it to this\nnode's render object, it passes that slot token back to this node, and that\nallows this node to cheaply identify where to put the child render object\nrelative to the others in the parent render object.<\/p>\n<h3 id=\"updating-children\">Updating children<\/h3>\n<p>Early in the lifecycle of an element, the framework calls the <a href=\"widgets\/RenderObjectElement\/mount.html\">mount<\/a>\nmethod. This method should call <a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a> for each child, passing in\nthe widget for that child, and the slot for that child, thus obtaining a\nlist of child <a href=\"widgets\/Element-class.html\">Element<\/a>s.<\/p>\n<p>Subsequently, the framework will call the <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a> method. In this method,\nthe <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> should call <a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a> for each child, passing\nin the <a href=\"widgets\/Element-class.html\">Element<\/a> that was obtained during <a href=\"widgets\/RenderObjectElement\/mount.html\">mount<\/a> or the last time <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a>\nwas run (whichever happened most recently), the new <a href=\"widgets\/Widget-class.html\">Widget<\/a>, and the slot.\nThis provides the object with a new list of <a href=\"widgets\/Element-class.html\">Element<\/a> objects.<\/p>\n<p>Where possible, the <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a> method should attempt to map the elements from\nthe last pass to the widgets in the new pass. For example, if one of the\nelements from the last pass was configured with a particular <a href=\"foundation\/Key-class.html\">Key<\/a>, and one\nof the widgets in this new pass has that same key, they should be paired up,\nand the old element should be updated with the widget (and the slot\ncorresponding to the new widget's new position, also). The <a href=\"widgets\/RenderObjectElement\/updateChildren.html\">updateChildren<\/a>\nmethod may be useful in this regard.<\/p>\n<p><a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a> should be called for children in their logical order. The\norder can matter; for example, if two of the children use <a href=\"widgets\/PageStorage-class.html\">PageStorage<\/a>'s\n<code>writeState<\/code> feature in their build method (and neither has a <a href=\"widgets\/Widget\/key.html\">Widget.key<\/a>),\nthen the state written by the first will be overwritten by the second.<\/p>\n<h4 id=\"dynamically-determining-the-children-during-the-build-phase\">Dynamically determining the children during the build phase<\/h4>\n<p>The child widgets need not necessarily come from this element's widget\nverbatim. They could be generated dynamically from a callback, or generated\nin other more creative ways.<\/p>\n<h4 id=\"dynamically-determining-the-children-during-layout\">Dynamically determining the children during layout<\/h4>\n<p>If the widgets are to be generated at layout time, then generating them when\nthe <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a> method won't work: layout of this element's render object\nhasn't started yet at that point. Instead, the <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a> method can mark the\nrender object as needing layout (see <a href=\"rendering\/RenderObject\/markNeedsLayout.html\">RenderObject.markNeedsLayout<\/a>), and\nthen the render object's <a href=\"rendering\/RenderObject\/performLayout.html\">RenderObject.performLayout<\/a> method can call back\nto the element to have it generate the widgets and call <a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a>\naccordingly.<\/p>\n<p>For a render object to call an element during layout, it must use\n<a href=\"rendering\/RenderObject\/invokeLayoutCallback.html\">RenderObject.invokeLayoutCallback<\/a>. For an element to call <a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a>\noutside of its <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a> method, it must use <a href=\"widgets\/BuildOwner\/buildScope.html\">BuildOwner.buildScope<\/a>.<\/p>\n<p>The framework provides many more checks in normal operation than it does\nwhen doing a build during layout. For this reason, creating widgets with\nlayout-time build semantics should be done with great care.<\/p>\n<h4 id=\"handling-errors-when-building\">Handling errors when building<\/h4>\n<p>If an element calls a builder function to obtain widgets for its children,\nit may find that the build throws an exception. Such exceptions should be\ncaught and reported using <a href=\"foundation\/FlutterError\/reportError.html\">FlutterError.reportError<\/a>. If a child is needed\nbut a builder has failed in this way, an instance of <a href=\"widgets\/ErrorWidget-class.html\">ErrorWidget<\/a> can be\nused instead.<\/p>\n<h3 id=\"detaching-children\">Detaching children<\/h3>\n<p>It is possible, when using <a href=\"widgets\/GlobalKey-class.html\">GlobalKey<\/a>s, for a child to be proactively\nremoved by another element before this element has been updated.\n(Specifically, this happens when the subtree rooted at a widget with a\nparticular <a href=\"widgets\/GlobalKey-class.html\">GlobalKey<\/a> is being moved from this element to an element\nprocessed earlier in the build phase.) When this happens, this element's\n<a href=\"widgets\/Element\/forgetChild.html\">forgetChild<\/a> method will be called with a reference to the affected child\nelement.<\/p>\n<p>The <a href=\"widgets\/Element\/forgetChild.html\">forgetChild<\/a> method of a <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> subclass must remove the\nchild element from its child list, so that when it next <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a>s its\nchildren, the removed child is not considered.<\/p>\n<p>For performance reasons, if there are many elements, it may be quicker to\ntrack which elements were forgotten by storing them in a <a href=\"dart-core\/Set-class.html\">Set<\/a>, rather than\nproactively mutating the local record of the child list and the identities\nof all the slots. For example, see the implementation of\n<a href=\"widgets\/MultiChildRenderObjectElement-class.html\">MultiChildRenderObjectElement<\/a>.<\/p>\n<h3 id=\"maintaining-the-render-object-tree\">Maintaining the render object tree<\/h3>\n<p>Once a descendant produces a render object, it will call\n<a href=\"widgets\/RenderObjectElement\/insertChildRenderObject.html\">insertChildRenderObject<\/a>. If the descendant's slot changes identity, it\nwill call <a href=\"widgets\/RenderObjectElement\/moveChildRenderObject.html\">moveChildRenderObject<\/a>. If a descendant goes away, it will call\n<a href=\"widgets\/RenderObjectElement\/removeChildRenderObject.html\">removeChildRenderObject<\/a>.<\/p>\n<p>These three methods should update the render tree accordingly, attaching,\nmoving, and detaching the given child render object from this element's own\nrender object respectively.<\/p>\n<h3 id=\"walking-the-children\">Walking the children<\/h3>\n<p>If a <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> object has any children <a href=\"widgets\/Element-class.html\">Element<\/a>s, it must\nexpose them in its implementation of the <a href=\"widgets\/Element\/visitChildren.html\">visitChildren<\/a> method. This method\nis used by many of the framework's internal mechanisms, and so should be\nfast. It is also used by the test framework and <a href=\"widgets\/debugDumpApp.html\">debugDumpApp<\/a>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "RenderObjectElement"
+}

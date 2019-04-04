@@ -1,0 +1,90 @@
+{
+    "name": "animation.TweenSequence",
+    "extends": [
+        "animation.Animatable",
+        "dart:core.Object"
+    ],
+    "memberOf": "animation",
+    "events": [],
+    "methods": [
+        {
+            "name": "TweenSequence",
+            "type": "",
+            "desc": "<p>Construct a TweenSequence.<\/p>\n<p>The <code>items<\/code> parameter must be a list of one or more\n<a href=\"animation\/TweenSequenceItem-class.html\">TweenSequenceItem<\/a>s.<\/p>\n<p>There's a small cost associated with building a <code>TweenSequence<\/code> so\nit's best to reuse one, rather than rebuilding it on every frame,\nwhen that's possible.<\/p>\n    ",
+            "static": false,
+            "memberOf": "animation.TweenSequence",
+            "sig": "",
+            "params": [
+                {
+                    "name": "items",
+                    "type": "dart:core.List<animation.TweenSequenceItem>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "animation.TweenSequenceItem"
+                    ]
+                }
+            ],
+            "isConstructor": true,
+            "href": "animation\/TweenSequence\/TweenSequence.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TweenSequence(List&lt;TweenSequenceItem&lt;T&gt;&gt; items)\n    : assert(items != null),\n      assert(items.isNotEmpty) {\n  _items.addAll(items);\n\n  double totalWeight = 0.0;\n  for (TweenSequenceItem&lt;T&gt; item in _items)\n    totalWeight += item.weight;\n  assert(totalWeight &gt; 0.0);\n\n  double start = 0.0;\n  for (int i = 0; i &lt; _items.length; i += 1) {\n    final double end = i == _items.length - 1 ? 1.0 : start + _items[i].weight \/ totalWeight;\n    _intervals.add(_Interval(start, end));\n    start = end;\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "animation.TweenSequence",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "animation\/TweenSequence\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; 'TweenSequence(${_items.length} items)';<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "transform",
+            "type": "",
+            "desc": "<p>Returns the value of the object at point <code>t<\/code>.<\/p>\n<p>The value of <code>t<\/code> is nominally a fraction in the range 0.0 to 1.0, though\nin practice it may extend outside this range.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"animation\/Animatable\/evaluate.html\">evaluate<\/a>, which is a shorthand for applying <a href=\"animation\/TweenSequence\/transform.html\">transform<\/a> to the value\nof an <a href=\"animation\/Animation-class.html\">Animation<\/a>.<\/li>\n<li>\n<a href=\"animation\/TweenSequence\/transform.html\">Curve.transform<\/a>, a similar method for easing curves.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "animation.TweenSequence",
+            "sig": "",
+            "params": [
+                {
+                    "name": "t",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "animation\/TweenSequence\/transform.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nT transform(double t) {\n  assert(t &gt;= 0.0 &amp;&amp; t &lt;= 1.0);\n  if (t == 1.0)\n    return _evaluateAt(t, _items.length - 1);\n  for (int index = 0; index &lt; _items.length; index++) {\n    if (_intervals[index].contains(t))\n      return _evaluateAt(t, index);\n  }\n  \/\/ Should be unreachable.\n  assert(false, 'TweenSequence.evaluate() could not find a interval for $t');\n  return null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "animation\/TweenSequence-class.html",
+    "desc": "<p>Enables creating an <a href=\"animation\/Animation-class.html\">Animation<\/a> whose value is defined by a\nsequence of <a href=\"animation\/Tween-class.html\">Tween<\/a>s.<\/p>\n<p>Each <a href=\"animation\/TweenSequenceItem-class.html\">TweenSequenceItem<\/a> has a weight that defines its percentage\nof the animation's duration. Each tween defines the animation's value\nduring the interval indicated by its weight.<\/p>\n<p>For example, to define an animation that uses an easing curve to\ninterpolate between 5.0 and 10.0 during the first 40% of the\nanimation, remain at 10.0 for the next 20%, and then return to\n10.0 for the final 40%:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">final Animation&lt;double&gt; animation = TweenSequence(\n  &lt;TweenSequenceItem&lt;double&gt;&gt;[\n    TweenSequenceItem&lt;double&gt;(\n      tween: Tween&lt;double&gt;(begin: 5.0, end: 10.0)\n        .chain(CurveTween(curve: Curves.ease)),\n      weight: 40.0,\n    ),\n    TweenSequenceItem&lt;double&gt;(\n      tween: ConstantTween&lt;double&gt;(10.0),\n      weight: 20.0,\n    ),\n    TweenSequenceItem&lt;double&gt;(\n      tween: Tween&lt;double&gt;(begin: 10.0, end: 5.0)\n        .chain(CurveTween(curve: Curves.ease)),\n      weight: 40.0,\n    ),\n  ],\n).animate(myAnimationController);\n<\/code><\/pre>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "TweenSequence"
+}

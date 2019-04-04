@@ -1,0 +1,133 @@
+{
+    "name": "stream_channel.StreamChannelCompleter",
+    "extends": [],
+    "memberOf": "stream_channel",
+    "events": [],
+    "methods": [
+        {
+            "name": "StreamChannelCompleter",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "stream_channel.StreamChannelCompleter",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "package-stream_channel_stream_channel\/StreamChannelCompleter\/StreamChannelCompleter.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannelCompleter() {\n  _channel =\n      new StreamChannel&lt;T&gt;(_streamCompleter.stream, _sinkCompleter.sink);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "fromFuture",
+            "type": "stream_channel.StreamChannel",
+            "desc": "<p>Convert a <code>Future&lt;StreamChannel&gt;<\/code> to a <code>StreamChannel<\/code>.<\/p>\n<p>This creates a channel using a channel completer, and sets the source\nchannel to the result of the future when the future completes.<\/p>\n<p>If the future completes with an error, the returned channel's stream will\ninstead contain just that error. The sink will silently discard all\nevents.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stream_channel.StreamChannelCompleter",
+            "sig": "",
+            "params": [
+                {
+                    "name": "channelFuture",
+                    "type": "dart:async.Future<stream_channel.StreamChannel>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:async.Future",
+                        "stream_channel.StreamChannel"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-stream_channel_stream_channel\/StreamChannelCompleter\/fromFuture.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static StreamChannel fromFuture(Future&lt;StreamChannel&gt; channelFuture) {\n  var completer = new StreamChannelCompleter();\n  channelFuture.then(completer.setChannel, onError: completer.setError);\n  return completer.channel;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "setChannel",
+            "type": "",
+            "desc": "<p>Set a channel as the source and destination for <code>channel<\/code>.<\/p>\n<p>A channel may be set at most once.<\/p>\n<p>Either <a href=\"package-stream_channel_stream_channel\/StreamChannelCompleter\/setChannel.html\">setChannel<\/a> or <a href=\"package-stream_channel_stream_channel\/StreamChannelCompleter\/setError.html\">setError<\/a> may be called at most once. Trying to\ncall either of them again will fail.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stream_channel.StreamChannelCompleter",
+            "sig": "",
+            "params": [
+                {
+                    "name": "channel",
+                    "type": "stream_channel.StreamChannel",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-stream_channel_stream_channel\/StreamChannelCompleter\/setChannel.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setChannel(StreamChannel&lt;T&gt; channel) {\n  if (_set) throw new StateError(\"The channel has already been set.\");\n  _set = true;\n\n  _streamCompleter.setSourceStream(channel.stream);\n  _sinkCompleter.setDestinationSink(channel.sink);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "setError",
+            "type": "",
+            "desc": "<p>Indicates that there was an error connecting the channel.<\/p>\n<p>This makes the stream emit <code>error<\/code> and close. It makes the sink discard\nall its events.<\/p>\n<p>Either <a href=\"package-stream_channel_stream_channel\/StreamChannelCompleter\/setChannel.html\">setChannel<\/a> or <a href=\"package-stream_channel_stream_channel\/StreamChannelCompleter\/setError.html\">setError<\/a> may be called at most once. Trying to\ncall either of them again will fail.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stream_channel.StreamChannelCompleter",
+            "sig": "",
+            "params": [
+                {
+                    "name": "error",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "stackTrace",
+                    "type": "dart:core.StackTrace",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-stream_channel_stream_channel\/StreamChannelCompleter\/setError.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setError(error, [StackTrace stackTrace]) {\n  if (_set) throw new StateError(\"The channel has already been set.\");\n  _set = true;\n\n  _streamCompleter.setError(error, stackTrace);\n  _sinkCompleter.setDestinationSink(new NullStreamSink());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "channel",
+            "type": "stream_channel.StreamChannel",
+            "types": [],
+            "desc": "<p>The channel for this completer.<\/p>\n        ",
+            "memberOf": "stream_channel.StreamChannelCompleter",
+            "isConstant": false,
+            "href": "package-stream_channel_stream_channel\/StreamChannelCompleter\/channel.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;T&gt; get channel =&gt; _channel;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-stream_channel_stream_channel\/StreamChannelCompleter-class.html",
+    "desc": "<p>A <a href=\"package-stream_channel_stream_channel\/StreamChannelCompleter\/channel.html\">channel<\/a> where the source and destination are provided later.<\/p>\n<p>The <a href=\"package-stream_channel_stream_channel\/StreamChannelCompleter\/channel.html\">channel<\/a> is a normal channel that can be listened to and that events\ncan be added to immediately, but until <a href=\"package-stream_channel_stream_channel\/StreamChannelCompleter\/setChannel.html\">setChannel<\/a> is called it won't emit\nany events and all events added to it will be buffered.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "StreamChannelCompleter"
+}

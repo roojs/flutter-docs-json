@@ -1,0 +1,221 @@
+{
+    "name": "widgets.BallisticScrollActivity",
+    "extends": [
+        "widgets.ScrollActivity",
+        "dart:core.Object"
+    ],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "BallisticScrollActivity",
+            "type": "",
+            "desc": "<p>Creates an activity that animates a scroll view based on a <code>simulation<\/code>.<\/p>\n<p>The <code>delegate<\/code>, <code>simulation<\/code>, and <code>vsync<\/code> arguments must not be null.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.BallisticScrollActivity",
+            "sig": "",
+            "params": [
+                {
+                    "name": "delegate",
+                    "type": "widgets.ScrollActivityDelegate",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "simulation",
+                    "type": "physics.Simulation",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "vsync",
+                    "type": "scheduler.TickerProvider",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "widgets\/BallisticScrollActivity\/BallisticScrollActivity.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BallisticScrollActivity(\n  ScrollActivityDelegate delegate,\n  Simulation simulation,\n  TickerProvider vsync,\n) : super(delegate) {\n  _controller = AnimationController.unbounded(\n    debugLabel: '$runtimeType',\n    vsync: vsync,\n  )\n    ..addListener(_tick)\n    ..animateWith(simulation)\n     .whenComplete(_end); \/\/ won't trigger if we dispose _controller first\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "applyMoveTo",
+            "type": "dart:core.bool",
+            "desc": "<p>Move the position to the given location.<\/p>\n<p>If the new position was fully applied, returns true. If there was any\noverflow, returns false.<\/p>\n<p>The default implementation calls <a href=\"widgets\/ScrollActivityDelegate\/setPixels.html\">ScrollActivityDelegate.setPixels<\/a>\nand returns true if the overflow was zero.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.BallisticScrollActivity",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/BallisticScrollActivity\/applyMoveTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool applyMoveTo(double value) {\n  return delegate.setPixels(value) == 0.0;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "applyNewDimensions",
+            "type": "",
+            "desc": "<p>Called when the scroll view that is performing this activity changes its metrics.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.BallisticScrollActivity",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/BallisticScrollActivity\/applyNewDimensions.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid applyNewDimensions() {\n  delegate.goBallistic(velocity);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "dispatchOverscrollNotification",
+            "type": "",
+            "desc": "<p>Dispatch an <a href=\"widgets\/OverscrollNotification-class.html\">OverscrollNotification<\/a> with the given metrics and overscroll.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.BallisticScrollActivity",
+            "sig": "",
+            "params": [
+                {
+                    "name": "metrics",
+                    "type": "widgets.ScrollMetrics",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "context",
+                    "type": "widgets.BuildContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "overscroll",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/BallisticScrollActivity\/dispatchOverscrollNotification.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispatchOverscrollNotification(ScrollMetrics metrics, BuildContext context, double overscroll) {\n  OverscrollNotification(metrics: metrics, context: context, overscroll: overscroll, velocity: velocity).dispatch(context);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "dispose",
+            "type": "",
+            "desc": "<p>Called when the scroll view stops performing this activity.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.BallisticScrollActivity",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/BallisticScrollActivity\/dispose.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  _controller.dispose();\n  super.dispose();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "resetActivity",
+            "type": "",
+            "desc": "<p>Called by the <a href=\"widgets\/ScrollActivityDelegate-class.html\">ScrollActivityDelegate<\/a> when it has changed type (for\nexample, when changing from an Android-style scroll position to an\niOS-style scroll position). If this activity can differ between the two\nmodes, then it should tell the position to restart that activity\nappropriately.<\/p>\n<p>For example, <a href=\"widgets\/BallisticScrollActivity-class.html\">BallisticScrollActivity<\/a>'s implementation calls\n<a href=\"widgets\/ScrollActivityDelegate\/goBallistic.html\">ScrollActivityDelegate.goBallistic<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.BallisticScrollActivity",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/BallisticScrollActivity\/resetActivity.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid resetActivity() {\n  delegate.goBallistic(velocity);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.BallisticScrollActivity",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/BallisticScrollActivity\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() {\n  return '${describeIdentity(this)}($_controller)';\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "isScrolling",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether performing this activity constitutes scrolling.<\/p>\n<p>Used, for example, to determine whether the user scroll direction is\n<a href=\"rendering\/ScrollDirection-class.html\">ScrollDirection.idle<\/a>.<\/p>\n        ",
+            "memberOf": "widgets.BallisticScrollActivity",
+            "isConstant": false,
+            "href": "widgets\/BallisticScrollActivity\/isScrolling.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get isScrolling =&gt; true;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "shouldIgnorePointer",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether the scroll view should ignore pointer events while performing this\nactivity.<\/p>\n        ",
+            "memberOf": "widgets.BallisticScrollActivity",
+            "isConstant": false,
+            "href": "widgets\/BallisticScrollActivity\/shouldIgnorePointer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get shouldIgnorePointer =&gt; true;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "velocity",
+            "type": "dart:core.double",
+            "types": [],
+            "desc": "<p>If applicable, the velocity at which the scroll offset is currently\nindependently changing (i.e. without external stimuli such as a dragging\ngestures) in logical pixels per second for this activity.<\/p>\n        ",
+            "memberOf": "widgets.BallisticScrollActivity",
+            "isConstant": false,
+            "href": "widgets\/BallisticScrollActivity\/velocity.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble get velocity =&gt; _controller.velocity;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "widgets\/BallisticScrollActivity-class.html",
+    "desc": "<p>An activity that animates a scroll view based on a physics <a href=\"physics\/Simulation-class.html\">Simulation<\/a>.<\/p>\n<p>A <a href=\"widgets\/BallisticScrollActivity-class.html\">BallisticScrollActivity<\/a> is typically used when the user lifts their\nfinger off the screen to continue the scrolling gesture with the current velocity.<\/p>\n<p><a href=\"widgets\/BallisticScrollActivity-class.html\">BallisticScrollActivity<\/a> is also used to restore a scroll view to a valid\nscroll offset when the geometry of the scroll view changes. In these\nsituations, the <a href=\"physics\/Simulation-class.html\">Simulation<\/a> typically starts with a zero velocity.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/DrivenScrollActivity-class.html\">DrivenScrollActivity<\/a>, which animates a scroll view based on a set of\nanimation parameters.<\/li><\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "BallisticScrollActivity"
+}

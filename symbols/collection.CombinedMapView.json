@@ -1,0 +1,91 @@
+{
+    "name": "collection.CombinedMapView",
+    "extends": [
+        "dart:collection.UnmodifiableMapBase",
+        "dart:collection.MapBase",
+        "dart:collection.MapMixin",
+        "dart:core.Object"
+    ],
+    "memberOf": "collection",
+    "events": [],
+    "methods": [
+        {
+            "name": "CombinedMapView",
+            "type": "",
+            "desc": "<p>Create a new combined view into multiple maps.<\/p>\n<p>The iterable is accessed lazily so it should be collection type like\n<a href=\"dart-core\/List-class.html\">List<\/a> or <a href=\"dart-core\/Set-class.html\">Set<\/a> rather than a lazy iterable produced by <code>map()<\/code> et al.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.CombinedMapView",
+            "sig": "",
+            "params": [
+                {
+                    "name": "_maps",
+                    "type": "dart:core.Iterable<dart:core.Map>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.Iterable",
+                        "dart:core.Map"
+                    ]
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-collection_collection\/CombinedMapView\/CombinedMapView.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">CombinedMapView(this._maps);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "operator []",
+            "type": "",
+            "desc": "<p>Returns the value for the given <code>key<\/code> or null if <code>key<\/code> is not in the map.<\/p>\n<p>Some maps allow keys to have <code>null<\/code> as a value.\nFor those maps, a lookup using this operator cannot distinguish between a\nkey not being in the map and the key having a <code>null<\/code> value.\nMethods like <a href=\"dart-collection\/MapMixin\/containsKey.html\">containsKey<\/a> or <a href=\"dart-collection\/UnmodifiableMapBase\/putIfAbsent.html\">putIfAbsent<\/a> can be used if the distinction\nis important.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.CombinedMapView",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-collection_collection\/CombinedMapView\/operator_get.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">V operator [](Object key) {\n  for (var map in _maps) {\n    \/\/ Avoid two hash lookups on a positive hit.\n    var value = map[key];\n    if (value != null || map.containsKey(value)) {\n      return value;\n    }\n  }\n  return null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "keys",
+            "type": "dart:core.Iterable",
+            "types": [],
+            "desc": "<p>The keys of <a href=\"package-collection_collection\/CombinedMapView-class.html\">this<\/a>.<\/p>\n<p>The returned iterable has efficient <code>length<\/code> and <code>contains<\/code> operations,\nbased on <a href=\"dart-collection\/MapMixin\/length.html\">length<\/a> and <a href=\"dart-collection\/MapMixin\/containsKey.html\">containsKey<\/a> of the individual maps.<\/p>\n<p>The order of iteration is defined by the individual <code>Map<\/code> implementations,\nbut must be consistent between changes to the maps.<\/p>\n<p>Unlike most <a href=\"dart-core\/Map-class.html\">Map<\/a> implementations, modifying an individual map while\niterating the keys will <em>sometimes<\/em> throw. This behavior may change in\nthe future.<\/p>\n        ",
+            "memberOf": "collection.CombinedMapView",
+            "isConstant": false,
+            "href": "package-collection_collection\/CombinedMapView\/keys.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;K&gt; get keys =&gt; new CombinedIterableView&lt;K&gt;(_maps.map((m) =&gt; m.keys));<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-collection_collection\/CombinedMapView-class.html",
+    "desc": "<p>Returns a new map that represents maps flattened into a single map.<\/p>\n<p>All methods and accessors treat the new map as-if it were a single\nconcatenated map, but the underlying implementation is based on lazily\naccessing individual map instances. In the occasion where a key occurs in\nmultiple maps the first value is returned.<\/p>\n<p>The resulting map has an index operator (<code>[]<\/code>) and <code>length<\/code> property that\nare both <code>O(maps)<\/code>, rather than <code>O(1)<\/code>, and the map is unmodifiable - but\nunderlying changes to these maps are still accessible from the resulting\nmap.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "CombinedMapView"
+}

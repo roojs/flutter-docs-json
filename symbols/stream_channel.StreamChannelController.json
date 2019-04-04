@@ -1,0 +1,78 @@
+{
+    "name": "stream_channel.StreamChannelController",
+    "extends": [],
+    "memberOf": "stream_channel",
+    "events": [],
+    "methods": [
+        {
+            "name": "StreamChannelController",
+            "type": "",
+            "desc": "<p>Creates a <a href=\"package-stream_channel_stream_channel\/StreamChannelController-class.html\">StreamChannelController<\/a>.<\/p>\n<p>If <code>sync<\/code> is true, events added to either channel's sink are synchronously\ndispatched to the other channel's stream. This should only be done if the\nsource of those events is already asynchronous.<\/p>\n<p>If <code>allowForeignErrors<\/code> is <code>false<\/code>, errors are not allowed to be passed to\nthe foreign channel's sink. If any are, the connection will close and the\nerror will be forwarded to the foreign channel's <a href=\"dart-async\/StreamSink\/done.html\">StreamSink.done<\/a> future.\nThis guarantees that the local stream will never emit errors.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stream_channel.StreamChannelController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "allowForeignErrors",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "sync",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stream_channel_stream_channel\/StreamChannelController\/StreamChannelController.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannelController({bool allowForeignErrors: true, bool sync: false}) {\n  var localToForeignController = new StreamController&lt;T&gt;(sync: sync);\n  var foreignToLocalController = new StreamController&lt;T&gt;(sync: sync);\n  _local = new StreamChannel&lt;T&gt;.withGuarantees(\n      foreignToLocalController.stream, localToForeignController.sink);\n  _foreign = new StreamChannel&lt;T&gt;.withGuarantees(\n      localToForeignController.stream, foreignToLocalController.sink,\n      allowSinkErrors: allowForeignErrors);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "foreign",
+            "type": "stream_channel.StreamChannel",
+            "types": [],
+            "desc": "<p>The foreign channel.<\/p>\n<p>This channel should be returned to external users so they can communicate\nwith <a href=\"package-stream_channel_stream_channel\/StreamChannelController\/local.html\">local<\/a>.<\/p>\n        ",
+            "memberOf": "stream_channel.StreamChannelController",
+            "isConstant": false,
+            "href": "package-stream_channel_stream_channel\/StreamChannelController\/foreign.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;T&gt; get foreign =&gt; _foreign;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "local",
+            "type": "stream_channel.StreamChannel",
+            "types": [],
+            "desc": "<p>The local channel.<\/p>\n<p>This channel should be used directly by the creator of this\n<a href=\"package-stream_channel_stream_channel\/StreamChannelController-class.html\">StreamChannelController<\/a> to send and receive events.<\/p>\n        ",
+            "memberOf": "stream_channel.StreamChannelController",
+            "isConstant": false,
+            "href": "package-stream_channel_stream_channel\/StreamChannelController\/local.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;T&gt; get local =&gt; _local;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-stream_channel_stream_channel\/StreamChannelController-class.html",
+    "desc": "<p>A controller for exposing a new <a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a>.<\/p>\n<p>This exposes two connected <a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a>s, <a href=\"package-stream_channel_stream_channel\/StreamChannelController\/local.html\">local<\/a> and <a href=\"package-stream_channel_stream_channel\/StreamChannelController\/foreign.html\">foreign<\/a>. The\nuser's code should use <a href=\"package-stream_channel_stream_channel\/StreamChannelController\/local.html\">local<\/a> to emit and receive events. Then <a href=\"package-stream_channel_stream_channel\/StreamChannelController\/foreign.html\">foreign<\/a>\ncan be returned for others to use. For example, here's a simplified version\nof the implementation of <a href=\"package-stream_channel_stream_channel\/IsolateChannel\/IsolateChannel.html\">new IsolateChannel<\/a>:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel isolateChannel(ReceivePort receivePort, SendPort sendPort) {\n  var controller = new StreamChannelController(allowForeignErrors: false);\n\n  \/\/ Pipe all events from the receive port into the local sink...\n  receivePort.pipe(controller.local.sink);\n\n  \/\/ ...and all events from the local stream into the send port.\n  controller.local.stream.listen(sendPort.send, onDone: receivePort.close);\n\n  \/\/ Then return the foreign controller for your users to use.\n  return controller.foreign;\n}\n<\/code><\/pre>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "StreamChannelController"
+}

@@ -1,0 +1,172 @@
+{
+    "name": "gestures.DoubleTapGestureRecognizer",
+    "extends": [
+        "gestures.GestureRecognizer",
+        "gestures.GestureArenaMember",
+        "dart:core.Object"
+    ],
+    "memberOf": "gestures",
+    "events": [
+        {
+            "name": "onDoubleTap",
+            "type": "gestures.GestureDoubleTapCallback",
+            "desc": "<p>Called when the user has tapped the screen at the same location twice in\nquick succession.<\/p>\n        ",
+            "static": false,
+            "memberOf": "",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "gestures\/DoubleTapGestureRecognizer\/onDoubleTap.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">GestureDoubleTapCallback onDoubleTap\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false,
+            "isConstant": false
+        }
+    ],
+    "methods": [
+        {
+            "name": "DoubleTapGestureRecognizer",
+            "type": "",
+            "desc": "<p>Create a gesture recognizer for double taps.<\/p>\n<p>It's possible to limit this recognizer to a specific <a href=\"dart-ui\/PointerDeviceKind-class.html\">PointerDeviceKind<\/a>\nby providing the optional <code>kind<\/code> argument. If <code>kind<\/code> is null,\nthe recognizer will accept pointer events from all device kinds.<\/p>\n    ",
+            "static": false,
+            "memberOf": "gestures.DoubleTapGestureRecognizer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "debugOwner",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "kind",
+                    "type": "dart:ui.PointerDeviceKind",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "gestures\/DoubleTapGestureRecognizer\/DoubleTapGestureRecognizer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DoubleTapGestureRecognizer({\n  Object debugOwner,\n  PointerDeviceKind kind,\n}) : super(debugOwner: debugOwner, kind: kind);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "acceptGesture",
+            "type": "",
+            "desc": "<p>Called when this member wins the arena for the given pointer id.<\/p>\n    ",
+            "static": false,
+            "memberOf": "gestures.DoubleTapGestureRecognizer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "pointer",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "gestures\/DoubleTapGestureRecognizer\/acceptGesture.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid acceptGesture(int pointer) { }<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addAllowedPointer",
+            "type": "",
+            "desc": "<p>Registers a new pointer that's been checked to be allowed by this gesture\nrecognizer.<\/p>\n<p>Subclasses of <a href=\"gestures\/GestureRecognizer-class.html\">GestureRecognizer<\/a> are supposed to override this method\ninstead of <a href=\"gestures\/GestureRecognizer\/addPointer.html\">addPointer<\/a> because <a href=\"gestures\/GestureRecognizer\/addPointer.html\">addPointer<\/a> will be called for each\npointer being added while <a href=\"gestures\/DoubleTapGestureRecognizer\/addAllowedPointer.html\">addAllowedPointer<\/a> is only called for pointers\nthat are allowed by this recognizer.<\/p>\n    ",
+            "static": false,
+            "memberOf": "gestures.DoubleTapGestureRecognizer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "event",
+                    "type": "gestures.PointerEvent",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "gestures\/DoubleTapGestureRecognizer\/addAllowedPointer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid addAllowedPointer(PointerEvent event) {\n  if (_firstTap != null) {\n    if (!_firstTap.isWithinTolerance(event, kDoubleTapSlop)) {\n      \/\/ Ignore out-of-bounds second taps.\n      return;\n    } else if (!_firstTap.hasElapsedMinTime()) {\n      \/\/ Restart when the second tap is too close to the first.\n      _reset();\n      return addAllowedPointer(event);\n    }\n  }\n  _stopDoubleTapTimer();\n  final _TapTracker tracker = _TapTracker(\n    event: event,\n    entry: GestureBinding.instance.gestureArena.add(event.pointer, this),\n    doubleTapMinTime: kDoubleTapMinTime,\n  );\n  _trackers[event.pointer] = tracker;\n  tracker.startTrackingPointer(_handleEvent);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "dispose",
+            "type": "",
+            "desc": "<p>Releases any resources used by the object.<\/p>\n<p>This method is called by the owner of this gesture recognizer\nwhen the object is no longer needed (e.g. when a gesture\nrecognizer is being unregistered from a <a href=\"widgets\/GestureDetector-class.html\">GestureDetector<\/a>, the\nGestureDetector widget calls this method).<\/p>\n    ",
+            "static": false,
+            "memberOf": "gestures.DoubleTapGestureRecognizer",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "gestures\/DoubleTapGestureRecognizer\/dispose.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  _reset();\n  super.dispose();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "rejectGesture",
+            "type": "",
+            "desc": "<p>Called when this member loses the arena for the given pointer id.<\/p>\n    ",
+            "static": false,
+            "memberOf": "gestures.DoubleTapGestureRecognizer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "pointer",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "gestures\/DoubleTapGestureRecognizer\/rejectGesture.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid rejectGesture(int pointer) {\n  _TapTracker tracker = _trackers[pointer];\n  \/\/ If tracker isn't in the list, check if this is the first tap tracker\n  if (tracker == null &amp;&amp;\n      _firstTap != null &amp;&amp;\n      _firstTap.pointer == pointer)\n    tracker = _firstTap;\n  \/\/ If tracker is still null, we rejected ourselves already\n  if (tracker != null)\n    _reject(tracker);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "debugDescription",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>Returns a very short pretty description of the gesture that the\nrecognizer looks for, like 'tap' or 'horizontal drag'.<\/p>\n        ",
+            "memberOf": "gestures.DoubleTapGestureRecognizer",
+            "isConstant": false,
+            "href": "gestures\/DoubleTapGestureRecognizer\/debugDescription.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString get debugDescription =&gt; 'double tap';<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "gestures\/DoubleTapGestureRecognizer-class.html",
+    "desc": "<p>Recognizes when the user has tapped the screen at the same location twice in\nquick succession.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "DoubleTapGestureRecognizer"
+}

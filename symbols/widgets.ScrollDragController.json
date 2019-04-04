@@ -1,0 +1,273 @@
+{
+    "name": "widgets.ScrollDragController",
+    "extends": [],
+    "memberOf": "widgets",
+    "events": [
+        {
+            "name": "onDragCanceled",
+            "type": "dart:ui.VoidCallback",
+            "desc": "<p>Called when <a href=\"widgets\/ScrollDragController\/dispose.html\">dispose<\/a> is called.<\/p>\n        ",
+            "static": false,
+            "memberOf": "",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollDragController\/onDragCanceled.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final VoidCallback onDragCanceled\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false,
+            "isConstant": false
+        }
+    ],
+    "methods": [
+        {
+            "name": "ScrollDragController",
+            "type": "",
+            "desc": "<p>Creates an object that scrolls a scroll view as the user drags their\nfinger across the screen.<\/p>\n<p>The <code>delegate<\/code> and <code>details<\/code> arguments must not be null.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollDragController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "delegate",
+                    "type": "widgets.ScrollActivityDelegate",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "details",
+                    "type": "gestures.DragStartDetails",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "onDragCanceled",
+                    "type": "dart:ui.VoidCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "carriedVelocity",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "motionStartDistanceThreshold",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "widgets\/ScrollDragController\/ScrollDragController.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ScrollDragController({\n  @required ScrollActivityDelegate delegate,\n  @required DragStartDetails details,\n  this.onDragCanceled,\n  this.carriedVelocity,\n  this.motionStartDistanceThreshold,\n}) : assert(delegate != null),\n     assert(details != null),\n     assert(\n       motionStartDistanceThreshold == null || motionStartDistanceThreshold &gt; 0.0,\n       'motionStartDistanceThreshold must be a positive number or null'\n     ),\n     _delegate = delegate,\n     _lastDetails = details,\n     _retainMomentum = carriedVelocity != null &amp;&amp; carriedVelocity != 0.0,\n     _lastNonStationaryTimestamp = details.sourceTimeStamp,\n     _offsetSinceLastStop = motionStartDistanceThreshold == null ? null : 0.0;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "cancel",
+            "type": "",
+            "desc": "<p>The input from the pointer is no longer directed towards this receiver.<\/p>\n<p>For example, the user might have been interrupted by a system-modal dialog\nin the middle of the drag.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollDragController",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollDragController\/cancel.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid cancel() {\n  delegate.goBallistic(0.0);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "dispose",
+            "type": "",
+            "desc": "<p>Called by the delegate when it is no longer sending events to this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollDragController",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollDragController\/dispose.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid dispose() {\n  _lastDetails = null;\n  if (onDragCanceled != null)\n    onDragCanceled();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "end",
+            "type": "",
+            "desc": "<p>The pointer is no longer in contact with the screen.<\/p>\n<p>The velocity at which the pointer was moving when it stopped contacting\nthe screen is available in the <code>details<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollDragController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "details",
+                    "type": "gestures.DragEndDetails",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollDragController\/end.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid end(DragEndDetails details) {\n  assert(details.primaryVelocity != null);\n  \/\/ We negate the velocity here because if the touch is moving downwards,\n  \/\/ the scroll has to move upwards. It's the same reason that update()\n  \/\/ above negates the delta before applying it to the scroll offset.\n  double velocity = -details.primaryVelocity;\n  if (_reversed) \/\/ e.g. an AxisDirection.up scrollable\n    velocity = -velocity;\n  _lastDetails = details;\n\n  \/\/ Build momentum only if dragging in the same direction.\n  if (_retainMomentum &amp;&amp; velocity.sign == carriedVelocity.sign)\n    velocity += carriedVelocity;\n  delegate.goBallistic(velocity);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollDragController",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollDragController\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; describeIdentity(this);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "update",
+            "type": "",
+            "desc": "<p>The pointer has moved.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollDragController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "details",
+                    "type": "gestures.DragUpdateDetails",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollDragController\/update.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid update(DragUpdateDetails details) {\n  assert(details.primaryDelta != null);\n  _lastDetails = details;\n  double offset = details.primaryDelta;\n  if (offset != 0.0) {\n    _lastNonStationaryTimestamp = details.sourceTimeStamp;\n  }\n  \/\/ By default, iOS platforms carries momentum and has a start threshold\n  \/\/ (configured in [BouncingScrollPhysics]). The 2 operations below are\n  \/\/ no-ops on Android.\n  _maybeLoseMomentum(offset, details.sourceTimeStamp);\n  offset = _adjustForScrollStartThreshold(offset, details.sourceTimeStamp);\n  if (offset == 0.0) {\n    return;\n  }\n  if (_reversed) \/\/ e.g. an AxisDirection.up scrollable\n    offset = -offset;\n  delegate.applyUserOffset(offset);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "updateDelegate",
+            "type": "",
+            "desc": "<p>Updates the controller's link to the <a href=\"widgets\/ScrollActivityDelegate-class.html\">ScrollActivityDelegate<\/a>.<\/p>\n<p>This should only be called when a controller is being moved from a defunct\n(or about-to-be defunct) <a href=\"widgets\/ScrollActivityDelegate-class.html\">ScrollActivityDelegate<\/a> object to a new one.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollDragController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "widgets.ScrollActivityDelegate",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollDragController\/updateDelegate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void updateDelegate(ScrollActivityDelegate value) {\n  assert(_delegate != value);\n  _delegate = value;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "carriedVelocity",
+            "type": "dart:core.double",
+            "types": [],
+            "desc": "<p>Velocity that was present from a previous <a href=\"widgets\/ScrollActivity-class.html\">ScrollActivity<\/a> when this drag\nbegan.<\/p>\n        ",
+            "memberOf": "widgets.ScrollDragController",
+            "isConstant": false,
+            "href": "widgets\/ScrollDragController\/carriedVelocity.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double carriedVelocity\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "delegate",
+            "type": "widgets.ScrollActivityDelegate",
+            "types": [],
+            "desc": "<p>The object that will actuate the scroll view as the user drags.<\/p>\n        ",
+            "memberOf": "widgets.ScrollDragController",
+            "isConstant": false,
+            "href": "widgets\/ScrollDragController\/delegate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">ScrollActivityDelegate get delegate =&gt; _delegate;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "lastDetails",
+            "type": "",
+            "types": [],
+            "desc": "<p>The most recently observed <a href=\"gestures\/DragStartDetails-class.html\">DragStartDetails<\/a>, <a href=\"gestures\/DragUpdateDetails-class.html\">DragUpdateDetails<\/a>, or\n<a href=\"gestures\/DragEndDetails-class.html\">DragEndDetails<\/a> object.<\/p>\n        ",
+            "memberOf": "widgets.ScrollDragController",
+            "isConstant": false,
+            "href": "widgets\/ScrollDragController\/lastDetails.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">dynamic get lastDetails =&gt; _lastDetails;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "type": "",
+            "href": "widgets\/ScrollDragController\/momentumRetainStationaryDurationThreshold-constant.html",
+            "desc": "<p>Maximum amount of time interval the drag can have consecutive stationary\npointer update events before losing the momentum carried from a previous\nscroll activity.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const Duration momentumRetainStationaryDurationThreshold =\n    Duration(milliseconds: 20)\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "momentumRetainStationaryDurationThreshold",
+            "memberOf": "widgets.ScrollDragController"
+        },
+        {
+            "name": "motionStartDistanceThreshold",
+            "type": "dart:core.double",
+            "types": [],
+            "desc": "<p>Amount of pixels in either direction the drag has to move by to start\nscroll movement again after each time scrolling came to a stop.<\/p>\n        ",
+            "memberOf": "widgets.ScrollDragController",
+            "isConstant": false,
+            "href": "widgets\/ScrollDragController\/motionStartDistanceThreshold.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double motionStartDistanceThreshold\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "type": "",
+            "href": "widgets\/ScrollDragController\/motionStoppedDurationThreshold-constant.html",
+            "desc": "<p>Maximum amount of time interval the drag can have consecutive stationary\npointer update events before needing to break the\n<a href=\"widgets\/ScrollDragController\/motionStartDistanceThreshold.html\">motionStartDistanceThreshold<\/a> to start motion again.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const Duration motionStoppedDurationThreshold =\n    Duration(milliseconds: 50)\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "motionStoppedDurationThreshold",
+            "memberOf": "widgets.ScrollDragController"
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "widgets\/ScrollDragController-class.html",
+    "desc": "<p>Scrolls a scroll view as the user drags their finger across the screen.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/DragScrollActivity-class.html\">DragScrollActivity<\/a>, which is the activity the scroll view performs\nwhile a drag is underway.<\/li><\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "ScrollDragController"
+}

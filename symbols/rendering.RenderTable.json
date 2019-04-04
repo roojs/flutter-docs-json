@@ -1,0 +1,840 @@
+{
+    "name": "rendering.RenderTable",
+    "extends": [
+        "rendering.RenderBox",
+        "rendering.RenderObject",
+        "foundation.AbstractNode",
+        "dart:core.Object"
+    ],
+    "memberOf": "rendering",
+    "events": [],
+    "methods": [
+        {
+            "name": "RenderTable",
+            "type": "",
+            "desc": "<p>Creates a table render object.<\/p>\n<ul>\n<li>\n<code>columns<\/code> must either be null or non-negative. If <code>columns<\/code> is null,\nthe number of columns will be inferred from length of the first sublist\nof <code>children<\/code>.<\/li>\n<li>\n<code>rows<\/code> must either be null or non-negative. If <code>rows<\/code> is null, the\nnumber of rows will be inferred from the <code>children<\/code>. If <code>rows<\/code> is not\nnull, then <code>children<\/code> must be null.<\/li>\n<li>\n<code>children<\/code> must either be null or contain lists of all the same length.\nif <code>children<\/code> is not null, then <code>rows<\/code> must be null.<\/li>\n<li>\n<code>defaultColumnWidth<\/code> must not be null.<\/li>\n<li>\n<code>configuration<\/code> must not be null (but has a default value).<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "columns",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "rows",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "columnWidths",
+                    "type": "dart:core.Map<dart:core.int<rendering.TableColumnWidth>>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.Map",
+                        "dart:core.int",
+                        "rendering.TableColumnWidth"
+                    ]
+                },
+                {
+                    "name": "defaultColumnWidth",
+                    "type": "rendering.TableColumnWidth",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "textDirection",
+                    "type": "dart:ui.TextDirection",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "border",
+                    "type": "rendering.TableBorder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "rowDecorations",
+                    "type": "dart:core.List<painting.Decoration>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "painting.Decoration"
+                    ]
+                },
+                {
+                    "name": "configuration",
+                    "type": "painting.ImageConfiguration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "defaultVerticalAlignment",
+                    "type": "rendering.TableCellVerticalAlignment",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "textBaseline",
+                    "type": "dart:ui.TextBaseline",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "children",
+                    "type": "dart:core.List<dart:core.List<rendering.RenderBox>>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "dart:core.List",
+                        "rendering.RenderBox"
+                    ]
+                }
+            ],
+            "isConstructor": true,
+            "href": "rendering\/RenderTable\/RenderTable.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RenderTable({\n  int columns,\n  int rows,\n  Map&lt;int, TableColumnWidth&gt; columnWidths,\n  TableColumnWidth defaultColumnWidth = const FlexColumnWidth(1.0),\n  @required TextDirection textDirection,\n  TableBorder border,\n  List&lt;Decoration&gt; rowDecorations,\n  ImageConfiguration configuration = ImageConfiguration.empty,\n  TableCellVerticalAlignment defaultVerticalAlignment = TableCellVerticalAlignment.top,\n  TextBaseline textBaseline,\n  List&lt;List&lt;RenderBox&gt;&gt; children,\n}) : assert(columns == null || columns &gt;= 0),\n     assert(rows == null || rows &gt;= 0),\n     assert(rows == null || children == null),\n     assert(defaultColumnWidth != null),\n     assert(textDirection != null),\n     assert(configuration != null),\n     _textDirection = textDirection {\n  _columns = columns ?? (children != null &amp;&amp; children.isNotEmpty ? children.first.length : 0);\n  _rows = rows ?? 0;\n  _children = &lt;RenderBox&gt;[]..length = _columns * _rows;\n  _columnWidths = columnWidths ?? HashMap&lt;int, TableColumnWidth&gt;();\n  _defaultColumnWidth = defaultColumnWidth;\n  _border = border;\n  this.rowDecorations = rowDecorations; \/\/ must use setter to initialize box painters array\n  _configuration = configuration;\n  _defaultVerticalAlignment = defaultVerticalAlignment;\n  _textBaseline = textBaseline;\n  children?.forEach(addRow);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "addRow",
+            "type": "",
+            "desc": "<p>Adds a row to the end of the table.<\/p>\n<p>The newly added children must not already have parents.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "cells",
+                    "type": "dart:core.List<rendering.RenderBox>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "rendering.RenderBox"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/addRow.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addRow(List&lt;RenderBox&gt; cells) {\n  assert(cells.length == columns);\n  assert(_children.length == rows * columns);\n  _rows += 1;\n  _children.addAll(cells);\n  for (RenderBox cell in cells) {\n    if (cell != null)\n      adoptChild(cell);\n  }\n  markNeedsLayout();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "attach",
+            "type": "",
+            "desc": "<p>Mark this node as attached to the given owner.<\/p>\n<p>Typically called only from the <a href=\"foundation\/AbstractNode\/parent.html\">parent<\/a>'s <a href=\"rendering\/RenderTable\/attach.html\">attach<\/a> method, and by the\n<code>owner<\/code> to mark the root of a tree as attached.<\/p>\n<p>Subclasses with children should override this method to first call their\ninherited <a href=\"rendering\/RenderTable\/attach.html\">attach<\/a> method, and then <a href=\"rendering\/RenderTable\/attach.html\">attach<\/a> all their children to the\nsame <code>owner<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "owner",
+                    "type": "rendering.PipelineOwner",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/attach.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid attach(PipelineOwner owner) {\n  super.attach(owner);\n  for (RenderBox child in _children)\n    child?.attach(owner);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "column",
+            "type": "dart:core.Iterable<rendering.RenderBox>",
+            "desc": "<p>Returns the list of <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> objects that are in the given\ncolumn, in row order, starting from the first row.<\/p>\n<p>This is a lazily-evaluated iterable.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "x",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/column.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;RenderBox&gt; column(int x) sync* {\n  for (int y = 0; y &lt; rows; y += 1) {\n    final int xy = x + y * columns;\n    final RenderBox child = _children[xy];\n    if (child != null)\n      yield child;\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:core.Iterable",
+                "rendering.RenderBox"
+            ]
+        },
+        {
+            "name": "computeDistanceToActualBaseline",
+            "type": "dart:core.double",
+            "desc": "<p>Returns the distance from the y-coordinate of the position of the box to\nthe y-coordinate of the first given baseline in the box's contents, if\nany, or null otherwise.<\/p>\n<p>Do not call this function directly. If you need to know the baseline of a\nchild from an invocation of <a href=\"rendering\/RenderTable\/performLayout.html\">performLayout<\/a> or <a href=\"rendering\/RenderTable\/paint.html\">paint<\/a>, call\n<a href=\"rendering\/RenderBox\/getDistanceToBaseline.html\">getDistanceToBaseline<\/a>.<\/p>\n<p>Subclasses should override this method to supply the distances to their\nbaselines. When implementing this method, there are generally three\nstrategies:<\/p>\n<ul>\n<li>\n<p>For classes that use the <a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> child model,\nconsider mixing in the <a href=\"rendering\/RenderBoxContainerDefaultsMixin-mixin.html\">RenderBoxContainerDefaultsMixin<\/a> class and\nusing\n<a href=\"rendering\/RenderBoxContainerDefaultsMixin\/defaultComputeDistanceToFirstActualBaseline.html\">RenderBoxContainerDefaultsMixin.defaultComputeDistanceToFirstActualBaseline<\/a>.<\/p>\n<\/li>\n<li>\n<p>For classes that define a particular baseline themselves, return that\nvalue directly.<\/p>\n<\/li>\n<li>\n<p>For classes that have a child to which they wish to defer the\ncomputation, call <a href=\"rendering\/RenderBox\/getDistanceToActualBaseline.html\">getDistanceToActualBaseline<\/a> on the child (not\n<a href=\"rendering\/RenderTable\/computeDistanceToActualBaseline.html\">computeDistanceToActualBaseline<\/a>, the internal implementation, and not\n<a href=\"rendering\/RenderBox\/getDistanceToBaseline.html\">getDistanceToBaseline<\/a>, the public entry point for this API).<\/p>\n<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "baseline",
+                    "type": "dart:ui.TextBaseline",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/computeDistanceToActualBaseline.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble computeDistanceToActualBaseline(TextBaseline baseline) {\n  \/\/ returns the baseline of the first cell that has a baseline in the first row\n  assert(!debugNeedsLayout);\n  return _baselineDistance;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeMaxIntrinsicHeight",
+            "type": "dart:core.double",
+            "desc": "<p>Computes the value returned by <a href=\"rendering\/RenderBox\/getMaxIntrinsicHeight.html\">getMaxIntrinsicHeight<\/a>. Do not call this\nfunction directly, instead, call <a href=\"rendering\/RenderBox\/getMaxIntrinsicHeight.html\">getMaxIntrinsicHeight<\/a>.<\/p>\n<p>Override in subclasses that implement <a href=\"rendering\/RenderTable\/performLayout.html\">performLayout<\/a>. Should return the\nsmallest height beyond which increasing the height never decreases the\npreferred width. The preferred width is the value that would be returned\nby <a href=\"rendering\/RenderTable\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a> for that height.<\/p>\n<p>If the layout algorithm is strictly width-in-height-out, or is\nwidth-in-height-out when the height is unconstrained, then this should\nreturn the same value as <a href=\"rendering\/RenderTable\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a> for the same width.<\/p>\n<p>Otherwise, the width argument should be ignored, and the returned value\nshould be equal to or bigger than the value returned by\n<a href=\"rendering\/RenderTable\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a>.<\/p>\n<p>The <code>width<\/code> argument will never be negative or null. It may be infinite.<\/p>\n<p>The value returned by this method might not match the size that the object\nwould actually take. For example, a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass that always\nexactly sizes itself using <a href=\"rendering\/BoxConstraints\/biggest.html\">BoxConstraints.biggest<\/a> might well size itself\nbigger than its max intrinsic size.<\/p>\n<p>If this algorithm depends on the intrinsic dimensions of a child, the\nintrinsic dimensions of that child should be obtained using the functions\nwhose names start with <code>get<\/code>, not <code>compute<\/code>.<\/p>\n<p>This function should never return a negative or infinite value.<\/p>\n<p>See also examples in the definition of <a href=\"rendering\/RenderTable\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "width",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/computeMaxIntrinsicHeight.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble computeMaxIntrinsicHeight(double width) {\n  return computeMinIntrinsicHeight(width);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeMaxIntrinsicWidth",
+            "type": "dart:core.double",
+            "desc": "<p>Computes the value returned by <a href=\"rendering\/RenderBox\/getMaxIntrinsicWidth.html\">getMaxIntrinsicWidth<\/a>. Do not call this\nfunction directly, instead, call <a href=\"rendering\/RenderBox\/getMaxIntrinsicWidth.html\">getMaxIntrinsicWidth<\/a>.<\/p>\n<p>Override in subclasses that implement <a href=\"rendering\/RenderTable\/performLayout.html\">performLayout<\/a>. This should return\nthe smallest width beyond which increasing the width never decreases the\npreferred height. The preferred height is the value that would be returned\nby <a href=\"rendering\/RenderTable\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a> for that width.<\/p>\n<p>If the layout algorithm is strictly height-in-width-out, or is\nheight-in-width-out when the width is unconstrained, then this should\nreturn the same value as <a href=\"rendering\/RenderTable\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a> for the same height.<\/p>\n<p>Otherwise, the height argument should be ignored, and the returned value\nshould be equal to or bigger than the value returned by\n<a href=\"rendering\/RenderTable\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>.<\/p>\n<p>The <code>height<\/code> argument will never be negative or null. It may be infinite.<\/p>\n<p>The value returned by this method might not match the size that the object\nwould actually take. For example, a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass that always\nexactly sizes itself using <a href=\"rendering\/BoxConstraints\/biggest.html\">BoxConstraints.biggest<\/a> might well size itself\nbigger than its max intrinsic size.<\/p>\n<p>If this algorithm depends on the intrinsic dimensions of a child, the\nintrinsic dimensions of that child should be obtained using the functions\nwhose names start with <code>get<\/code>, not <code>compute<\/code>.<\/p>\n<p>This function should never return a negative or infinite value.<\/p>\n<p>See also examples in the definition of <a href=\"rendering\/RenderTable\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "height",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/computeMaxIntrinsicWidth.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble computeMaxIntrinsicWidth(double height) {\n  assert(_children.length == rows * columns);\n  double totalMaxWidth = 0.0;\n  for (int x = 0; x &lt; columns; x += 1) {\n    final TableColumnWidth columnWidth = _columnWidths[x] ?? defaultColumnWidth;\n    final Iterable&lt;RenderBox&gt; columnCells = column(x);\n    totalMaxWidth += columnWidth.maxIntrinsicWidth(columnCells, double.infinity);\n  }\n  return totalMaxWidth;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeMinIntrinsicHeight",
+            "type": "dart:core.double",
+            "desc": "<p>Computes the value returned by <a href=\"rendering\/RenderBox\/getMinIntrinsicHeight.html\">getMinIntrinsicHeight<\/a>. Do not call this\nfunction directly, instead, call <a href=\"rendering\/RenderBox\/getMinIntrinsicHeight.html\">getMinIntrinsicHeight<\/a>.<\/p>\n<p>Override in subclasses that implement <a href=\"rendering\/RenderTable\/performLayout.html\">performLayout<\/a>. Should return the\nminimum height that this box could be without failing to correctly paint\nits contents within itself, without clipping.<\/p>\n<p>If the layout algorithm is independent of the context (e.g. it always\ntries to be a particular size), or if the layout algorithm is\nheight-in-width-out, or if the layout algorithm uses both the incoming\nheight and width constraints (e.g. it always sizes itself to\n<a href=\"rendering\/BoxConstraints\/biggest.html\">BoxConstraints.biggest<\/a>), then the <code>width<\/code> argument should be ignored.<\/p>\n<p>If the layout algorithm is strictly width-in-height-out, or is\nwidth-in-height-out when the height is unconstrained, then the width\nargument is the width to use.<\/p>\n<p>The <code>width<\/code> argument will never be negative or null. It may be infinite.<\/p>\n<p>If this algorithm depends on the intrinsic dimensions of a child, the\nintrinsic dimensions of that child should be obtained using the functions\nwhose names start with <code>get<\/code>, not <code>compute<\/code>.<\/p>\n<p>This function should never return a negative or infinite value.<\/p>\n<p>See also examples in the definition of <a href=\"rendering\/RenderTable\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "width",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/computeMinIntrinsicHeight.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble computeMinIntrinsicHeight(double width) {\n  \/\/ winner of the 2016 world's most expensive intrinsic dimension function award\n  \/\/ honorable mention, most likely to improve if taught about memoization award\n  assert(_children.length == rows * columns);\n  final List&lt;double&gt; widths = _computeColumnWidths(BoxConstraints.tightForFinite(width: width));\n  double rowTop = 0.0;\n  for (int y = 0; y &lt; rows; y += 1) {\n    double rowHeight = 0.0;\n    for (int x = 0; x &lt; columns; x += 1) {\n      final int xy = x + y * columns;\n      final RenderBox child = _children[xy];\n      if (child != null)\n        rowHeight = math.max(rowHeight, child.getMaxIntrinsicHeight(widths[x]));\n    }\n    rowTop += rowHeight;\n  }\n  return rowTop;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeMinIntrinsicWidth",
+            "type": "dart:core.double",
+            "desc": "<p>Computes the value returned by <a href=\"rendering\/RenderBox\/getMinIntrinsicWidth.html\">getMinIntrinsicWidth<\/a>. Do not call this\nfunction directly, instead, call <a href=\"rendering\/RenderBox\/getMinIntrinsicWidth.html\">getMinIntrinsicWidth<\/a>.<\/p>\n<p>Override in subclasses that implement <a href=\"rendering\/RenderTable\/performLayout.html\">performLayout<\/a>. This method should\nreturn the minimum width that this box could be without failing to\ncorrectly paint its contents within itself, without clipping.<\/p>\n<p>If the layout algorithm is independent of the context (e.g. it always\ntries to be a particular size), or if the layout algorithm is\nwidth-in-height-out, or if the layout algorithm uses both the incoming\nwidth and height constraints (e.g. it always sizes itself to\n<a href=\"rendering\/BoxConstraints\/biggest.html\">BoxConstraints.biggest<\/a>), then the <code>height<\/code> argument should be ignored.<\/p>\n<p>If the layout algorithm is strictly height-in-width-out, or is\nheight-in-width-out when the width is unconstrained, then the height\nargument is the height to use.<\/p>\n<p>The <code>height<\/code> argument will never be negative or null. It may be infinite.<\/p>\n<p>If this algorithm depends on the intrinsic dimensions of a child, the\nintrinsic dimensions of that child should be obtained using the functions\nwhose names start with <code>get<\/code>, not <code>compute<\/code>.<\/p>\n<p>This function should never return a negative or infinite value.<\/p>\n<h2 id=\"examples\">Examples<\/h2>\n<h3 id=\"text\">Text<\/h3>\n<p>Text is the canonical example of a width-in-height-out algorithm. The\n<code>height<\/code> argument is therefore ignored.<\/p>\n<p>Consider the string \"Hello World\" The <em>maximum<\/em> intrinsic width (as\nreturned from <a href=\"rendering\/RenderTable\/computeMaxIntrinsicWidth.html\">computeMaxIntrinsicWidth<\/a>) would be the width of the string\nwith no line breaks.<\/p>\n<p>The minimum intrinsic width would be the width of the widest word, \"Hello\"\nor \"World\". If the text is rendered in an even narrower width, however, it\nmight still not overflow. For example, maybe the rendering would put a\nline-break half-way through the words, as in \"Hel\u205elo\u205eWor\u205eld\". However,\nthis wouldn't be a <em>correct<\/em> rendering, and <a href=\"rendering\/RenderTable\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a> is\nsupposed to render the minimum width that the box could be without failing\nto <em>correctly<\/em> paint the contents within itself.<\/p>\n<p>The minimum intrinsic <em>height<\/em> for a given width smaller than the minimum\nintrinsic width could therefore be greater than the minimum intrinsic\nheight for the minimum intrinsic width.<\/p>\n<h3 id=\"viewports-eg-scrolling-lists\">Viewports (e.g. scrolling lists)<\/h3>\n<p>Some render boxes are intended to clip their children. For example, the\nrender box for a scrolling list might always size itself to its parents'\nsize (or rather, to the maximum incoming constraints), regardless of the\nchildren's sizes, and then clip the children and position them based on\nthe current scroll offset.<\/p>\n<p>The intrinsic dimensions in these cases still depend on the children, even\nthough the layout algorithm sizes the box in a way independent of the\nchildren. It is the size that is needed to paint the box's contents (in\nthis case, the children) <em>without clipping<\/em> that matters.<\/p>\n<h3 id=\"when-the-intrinsic-dimensions-cannot-be-known\">When the intrinsic dimensions cannot be known<\/h3>\n<p>There are cases where render objects do not have an efficient way to\ncompute their intrinsic dimensions. For example, it may be prohibitively\nexpensive to reify and measure every child of a lazy viewport (viewports\ngenerally only instantiate the actually visible children), or the\ndimensions may be computed by a callback about which the render object\ncannot reason.<\/p>\n<p>In such cases, it may be impossible (or at least impractical) to actually\nreturn a valid answer. In such cases, the intrinsic functions should throw\nwhen <a href=\"rendering\/RenderObject\/debugCheckingIntrinsics.html\">RenderObject.debugCheckingIntrinsics<\/a> is false and asserts are\nenabled, and return 0.0 otherwise.<\/p>\n<p>See the implementations of <a href=\"widgets\/LayoutBuilder-class.html\">LayoutBuilder<\/a> or <a href=\"rendering\/RenderViewportBase-class.html\">RenderViewportBase<\/a> for\nexamples (in particular,\n<a href=\"rendering\/RenderViewportBase\/debugThrowIfNotCheckingIntrinsics.html\">RenderViewportBase.debugThrowIfNotCheckingIntrinsics<\/a>).<\/p>\n<h3 id=\"aspect-ratio-driven-boxes\">Aspect-ratio-driven boxes<\/h3>\n<p>Some boxes always return a fixed size based on the constraints. For these\nboxes, the intrinsic functions should return the appropriate size when the\nincoming <code>height<\/code> or <code>width<\/code> argument is finite, treating that as a tight\nconstraint in the respective direction and treating the other direction's\nconstraints as unbounded. This is because the definitions of\n<a href=\"rendering\/RenderTable\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a> and <a href=\"rendering\/RenderTable\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a> are in terms of\nwhat the dimensions <em>could be<\/em>, and such boxes can only be one size in\nsuch cases.<\/p>\n<p>When the incoming argument is not finite, then they should return the\nactual intrinsic dimensions based on the contents, as any other box would.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "height",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/computeMinIntrinsicWidth.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble computeMinIntrinsicWidth(double height) {\n  assert(_children.length == rows * columns);\n  double totalMinWidth = 0.0;\n  for (int x = 0; x &lt; columns; x += 1) {\n    final TableColumnWidth columnWidth = _columnWidths[x] ?? defaultColumnWidth;\n    final Iterable&lt;RenderBox&gt; columnCells = column(x);\n    totalMinWidth += columnWidth.minIntrinsicWidth(columnCells, double.infinity);\n  }\n  return totalMinWidth;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugDescribeChildren",
+            "type": "dart:core.List<foundation.DiagnosticsNode>",
+            "desc": "<p>Returns a list of <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> objects describing this node's\nchildren.<\/p>\n<p>Children that are offstage should be added with <code>style<\/code> set to\n<a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle.offstage<\/a> to indicate that they are offstage.<\/p>\n<p>The list must not contain any null entries. If there are explicit null\nchildren to report, consider <a href=\"foundation\/DiagnosticsNode\/DiagnosticsNode.message.html\">new DiagnosticsNode.message<\/a> or\n<a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty&lt;Object&gt;<\/a> as possible <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> objects to\nprovide.<\/p>\n<p>Used by <a href=\"rendering\/RenderObject\/toStringDeep.html\">toStringDeep<\/a>, <a href=\"foundation\/DiagnosticableTreeMixin\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"rendering\/RenderObject\/toStringShallow.html\">toStringShallow<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/RenderTable\/debugDescribeChildren.html\">RenderTable.debugDescribeChildren<\/a>, which provides high quality custom\ndescriptions for its child nodes.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/debugDescribeChildren.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nList&lt;DiagnosticsNode&gt; debugDescribeChildren() {\n  if (_children.isEmpty) {\n    return &lt;DiagnosticsNode&gt;[DiagnosticsNode.message('table is empty')];\n  }\n\n  final List&lt;DiagnosticsNode&gt; children = &lt;DiagnosticsNode&gt;[];\n  for (int y = 0; y &lt; rows; y += 1) {\n    for (int x = 0; x &lt; columns; x += 1) {\n      final int xy = x + y * columns;\n      final RenderBox child = _children[xy];\n      final String name = 'child ($x, $y)';\n      if (child != null)\n        children.add(child.toDiagnosticsNode(name: name));\n      else\n        children.add(DiagnosticsProperty&lt;Object&gt;(name, null, ifNull: 'is null', showSeparator: false));\n    }\n  }\n  return children;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:core.List",
+                "foundation.DiagnosticsNode"
+            ]
+        },
+        {
+            "name": "debugFillProperties",
+            "type": "",
+            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"rendering\/RenderTable\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTreeMixin\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"rendering\/RenderObject\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "properties",
+                    "type": "foundation.DiagnosticPropertiesBuilder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/debugFillProperties.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(DiagnosticsProperty&lt;TableBorder&gt;('border', border, defaultValue: null));\n  properties.add(DiagnosticsProperty&lt;Map&lt;int, TableColumnWidth&gt;&gt;('specified column widths', _columnWidths, level: _columnWidths.isEmpty ? DiagnosticLevel.hidden : DiagnosticLevel.info));\n  properties.add(DiagnosticsProperty&lt;TableColumnWidth&gt;('default column width', defaultColumnWidth));\n  properties.add(MessageProperty('table size', '$columns\\u00D7$rows'));\n  properties.add(IterableProperty&lt;double&gt;('column offsets', _columnLefts, ifNull: 'unknown'));\n  properties.add(IterableProperty&lt;double&gt;('row offsets', _rowTops, ifNull: 'unknown'));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "detach",
+            "type": "",
+            "desc": "<p>Mark this node as detached.<\/p>\n<p>Typically called only from the <a href=\"foundation\/AbstractNode\/parent.html\">parent<\/a>'s <a href=\"rendering\/RenderTable\/detach.html\">detach<\/a>, and by the <a href=\"rendering\/RenderObject\/owner.html\">owner<\/a> to\nmark the root of a tree as detached.<\/p>\n<p>Subclasses with children should override this method to first call their\ninherited <a href=\"rendering\/RenderTable\/detach.html\">detach<\/a> method, and then <a href=\"rendering\/RenderTable\/detach.html\">detach<\/a> all their children.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/detach.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid detach() {\n  super.detach();\n  if (_rowDecorationPainters != null) {\n    for (BoxPainter painter in _rowDecorationPainters)\n      painter?.dispose();\n    _rowDecorationPainters = null;\n  }\n  for (RenderBox child in _children)\n    child?.detach();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "getRowBox",
+            "type": "dart:ui.Rect",
+            "desc": "<p>Returns the position and dimensions of the box that the given\nrow covers, in this render object's coordinate space (so the\nleft coordinate is always 0.0).<\/p>\n<p>The row being queried must exist.<\/p>\n<p>This is only valid after layout.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "row",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/getRowBox.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Rect getRowBox(int row) {\n  assert(row &gt;= 0);\n  assert(row &lt; rows);\n  assert(!debugNeedsLayout);\n  return Rect.fromLTRB(0.0, _rowTops[row], size.width, _rowTops[row + 1]);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "hitTestChildren",
+            "type": "dart:core.bool",
+            "desc": "<p>Override this method to check whether any children are located at the\ngiven position.<\/p>\n<p>Typically children should be hit-tested in reverse paint order so that\nhit tests at locations where children overlap hit the child that is\nvisually \"on top\" (i.e., paints later).<\/p>\n<p>The caller is responsible for transforming <code>position<\/code> from global\ncoordinates to its location relative to the origin of this <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>.\nThis <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> is responsible for checking whether the given position is\nwithin its bounds.<\/p>\n<p>Used by <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a>. If you override <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> and do not call this\nfunction, then you don't need to implement this function.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "result",
+                    "type": "gestures.HitTestResult",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "position",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/hitTestChildren.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool hitTestChildren(HitTestResult result, { Offset position }) {\n  assert(_children.length == rows * columns);\n  for (int index = _children.length - 1; index &gt;= 0; index -= 1) {\n    final RenderBox child = _children[index];\n    if (child != null) {\n      final BoxParentData childParentData = child.parentData;\n      if (child.hitTest(result, position: position - childParentData.offset))\n        return true;\n    }\n  }\n  return false;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "paint",
+            "type": "",
+            "desc": "<p>Paint this render object into the given context at the given offset.<\/p>\n<p>Subclasses should override this method to provide a visual appearance\nfor themselves. The render object's local coordinate system is\naxis-aligned with the coordinate system of the context's canvas and the\nrender object's local origin (i.e, x=0 and y=0) is placed at the given\noffset in the context's canvas.<\/p>\n<p>Do not call this function directly. If you wish to paint yourself, call\n<a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a> instead to schedule a call to this function. If you wish\nto paint one of your children, call <a href=\"rendering\/PaintingContext\/paintChild.html\">PaintingContext.paintChild<\/a> on the\ngiven <code>context<\/code>.<\/p>\n<p>When painting one of your children (via a paint child function on the\ngiven context), the current canvas held by the context might change\nbecause draw operations before and after painting children might need to\nbe recorded on separate compositing layers.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "rendering.PaintingContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/paint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid paint(PaintingContext context, Offset offset) {\n  assert(_children.length == rows * columns);\n  if (rows * columns == 0) {\n    if (border != null) {\n      final Rect borderRect = Rect.fromLTWH(offset.dx, offset.dy, size.width, 0.0);\n      border.paint(context.canvas, borderRect, rows: const &lt;double&gt;[], columns: const &lt;double&gt;[]);\n    }\n    return;\n  }\n  assert(_rowTops.length == rows + 1);\n  if (_rowDecorations != null) {\n    final Canvas canvas = context.canvas;\n    for (int y = 0; y &lt; rows; y += 1) {\n      if (_rowDecorations.length &lt;= y)\n        break;\n      if (_rowDecorations[y] != null) {\n        _rowDecorationPainters[y] ??= _rowDecorations[y].createBoxPainter(markNeedsPaint);\n        _rowDecorationPainters[y].paint(\n          canvas,\n          Offset(offset.dx, offset.dy + _rowTops[y]),\n          configuration.copyWith(size: Size(size.width, _rowTops[y+1] - _rowTops[y])),\n        );\n      }\n    }\n  }\n  for (int index = 0; index &lt; _children.length; index += 1) {\n    final RenderBox child = _children[index];\n    if (child != null) {\n      final BoxParentData childParentData = child.parentData;\n      context.paintChild(child, childParentData.offset + offset);\n    }\n  }\n  assert(_rows == _rowTops.length - 1);\n  assert(_columns == _columnLefts.length);\n  if (border != null) {\n    \/\/ The border rect might not fill the entire height of this render object\n    \/\/ if the rows underflow. We always force the columns to fill the width of\n    \/\/ the render object, which means the columns cannot underflow.\n    final Rect borderRect = Rect.fromLTWH(offset.dx, offset.dy, size.width, _rowTops.last);\n    final Iterable&lt;double&gt; rows = _rowTops.getRange(1, _rowTops.length - 1);\n    final Iterable&lt;double&gt; columns = _columnLefts.skip(1);\n    border.paint(context.canvas, borderRect, rows: rows, columns: columns);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "performLayout",
+            "type": "",
+            "desc": "<p>Do the work of computing the layout for this render object.<\/p>\n<p>Do not call this function directly: call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> instead. This function\nis called by <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> when there is actually work to be done by this\nrender object during layout. The layout constraints provided by your\nparent are available via the <a href=\"rendering\/RenderBox\/constraints.html\">constraints<\/a> getter.<\/p>\n<p>If <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is true, then this function should not actually change\nthe dimensions of this render object. Instead, that work should be done by\n<a href=\"rendering\/RenderBox\/performResize.html\">performResize<\/a>. If <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is false, then this function should\nboth change the dimensions of this render object and instruct its children\nto layout.<\/p>\n<p>In implementing this function, you must call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> on each of your\nchildren, passing true for parentUsesSize if your layout information is\ndependent on your child's layout information. Passing true for\nparentUsesSize ensures that this render object will undergo layout if the\nchild undergoes layout. Otherwise, the child can change its layout\ninformation without informing this render object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/performLayout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid performLayout() {\n  final int rows = this.rows;\n  final int columns = this.columns;\n  assert(_children.length == rows * columns);\n  if (rows * columns == 0) {\n    \/\/ TODO(ianh): if columns is zero, this should be zero width\n    \/\/ TODO(ianh): if columns is not zero, this should be based on the column width specifications\n    size = constraints.constrain(const Size(0.0, 0.0));\n    return;\n  }\n  final List&lt;double&gt; widths = _computeColumnWidths(constraints);\n  final List&lt;double&gt; positions = List&lt;double&gt;(columns);\n  double tableWidth;\n  switch (textDirection) {\n    case TextDirection.rtl:\n      positions[columns - 1] = 0.0;\n      for (int x = columns - 2; x &gt;= 0; x -= 1)\n        positions[x] = positions[x+1] + widths[x+1];\n      _columnLefts = positions.reversed;\n      tableWidth = positions.first + widths.first;\n      break;\n    case TextDirection.ltr:\n      positions[0] = 0.0;\n      for (int x = 1; x &lt; columns; x += 1)\n        positions[x] = positions[x-1] + widths[x-1];\n      _columnLefts = positions;\n      tableWidth = positions.last + widths.last;\n      break;\n  }\n  assert(!positions.any((double value) =&gt; value == null));\n  _rowTops.clear();\n  _baselineDistance = null;\n  \/\/ then, lay out each row\n  double rowTop = 0.0;\n  for (int y = 0; y &lt; rows; y += 1) {\n    _rowTops.add(rowTop);\n    double rowHeight = 0.0;\n    bool haveBaseline = false;\n    double beforeBaselineDistance = 0.0;\n    double afterBaselineDistance = 0.0;\n    final List&lt;double&gt; baselines = List&lt;double&gt;(columns);\n    for (int x = 0; x &lt; columns; x += 1) {\n      final int xy = x + y * columns;\n      final RenderBox child = _children[xy];\n      if (child != null) {\n        final TableCellParentData childParentData = child.parentData;\n        assert(childParentData != null);\n        childParentData.x = x;\n        childParentData.y = y;\n        switch (childParentData.verticalAlignment ?? defaultVerticalAlignment) {\n          case TableCellVerticalAlignment.baseline:\n            assert(textBaseline != null);\n            child.layout(BoxConstraints.tightFor(width: widths[x]), parentUsesSize: true);\n            final double childBaseline = child.getDistanceToBaseline(textBaseline, onlyReal: true);\n            if (childBaseline != null) {\n              beforeBaselineDistance = math.max(beforeBaselineDistance, childBaseline);\n              afterBaselineDistance = math.max(afterBaselineDistance, child.size.height - childBaseline);\n              baselines[x] = childBaseline;\n              haveBaseline = true;\n            } else {\n              rowHeight = math.max(rowHeight, child.size.height);\n              childParentData.offset = Offset(positions[x], rowTop);\n            }\n            break;\n          case TableCellVerticalAlignment.top:\n          case TableCellVerticalAlignment.middle:\n          case TableCellVerticalAlignment.bottom:\n            child.layout(BoxConstraints.tightFor(width: widths[x]), parentUsesSize: true);\n            rowHeight = math.max(rowHeight, child.size.height);\n            break;\n          case TableCellVerticalAlignment.fill:\n            break;\n        }\n      }\n    }\n    if (haveBaseline) {\n      if (y == 0)\n        _baselineDistance = beforeBaselineDistance;\n      rowHeight = math.max(rowHeight, beforeBaselineDistance + afterBaselineDistance);\n    }\n    for (int x = 0; x &lt; columns; x += 1) {\n      final int xy = x + y * columns;\n      final RenderBox child = _children[xy];\n      if (child != null) {\n        final TableCellParentData childParentData = child.parentData;\n        switch (childParentData.verticalAlignment ?? defaultVerticalAlignment) {\n          case TableCellVerticalAlignment.baseline:\n            if (baselines[x] != null)\n              childParentData.offset = Offset(positions[x], rowTop + beforeBaselineDistance - baselines[x]);\n            break;\n          case TableCellVerticalAlignment.top:\n            childParentData.offset = Offset(positions[x], rowTop);\n            break;\n          case TableCellVerticalAlignment.middle:\n            childParentData.offset = Offset(positions[x], rowTop + (rowHeight - child.size.height) \/ 2.0);\n            break;\n          case TableCellVerticalAlignment.bottom:\n            childParentData.offset = Offset(positions[x], rowTop + rowHeight - child.size.height);\n            break;\n          case TableCellVerticalAlignment.fill:\n            child.layout(BoxConstraints.tightFor(width: widths[x], height: rowHeight));\n            childParentData.offset = Offset(positions[x], rowTop);\n            break;\n        }\n      }\n    }\n    rowTop += rowHeight;\n  }\n  _rowTops.add(rowTop);\n  size = constraints.constrain(Size(tableWidth, rowTop));\n  assert(_rowTops.length == rows + 1);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "row",
+            "type": "dart:core.Iterable<rendering.RenderBox>",
+            "desc": "<p>Returns the list of <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> objects that are on the given\nrow, in column order, starting with the first column.<\/p>\n<p>This is a lazily-evaluated iterable.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "y",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/row.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;RenderBox&gt; row(int y) sync* {\n  final int start = y * columns;\n  final int end = (y + 1) * columns;\n  for (int xy = start; xy &lt; end; xy += 1) {\n    final RenderBox child = _children[xy];\n    if (child != null)\n      yield child;\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:core.Iterable",
+                "rendering.RenderBox"
+            ]
+        },
+        {
+            "name": "setChild",
+            "type": "",
+            "desc": "<p>Replaces the child at the given position with the given child.<\/p>\n<p>If the given child is already located at the given position, this function\ndoes not modify the table. Otherwise, the given child must not already\nhave a parent.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "x",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "value",
+                    "type": "rendering.RenderBox",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/setChild.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setChild(int x, int y, RenderBox value) {\n  assert(x != null);\n  assert(y != null);\n  assert(x &gt;= 0 &amp;&amp; x &lt; columns &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; rows);\n  assert(_children.length == rows * columns);\n  final int xy = x + y * columns;\n  final RenderBox oldChild = _children[xy];\n  if (oldChild == value)\n    return;\n  if (oldChild != null)\n    dropChild(oldChild);\n  _children[xy] = value;\n  if (value != null)\n    adoptChild(value);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "setChildren",
+            "type": "",
+            "desc": "<p>Replaces the children of this table with the given cells.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "cells",
+                    "type": "dart:core.List<dart:core.List<rendering.RenderBox>>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "dart:core.List",
+                        "rendering.RenderBox"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/setChildren.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setChildren(List&lt;List&lt;RenderBox&gt;&gt; cells) {\n  \/\/ TODO(ianh): Make this smarter, like setFlatChildren\n  if (cells == null) {\n    setFlatChildren(0, null);\n    return;\n  }\n  for (RenderBox oldChild in _children) {\n    if (oldChild != null)\n      dropChild(oldChild);\n  }\n  _children.clear();\n  _columns = cells.isNotEmpty ? cells.first.length : 0;\n  _rows = 0;\n  cells.forEach(addRow);\n  assert(_children.length == rows * columns);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "setColumnWidth",
+            "type": "",
+            "desc": "<p>Determines how the width of column with the given index is determined.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "column",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "value",
+                    "type": "rendering.TableColumnWidth",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/setColumnWidth.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setColumnWidth(int column, TableColumnWidth value) {\n  if (_columnWidths[column] == value)\n    return;\n  _columnWidths[column] = value;\n  markNeedsLayout();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "setFlatChildren",
+            "type": "",
+            "desc": "<p>Replaces the children of this table with the given cells.<\/p>\n<p>The cells are divided into the specified number of columns before\nreplacing the existing children.<\/p>\n<p>If the new cells contain any existing children of the table, those\nchildren are simply moved to their new location in the table rather than\nremoved from the table and re-added.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "columns",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "cells",
+                    "type": "dart:core.List<rendering.RenderBox>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "rendering.RenderBox"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/setFlatChildren.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setFlatChildren(int columns, List&lt;RenderBox&gt; cells) {\n  if (cells == _children &amp;&amp; columns == _columns)\n    return;\n  assert(columns &gt;= 0);\n  \/\/ consider the case of a newly empty table\n  if (columns == 0 || cells.isEmpty) {\n    assert(cells == null || cells.isEmpty);\n    _columns = columns;\n    if (_children.isEmpty) {\n      assert(_rows == 0);\n      return;\n    }\n    for (RenderBox oldChild in _children) {\n      if (oldChild != null)\n        dropChild(oldChild);\n    }\n    _rows = 0;\n    _children.clear();\n    markNeedsLayout();\n    return;\n  }\n  assert(cells != null);\n  assert(cells.length % columns == 0);\n  \/\/ fill a set with the cells that are moving (it's important not\n  \/\/ to dropChild a child that's remaining with us, because that\n  \/\/ would clear their parentData field)\n  final Set&lt;RenderBox&gt; lostChildren = HashSet&lt;RenderBox&gt;();\n  for (int y = 0; y &lt; _rows; y += 1) {\n    for (int x = 0; x &lt; _columns; x += 1) {\n      final int xyOld = x + y * _columns;\n      final int xyNew = x + y * columns;\n      if (_children[xyOld] != null &amp;&amp; (x &gt;= columns || xyNew &gt;= cells.length || _children[xyOld] != cells[xyNew]))\n        lostChildren.add(_children[xyOld]);\n    }\n  }\n  \/\/ adopt cells that are arriving, and cross cells that are just moving off our list of lostChildren\n  int y = 0;\n  while (y * columns &lt; cells.length) {\n    for (int x = 0; x &lt; columns; x += 1) {\n      final int xyNew = x + y * columns;\n      final int xyOld = x + y * _columns;\n      if (cells[xyNew] != null &amp;&amp; (x &gt;= _columns || y &gt;= _rows || _children[xyOld] != cells[xyNew])) {\n        if (!lostChildren.remove(cells[xyNew]))\n          adoptChild(cells[xyNew]);\n      }\n    }\n    y += 1;\n  }\n  \/\/ drop all the lost children\n  lostChildren.forEach(dropChild);\n  \/\/ update our internal values\n  _columns = columns;\n  _rows = cells.length ~\/ columns;\n  _children = cells.toList();\n  assert(_children.length == rows * columns);\n  markNeedsLayout();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "setupParentData",
+            "type": "",
+            "desc": "<p>Override to setup parent data correctly for your children.<\/p>\n<p>You can call this function to set up the parent data for child before the\nchild is added to the parent's child list.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/setupParentData.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid setupParentData(RenderObject child) {\n  if (child.parentData is! TableCellParentData)\n    child.parentData = TableCellParentData();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "visitChildren",
+            "type": "",
+            "desc": "<p>Calls visitor for each immediate child of this render object.<\/p>\n<p>Override in subclasses with children and call the visitor for each child.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderTable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "visitor",
+                    "type": "rendering.RenderObjectVisitor",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderTable\/visitChildren.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid visitChildren(RenderObjectVisitor visitor) {\n  assert(_children.length == rows * columns);\n  for (RenderBox child in _children) {\n    if (child != null)\n      visitor(child);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "border",
+            "type": "rendering.TableBorder",
+            "types": [],
+            "desc": "<p>The style to use when painting the boundary and interior divisions of the table.<\/p>\n        ",
+            "memberOf": "rendering.RenderTable",
+            "isConstant": false,
+            "href": "rendering\/RenderTable\/border.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">TableBorder get border =&gt; _border;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "columnWidths",
+            "type": "dart:core.Map<dart:core.int<rendering.TableColumnWidth>>",
+            "types": [
+                "dart:core.Map",
+                "dart:core.int",
+                "rendering.TableColumnWidth"
+            ],
+            "desc": "<p>How the horizontal extents of the columns of this table should be determined.<\/p>\n<p>If the <a href=\"dart-core\/Map-class.html\">Map<\/a> has a null entry for a given column, the table uses the\n<a href=\"rendering\/RenderTable\/defaultColumnWidth.html\">defaultColumnWidth<\/a> instead.<\/p>\n<p>The layout performance of the table depends critically on which column\nsizing algorithms are used here. In particular, <a href=\"rendering\/IntrinsicColumnWidth-class.html\">IntrinsicColumnWidth<\/a> is\nquite expensive because it needs to measure each cell in the column to\ndetermine the intrinsic size of the column.<\/p>\n        ",
+            "memberOf": "rendering.RenderTable",
+            "isConstant": false,
+            "href": "rendering\/RenderTable\/columnWidths.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Map&lt;int, TableColumnWidth&gt; get columnWidths =&gt; Map&lt;int, TableColumnWidth&gt;.unmodifiable(_columnWidths);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "columns",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The number of vertical alignment lines in this table.<\/p>\n<p>Changing the number of columns will remove any children that no longer fit\nin the table.<\/p>\n<p>Changing the number of columns is an expensive operation because the table\nneeds to rearrange its internal representation.<\/p>\n        ",
+            "memberOf": "rendering.RenderTable",
+            "isConstant": false,
+            "href": "rendering\/RenderTable\/columns.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get columns =&gt; _columns;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "configuration",
+            "type": "painting.ImageConfiguration",
+            "types": [],
+            "desc": "<p>The settings to pass to the <a href=\"rendering\/RenderTable\/rowDecorations.html\">rowDecorations<\/a> when painting, so that they\ncan resolve images appropriately. See <a href=\"painting\/ImageProvider\/resolve.html\">ImageProvider.resolve<\/a> and\n<a href=\"rendering\/RenderTable\/paint.html\">BoxPainter.paint<\/a>.<\/p>\n        ",
+            "memberOf": "rendering.RenderTable",
+            "isConstant": false,
+            "href": "rendering\/RenderTable\/configuration.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">ImageConfiguration get configuration =&gt; _configuration;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "defaultColumnWidth",
+            "type": "rendering.TableColumnWidth",
+            "types": [],
+            "desc": "<p>How to determine with widths of columns that don't have an explicit sizing algorithm.<\/p>\n<p>Specifically, the <a href=\"rendering\/RenderTable\/defaultColumnWidth.html\">defaultColumnWidth<\/a> is used for column <code>i<\/code> if\n<code>columnWidths[i]<\/code> is null.<\/p>\n        ",
+            "memberOf": "rendering.RenderTable",
+            "isConstant": false,
+            "href": "rendering\/RenderTable\/defaultColumnWidth.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">TableColumnWidth get defaultColumnWidth =&gt; _defaultColumnWidth;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "defaultVerticalAlignment",
+            "type": "rendering.TableCellVerticalAlignment",
+            "types": [],
+            "desc": "<p>How cells that do not explicitly specify a vertical alignment are aligned vertically.<\/p>\n        ",
+            "memberOf": "rendering.RenderTable",
+            "isConstant": false,
+            "href": "rendering\/RenderTable\/defaultVerticalAlignment.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">TableCellVerticalAlignment get defaultVerticalAlignment =&gt; _defaultVerticalAlignment;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "rowDecorations",
+            "type": "dart:core.List<painting.Decoration>",
+            "types": [
+                "dart:core.List",
+                "painting.Decoration"
+            ],
+            "desc": "<p>The decorations to use for each row of the table.<\/p>\n<p>Row decorations fill the horizontal and vertical extent of each row in\nthe table, unlike decorations for individual cells, which might not fill\neither.<\/p>\n        ",
+            "memberOf": "rendering.RenderTable",
+            "isConstant": false,
+            "href": "rendering\/RenderTable\/rowDecorations.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;Decoration&gt; get rowDecorations =&gt; List&lt;Decoration&gt;.unmodifiable(_rowDecorations ?? const &lt;Decoration&gt;[]);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "rows",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The number of horizontal alignment lines in this table.<\/p>\n<p>Changing the number of rows will remove any children that no longer fit\nin the table.<\/p>\n        ",
+            "memberOf": "rendering.RenderTable",
+            "isConstant": false,
+            "href": "rendering\/RenderTable\/rows.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get rows =&gt; _rows;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "textBaseline",
+            "type": "dart:ui.TextBaseline",
+            "types": [],
+            "desc": "<p>The text baseline to use when aligning rows using <a href=\"rendering\/TableCellVerticalAlignment-class.html\">TableCellVerticalAlignment.baseline<\/a>.<\/p>\n        ",
+            "memberOf": "rendering.RenderTable",
+            "isConstant": false,
+            "href": "rendering\/RenderTable\/textBaseline.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">TextBaseline get textBaseline =&gt; _textBaseline;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "textDirection",
+            "type": "dart:ui.TextDirection",
+            "types": [],
+            "desc": "<p>The direction in which the columns are ordered.<\/p>\n        ",
+            "memberOf": "rendering.RenderTable",
+            "isConstant": false,
+            "href": "rendering\/RenderTable\/textDirection.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">TextDirection get textDirection =&gt; _textDirection;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "rendering\/RenderTable-class.html",
+    "desc": "<p>A table where the columns and rows are sized to fit the contents of the cells.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "RenderTable"
+}

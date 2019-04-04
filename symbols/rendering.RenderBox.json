@@ -1,0 +1,959 @@
+{
+    "name": "rendering.RenderBox",
+    "extends": [
+        "rendering.RenderObject",
+        "foundation.AbstractNode",
+        "dart:core.Object"
+    ],
+    "memberOf": "rendering",
+    "events": [],
+    "methods": [
+        {
+            "name": "RenderBox",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "rendering\/RenderBox\/RenderBox.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "applyPaintTransform",
+            "type": "",
+            "desc": "<p>Multiply the transform from the parent's coordinate system to this box's\ncoordinate system into the given transform.<\/p>\n<p>This function is used to convert coordinate systems between boxes.\nSubclasses that apply transforms during painting should override this\nfunction to factor those transforms into the calculation.<\/p>\n<p>The <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> implementation takes care of adjusting the matrix for the\nposition of the given child as determined during layout and stored on the\nchild's <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> in the <a href=\"rendering\/BoxParentData\/offset.html\">BoxParentData.offset<\/a> field.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "transform",
+                    "type": "vector_math_64.Matrix4",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/applyPaintTransform.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid applyPaintTransform(RenderObject child, Matrix4 transform) {\n  assert(child != null);\n  assert(child.parent == this);\n  assert(() {\n    if (child.parentData is! BoxParentData) {\n      throw FlutterError(\n        '$runtimeType does not implement applyPaintTransform.\\n'\n        'The following $runtimeType object:\\n'\n        '  ${toStringShallow()}\\n'\n        '...did not use a BoxParentData class for the parentData field of the following child:\\n'\n        '  ${child.toStringShallow()}\\n'\n        'The $runtimeType class inherits from RenderBox. '\n        'The default applyPaintTransform implementation provided by RenderBox assumes that the '\n        'children all use BoxParentData objects for their parentData field. '\n        'Since $runtimeType does not in fact use that ParentData class for its children, it must '\n        'provide an implementation of applyPaintTransform that supports the specific ParentData '\n        'subclass used by its children (which apparently is ${child.parentData.runtimeType}).'\n      );\n    }\n    return true;\n  }());\n  final BoxParentData childParentData = child.parentData;\n  final Offset offset = childParentData.offset;\n  transform.translate(offset.dx, offset.dy);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "computeDistanceToActualBaseline",
+            "type": "dart:core.double",
+            "desc": "<p>Returns the distance from the y-coordinate of the position of the box to\nthe y-coordinate of the first given baseline in the box's contents, if\nany, or null otherwise.<\/p>\n<p>Do not call this function directly. If you need to know the baseline of a\nchild from an invocation of <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a> or <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a>, call\n<a href=\"rendering\/RenderBox\/getDistanceToBaseline.html\">getDistanceToBaseline<\/a>.<\/p>\n<p>Subclasses should override this method to supply the distances to their\nbaselines. When implementing this method, there are generally three\nstrategies:<\/p>\n<ul>\n<li>\n<p>For classes that use the <a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> child model,\nconsider mixing in the <a href=\"rendering\/RenderBoxContainerDefaultsMixin-mixin.html\">RenderBoxContainerDefaultsMixin<\/a> class and\nusing\n<a href=\"rendering\/RenderBoxContainerDefaultsMixin\/defaultComputeDistanceToFirstActualBaseline.html\">RenderBoxContainerDefaultsMixin.defaultComputeDistanceToFirstActualBaseline<\/a>.<\/p>\n<\/li>\n<li>\n<p>For classes that define a particular baseline themselves, return that\nvalue directly.<\/p>\n<\/li>\n<li>\n<p>For classes that have a child to which they wish to defer the\ncomputation, call <a href=\"rendering\/RenderBox\/getDistanceToActualBaseline.html\">getDistanceToActualBaseline<\/a> on the child (not\n<a href=\"rendering\/RenderBox\/computeDistanceToActualBaseline.html\">computeDistanceToActualBaseline<\/a>, the internal implementation, and not\n<a href=\"rendering\/RenderBox\/getDistanceToBaseline.html\">getDistanceToBaseline<\/a>, the public entry point for this API).<\/p>\n<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "baseline",
+                    "type": "dart:ui.TextBaseline",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/computeDistanceToActualBaseline.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\ndouble computeDistanceToActualBaseline(TextBaseline baseline) {\n  assert(_debugDoingBaseline, 'Please see the documentation for computeDistanceToActualBaseline for the required calling conventions of this method.');\n  return null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeMaxIntrinsicHeight",
+            "type": "dart:core.double",
+            "desc": "<p>Computes the value returned by <a href=\"rendering\/RenderBox\/getMaxIntrinsicHeight.html\">getMaxIntrinsicHeight<\/a>. Do not call this\nfunction directly, instead, call <a href=\"rendering\/RenderBox\/getMaxIntrinsicHeight.html\">getMaxIntrinsicHeight<\/a>.<\/p>\n<p>Override in subclasses that implement <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a>. Should return the\nsmallest height beyond which increasing the height never decreases the\npreferred width. The preferred width is the value that would be returned\nby <a href=\"rendering\/RenderBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a> for that height.<\/p>\n<p>If the layout algorithm is strictly width-in-height-out, or is\nwidth-in-height-out when the height is unconstrained, then this should\nreturn the same value as <a href=\"rendering\/RenderBox\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a> for the same width.<\/p>\n<p>Otherwise, the width argument should be ignored, and the returned value\nshould be equal to or bigger than the value returned by\n<a href=\"rendering\/RenderBox\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a>.<\/p>\n<p>The <code>width<\/code> argument will never be negative or null. It may be infinite.<\/p>\n<p>The value returned by this method might not match the size that the object\nwould actually take. For example, a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass that always\nexactly sizes itself using <a href=\"rendering\/BoxConstraints\/biggest.html\">BoxConstraints.biggest<\/a> might well size itself\nbigger than its max intrinsic size.<\/p>\n<p>If this algorithm depends on the intrinsic dimensions of a child, the\nintrinsic dimensions of that child should be obtained using the functions\nwhose names start with <code>get<\/code>, not <code>compute<\/code>.<\/p>\n<p>This function should never return a negative or infinite value.<\/p>\n<p>See also examples in the definition of <a href=\"rendering\/RenderBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "width",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/computeMaxIntrinsicHeight.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\ndouble computeMaxIntrinsicHeight(double width) {\n  return 0.0;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeMaxIntrinsicWidth",
+            "type": "dart:core.double",
+            "desc": "<p>Computes the value returned by <a href=\"rendering\/RenderBox\/getMaxIntrinsicWidth.html\">getMaxIntrinsicWidth<\/a>. Do not call this\nfunction directly, instead, call <a href=\"rendering\/RenderBox\/getMaxIntrinsicWidth.html\">getMaxIntrinsicWidth<\/a>.<\/p>\n<p>Override in subclasses that implement <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a>. This should return\nthe smallest width beyond which increasing the width never decreases the\npreferred height. The preferred height is the value that would be returned\nby <a href=\"rendering\/RenderBox\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a> for that width.<\/p>\n<p>If the layout algorithm is strictly height-in-width-out, or is\nheight-in-width-out when the width is unconstrained, then this should\nreturn the same value as <a href=\"rendering\/RenderBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a> for the same height.<\/p>\n<p>Otherwise, the height argument should be ignored, and the returned value\nshould be equal to or bigger than the value returned by\n<a href=\"rendering\/RenderBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>.<\/p>\n<p>The <code>height<\/code> argument will never be negative or null. It may be infinite.<\/p>\n<p>The value returned by this method might not match the size that the object\nwould actually take. For example, a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass that always\nexactly sizes itself using <a href=\"rendering\/BoxConstraints\/biggest.html\">BoxConstraints.biggest<\/a> might well size itself\nbigger than its max intrinsic size.<\/p>\n<p>If this algorithm depends on the intrinsic dimensions of a child, the\nintrinsic dimensions of that child should be obtained using the functions\nwhose names start with <code>get<\/code>, not <code>compute<\/code>.<\/p>\n<p>This function should never return a negative or infinite value.<\/p>\n<p>See also examples in the definition of <a href=\"rendering\/RenderBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "height",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/computeMaxIntrinsicWidth.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\ndouble computeMaxIntrinsicWidth(double height) {\n  return 0.0;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeMinIntrinsicHeight",
+            "type": "dart:core.double",
+            "desc": "<p>Computes the value returned by <a href=\"rendering\/RenderBox\/getMinIntrinsicHeight.html\">getMinIntrinsicHeight<\/a>. Do not call this\nfunction directly, instead, call <a href=\"rendering\/RenderBox\/getMinIntrinsicHeight.html\">getMinIntrinsicHeight<\/a>.<\/p>\n<p>Override in subclasses that implement <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a>. Should return the\nminimum height that this box could be without failing to correctly paint\nits contents within itself, without clipping.<\/p>\n<p>If the layout algorithm is independent of the context (e.g. it always\ntries to be a particular size), or if the layout algorithm is\nheight-in-width-out, or if the layout algorithm uses both the incoming\nheight and width constraints (e.g. it always sizes itself to\n<a href=\"rendering\/BoxConstraints\/biggest.html\">BoxConstraints.biggest<\/a>), then the <code>width<\/code> argument should be ignored.<\/p>\n<p>If the layout algorithm is strictly width-in-height-out, or is\nwidth-in-height-out when the height is unconstrained, then the width\nargument is the width to use.<\/p>\n<p>The <code>width<\/code> argument will never be negative or null. It may be infinite.<\/p>\n<p>If this algorithm depends on the intrinsic dimensions of a child, the\nintrinsic dimensions of that child should be obtained using the functions\nwhose names start with <code>get<\/code>, not <code>compute<\/code>.<\/p>\n<p>This function should never return a negative or infinite value.<\/p>\n<p>See also examples in the definition of <a href=\"rendering\/RenderBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "width",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/computeMinIntrinsicHeight.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\ndouble computeMinIntrinsicHeight(double width) {\n  return 0.0;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeMinIntrinsicWidth",
+            "type": "dart:core.double",
+            "desc": "<p>Computes the value returned by <a href=\"rendering\/RenderBox\/getMinIntrinsicWidth.html\">getMinIntrinsicWidth<\/a>. Do not call this\nfunction directly, instead, call <a href=\"rendering\/RenderBox\/getMinIntrinsicWidth.html\">getMinIntrinsicWidth<\/a>.<\/p>\n<p>Override in subclasses that implement <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a>. This method should\nreturn the minimum width that this box could be without failing to\ncorrectly paint its contents within itself, without clipping.<\/p>\n<p>If the layout algorithm is independent of the context (e.g. it always\ntries to be a particular size), or if the layout algorithm is\nwidth-in-height-out, or if the layout algorithm uses both the incoming\nwidth and height constraints (e.g. it always sizes itself to\n<a href=\"rendering\/BoxConstraints\/biggest.html\">BoxConstraints.biggest<\/a>), then the <code>height<\/code> argument should be ignored.<\/p>\n<p>If the layout algorithm is strictly height-in-width-out, or is\nheight-in-width-out when the width is unconstrained, then the height\nargument is the height to use.<\/p>\n<p>The <code>height<\/code> argument will never be negative or null. It may be infinite.<\/p>\n<p>If this algorithm depends on the intrinsic dimensions of a child, the\nintrinsic dimensions of that child should be obtained using the functions\nwhose names start with <code>get<\/code>, not <code>compute<\/code>.<\/p>\n<p>This function should never return a negative or infinite value.<\/p>\n<h2 id=\"examples\">Examples<\/h2>\n<h3 id=\"text\">Text<\/h3>\n<p>Text is the canonical example of a width-in-height-out algorithm. The\n<code>height<\/code> argument is therefore ignored.<\/p>\n<p>Consider the string \"Hello World\" The <em>maximum<\/em> intrinsic width (as\nreturned from <a href=\"rendering\/RenderBox\/computeMaxIntrinsicWidth.html\">computeMaxIntrinsicWidth<\/a>) would be the width of the string\nwith no line breaks.<\/p>\n<p>The minimum intrinsic width would be the width of the widest word, \"Hello\"\nor \"World\". If the text is rendered in an even narrower width, however, it\nmight still not overflow. For example, maybe the rendering would put a\nline-break half-way through the words, as in \"Hel\u205elo\u205eWor\u205eld\". However,\nthis wouldn't be a <em>correct<\/em> rendering, and <a href=\"rendering\/RenderBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a> is\nsupposed to render the minimum width that the box could be without failing\nto <em>correctly<\/em> paint the contents within itself.<\/p>\n<p>The minimum intrinsic <em>height<\/em> for a given width smaller than the minimum\nintrinsic width could therefore be greater than the minimum intrinsic\nheight for the minimum intrinsic width.<\/p>\n<h3 id=\"viewports-eg-scrolling-lists\">Viewports (e.g. scrolling lists)<\/h3>\n<p>Some render boxes are intended to clip their children. For example, the\nrender box for a scrolling list might always size itself to its parents'\nsize (or rather, to the maximum incoming constraints), regardless of the\nchildren's sizes, and then clip the children and position them based on\nthe current scroll offset.<\/p>\n<p>The intrinsic dimensions in these cases still depend on the children, even\nthough the layout algorithm sizes the box in a way independent of the\nchildren. It is the size that is needed to paint the box's contents (in\nthis case, the children) <em>without clipping<\/em> that matters.<\/p>\n<h3 id=\"when-the-intrinsic-dimensions-cannot-be-known\">When the intrinsic dimensions cannot be known<\/h3>\n<p>There are cases where render objects do not have an efficient way to\ncompute their intrinsic dimensions. For example, it may be prohibitively\nexpensive to reify and measure every child of a lazy viewport (viewports\ngenerally only instantiate the actually visible children), or the\ndimensions may be computed by a callback about which the render object\ncannot reason.<\/p>\n<p>In such cases, it may be impossible (or at least impractical) to actually\nreturn a valid answer. In such cases, the intrinsic functions should throw\nwhen <a href=\"rendering\/RenderObject\/debugCheckingIntrinsics.html\">RenderObject.debugCheckingIntrinsics<\/a> is false and asserts are\nenabled, and return 0.0 otherwise.<\/p>\n<p>See the implementations of <a href=\"widgets\/LayoutBuilder-class.html\">LayoutBuilder<\/a> or <a href=\"rendering\/RenderViewportBase-class.html\">RenderViewportBase<\/a> for\nexamples (in particular,\n<a href=\"rendering\/RenderViewportBase\/debugThrowIfNotCheckingIntrinsics.html\">RenderViewportBase.debugThrowIfNotCheckingIntrinsics<\/a>).<\/p>\n<h3 id=\"aspect-ratio-driven-boxes\">Aspect-ratio-driven boxes<\/h3>\n<p>Some boxes always return a fixed size based on the constraints. For these\nboxes, the intrinsic functions should return the appropriate size when the\nincoming <code>height<\/code> or <code>width<\/code> argument is finite, treating that as a tight\nconstraint in the respective direction and treating the other direction's\nconstraints as unbounded. This is because the definitions of\n<a href=\"rendering\/RenderBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a> and <a href=\"rendering\/RenderBox\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a> are in terms of\nwhat the dimensions <em>could be<\/em>, and such boxes can only be one size in\nsuch cases.<\/p>\n<p>When the incoming argument is not finite, then they should return the\nactual intrinsic dimensions based on the contents, as any other box would.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "height",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/computeMinIntrinsicWidth.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\ndouble computeMinIntrinsicWidth(double height) {\n  return 0.0;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugAdoptSize",
+            "type": "dart:ui.Size",
+            "desc": "<p>Claims ownership of the given <a href=\"dart-ui\/Size-class.html\">Size<\/a>.<\/p>\n<p>In debug mode, the <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> class verifies that <a href=\"dart-ui\/Size-class.html\">Size<\/a> objects obtained\nfrom other <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> objects are only used according to the semantics of\nthe <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> protocol, namely that a <a href=\"dart-ui\/Size-class.html\">Size<\/a> from a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> can only\nbe used by its parent, and then only if <code>parentUsesSize<\/code> was set.<\/p>\n<p>Sometimes, a <a href=\"dart-ui\/Size-class.html\">Size<\/a> that can validly be used ends up no longer being valid\nover time. The common example is a <a href=\"dart-ui\/Size-class.html\">Size<\/a> taken from a child that is later\nremoved from the parent. In such cases, this method can be called to first\ncheck whether the size can legitimately be used, and if so, to then create\na new <a href=\"dart-ui\/Size-class.html\">Size<\/a> that can be used going forward, regardless of what happens to\nthe original owner.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "dart:ui.Size",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/debugAdoptSize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Size debugAdoptSize(Size value) {\n  Size result = value;\n  assert(() {\n    if (value is _DebugSize) {\n      if (value._owner != this) {\n        if (value._owner.parent != this) {\n          throw FlutterError(\n            'The size property was assigned a size inappropriately.\\n'\n            'The following render object:\\n'\n            '  $this\\n'\n            '...was assigned a size obtained from:\\n'\n            '  ${value._owner}\\n'\n            'However, this second render object is not, or is no longer, a '\n            'child of the first, and it is therefore a violation of the '\n            'RenderBox layout protocol to use that size in the layout of the '\n            'first render object.\\n'\n            'If the size was obtained at a time where it was valid to read '\n            'the size (because the second render object above was a child '\n            'of the first at the time), then it should be adopted using '\n            'debugAdoptSize at that time.\\n'\n            'If the size comes from a grandchild or a render object from an '\n            'entirely different part of the render tree, then there is no '\n            'way to be notified when the size changes and therefore attempts '\n            'to read that size are almost certainly a source of bugs. A different '\n            'approach should be used.'\n          );\n        }\n        if (!value._canBeUsedByParent) {\n          throw FlutterError(\n            'A child\\'s size was used without setting parentUsesSize.\\n'\n            'The following render object:\\n'\n            '  $this\\n'\n            '...was assigned a size obtained from its child:\\n'\n            '  ${value._owner}\\n'\n            'However, when the child was laid out, the parentUsesSize argument '\n            'was not set or set to false. Subsequently this transpired to be '\n            'inaccurate: the size was nonetheless used by the parent.\\n'\n            'It is important to tell the framework if the size will be used or not '\n            'as several important performance optimizations can be made if the '\n            'size will not be used by the parent.'\n          );\n        }\n      }\n    }\n    result = _DebugSize(value, this, debugCanParentUseSize);\n    return true;\n  }());\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugAssertDoesMeetConstraints",
+            "type": "",
+            "desc": "<p>Verify that the object's constraints are being met. Override\nthis function in a subclass to verify that your state matches\nthe constraints object. This function is only called in checked\nmode and only when needsLayout is false. If the constraints are\nnot met, it should assert or throw an exception.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/debugAssertDoesMeetConstraints.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugAssertDoesMeetConstraints() {\n  assert(constraints != null);\n  assert(() {\n    if (!hasSize) {\n      assert(!debugNeedsLayout); \/\/ this is called in the size= setter during layout, but in that case we have a size\n      String contract;\n      if (sizedByParent)\n        contract = 'Because this RenderBox has sizedByParent set to true, it must set its size in performResize().\\n';\n      else\n        contract = 'Because this RenderBox has sizedByParent set to false, it must set its size in performLayout().\\n';\n      throw FlutterError(\n        'RenderBox did not set its size during layout.\\n'\n        '$contract'\n        'It appears that this did not happen; layout completed, but the size property is still null.\\n'\n        'The RenderBox in question is:\\n'\n        '  $this'\n      );\n    }\n    \/\/ verify that the size is not infinite\n    if (!_size.isFinite) {\n      final StringBuffer information = StringBuffer();\n      if (!constraints.hasBoundedWidth) {\n        RenderBox node = this;\n        while (!node.constraints.hasBoundedWidth &amp;&amp; node.parent is RenderBox)\n          node = node.parent;\n        information.writeln('The nearest ancestor providing an unbounded width constraint is:');\n        information.write('  ');\n        information.writeln(node.toStringShallow(joiner: '\\n  '));\n      }\n      if (!constraints.hasBoundedHeight) {\n        RenderBox node = this;\n        while (!node.constraints.hasBoundedHeight &amp;&amp; node.parent is RenderBox)\n          node = node.parent;\n        information.writeln('The nearest ancestor providing an unbounded height constraint is:');\n        information.write('  ');\n        information.writeln(node.toStringShallow(joiner: '\\n  '));\n\n      }\n      throw FlutterError(\n        '$runtimeType object was given an infinite size during layout.\\n'\n        'This probably means that it is a render object that tries to be '\n        'as big as possible, but it was put inside another render object '\n        'that allows its children to pick their own size.\\n'\n        '$information'\n        'The constraints that applied to the $runtimeType were:\\n'\n        '  $constraints\\n'\n        'The exact size it was given was:\\n'\n        '  $_size\\n'\n        'See https:\/\/flutter.io\/layout\/ for more information.'\n      );\n    }\n    \/\/ verify that the size is within the constraints\n    if (!constraints.isSatisfiedBy(_size)) {\n      throw FlutterError(\n        '$runtimeType does not meet its constraints.\\n'\n        'Constraints: $constraints\\n'\n        'Size: $_size\\n'\n        'If you are not writing your own RenderBox subclass, then this is not '\n        'your fault. Contact support: https:\/\/github.com\/flutter\/flutter\/issues\/new?template=BUG.md'\n      );\n    }\n    if (debugCheckIntrinsicSizes) {\n      \/\/ verify that the intrinsics are sane\n      assert(!RenderObject.debugCheckingIntrinsics);\n      RenderObject.debugCheckingIntrinsics = true;\n      final StringBuffer failures = StringBuffer();\n      int failureCount = 0;\n\n      double testIntrinsic(double function(double extent), String name, double constraint) {\n        final double result = function(constraint);\n        if (result &lt; 0) {\n          failures.writeln(' * $name($constraint) returned a negative value: $result');\n          failureCount += 1;\n        }\n        if (!result.isFinite) {\n          failures.writeln(' * $name($constraint) returned a non-finite value: $result');\n          failureCount += 1;\n        }\n        return result;\n      }\n\n      void testIntrinsicsForValues(double getMin(double extent), double getMax(double extent), String name, double constraint) {\n        final double min = testIntrinsic(getMin, 'getMinIntrinsic$name', constraint);\n        final double max = testIntrinsic(getMax, 'getMaxIntrinsic$name', constraint);\n        if (min &gt; max) {\n          failures.writeln(' * getMinIntrinsic$name($constraint) returned a larger value ($min) than getMaxIntrinsic$name($constraint) ($max)');\n          failureCount += 1;\n        }\n      }\n\n      testIntrinsicsForValues(getMinIntrinsicWidth, getMaxIntrinsicWidth, 'Width', double.infinity);\n      testIntrinsicsForValues(getMinIntrinsicHeight, getMaxIntrinsicHeight, 'Height', double.infinity);\n      if (constraints.hasBoundedWidth)\n        testIntrinsicsForValues(getMinIntrinsicWidth, getMaxIntrinsicWidth, 'Width', constraints.maxHeight);\n      if (constraints.hasBoundedHeight)\n        testIntrinsicsForValues(getMinIntrinsicHeight, getMaxIntrinsicHeight, 'Height', constraints.maxWidth);\n\n      \/\/ TODO(ianh): Test that values are internally consistent in more ways than the above.\n\n      RenderObject.debugCheckingIntrinsics = false;\n      if (failures.isNotEmpty) {\n        assert(failureCount &gt; 0);\n        throw FlutterError(\n          'The intrinsic dimension methods of the $runtimeType class returned values that violate the intrinsic protocol contract.\\n'\n          'The following ${failureCount &gt; 1 ? \"failures\" : \"failure\"} was detected:\\n'\n          '$failures'\n          'If you are not writing your own RenderBox subclass, then this is not\\n'\n          'your fault. Contact support: https:\/\/github.com\/flutter\/flutter\/issues\/new?template=BUG.md'\n        );\n      }\n    }\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugFillProperties",
+            "type": "",
+            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"rendering\/RenderBox\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTreeMixin\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"rendering\/RenderObject\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "properties",
+                    "type": "foundation.DiagnosticPropertiesBuilder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/debugFillProperties.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(DiagnosticsProperty&lt;Size&gt;('size', _size, missingIfNull: true));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugHandleEvent",
+            "type": "dart:core.bool",
+            "desc": "<p>Implements the <a href=\"rendering\/debugPaintPointersEnabled.html\">debugPaintPointersEnabled<\/a> debugging feature.<\/p>\n<p><a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclasses that implement <a href=\"rendering\/RenderBox\/handleEvent.html\">handleEvent<\/a> should call\n<a href=\"rendering\/RenderBox\/debugHandleEvent.html\">debugHandleEvent<\/a> from their <a href=\"rendering\/RenderBox\/handleEvent.html\">handleEvent<\/a> method, as follows:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid handleEvent(PointerEvent event, HitTestEntry entry) {\n  assert(debugHandleEvent(event, entry));\n  \/\/ ... handle the event ...\n}\n<\/code><\/pre>\n<p>If you call this for a <a href=\"gestures\/PointerDownEvent-class.html\">PointerDownEvent<\/a>, make sure you also call it for\nthe corresponding <a href=\"gestures\/PointerUpEvent-class.html\">PointerUpEvent<\/a> or <a href=\"gestures\/PointerCancelEvent-class.html\">PointerCancelEvent<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "event",
+                    "type": "gestures.PointerEvent",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "entry",
+                    "type": "gestures.HitTestEntry",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/debugHandleEvent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool debugHandleEvent(PointerEvent event, HitTestEntry entry) {\n  assert(() {\n    if (debugPaintPointersEnabled) {\n      if (event is PointerDownEvent) {\n        _debugActivePointers += 1;\n      } else if (event is PointerUpEvent || event is PointerCancelEvent) {\n        _debugActivePointers -= 1;\n      }\n      markNeedsPaint();\n    }\n    return true;\n  }());\n  return true;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugPaint",
+            "type": "",
+            "desc": "<p>Override this method to paint debugging information.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "rendering.PaintingContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/debugPaint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugPaint(PaintingContext context, Offset offset) {\n  assert(() {\n    if (debugPaintSizeEnabled)\n      debugPaintSize(context, offset);\n    if (debugPaintBaselinesEnabled)\n      debugPaintBaselines(context, offset);\n    if (debugPaintPointersEnabled)\n      debugPaintPointers(context, offset);\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugPaintBaselines",
+            "type": "",
+            "desc": "<p>In debug mode, paints a line for each baseline.<\/p>\n<p>Called for every <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> when <a href=\"rendering\/debugPaintBaselinesEnabled.html\">debugPaintBaselinesEnabled<\/a> is true.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "rendering.PaintingContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/debugPaintBaselines.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid debugPaintBaselines(PaintingContext context, Offset offset) {\n  assert(() {\n    final Paint paint = Paint()\n     ..style = PaintingStyle.stroke\n     ..strokeWidth = 0.25;\n    Path path;\n    \/\/ ideographic baseline\n    final double baselineI = getDistanceToBaseline(TextBaseline.ideographic, onlyReal: true);\n    if (baselineI != null) {\n      paint.color = const Color(0xFFFFD000);\n      path = Path();\n      path.moveTo(offset.dx, offset.dy + baselineI);\n      path.lineTo(offset.dx + size.width, offset.dy + baselineI);\n      context.canvas.drawPath(path, paint);\n    }\n    \/\/ alphabetic baseline\n    final double baselineA = getDistanceToBaseline(TextBaseline.alphabetic, onlyReal: true);\n    if (baselineA != null) {\n      paint.color = const Color(0xFF00FF00);\n      path = Path();\n      path.moveTo(offset.dx, offset.dy + baselineA);\n      path.lineTo(offset.dx + size.width, offset.dy + baselineA);\n      context.canvas.drawPath(path, paint);\n    }\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugPaintPointers",
+            "type": "",
+            "desc": "<p>In debug mode, paints a rectangle if this render box has counted more\npointer downs than pointer up events.<\/p>\n<p>Called for every <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> when <a href=\"rendering\/debugPaintPointersEnabled.html\">debugPaintPointersEnabled<\/a> is true.<\/p>\n<p>By default, events are not counted. For details on how to ensure that\nevents are counted for your class, see <a href=\"rendering\/RenderBox\/debugHandleEvent.html\">debugHandleEvent<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "rendering.PaintingContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/debugPaintPointers.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid debugPaintPointers(PaintingContext context, Offset offset) {\n  assert(() {\n    if (_debugActivePointers &gt; 0) {\n      final Paint paint = Paint()\n       ..color = Color(0x00BBBB | ((0x04000000 * depth) &amp; 0xFF000000));\n      context.canvas.drawRect(offset &amp; size, paint);\n    }\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugPaintSize",
+            "type": "",
+            "desc": "<p>In debug mode, paints a border around this render box.<\/p>\n<p>Called for every <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> when <a href=\"rendering\/debugPaintSizeEnabled.html\">debugPaintSizeEnabled<\/a> is true.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "rendering.PaintingContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/debugPaintSize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid debugPaintSize(PaintingContext context, Offset offset) {\n  assert(() {\n    final Paint paint = Paint()\n     ..style = PaintingStyle.stroke\n     ..strokeWidth = 1.0\n     ..color = const Color(0xFF00FFFF);\n    context.canvas.drawRect((offset &amp; size).deflate(0.5), paint);\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugResetSize",
+            "type": "",
+            "desc": "<p>If a subclass has a \"size\" (the state controlled by <code>parentUsesSize<\/code>,\nwhatever it is in the subclass, e.g. the actual <code>size<\/code> property of\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>), and the subclass verifies that in checked mode this \"size\"\nproperty isn't used when <a href=\"rendering\/RenderObject\/debugCanParentUseSize.html\">debugCanParentUseSize<\/a> isn't set, then that\nsubclass should override <a href=\"rendering\/RenderBox\/debugResetSize.html\">debugResetSize<\/a> to reapply the current values of\n<a href=\"rendering\/RenderObject\/debugCanParentUseSize.html\">debugCanParentUseSize<\/a> to that state.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/debugResetSize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugResetSize() {\n  \/\/ updates the value of size._canBeUsedByParent if necessary\n  size = size;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "getDistanceToActualBaseline",
+            "type": "dart:core.double",
+            "desc": "<p>Calls <a href=\"rendering\/RenderBox\/computeDistanceToActualBaseline.html\">computeDistanceToActualBaseline<\/a> and caches the result.<\/p>\n<p>This function must only be called from <a href=\"rendering\/RenderBox\/getDistanceToBaseline.html\">getDistanceToBaseline<\/a> and\n<a href=\"rendering\/RenderBox\/computeDistanceToActualBaseline.html\">computeDistanceToActualBaseline<\/a>. Do not call this function directly from\noutside those two methods.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "baseline",
+                    "type": "dart:ui.TextBaseline",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/getDistanceToActualBaseline.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\ndouble getDistanceToActualBaseline(TextBaseline baseline) {\n  assert(_debugDoingBaseline, 'Please see the documentation for computeDistanceToActualBaseline for the required calling conventions of this method.');\n  _cachedBaselines ??= &lt;TextBaseline, double&gt;{};\n  _cachedBaselines.putIfAbsent(baseline, () =&gt; computeDistanceToActualBaseline(baseline));\n  return _cachedBaselines[baseline];\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "getDistanceToBaseline",
+            "type": "dart:core.double",
+            "desc": "<p>Returns the distance from the y-coordinate of the position of the box to\nthe y-coordinate of the first given baseline in the box's contents.<\/p>\n<p>Used by certain layout models to align adjacent boxes on a common\nbaseline, regardless of padding, font size differences, etc. If there is\nno baseline, this function returns the distance from the y-coordinate of\nthe position of the box to the y-coordinate of the bottom of the box\n(i.e., the height of the box) unless the caller passes true\nfor <code>onlyReal<\/code>, in which case the function returns null.<\/p>\n<p>Only call this function after calling <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> on this box. You\nare only allowed to call this from the parent of this box during\nthat parent's <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a> or <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> functions.<\/p>\n<p>When implementing a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass, to override the baseline\ncomputation, override <a href=\"rendering\/RenderBox\/computeDistanceToActualBaseline.html\">computeDistanceToActualBaseline<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "baseline",
+                    "type": "dart:ui.TextBaseline",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "onlyReal",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/getDistanceToBaseline.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double getDistanceToBaseline(TextBaseline baseline, { bool onlyReal = false }) {\n  assert(!_debugDoingBaseline, 'Please see the documentation for computeDistanceToActualBaseline for the required calling conventions of this method.');\n  assert(!debugNeedsLayout);\n  assert(() {\n    final RenderObject parent = this.parent;\n    if (owner.debugDoingLayout)\n      return (RenderObject.debugActiveLayout == parent) &amp;&amp; parent.debugDoingThisLayout;\n    if (owner.debugDoingPaint)\n      return ((RenderObject.debugActivePaint == parent) &amp;&amp; parent.debugDoingThisPaint) ||\n             ((RenderObject.debugActivePaint == this) &amp;&amp; debugDoingThisPaint);\n    assert(parent == this.parent);\n    return false;\n  }());\n  assert(_debugSetDoingBaseline(true));\n  final double result = getDistanceToActualBaseline(baseline);\n  assert(_debugSetDoingBaseline(false));\n  if (result == null &amp;&amp; !onlyReal)\n    return size.height;\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "getMaxIntrinsicHeight",
+            "type": "dart:core.double",
+            "desc": "<p>Returns the smallest height beyond which increasing the height never\ndecreases the preferred width. The preferred width is the value that\nwould be returned by <a href=\"rendering\/RenderBox\/getMinIntrinsicWidth.html\">getMinIntrinsicWidth<\/a> for that height.<\/p>\n<p>The width argument may give a specific width to assume. The given width\ncan be infinite, meaning that the intrinsic height in an unconstrained\nenvironment is being requested. The given width should never be negative\nor null.<\/p>\n<p>This function should only be called on one's children. Calling this\nfunction couples the child with the parent so that when the child's layout\nchanges, the parent is notified (via <a href=\"rendering\/RenderBox\/markNeedsLayout.html\">markNeedsLayout<\/a>).<\/p>\n<p>Calling this function is expensive and as it can result in O(N^2)\nbehavior.<\/p>\n<p>Do not override this method. Instead, implement\n<a href=\"rendering\/RenderBox\/computeMaxIntrinsicHeight.html\">computeMaxIntrinsicHeight<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "width",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/getMaxIntrinsicHeight.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\ndouble getMaxIntrinsicHeight(double width) {\n  assert(() {\n    if (width == null) {\n      throw FlutterError(\n        'The width argument to getMaxIntrinsicHeight was null.\\n'\n        'The argument to getMaxIntrinsicHeight must not be negative or null. '\n        'If you do not have a specific width in mind, then pass double.infinity instead.'\n      );\n    }\n    if (width &lt; 0.0) {\n      throw FlutterError(\n        'The width argument to getMaxIntrinsicHeight was negative.\\n'\n        'The argument to getMaxIntrinsicHeight must not be negative or null. '\n        'If you perform computations on another width before passing it to '\n        'getMaxIntrinsicHeight, consider using math.max() or double.clamp() '\n        'to force the value into the valid range.'\n      );\n    }\n    return true;\n  }());\n  return _computeIntrinsicDimension(_IntrinsicDimension.maxHeight, width, computeMaxIntrinsicHeight);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "getMaxIntrinsicWidth",
+            "type": "dart:core.double",
+            "desc": "<p>Returns the smallest width beyond which increasing the width never\ndecreases the preferred height. The preferred height is the value that\nwould be returned by <a href=\"rendering\/RenderBox\/getMinIntrinsicHeight.html\">getMinIntrinsicHeight<\/a> for that width.<\/p>\n<p>The height argument may give a specific height to assume. The given height\ncan be infinite, meaning that the intrinsic width in an unconstrained\nenvironment is being requested. The given height should never be negative\nor null.<\/p>\n<p>This function should only be called on one's children. Calling this\nfunction couples the child with the parent so that when the child's layout\nchanges, the parent is notified (via <a href=\"rendering\/RenderBox\/markNeedsLayout.html\">markNeedsLayout<\/a>).<\/p>\n<p>Calling this function is expensive and as it can result in O(N^2)\nbehavior.<\/p>\n<p>Do not override this method. Instead, implement\n<a href=\"rendering\/RenderBox\/computeMaxIntrinsicWidth.html\">computeMaxIntrinsicWidth<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "height",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/getMaxIntrinsicWidth.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\ndouble getMaxIntrinsicWidth(double height) {\n  assert(() {\n    if (height == null) {\n      throw FlutterError(\n        'The height argument to getMaxIntrinsicWidth was null.\\n'\n        'The argument to getMaxIntrinsicWidth must not be negative or null. '\n        'If you do not have a specific height in mind, then pass double.infinity instead.'\n      );\n    }\n    if (height &lt; 0.0) {\n      throw FlutterError(\n        'The height argument to getMaxIntrinsicWidth was negative.\\n'\n        'The argument to getMaxIntrinsicWidth must not be negative or null. '\n        'If you perform computations on another height before passing it to '\n        'getMaxIntrinsicWidth, consider using math.max() or double.clamp() '\n        'to force the value into the valid range.'\n      );\n    }\n    return true;\n  }());\n  return _computeIntrinsicDimension(_IntrinsicDimension.maxWidth, height, computeMaxIntrinsicWidth);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "getMinIntrinsicHeight",
+            "type": "dart:core.double",
+            "desc": "<p>Returns the minimum height that this box could be without failing to\ncorrectly paint its contents within itself, without clipping.<\/p>\n<p>The width argument may give a specific width to assume. The given width\ncan be infinite, meaning that the intrinsic height in an unconstrained\nenvironment is being requested. The given width should never be negative\nor null.<\/p>\n<p>This function should only be called on one's children. Calling this\nfunction couples the child with the parent so that when the child's layout\nchanges, the parent is notified (via <a href=\"rendering\/RenderBox\/markNeedsLayout.html\">markNeedsLayout<\/a>).<\/p>\n<p>Calling this function is expensive and as it can result in O(N^2)\nbehavior.<\/p>\n<p>Do not override this method. Instead, implement\n<a href=\"rendering\/RenderBox\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "width",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/getMinIntrinsicHeight.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\ndouble getMinIntrinsicHeight(double width) {\n  assert(() {\n    if (width == null) {\n      throw FlutterError(\n        'The width argument to getMinIntrinsicHeight was null.\\n'\n        'The argument to getMinIntrinsicHeight must not be negative or null. '\n        'If you do not have a specific width in mind, then pass double.infinity instead.'\n      );\n    }\n    if (width &lt; 0.0) {\n      throw FlutterError(\n        'The width argument to getMinIntrinsicHeight was negative.\\n'\n        'The argument to getMinIntrinsicHeight must not be negative or null. '\n        'If you perform computations on another width before passing it to '\n        'getMinIntrinsicHeight, consider using math.max() or double.clamp() '\n        'to force the value into the valid range.'\n      );\n    }\n    return true;\n  }());\n  return _computeIntrinsicDimension(_IntrinsicDimension.minHeight, width, computeMinIntrinsicHeight);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "getMinIntrinsicWidth",
+            "type": "dart:core.double",
+            "desc": "<p>Returns the minimum width that this box could be without failing to\ncorrectly paint its contents within itself, without clipping.<\/p>\n<p>The height argument may give a specific height to assume. The given height\ncan be infinite, meaning that the intrinsic width in an unconstrained\nenvironment is being requested. The given height should never be negative\nor null.<\/p>\n<p>This function should only be called on one's children. Calling this\nfunction couples the child with the parent so that when the child's layout\nchanges, the parent is notified (via <a href=\"rendering\/RenderBox\/markNeedsLayout.html\">markNeedsLayout<\/a>).<\/p>\n<p>Calling this function is expensive and as it can result in O(N^2)\nbehavior.<\/p>\n<p>Do not override this method. Instead, implement <a href=\"rendering\/RenderBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "height",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/getMinIntrinsicWidth.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\ndouble getMinIntrinsicWidth(double height) {\n  assert(() {\n    if (height == null) {\n      throw FlutterError(\n        'The height argument to getMinIntrinsicWidth was null.\\n'\n        'The argument to getMinIntrinsicWidth must not be negative or null. '\n        'If you do not have a specific height in mind, then pass double.infinity instead.'\n      );\n    }\n    if (height &lt; 0.0) {\n      throw FlutterError(\n        'The height argument to getMinIntrinsicWidth was negative.\\n'\n        'The argument to getMinIntrinsicWidth must not be negative or null. '\n        'If you perform computations on another height before passing it to '\n        'getMinIntrinsicWidth, consider using math.max() or double.clamp() '\n        'to force the value into the valid range.'\n      );\n    }\n    return true;\n  }());\n  return _computeIntrinsicDimension(_IntrinsicDimension.minWidth, height, computeMinIntrinsicWidth);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "globalToLocal",
+            "type": "dart:ui.Offset",
+            "desc": "<p>Convert the given point from the global coordinate system in logical pixels\nto the local coordinate system for this box.<\/p>\n<p>This method will un-project the point from the screen onto the widget,\nwhich makes it different from <a href=\"painting\/MatrixUtils\/transformPoint.html\">MatrixUtils.transformPoint<\/a>.<\/p>\n<p>If the transform from global coordinates to local coordinates is\ndegenerate, this function returns <a href=\"dart-ui\/Offset\/zero-constant.html\">Offset.zero<\/a>.<\/p>\n<p>If <code>ancestor<\/code> is non-null, this function converts the given point from the\ncoordinate system of <code>ancestor<\/code> (which must be an ancestor of this render\nobject) instead of from the global coordinate system.<\/p>\n<p>This method is implemented in terms of <a href=\"rendering\/RenderObject\/getTransformTo.html\">getTransformTo<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "point",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "ancestor",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/globalToLocal.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Offset globalToLocal(Offset point, { RenderObject ancestor }) {\n  \/\/ We want to find point (p) that corresponds to a given point on the\n  \/\/ screen (s), but that also physically resides on the local render plane,\n  \/\/ so that it is useful for visually accurate gesture processing in the\n  \/\/ local space. For that, we can't simply transform 2D screen point to\n  \/\/ the 3D local space since the screen space lacks the depth component |z|,\n  \/\/ and so there are many 3D points that correspond to the screen point.\n  \/\/ We must first unproject the screen point onto the render plane to find\n  \/\/ the true 3D point that corresponds to the screen point.\n  \/\/ We do orthogonal unprojection after undoing perspective, in local space.\n  \/\/ The render plane is specified by renderBox offset (o) and Z axis (n).\n  \/\/ Unprojection is done by finding the intersection of the view vector (d)\n  \/\/ with the local X-Y plane: (o-s).dot(n) == (p-s).dot(n), (p-s) == |z|*d.\n  final Matrix4 transform = getTransformTo(ancestor);\n  final double det = transform.invert();\n  if (det == 0.0)\n    return Offset.zero;\n  final Vector3 n = Vector3(0.0, 0.0, 1.0);\n  final Vector3 i = transform.perspectiveTransform(Vector3(0.0, 0.0, 0.0));\n  final Vector3 d = transform.perspectiveTransform(Vector3(0.0, 0.0, 1.0)) - i;\n  final Vector3 s = transform.perspectiveTransform(Vector3(point.dx, point.dy, 0.0));\n  final Vector3 p = s - d * (n.dot(s) \/ n.dot(d));\n  return Offset(p.x, p.y);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "handleEvent",
+            "type": "",
+            "desc": "<p>Override this method to handle pointer events that hit this render object.<\/p>\n<p>For <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> objects, the <code>entry<\/code> argument is a <a href=\"rendering\/BoxHitTestEntry-class.html\">BoxHitTestEntry<\/a>. From this\nobject you can determine the <a href=\"gestures\/PointerDownEvent-class.html\">PointerDownEvent<\/a>'s position in local coordinates.\n(This is useful because <a href=\"gestures\/PointerEvent\/position.html\">PointerEvent.position<\/a> is in global coordinates.)<\/p>\n<p>If you override this, consider calling <a href=\"rendering\/RenderBox\/debugHandleEvent.html\">debugHandleEvent<\/a> as follows, so\nthat you can support <a href=\"rendering\/debugPaintPointersEnabled.html\">debugPaintPointersEnabled<\/a>:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid handleEvent(PointerEvent event, HitTestEntry entry) {\n  assert(debugHandleEvent(event, entry));\n  \/\/ ... handle the event ...\n}\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "event",
+                    "type": "gestures.PointerEvent",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "entry",
+                    "type": "rendering.BoxHitTestEntry",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/handleEvent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid handleEvent(PointerEvent event, BoxHitTestEntry entry) {\n  super.handleEvent(event, entry);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "hitTest",
+            "type": "dart:core.bool",
+            "desc": "<p>Determines the set of render objects located at the given position.<\/p>\n<p>Returns true, and adds any render objects that contain the point to the\ngiven hit test result, if this render object or one of its descendants\nabsorbs the hit (preventing objects below this one from being hit).\nReturns false if the hit can continue to other objects below this one.<\/p>\n<p>The caller is responsible for transforming <code>position<\/code> from global\ncoordinates to its location relative to the origin of this <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>.\nThis <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> is responsible for checking whether the given position is\nwithin its bounds.<\/p>\n<p>Hit testing requires layout to be up-to-date but does not require painting\nto be up-to-date. That means a render object can rely upon <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a>\nhaving been called in <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> but cannot rely upon <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> having been\ncalled. For example, a render object might be a child of a <a href=\"rendering\/RenderOpacity-class.html\">RenderOpacity<\/a>\nobject, which calls <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> on its children when its opacity is zero\neven through it does not <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> its children.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "result",
+                    "type": "gestures.HitTestResult",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "position",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/hitTest.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool hitTest(HitTestResult result, { @required Offset position }) {\n  assert(() {\n    if (!hasSize) {\n      if (debugNeedsLayout) {\n        throw FlutterError(\n          'Cannot hit test a render box that has never been laid out.\\n'\n          'The hitTest() method was called on this RenderBox:\\n'\n          '  $this\\n'\n          'Unfortunately, this object\\'s geometry is not known at this time, '\n          'probably because it has never been laid out. '\n          'This means it cannot be accurately hit-tested. If you are trying '\n          'to perform a hit test during the layout phase itself, make sure '\n          'you only hit test nodes that have completed layout (e.g. the node\\'s '\n          'children, after their layout() method has been called).'\n        );\n      }\n      throw FlutterError(\n        'Cannot hit test a render box with no size.\\n'\n        'The hitTest() method was called on this RenderBox:\\n'\n        '  $this\\n'\n        'Although this node is not marked as needing layout, '\n        'its size is not set. A RenderBox object must have an '\n        'explicit size before it can be hit-tested. Make sure '\n        'that the RenderBox in question sets its size during layout.'\n      );\n    }\n    return true;\n  }());\n  if (_size.contains(position)) {\n    if (hitTestChildren(result, position: position) || hitTestSelf(position)) {\n      result.add(BoxHitTestEntry(this, position));\n      return true;\n    }\n  }\n  return false;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "hitTestChildren",
+            "type": "dart:core.bool",
+            "desc": "<p>Override this method to check whether any children are located at the\ngiven position.<\/p>\n<p>Typically children should be hit-tested in reverse paint order so that\nhit tests at locations where children overlap hit the child that is\nvisually \"on top\" (i.e., paints later).<\/p>\n<p>The caller is responsible for transforming <code>position<\/code> from global\ncoordinates to its location relative to the origin of this <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>.\nThis <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> is responsible for checking whether the given position is\nwithin its bounds.<\/p>\n<p>Used by <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a>. If you override <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> and do not call this\nfunction, then you don't need to implement this function.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "result",
+                    "type": "gestures.HitTestResult",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "position",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/hitTestChildren.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool hitTestChildren(HitTestResult result, { Offset position }) =&gt; false;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "hitTestSelf",
+            "type": "dart:core.bool",
+            "desc": "<p>Override this method if this render object can be hit even if its\nchildren were not hit.<\/p>\n<p>The caller is responsible for transforming <code>position<\/code> from global\ncoordinates to its location relative to the origin of this <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>.\nThis <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> is responsible for checking whether the given position is\nwithin its bounds.<\/p>\n<p>Used by <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a>. If you override <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> and do not call this\nfunction, then you don't need to implement this function.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "position",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/hitTestSelf.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool hitTestSelf(Offset position) =&gt; false;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "localToGlobal",
+            "type": "dart:ui.Offset",
+            "desc": "<p>Convert the given point from the local coordinate system for this box to\nthe global coordinate system in logical pixels.<\/p>\n<p>If <code>ancestor<\/code> is non-null, this function converts the given point to the\ncoordinate system of <code>ancestor<\/code> (which must be an ancestor of this render\nobject) instead of to the global coordinate system.<\/p>\n<p>This method is implemented in terms of <a href=\"rendering\/RenderObject\/getTransformTo.html\">getTransformTo<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "point",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "ancestor",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/localToGlobal.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Offset localToGlobal(Offset point, { RenderObject ancestor }) {\n  return MatrixUtils.transformPoint(getTransformTo(ancestor), point);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "markNeedsLayout",
+            "type": "",
+            "desc": "<p>Mark this render object's layout information as dirty, and either register\nthis object with its <a href=\"rendering\/PipelineOwner-class.html\">PipelineOwner<\/a>, or defer to the parent, depending on\nwhether this object is a relayout boundary or not respectively.<\/p>\n<h2 id=\"background\">Background<\/h2>\n<p>Rather than eagerly updating layout information in response to writes into\na render object, we instead mark the layout information as dirty, which\nschedules a visual update. As part of the visual update, the rendering\npipeline updates the render object's layout information.<\/p>\n<p>This mechanism batches the layout work so that multiple sequential writes\nare coalesced, removing redundant computation.<\/p>\n<p>If a render object's parent indicates that it uses the size of one of its\nrender object children when computing its layout information, this\nfunction, when called for the child, will also mark the parent as needing\nlayout. In that case, since both the parent and the child need to have\ntheir layout recomputed, the pipeline owner is only notified about the\nparent; when the parent is laid out, it will call the child's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a>\nmethod and thus the child will be laid out as well.<\/p>\n<p>Once <a href=\"rendering\/RenderBox\/markNeedsLayout.html\">markNeedsLayout<\/a> has been called on a render object,\n<a href=\"rendering\/RenderObject\/debugNeedsLayout.html\">debugNeedsLayout<\/a> returns true for that render object until just after\nthe pipeline owner has called <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> on the render object.<\/p>\n<h2 id=\"special-cases\">Special cases<\/h2>\n<p>Some subclasses of <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>, notably <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, have other\nsituations in which the parent needs to be notified if the child is\ndirtied. Such subclasses override markNeedsLayout and either call\n<code>super.markNeedsLayout()<\/code>, in the normal case, or call\n<a href=\"rendering\/RenderObject\/markParentNeedsLayout.html\">markParentNeedsLayout<\/a>, in the case where the parent needs to be laid out\nas well as the child.<\/p>\n<p>If <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> has changed, calls\n<a href=\"rendering\/RenderObject\/markNeedsLayoutForSizedByParentChange.html\">markNeedsLayoutForSizedByParentChange<\/a> instead of <a href=\"rendering\/RenderBox\/markNeedsLayout.html\">markNeedsLayout<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/markNeedsLayout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid markNeedsLayout() {\n  if ((_cachedBaselines != null &amp;&amp; _cachedBaselines.isNotEmpty) ||\n      (_cachedIntrinsicDimensions != null &amp;&amp; _cachedIntrinsicDimensions.isNotEmpty)) {\n    \/\/ If we have cached data, then someone must have used our data.\n    \/\/ Since the parent will shortly be marked dirty, we can forget that they\n    \/\/ used the baseline and\/or intrinsic dimensions. If they use them again,\n    \/\/ then we'll fill the cache again, and if we get dirty again, we'll\n    \/\/ notify them again.\n    _cachedBaselines?.clear();\n    _cachedIntrinsicDimensions?.clear();\n    if (parent is RenderObject) {\n      markParentNeedsLayout();\n      return;\n    }\n  }\n  super.markNeedsLayout();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "performLayout",
+            "type": "",
+            "desc": "<p>Do the work of computing the layout for this render object.<\/p>\n<p>Do not call this function directly: call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> instead. This function\nis called by <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> when there is actually work to be done by this\nrender object during layout. The layout constraints provided by your\nparent are available via the <a href=\"rendering\/RenderBox\/constraints.html\">constraints<\/a> getter.<\/p>\n<p>If <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is true, then this function should not actually change\nthe dimensions of this render object. Instead, that work should be done by\n<a href=\"rendering\/RenderBox\/performResize.html\">performResize<\/a>. If <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is false, then this function should\nboth change the dimensions of this render object and instruct its children\nto layout.<\/p>\n<p>In implementing this function, you must call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> on each of your\nchildren, passing true for parentUsesSize if your layout information is\ndependent on your child's layout information. Passing true for\nparentUsesSize ensures that this render object will undergo layout if the\nchild undergoes layout. Otherwise, the child can change its layout\ninformation without informing this render object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/performLayout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid performLayout() {\n  assert(() {\n    if (!sizedByParent) {\n      throw FlutterError(\n        '$runtimeType did not implement performLayout().\\n'\n        'RenderBox subclasses need to either override performLayout() to '\n        'set a size and lay out any children, or, set sizedByParent to true '\n        'so that performResize() sizes the render object.'\n      );\n    }\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "performResize",
+            "type": "",
+            "desc": "<p>Updates the render objects size using only the constraints.<\/p>\n<p>Do not call this function directly: call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> instead. This function\nis called by <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> when there is actually work to be done by this\nrender object during layout. The layout constraints provided by your\nparent are available via the <a href=\"rendering\/RenderBox\/constraints.html\">constraints<\/a> getter.<\/p>\n<p>Subclasses that set <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> to true should override this method\nto compute their size.<\/p>\n<p>This function is called only if <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is true.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/performResize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid performResize() {\n  \/\/ default behavior for subclasses that have sizedByParent = true\n  size = constraints.smallest;\n  assert(size.isFinite);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "setupParentData",
+            "type": "",
+            "desc": "<p>Override to setup parent data correctly for your children.<\/p>\n<p>You can call this function to set up the parent data for child before the\nchild is added to the parent's child list.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderBox\/setupParentData.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid setupParentData(covariant RenderObject child) {\n  if (child.parentData is! BoxParentData)\n    child.parentData = BoxParentData();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "constraints",
+            "type": "rendering.BoxConstraints",
+            "types": [],
+            "desc": "<p>The box constraints most recently received from the parent.<\/p>\n        ",
+            "memberOf": "rendering.RenderBox",
+            "isConstant": false,
+            "href": "rendering\/RenderBox\/constraints.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nBoxConstraints get constraints =&gt; super.constraints;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "hasSize",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether this render object has undergone layout and has a <a href=\"rendering\/RenderBox\/size.html\">size<\/a>.<\/p>\n        ",
+            "memberOf": "rendering.RenderBox",
+            "isConstant": false,
+            "href": "rendering\/RenderBox\/hasSize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasSize =&gt; _size != null;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "paintBounds",
+            "type": "dart:ui.Rect",
+            "types": [],
+            "desc": "<p>Returns a rectangle that contains all the pixels painted by this box.<\/p>\n<p>The paint bounds can be larger or smaller than <a href=\"rendering\/RenderBox\/size.html\">size<\/a>, which is the amount\nof space this box takes up during layout. For example, if this box casts a\nshadow, that shadow might extend beyond the space allocated to this box\nduring layout.<\/p>\n<p>The paint bounds are used to size the buffers into which this box paints.\nIf the box attempts to paints outside its paint bounds, there might not be\nenough memory allocated to represent the box's visual appearance, which\ncan lead to undefined behavior.<\/p>\n<p>The returned paint bounds are in the local coordinate system of this box.<\/p>\n        ",
+            "memberOf": "rendering.RenderBox",
+            "isConstant": false,
+            "href": "rendering\/RenderBox\/paintBounds.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nRect get paintBounds =&gt; Offset.zero &amp; size;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "semanticBounds",
+            "type": "dart:ui.Rect",
+            "types": [],
+            "desc": "<p>The bounding box, in the local coordinate system, of this\nobject, for accessibility purposes.<\/p>\n        ",
+            "memberOf": "rendering.RenderBox",
+            "isConstant": false,
+            "href": "rendering\/RenderBox\/semanticBounds.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nRect get semanticBounds =&gt; Offset.zero &amp; size;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "size",
+            "type": "dart:ui.Size",
+            "types": [],
+            "desc": "<p>The size of this render box computed during layout.<\/p>\n<p>This value is stale whenever this object is marked as needing layout.\nDuring <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a>, do not read the size of a child unless you pass\ntrue for parentUsesSize when calling the child's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> function.<\/p>\n<p>The size of a box should be set only during the box's <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a> or\n<a href=\"rendering\/RenderBox\/performResize.html\">performResize<\/a> functions. If you wish to change the size of a box outside\nof those functions, call <a href=\"rendering\/RenderBox\/markNeedsLayout.html\">markNeedsLayout<\/a> instead to schedule a layout of\nthe box.<\/p>\n        ",
+            "memberOf": "rendering.RenderBox",
+            "isConstant": false,
+            "href": "rendering\/RenderBox\/size.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Size get size {\n  assert(hasSize, 'RenderBox was not laid out: ${toString()}');\n  assert(() {\n    if (_size is _DebugSize) {\n      final _DebugSize _size = this._size;\n      assert(_size._owner == this);\n      if (RenderObject.debugActiveLayout != null) {\n        \/\/ We are always allowed to access our own size (for print debugging\n        \/\/ and asserts if nothing else). Other than us, the only object that's\n        \/\/ allowed to read our size is our parent, if they've said they will.\n        \/\/ If you hit this assert trying to access a child's size, pass\n        \/\/ \"parentUsesSize: true\" to that child's layout().\n        assert(debugDoingThisResize || debugDoingThisLayout ||\n               (RenderObject.debugActiveLayout == parent &amp;&amp; _size._canBeUsedByParent));\n      }\n      assert(_size == this._size);\n    }\n    return true;\n  }());\n  return _size;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [
+        "material.RenderToggleable",
+        "rendering.FlexParentData",
+        "rendering.FlowParentData",
+        "rendering.ListBodyParentData",
+        "rendering.ListWheelParentData",
+        "rendering.MultiChildLayoutParentData",
+        "rendering.RenderAbsorbPointer",
+        "rendering.RenderAligningShiftedBox",
+        "rendering.RenderAndroidView",
+        "rendering.RenderAnimatedOpacity",
+        "rendering.RenderAnimatedSize",
+        "rendering.RenderAnnotatedRegion",
+        "rendering.RenderAspectRatio",
+        "rendering.RenderBackdropFilter",
+        "rendering.RenderBaseline",
+        "rendering.RenderBlockSemantics",
+        "rendering.RenderClipOval",
+        "rendering.RenderClipPath",
+        "rendering.RenderClipRRect",
+        "rendering.RenderClipRect",
+        "rendering.RenderConstrainedBox",
+        "rendering.RenderConstrainedOverflowBox",
+        "rendering.RenderCustomMultiChildLayoutBox",
+        "rendering.RenderCustomPaint",
+        "rendering.RenderCustomSingleChildLayoutBox",
+        "rendering.RenderDecoratedBox",
+        "rendering.RenderEditable",
+        "rendering.RenderErrorBox",
+        "rendering.RenderExcludeSemantics",
+        "rendering.RenderFittedBox",
+        "rendering.RenderFlex",
+        "rendering.RenderFlow",
+        "rendering.RenderFollowerLayer",
+        "rendering.RenderFractionalTranslation",
+        "rendering.RenderFractionallySizedOverflowBox",
+        "rendering.RenderIgnorePointer",
+        "rendering.RenderImage",
+        "rendering.RenderIndexedSemantics",
+        "rendering.RenderIndexedStack",
+        "rendering.RenderIntrinsicHeight",
+        "rendering.RenderIntrinsicWidth",
+        "rendering.RenderLeaderLayer",
+        "rendering.RenderLimitedBox",
+        "rendering.RenderListBody",
+        "rendering.RenderListWheelViewport",
+        "rendering.RenderMergeSemantics",
+        "rendering.RenderMetaData",
+        "rendering.RenderOffstage",
+        "rendering.RenderOpacity",
+        "rendering.RenderPadding",
+        "rendering.RenderParagraph",
+        "rendering.RenderPerformanceOverlay",
+        "rendering.RenderPhysicalModel",
+        "rendering.RenderPhysicalShape",
+        "rendering.RenderPointerListener",
+        "rendering.RenderPositionedBox",
+        "rendering.RenderProxyBox",
+        "rendering.RenderProxyBoxWithHitTestBehavior",
+        "rendering.RenderRepaintBoundary",
+        "rendering.RenderRotatedBox",
+        "rendering.RenderSemanticsAnnotations",
+        "rendering.RenderSemanticsGestureHandler",
+        "rendering.RenderShaderMask",
+        "rendering.RenderShiftedBox",
+        "rendering.RenderShrinkWrappingViewport",
+        "rendering.RenderSizedOverflowBox",
+        "rendering.RenderStack",
+        "rendering.RenderTable",
+        "rendering.RenderTransform",
+        "rendering.RenderUiKitView",
+        "rendering.RenderUnconstrainedBox",
+        "rendering.RenderViewport",
+        "rendering.RenderViewportBase",
+        "rendering.RenderWrap",
+        "rendering.StackParentData",
+        "rendering.TextureBox",
+        "rendering.WrapParentData",
+        "widgets.RenderNestedScrollViewViewport"
+    ],
+    "realImplementors": [],
+    "cn": [],
+    "href": "rendering\/RenderBox-class.html",
+    "desc": "<p>A render object in a 2D Cartesian coordinate system.<\/p>\n<p>The <a href=\"rendering\/RenderBox\/size.html\">size<\/a> of each box is expressed as a width and a height. Each box has\nits own coordinate system in which its upper left corner is placed at (0,\n0). The lower right corner of the box is therefore at (width, height). The\nbox contains all the points including the upper left corner and extending\nto, but not including, the lower right corner.<\/p>\n<p>Box layout is performed by passing a <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> object down the tree.\nThe box constraints establish a min and max value for the child's width and\nheight. In determining its size, the child must respect the constraints\ngiven to it by its parent.<\/p>\n<p>This protocol is sufficient for expressing a number of common box layout\ndata flows. For example, to implement a width-in-height-out data flow, call\nyour child's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> function with a set of box constraints with a tight\nwidth value (and pass true for parentUsesSize). After the child determines\nits height, use the child's height to determine your size.<\/p>\n<h2 id=\"writing-a-renderbox-subclass\">Writing a RenderBox subclass<\/h2>\n<p>One would implement a new <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass to describe a new layout\nmodel, new paint model, new hit-testing model, or new semantics model, while\nremaining in the Cartesian space defined by the <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> protocol.<\/p>\n<p>To create a new protocol, consider subclassing <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> instead.<\/p>\n<h3 id=\"constructors-and-properties-of-a-new-renderbox-subclass\">Constructors and properties of a new RenderBox subclass<\/h3>\n<p>The constructor will typically take a named argument for each property of\nthe class. The value is then passed to a private field of the class and the\nconstructor asserts its correctness (e.g. if it should not be null, it\nasserts it's not null).<\/p>\n<p>Properties have the form of a getter\/setter\/field group like the following:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">AxisDirection get axis =&gt; _axis;\nAxisDirection _axis;\nset axis(AxisDirection value) {\n  assert(value != null); \/\/ same check as in the constructor\n  if (value == _axis)\n    return;\n  _axis = value;\n  markNeedsLayout();\n}\n<\/code><\/pre>\n<p>The setter will typically finish with either a call to <a href=\"rendering\/RenderBox\/markNeedsLayout.html\">markNeedsLayout<\/a>, if\nthe layout uses this property, or <a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a>, if only the painter\nfunction does. (No need to call both, <a href=\"rendering\/RenderBox\/markNeedsLayout.html\">markNeedsLayout<\/a> implies\n<a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a>.)<\/p>\n<p>Consider layout and paint to be expensive; be conservative about calling\n<a href=\"rendering\/RenderBox\/markNeedsLayout.html\">markNeedsLayout<\/a> or <a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a>. They should only be called if the\nlayout (or paint, respectively) has actually changed.<\/p>\n<h3 id=\"children\">Children<\/h3>\n<p>If a render object is a leaf, that is, it cannot have any children, then\nignore this section. (Examples of leaf render objects are <a href=\"rendering\/RenderImage-class.html\">RenderImage<\/a> and\n<a href=\"rendering\/RenderParagraph-class.html\">RenderParagraph<\/a>.)<\/p>\n<p>For render objects with children, there are four possible scenarios:<\/p>\n<ul>\n<li>\n<p>A single <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> child. In this scenario, consider inheriting from\n<a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> (if the render object sizes itself to match the child) or\n<a href=\"rendering\/RenderShiftedBox-class.html\">RenderShiftedBox<\/a> (if the child will be smaller than the box and the box\nwill align the child inside itself).<\/p>\n<\/li>\n<li>\n<p>A single child, but it isn't a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>. Use the\n<a href=\"rendering\/RenderObjectWithChildMixin-mixin.html\">RenderObjectWithChildMixin<\/a> mixin.<\/p>\n<\/li>\n<li>\n<p>A single list of children. Use the <a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> mixin.<\/p>\n<\/li>\n<li>\n<p>A more complicated child model.<\/p>\n<\/li>\n<\/ul>\n<h4 id=\"using-renderproxybox\">Using RenderProxyBox<\/h4>\n<p>By default, a <a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> render object sizes itself to fit its child, or\nto be as small as possible if there is no child; it passes all hit testing\nand painting on to the child, and intrinsic dimensions and baseline\nmeasurements similarly are proxied to the child.<\/p>\n<p>A subclass of <a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> just needs to override the parts of the\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> protocol that matter. For example, <a href=\"rendering\/RenderOpacity-class.html\">RenderOpacity<\/a> just\noverrides the paint method (and <a href=\"rendering\/RenderObject\/alwaysNeedsCompositing.html\">alwaysNeedsCompositing<\/a> to reflect what the\npaint method does, and the <a href=\"rendering\/RenderObject\/visitChildrenForSemantics.html\">visitChildrenForSemantics<\/a> method so that the\nchild is hidden from accessibility tools when it's invisible), and adds an\n<a href=\"rendering\/RenderOpacity\/opacity.html\">RenderOpacity.opacity<\/a> field.<\/p>\n<p><a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> assumes that the child is the size of the parent and\npositioned at 0,0. If this is not true, then use <a href=\"rendering\/RenderShiftedBox-class.html\">RenderShiftedBox<\/a> instead.<\/p>\n<p>See\n<a href=\"https:\/\/github.com\/flutter\/flutter\/blob\/master\/packages\/flutter\/lib\/src\/rendering\/proxy_box.dart\">proxy_box.dart<\/a>\nfor examples of inheriting from <a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a>.<\/p>\n<h4 id=\"using-rendershiftedbox\">Using RenderShiftedBox<\/h4>\n<p>By default, a <a href=\"rendering\/RenderShiftedBox-class.html\">RenderShiftedBox<\/a> acts much like a <a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> but\nwithout assuming that the child is positioned at 0,0 (the actual position\nrecorded in the child's <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> field is used), and without providing a\ndefault layout algorithm.<\/p>\n<p>See\n<a href=\"https:\/\/github.com\/flutter\/flutter\/blob\/master\/packages\/flutter\/lib\/src\/rendering\/shifted_box.dart\">shifted_box.dart<\/a>\nfor examples of inheriting from <a href=\"rendering\/RenderShiftedBox-class.html\">RenderShiftedBox<\/a>.<\/p>\n<h4 id=\"kinds-of-children-and-child-specific-data\">Kinds of children and child-specific data<\/h4>\n<p>A <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> doesn't have to have <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> children. One can use another\nsubclass of <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> for a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>'s children. See the discussion\nat <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>.<\/p>\n<p>Children can have additional data owned by the parent but stored on the\nchild using the <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> field. The class used for that data must\ninherit from <a href=\"rendering\/ParentData-class.html\">ParentData<\/a>. The <a href=\"rendering\/RenderBox\/setupParentData.html\">setupParentData<\/a> method is used to\ninitialize the <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> field of a child when the child is attached.<\/p>\n<p>By convention, <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> objects that have <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> children use the\n<a href=\"rendering\/BoxParentData-class.html\">BoxParentData<\/a> class, which has a <a href=\"rendering\/BoxParentData\/offset.html\">BoxParentData.offset<\/a> field to store the\nposition of the child relative to the parent. (<a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> does not\nneed this offset and therefore is an exception to this rule.)<\/p>\n<h4 id=\"using-renderobjectwithchildmixin\">Using RenderObjectWithChildMixin<\/h4>\n<p>If a render object has a single child but it isn't a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, then the\n<a href=\"rendering\/RenderObjectWithChildMixin-mixin.html\">RenderObjectWithChildMixin<\/a> class, which is a mixin that will handle the\nboilerplate of managing a child, will be useful.<\/p>\n<p>It's a generic class with one type argument, the type of the child. For\nexample, if you are building a <code>RenderFoo<\/code> class which takes a single\n<code>RenderBar<\/code> child, you would use the mixin as follows:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class RenderFoo extends RenderBox\n  with RenderObjectWithChildMixin&lt;RenderBar&gt; {\n  \/\/ ...\n}\n<\/code><\/pre>\n<p>Since the <code>RenderFoo<\/code> class itself is still a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> in this case, you\nstill have to implement the <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> layout algorithm, as well as\nfeatures like intrinsics and baselines, painting, and hit testing.<\/p>\n<h4 id=\"using-containerrenderobjectmixin\">Using ContainerRenderObjectMixin<\/h4>\n<p>If a render box can have multiple children, then the\n<a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> mixin can be used to handle the boilerplate. It\nuses a linked list to model the children in a manner that is easy to mutate\ndynamically and that can be walked efficiently. Random access is not\nefficient in this model; if you need random access to the children consider\nthe next section on more complicated child models.<\/p>\n<p>The <a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> class has two type arguments. The first is\nthe type of the child objects. The second is the type for their\n<a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a>. The class used for <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> must itself have the\n<a href=\"rendering\/ContainerParentDataMixin-mixin.html\">ContainerParentDataMixin<\/a> class mixed into it; this is where\n<a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> stores the linked list. A <a href=\"rendering\/ParentData-class.html\">ParentData<\/a> class\ncan extend <a href=\"rendering\/ContainerBoxParentData-class.html\">ContainerBoxParentData<\/a>; this is essentially\n<a href=\"rendering\/BoxParentData-class.html\">BoxParentData<\/a> mixed with <a href=\"rendering\/ContainerParentDataMixin-mixin.html\">ContainerParentDataMixin<\/a>. For example, if a\n<code>RenderFoo<\/code> class wanted to have a linked list of <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> children, one\nmight create a <code>FooParentData<\/code> class as follows:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class FooParentData extends ContainerBoxParentData&lt;RenderBox&gt; {\n  \/\/ (any fields you might need for these children)\n}\n<\/code><\/pre>\n<p>When using <a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> in a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, consider mixing in\n<a href=\"rendering\/RenderBoxContainerDefaultsMixin-mixin.html\">RenderBoxContainerDefaultsMixin<\/a>, which provides a collection of utility\nmethods that implement common parts of the <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> protocol (such as\npainting the children).<\/p>\n<p>The declaration of the <code>RenderFoo<\/code> class itself would thus look like this:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class RenderFoo extends RenderBox with\n  ContainerRenderObjectMixin&lt;RenderBox, FooParentData&gt;,\n  RenderBoxContainerDefaultsMixin&lt;RenderBox, FooParentData&gt; {\n  \/\/ ...\n}\n<\/code><\/pre>\n<p>When walking the children (e.g. during layout), the following pattern is\ncommonly used (in this case assuming that the children are all <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>\nobjects and that this render object uses <code>FooParentData<\/code> objects for its\nchildren's <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> fields):<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">RenderBox child = firstChild;\nwhile (child != null) {\n  final FooParentData childParentData = child.parentData;\n  \/\/ ...operate on child and childParentData...\n  assert(child.parentData == childParentData);\n  child = childParentData.nextSibling;\n}\n<\/code><\/pre>\n<h4 id=\"more-complicated-child-models\">More complicated child models<\/h4>\n<p>Render objects can have more complicated models, for example a map of\nchildren keyed on an enum, or a 2D grid of efficiently randomly-accessible\nchildren, or multiple lists of children, etc. If a render object has a model\nthat can't be handled by the mixins above, it must implement the\n<a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> child protocol, as follows:<\/p>\n<ul>\n<li>\n<p>Any time a child is removed, call <a href=\"rendering\/RenderObject\/dropChild.html\">dropChild<\/a> with the child.<\/p>\n<\/li>\n<li>\n<p>Any time a child is added, call <a href=\"rendering\/RenderObject\/adoptChild.html\">adoptChild<\/a> with the child.<\/p>\n<\/li>\n<li>\n<p>Implement the <a href=\"rendering\/RenderObject\/attach.html\">attach<\/a> method such that it calls <a href=\"rendering\/RenderObject\/attach.html\">attach<\/a> on each child.<\/p>\n<\/li>\n<li>\n<p>Implement the <a href=\"foundation\/AbstractNode\/detach.html\">detach<\/a> method such that it calls <a href=\"foundation\/AbstractNode\/detach.html\">detach<\/a> on each child.<\/p>\n<\/li>\n<li>\n<p>Implement the <a href=\"foundation\/AbstractNode\/redepthChildren.html\">redepthChildren<\/a> method such that it calls <a href=\"foundation\/AbstractNode\/redepthChild.html\">redepthChild<\/a>\non each child.<\/p>\n<\/li>\n<li>\n<p>Implement the <a href=\"rendering\/RenderObject\/visitChildren.html\">visitChildren<\/a> method such that it calls its argument for\neach child, typically in paint order (back-most to front-most).<\/p>\n<\/li>\n<li>\n<p>Implement <a href=\"rendering\/RenderObject\/debugDescribeChildren.html\">debugDescribeChildren<\/a> such that it outputs a <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a>\nfor each child.<\/p>\n<\/li>\n<\/ul>\n<p>Implementing these seven bullet points is essentially all that the two\naforementioned mixins do.<\/p>\n<h3 id=\"layout\">Layout<\/h3>\n<p><a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> classes implement a layout algorithm. They have a set of\nconstraints provided to them, and they size themselves based on those\nconstraints and whatever other inputs they may have (for example, their\nchildren or properties).<\/p>\n<p>When implementing a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass, one must make a choice. Does it\nsize itself exclusively based on the constraints, or does it use any other\ninformation in sizing itself? An example of sizing purely based on the\nconstraints would be growing to fit the parent.<\/p>\n<p>Sizing purely based on the constraints allows the system to make some\nsignificant optimizations. Classes that use this approach should override\n<a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> to return true, and then override <a href=\"rendering\/RenderBox\/performResize.html\">performResize<\/a> to set the\n<a href=\"rendering\/RenderBox\/size.html\">size<\/a> using nothing but the constraints, e.g.:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get sizedByParent =&gt; true;\n\n@override\nvoid performResize() {\n  size = constraints.smallest;\n}\n<\/code><\/pre>\n<p>Otherwise, the size is set in the <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a> function.<\/p>\n<p>The <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a> function is where render boxes decide, if they are not\n<a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a>, what <a href=\"rendering\/RenderBox\/size.html\">size<\/a> they should be, and also where they decide\nwhere their children should be.<\/p>\n<h4 id=\"layout-of-renderbox-children\">Layout of RenderBox children<\/h4>\n<p>The <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a> function should call the <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> function of each (box)\nchild, passing it a <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> object describing the constraints\nwithin which the child can render. Passing tight constraints (see\n<a href=\"rendering\/BoxConstraints\/isTight.html\">BoxConstraints.isTight<\/a>) to the child will allow the rendering library to\napply some optimizations, as it knows that if the constraints are tight, the\nchild's dimensions cannot change even if the layout of the child itself\nchanges.<\/p>\n<p>If the <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a> function will use the child's size to affect other\naspects of the layout, for example if the render box sizes itself around the\nchild, or positions several children based on the size of those children,\nthen it must specify the <code>parentUsesSize<\/code> argument to the child's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a>\nfunction, setting it to true.<\/p>\n<p>This flag turns off some optimizations; algorithms that do not rely on the\nchildren's sizes will be more efficient. (In particular, relying on the\nchild's <a href=\"rendering\/RenderBox\/size.html\">size<\/a> means that if the child is marked dirty for layout, the\nparent will probably also be marked dirty for layout, unless the\n<a href=\"rendering\/RenderBox\/constraints.html\">constraints<\/a> given by the parent to the child were tight constraints.)<\/p>\n<p>For <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> classes that do not inherit from <a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a>, once they\nhave laid out their children, should also position them, by setting the\n<a href=\"rendering\/BoxParentData\/offset.html\">BoxParentData.offset<\/a> field of each child's <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> object.<\/p>\n<h4 id=\"layout-of-non-renderbox-children\">Layout of non-RenderBox children<\/h4>\n<p>The children of a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> do not have to be <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>es themselves. If\nthey use another protocol (as discussed at <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>), then instead of\n<a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a>, the parent would pass in the appropriate <a href=\"rendering\/Constraints-class.html\">Constraints<\/a>\nsubclass, and instead of reading the child's size, the parent would read\nwhatever the output of <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> is for that layout protocol. The\n<code>parentUsesSize<\/code> flag is still used to indicate whether the parent is going\nto read that output, and optimizations still kick in if the child has tight\nconstraints (as defined by <a href=\"rendering\/Constraints\/isTight.html\">Constraints.isTight<\/a>).<\/p>\n<h3 id=\"painting\">Painting<\/h3>\n<p>To describe how a render box paints, implement the <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method. It is\ngiven a <a href=\"rendering\/PaintingContext-class.html\">PaintingContext<\/a> object and an <a href=\"dart-ui\/Offset-class.html\">Offset<\/a>. The painting context\nprovides methods to affect the layer tree as well as a\n<a href=\"rendering\/PaintingContext\/canvas.html\">PaintingContext.canvas<\/a> which can be used to add drawing commands. The\ncanvas object should not be cached across calls to the <a href=\"rendering\/PaintingContext-class.html\">PaintingContext<\/a>'s\nmethods; every time a method on <a href=\"rendering\/PaintingContext-class.html\">PaintingContext<\/a> is called, there is a\nchance that the canvas will change identity. The offset specifies the\nposition of the top left corner of the box in the coordinate system of the\n<a href=\"rendering\/PaintingContext\/canvas.html\">PaintingContext.canvas<\/a>.<\/p>\n<p>To draw text on a canvas, use a <a href=\"painting\/TextPainter-class.html\">TextPainter<\/a>.<\/p>\n<p>To draw an image to a canvas, use the <a href=\"painting\/paintImage.html\">paintImage<\/a> method.<\/p>\n<p>A <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> that uses methods on <a href=\"rendering\/PaintingContext-class.html\">PaintingContext<\/a> that introduce new\nlayers should override the <a href=\"rendering\/RenderObject\/alwaysNeedsCompositing.html\">alwaysNeedsCompositing<\/a> getter and set it to\ntrue. If the object sometimes does and sometimes does not, it can have that\ngetter return true in some cases and false in others. In that case, whenever\nthe return value would change, call <a href=\"rendering\/RenderObject\/markNeedsCompositingBitsUpdate.html\">markNeedsCompositingBitsUpdate<\/a>. (This\nis done automatically when a child is added or removed, so you don't have to\ncall it explicitly if the <a href=\"rendering\/RenderObject\/alwaysNeedsCompositing.html\">alwaysNeedsCompositing<\/a> getter only changes value\nbased on the presence or absence of children.)<\/p>\n<p>Anytime anything changes on the object that would cause the <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method\nto paint something different (but would not cause the layout to change),\nthe object should call <a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a>.<\/p>\n<h4 id=\"painting-children\">Painting children<\/h4>\n<p>The <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method's <code>context<\/code> argument has a <a href=\"rendering\/PaintingContext\/paintChild.html\">PaintingContext.paintChild<\/a>\nmethod, which should be called for each child that is to be painted. It\nshould be given a reference to the child, and an <a href=\"dart-ui\/Offset-class.html\">Offset<\/a> giving the\nposition of the child relative to the parent.<\/p>\n<p>If the <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method applies a transform to the painting context before\npainting children (or generally applies an additional offset beyond the\noffset it was itself given as an argument), then the <a href=\"rendering\/RenderBox\/applyPaintTransform.html\">applyPaintTransform<\/a>\nmethod should also be overridden. That method must adjust the matrix that it\nis given in the same manner as it transformed the painting context and\noffset before painting the given child. This is used by the <a href=\"rendering\/RenderBox\/globalToLocal.html\">globalToLocal<\/a>\nand <a href=\"rendering\/RenderBox\/localToGlobal.html\">localToGlobal<\/a> methods.<\/p>\n<h4 id=\"hit-tests\">Hit Tests<\/h4>\n<p>Hit testing for render boxes is implemented by the <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> method. The\ndefault implementation of this method defers to <a href=\"rendering\/RenderBox\/hitTestSelf.html\">hitTestSelf<\/a> and\n<a href=\"rendering\/RenderBox\/hitTestChildren.html\">hitTestChildren<\/a>. When implementing hit testing, you can either override\nthese latter two methods, or ignore them and just override <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a>.<\/p>\n<p>The <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> method itself is given an <a href=\"dart-ui\/Offset-class.html\">Offset<\/a>, and must return true if the\nobject or one of its children has absorbed the hit (preventing objects below\nthis one from being hit), or false if the hit can continue to other objects\nbelow this one.<\/p>\n<p>For each child <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, the <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> method on the child should be\ncalled with the same <a href=\"gestures\/HitTestResult-class.html\">HitTestResult<\/a> argument and with the point transformed\ninto the child's coordinate space (in the same manner that the\n<a href=\"rendering\/RenderBox\/applyPaintTransform.html\">applyPaintTransform<\/a> method would). The default implementation defers to\n<a href=\"rendering\/RenderBox\/hitTestChildren.html\">hitTestChildren<\/a> to call the children. <a href=\"rendering\/RenderBoxContainerDefaultsMixin-mixin.html\">RenderBoxContainerDefaultsMixin<\/a>\nprovides a <a href=\"rendering\/RenderBoxContainerDefaultsMixin\/defaultHitTestChildren.html\">RenderBoxContainerDefaultsMixin.defaultHitTestChildren<\/a> method\nthat does this assuming that the children are axis-aligned, not transformed,\nand positioned according to the <a href=\"rendering\/BoxParentData\/offset.html\">BoxParentData.offset<\/a> field of the\n<a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a>; more elaborate boxes can override <a href=\"rendering\/RenderBox\/hitTestChildren.html\">hitTestChildren<\/a>\naccordingly.<\/p>\n<p>If the object is hit, then it should also add itself to the <a href=\"gestures\/HitTestResult-class.html\">HitTestResult<\/a>\nobject that is given as an argument to the <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> method, using\n<a href=\"gestures\/HitTestResult\/add.html\">HitTestResult.add<\/a>. The default implementation defers to <a href=\"rendering\/RenderBox\/hitTestSelf.html\">hitTestSelf<\/a> to\ndetermine if the box is hit. If the object adds itself before the children\ncan add themselves, then it will be as if the object was above the children.\nIf it adds itself after the children, then it will be as if it was below the\nchildren. Entries added to the <a href=\"gestures\/HitTestResult-class.html\">HitTestResult<\/a> object should use the\n<a href=\"rendering\/BoxHitTestEntry-class.html\">BoxHitTestEntry<\/a> class. The entries are subsequently walked by the system\nin the order they were added, and for each entry, the target's <a href=\"rendering\/RenderBox\/handleEvent.html\">handleEvent<\/a>\nmethod is called, passing in the <a href=\"gestures\/HitTestEntry-class.html\">HitTestEntry<\/a> object.<\/p>\n<p>Hit testing cannot rely on painting having happened.<\/p>\n<h3 id=\"semantics\">Semantics<\/h3>\n<p>For a render box to be accessible, implement the\n<a href=\"rendering\/RenderObject\/describeApproximatePaintClip.html\">describeApproximatePaintClip<\/a> and <a href=\"rendering\/RenderObject\/visitChildrenForSemantics.html\">visitChildrenForSemantics<\/a> methods, and\nthe <code>semanticsAnnotator<\/code> getter. The default implementations are sufficient\nfor objects that only affect layout, but nodes that represent interactive\ncomponents or information (diagrams, text, images, etc) should provide more\ncomplete implementations. For more information, see the documentation for\nthese members.<\/p>\n<h3 id=\"intrinsics-and-baselines\">Intrinsics and Baselines<\/h3>\n<p>The layout, painting, hit testing, and semantics protocols are common to all\nrender objects. <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> objects must implement two additional protocols:\nintrinsic sizing and baseline measurements.<\/p>\n<p>There are four methods to implement for intrinsic sizing, to compute the\nminimum and maximum intrinsic width and height of the box. The documentation\nfor these methods discusses the protocol in detail:\n<a href=\"rendering\/RenderBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>, <a href=\"rendering\/RenderBox\/computeMaxIntrinsicWidth.html\">computeMaxIntrinsicWidth<\/a>,\n<a href=\"rendering\/RenderBox\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a>, <a href=\"rendering\/RenderBox\/computeMaxIntrinsicHeight.html\">computeMaxIntrinsicHeight<\/a>.<\/p>\n<p>In addition, if the box has any children, it must implement\n<a href=\"rendering\/RenderBox\/computeDistanceToActualBaseline.html\">computeDistanceToActualBaseline<\/a>. <a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> provides a simple\nimplementation that forwards to the child; <a href=\"rendering\/RenderShiftedBox-class.html\">RenderShiftedBox<\/a> provides an\nimplementation that offsets the child's baseline information by the position\nof the child relative to the parent. If you do not inherited from either of\nthese classes, however, you must implement the algorithm yourself.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "RenderBox"
+}

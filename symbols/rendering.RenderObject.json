@@ -1,0 +1,1396 @@
+{
+    "name": "rendering.RenderObject",
+    "extends": [
+        "foundation.AbstractNode",
+        "dart:core.Object"
+    ],
+    "memberOf": "rendering",
+    "events": [],
+    "methods": [
+        {
+            "name": "RenderObject",
+            "type": "",
+            "desc": "<p>Initializes internal fields for subclasses.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "rendering\/RenderObject\/RenderObject.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RenderObject() {\n  _needsCompositing = isRepaintBoundary || alwaysNeedsCompositing;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "adoptChild",
+            "type": "",
+            "desc": "<p>Called by subclasses when they decide a render object is a child.<\/p>\n<p>Only for use by subclasses when changing their child lists. Calling this\nin other cases will lead to an inconsistent tree and probably cause crashes.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/adoptChild.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid adoptChild(RenderObject child) {\n  assert(_debugCanPerformMutations);\n  assert(child != null);\n  setupParentData(child);\n  markNeedsLayout();\n  markNeedsCompositingBitsUpdate();\n  markNeedsSemanticsUpdate();\n  super.adoptChild(child);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "applyPaintTransform",
+            "type": "",
+            "desc": "<p>Applies the transform that would be applied when painting the given child\nto the given matrix.<\/p>\n<p>Used by coordinate conversion functions to translate coordinates local to\none render object into coordinates local to another render object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "transform",
+                    "type": "vector_math_64.Matrix4",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/applyPaintTransform.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void applyPaintTransform(covariant RenderObject child, Matrix4 transform) {\n  assert(child.parent == this);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "assembleSemanticsNode",
+            "type": "",
+            "desc": "<p>Assemble the <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> for this <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>.<\/p>\n<p>If <code>isSemanticBoundary<\/code> is true, this method is called with the <code>node<\/code>\ncreated for this <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>, the <code>config<\/code> to be applied to that node\nand the <code>children<\/code> <code>SemanticNode<\/code>s that descendants of this RenderObject\nhave generated.<\/p>\n<p>By default, the method will annotate <code>node<\/code> with <code>config<\/code> and add the\n<code>children<\/code> to it.<\/p>\n<p>Subclasses can override this method to add additional <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s\nto the tree. If new <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s are instantiated in this method\nthey must be disposed in <a href=\"rendering\/RenderObject\/clearSemantics.html\">clearSemantics<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "node",
+                    "type": "semantics.SemanticsNode",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "config",
+                    "type": "semantics.SemanticsConfiguration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "children",
+                    "type": "dart:core.Iterable<semantics.SemanticsNode>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.Iterable",
+                        "semantics.SemanticsNode"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/assembleSemanticsNode.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void assembleSemanticsNode(\n  SemanticsNode node,\n  SemanticsConfiguration config,\n  Iterable&lt;SemanticsNode&gt; children,\n) {\n  assert(node == _semantics);\n  node.updateWith(config: config, childrenInInversePaintOrder: children);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "attach",
+            "type": "",
+            "desc": "<p>Mark this node as attached to the given owner.<\/p>\n<p>Typically called only from the <a href=\"foundation\/AbstractNode\/parent.html\">parent<\/a>'s <a href=\"rendering\/RenderObject\/attach.html\">attach<\/a> method, and by the\n<code>owner<\/code> to mark the root of a tree as attached.<\/p>\n<p>Subclasses with children should override this method to first call their\ninherited <a href=\"rendering\/RenderObject\/attach.html\">attach<\/a> method, and then <a href=\"rendering\/RenderObject\/attach.html\">attach<\/a> all their children to the\nsame <code>owner<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "owner",
+                    "type": "rendering.PipelineOwner",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/attach.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid attach(PipelineOwner owner) {\n  super.attach(owner);\n  \/\/ If the node was dirtied in some way while unattached, make sure to add\n  \/\/ it to the appropriate dirty list now that an owner is available\n  if (_needsLayout &amp;&amp; _relayoutBoundary != null) {\n    \/\/ Don't enter this block if we've never laid out at all;\n    \/\/ scheduleInitialLayout() will handle it\n    _needsLayout = false;\n    markNeedsLayout();\n  }\n  if (_needsCompositingBitsUpdate) {\n    _needsCompositingBitsUpdate = false;\n    markNeedsCompositingBitsUpdate();\n  }\n  if (_needsPaint &amp;&amp; _layer != null) {\n    \/\/ Don't enter this block if we've never painted at all;\n    \/\/ scheduleInitialPaint() will handle it\n    _needsPaint = false;\n    markNeedsPaint();\n  }\n  if (_needsSemanticsUpdate &amp;&amp; _semanticsConfiguration.isSemanticBoundary) {\n    \/\/ Don't enter this block if we've never updated semantics at all;\n    \/\/ scheduleInitialSemantics() will handle it\n    _needsSemanticsUpdate = false;\n    markNeedsSemanticsUpdate();\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "clearSemantics",
+            "type": "",
+            "desc": "<p>Removes all semantics from this render object and its descendants.<\/p>\n<p>Should only be called on objects whose <a href=\"foundation\/AbstractNode\/parent.html\">parent<\/a> is not a <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>.<\/p>\n<p>Override this method if you instantiate new <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s in an\noverridden <a href=\"rendering\/RenderObject\/assembleSemanticsNode.html\">assembleSemanticsNode<\/a> method, to dispose of those nodes.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/clearSemantics.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid clearSemantics() {\n  _needsSemanticsUpdate = true;\n  _semantics = null;\n  visitChildren((RenderObject child) {\n    child.clearSemantics();\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugAssertDoesMeetConstraints",
+            "type": "",
+            "desc": "<p>Verify that the object's constraints are being met. Override\nthis function in a subclass to verify that your state matches\nthe constraints object. This function is only called in checked\nmode and only when needsLayout is false. If the constraints are\nnot met, it should assert or throw an exception.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/debugAssertDoesMeetConstraints.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid debugAssertDoesMeetConstraints();<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugDescribeChildren",
+            "type": "dart:core.List<foundation.DiagnosticsNode>",
+            "desc": "<p>Returns a list of <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> objects describing this node's\nchildren.<\/p>\n<p>Children that are offstage should be added with <code>style<\/code> set to\n<a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle.offstage<\/a> to indicate that they are offstage.<\/p>\n<p>The list must not contain any null entries. If there are explicit null\nchildren to report, consider <a href=\"foundation\/DiagnosticsNode\/DiagnosticsNode.message.html\">new DiagnosticsNode.message<\/a> or\n<a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty&lt;Object&gt;<\/a> as possible <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> objects to\nprovide.<\/p>\n<p>Used by <a href=\"rendering\/RenderObject\/toStringDeep.html\">toStringDeep<\/a>, <a href=\"foundation\/DiagnosticableTreeMixin\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"rendering\/RenderObject\/toStringShallow.html\">toStringShallow<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/RenderObject\/debugDescribeChildren.html\">RenderTable.debugDescribeChildren<\/a>, which provides high quality custom\ndescriptions for its child nodes.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/debugDescribeChildren.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nList&lt;DiagnosticsNode&gt; debugDescribeChildren() =&gt; &lt;DiagnosticsNode&gt;[];<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:core.List",
+                "foundation.DiagnosticsNode"
+            ]
+        },
+        {
+            "name": "debugFillProperties",
+            "type": "",
+            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"rendering\/RenderObject\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTreeMixin\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"rendering\/RenderObject\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "properties",
+                    "type": "foundation.DiagnosticPropertiesBuilder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/debugFillProperties.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  properties.add(DiagnosticsProperty&lt;dynamic&gt;('creator', debugCreator, defaultValue: null, level: DiagnosticLevel.debug));\n  properties.add(DiagnosticsProperty&lt;ParentData&gt;('parentData', parentData, tooltip: _debugCanParentUseSize == true ? 'can use size' : null, missingIfNull: true));\n  properties.add(DiagnosticsProperty&lt;Constraints&gt;('constraints', constraints, missingIfNull: true));\n  \/\/ don't access it via the \"layer\" getter since that's only valid when we don't need paint\n  properties.add(DiagnosticsProperty&lt;OffsetLayer&gt;('layer', _layer, defaultValue: null));\n  properties.add(DiagnosticsProperty&lt;SemanticsNode&gt;('semantics node', _semantics, defaultValue: null));\n  properties.add(FlagProperty(\n    'isBlockingSemanticsOfPreviouslyPaintedNodes',\n    value: _semanticsConfiguration.isBlockingSemanticsOfPreviouslyPaintedNodes,\n    ifTrue: 'blocks semantics of earlier render objects below the common boundary',\n  ));\n  properties.add(FlagProperty('isSemanticBoundary', value: _semanticsConfiguration.isSemanticBoundary, ifTrue: 'semantic boundary'));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugPaint",
+            "type": "",
+            "desc": "<p>Override this method to paint debugging information.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "rendering.PaintingContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/debugPaint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void debugPaint(PaintingContext context, Offset offset) { }<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugRegisterRepaintBoundaryPaint",
+            "type": "",
+            "desc": "<p>Called, in checked mode, if <a href=\"rendering\/RenderObject\/isRepaintBoundary.html\">isRepaintBoundary<\/a> is true, when either the\nthis render object or its parent attempt to paint.<\/p>\n<p>This can be used to record metrics about whether the node should actually\nbe a repaint boundary.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "includedParent",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "includedChild",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/debugRegisterRepaintBoundaryPaint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void debugRegisterRepaintBoundaryPaint({ bool includedParent = true, bool includedChild = false }) { }<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugResetSize",
+            "type": "",
+            "desc": "<p>If a subclass has a \"size\" (the state controlled by <code>parentUsesSize<\/code>,\nwhatever it is in the subclass, e.g. the actual <code>size<\/code> property of\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>), and the subclass verifies that in checked mode this \"size\"\nproperty isn't used when <a href=\"rendering\/RenderObject\/debugCanParentUseSize.html\">debugCanParentUseSize<\/a> isn't set, then that\nsubclass should override <a href=\"rendering\/RenderObject\/debugResetSize.html\">debugResetSize<\/a> to reapply the current values of\n<a href=\"rendering\/RenderObject\/debugCanParentUseSize.html\">debugCanParentUseSize<\/a> to that state.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/debugResetSize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid debugResetSize() { }<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "describeApproximatePaintClip",
+            "type": "dart:ui.Rect",
+            "desc": "<p>Returns a rect in this object's coordinate system that describes\nthe approximate bounding box of the clip rect that would be\napplied to the given child during the paint phase, if any.<\/p>\n<p>Returns null if the child would not be clipped.<\/p>\n<p>This is used in the semantics phase to avoid including children\nthat are not physically visible.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/describeApproximatePaintClip.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Rect describeApproximatePaintClip(covariant RenderObject child) =&gt; null;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "describeSemanticsClip",
+            "type": "dart:ui.Rect",
+            "desc": "<p>Returns a rect in this object's coordinate system that describes\nwhich <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s produced by the <code>child<\/code> should be included in the\nsemantics tree. <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s from the <code>child<\/code> that are positioned\noutside of this rect will be dropped. Child <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s that are\npositioned inside this rect, but outside of <a href=\"rendering\/RenderObject\/describeApproximatePaintClip.html\">describeApproximatePaintClip<\/a>\nwill be included in the tree marked as hidden. Child <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s\nthat are inside of both rect will be included in the tree as regular\nnodes.<\/p>\n<p>This method only returns a non-null value if the semantics clip rect\nis different from the rect returned by <a href=\"rendering\/RenderObject\/describeApproximatePaintClip.html\">describeApproximatePaintClip<\/a>.\nIf the semantics clip rect and the paint clip rect are the same, this\nmethod returns null.<\/p>\n<p>A viewport would typically implement this method to include semantic nodes\nin the semantics tree that are currently hidden just before the leading\nor just after the trailing edge. These nodes have to be included in the\nsemantics tree to implement implicit accessibility scrolling on iOS where\nthe viewport scrolls implicitly when moving the accessibility focus from\na the last visible node in the viewport to the first hidden one.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/describeSemanticsClip.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Rect describeSemanticsClip(covariant RenderObject child) =&gt; null;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "describeSemanticsConfiguration",
+            "type": "",
+            "desc": "<p>Report the semantics of this node, for example for accessibility purposes.<\/p>\n<p>This method should be overridden by subclasses that have interesting\nsemantic information.<\/p>\n<p>The given <a href=\"semantics\/SemanticsConfiguration-class.html\">SemanticsConfiguration<\/a> object is mutable and should be\nannotated in a manner that describes the current state. No reference\nshould be kept to that object; mutating it outside of the context of the\n<a href=\"rendering\/RenderObject\/describeSemanticsConfiguration.html\">describeSemanticsConfiguration<\/a> call (for example as a result of\nasynchronous computation) will at best have no useful effect and at worse\nwill cause crashes as the data will be in an inconsistent state.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following snippet will describe the node as a button that responds to\ntap actions.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">abstract class SemanticButtonRenderObject extends RenderObject {\n  @override\n  void describeSemanticsConfiguration(SemanticsConfiguration config) {\n    super.describeSemanticsConfiguration(config);\n    config\n      ..onTap = _handleTap\n      ..label = 'I am a button'\n      ..isButton = true;\n  }\n\n  void _handleTap() {\n    \/\/ Do something.\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "config",
+                    "type": "semantics.SemanticsConfiguration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/describeSemanticsConfiguration.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid describeSemanticsConfiguration(SemanticsConfiguration config) {\n  \/\/ Nothing to do by default.\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "dropChild",
+            "type": "",
+            "desc": "<p>Called by subclasses when they decide a render object is no longer a child.<\/p>\n<p>Only for use by subclasses when changing their child lists. Calling this\nin other cases will lead to an inconsistent tree and probably cause crashes.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/dropChild.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dropChild(RenderObject child) {\n  assert(_debugCanPerformMutations);\n  assert(child != null);\n  assert(child.parentData != null);\n  child._cleanRelayoutBoundary();\n  child.parentData.detach();\n  child.parentData = null;\n  super.dropChild(child);\n  markNeedsLayout();\n  markNeedsCompositingBitsUpdate();\n  markNeedsSemanticsUpdate();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "getTransformTo",
+            "type": "vector_math_64.Matrix4",
+            "desc": "<p>Applies the paint transform up the tree to <code>ancestor<\/code>.<\/p>\n<p>Returns a matrix that maps the local paint coordinate system to the\ncoordinate system of <code>ancestor<\/code>.<\/p>\n<p>If <code>ancestor<\/code> is null, this method returns a matrix that maps from the\nlocal paint coordinate system to the coordinate system of the\n<a href=\"rendering\/PipelineOwner\/rootNode.html\">PipelineOwner.rootNode<\/a>. For the render tree owner by the\n<a href=\"rendering\/RendererBinding-mixin.html\">RendererBinding<\/a> (i.e. for the main render tree displayed on the device)\nthis means that this method maps to the global coordinate system in\nlogical pixels. To get physical pixels, use <a href=\"rendering\/RenderObject\/applyPaintTransform.html\">applyPaintTransform<\/a> from the\n<a href=\"rendering\/RenderView-class.html\">RenderView<\/a> to further transform the coordinate.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "ancestor",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/getTransformTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matrix4 getTransformTo(RenderObject ancestor) {\n  assert(attached);\n  if (ancestor == null) {\n    final AbstractNode rootNode = owner.rootNode;\n    if (rootNode is RenderObject)\n      ancestor = rootNode;\n  }\n  final List&lt;RenderObject&gt; renderers = &lt;RenderObject&gt;[];\n  for (RenderObject renderer = this; renderer != ancestor; renderer = renderer.parent) {\n    assert(renderer != null); \/\/ Failed to find ancestor in parent chain.\n    renderers.add(renderer);\n  }\n  final Matrix4 transform = Matrix4.identity();\n  for (int index = renderers.length - 1; index &gt; 0; index -= 1)\n    renderers[index].applyPaintTransform(renderers[index - 1], transform);\n  return transform;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "handleEvent",
+            "type": "",
+            "desc": "<p>Override this method to handle pointer events that hit this render object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "event",
+                    "type": "gestures.PointerEvent",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "entry",
+                    "type": "gestures.HitTestEntry",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/handleEvent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid handleEvent(PointerEvent event, covariant HitTestEntry entry) { }<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "invokeLayoutCallback",
+            "type": "",
+            "desc": "<p>Allows mutations to be made to this object's child list (and any\ndescendants) as well as to any other dirty nodes in the render tree owned\nby the same <a href=\"rendering\/PipelineOwner-class.html\">PipelineOwner<\/a> as this object. The <code>callback<\/code> argument is\ninvoked synchronously, and the mutations are allowed only during that\ncallback's execution.<\/p>\n<p>This exists to allow child lists to be built on-demand during layout (e.g.\nbased on the object's size), and to enable nodes to be moved around the\ntree as this happens (e.g. to handle <a href=\"widgets\/GlobalKey-class.html\">GlobalKey<\/a> reparenting), while still\nensuring that any particular node is only laid out once per frame.<\/p>\n<p>Calling this function disables a number of assertions that are intended to\ncatch likely bugs. As such, using this function is generally discouraged.<\/p>\n<p>This function can only be called during layout.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "callback",
+                    "type": "rendering.LayoutCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/invokeLayoutCallback.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid invokeLayoutCallback&lt;T extends Constraints&gt;(LayoutCallback&lt;T&gt; callback) {\n  assert(_debugMutationsLocked);\n  assert(_debugDoingThisLayout);\n  assert(!_doingThisLayoutWithCallback);\n  _doingThisLayoutWithCallback = true;\n  try {\n    owner._enableMutationsToDirtySubtrees(() { callback(constraints); });\n  } finally {\n    _doingThisLayoutWithCallback = false;\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "layout",
+            "type": "",
+            "desc": "<p>Compute the layout for this render object.<\/p>\n<p>This method is the main entry point for parents to ask their children to\nupdate their layout information. The parent passes a constraints object,\nwhich informs the child as which layouts are permissible. The child is\nrequired to obey the given constraints.<\/p>\n<p>If the parent reads information computed during the child's layout, the\nparent must pass true for <code>parentUsesSize<\/code>. In that case, the parent will\nbe marked as needing layout whenever the child is marked as needing layout\nbecause the parent's layout information depends on the child's layout\ninformation. If the parent uses the default value (false) for\n<code>parentUsesSize<\/code>, the child can change its layout information (subject to\nthe given constraints) without informing the parent.<\/p>\n<p>Subclasses should not override <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> directly. Instead, they should\noverride <a href=\"rendering\/RenderObject\/performResize.html\">performResize<\/a> and\/or <a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a>. The <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> method\ndelegates the actual work to <a href=\"rendering\/RenderObject\/performResize.html\">performResize<\/a> and <a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a>.<\/p>\n<p>The parent's <a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a> method should call the <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> of all its\nchildren unconditionally. It is the <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> method's responsibility (as\nimplemented here) to return early if the child does not need to do any\nwork to update its layout information.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "constraints",
+                    "type": "rendering.Constraints",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "parentUsesSize",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/layout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void layout(Constraints constraints, { bool parentUsesSize = false }) {\n  assert(constraints != null);\n  assert(constraints.debugAssertIsValid(\n    isAppliedConstraint: true,\n    informationCollector: (StringBuffer information) {\n      final List&lt;String&gt; stack = StackTrace.current.toString().split('\\n');\n      int targetFrame;\n      final Pattern layoutFramePattern = RegExp(r'^#[0-9]+ +RenderObject.layout \\(');\n      for (int i = 0; i &lt; stack.length; i += 1) {\n        if (layoutFramePattern.matchAsPrefix(stack[i]) != null) {\n          targetFrame = i + 1;\n          break;\n        }\n      }\n      if (targetFrame != null &amp;&amp; targetFrame &lt; stack.length) {\n        information.writeln(\n          'These invalid constraints were provided to $runtimeType\\'s layout() '\n          'function by the following function, which probably computed the '\n          'invalid constraints in question:'\n        );\n        final Pattern targetFramePattern = RegExp(r'^#[0-9]+ +(.+)$');\n        final Match targetFrameMatch = targetFramePattern.matchAsPrefix(stack[targetFrame]);\n        if (targetFrameMatch != null &amp;&amp; targetFrameMatch.groupCount &gt; 0) {\n          information.writeln('  ${targetFrameMatch.group(1)}');\n        } else {\n          information.writeln(stack[targetFrame]);\n        }\n      }\n    },\n  ));\n  assert(!_debugDoingThisResize);\n  assert(!_debugDoingThisLayout);\n  RenderObject relayoutBoundary;\n  if (!parentUsesSize || sizedByParent || constraints.isTight || parent is! RenderObject) {\n    relayoutBoundary = this;\n  } else {\n    final RenderObject parent = this.parent;\n    relayoutBoundary = parent._relayoutBoundary;\n  }\n  assert(() {\n    _debugCanParentUseSize = parentUsesSize;\n    return true;\n  }());\n  if (!_needsLayout &amp;&amp; constraints == _constraints &amp;&amp; relayoutBoundary == _relayoutBoundary) {\n    assert(() {\n      \/\/ in case parentUsesSize changed since the last invocation, set size\n      \/\/ to itself, so it has the right internal debug values.\n      _debugDoingThisResize = sizedByParent;\n      _debugDoingThisLayout = !sizedByParent;\n      final RenderObject debugPreviousActiveLayout = _debugActiveLayout;\n      _debugActiveLayout = this;\n      debugResetSize();\n      _debugActiveLayout = debugPreviousActiveLayout;\n      _debugDoingThisLayout = false;\n      _debugDoingThisResize = false;\n      return true;\n    }());\n    return;\n  }\n  _constraints = constraints;\n  _relayoutBoundary = relayoutBoundary;\n  assert(!_debugMutationsLocked);\n  assert(!_doingThisLayoutWithCallback);\n  assert(() {\n    _debugMutationsLocked = true;\n    if (debugPrintLayouts)\n      debugPrint('Laying out (${sizedByParent ? \"with separate resize\" : \"with resize allowed\"}) $this');\n    return true;\n  }());\n  if (sizedByParent) {\n    assert(() { _debugDoingThisResize = true; return true; }());\n    try {\n      performResize();\n      assert(() { debugAssertDoesMeetConstraints(); return true; }());\n    } catch (e, stack) {\n      _debugReportException('performResize', e, stack);\n    }\n    assert(() { _debugDoingThisResize = false; return true; }());\n  }\n  RenderObject debugPreviousActiveLayout;\n  assert(() {\n    _debugDoingThisLayout = true;\n    debugPreviousActiveLayout = _debugActiveLayout;\n    _debugActiveLayout = this;\n    return true;\n  }());\n  try {\n    performLayout();\n    markNeedsSemanticsUpdate();\n    assert(() { debugAssertDoesMeetConstraints(); return true; }());\n  } catch (e, stack) {\n    _debugReportException('performLayout', e, stack);\n  }\n  assert(() {\n    _debugActiveLayout = debugPreviousActiveLayout;\n    _debugDoingThisLayout = false;\n    _debugMutationsLocked = false;\n    return true;\n  }());\n  _needsLayout = false;\n  markNeedsPaint();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "markNeedsCompositingBitsUpdate",
+            "type": "",
+            "desc": "<p>Mark the compositing state for this render object as dirty.<\/p>\n<p>This is called to indicate that the value for <a href=\"rendering\/RenderObject\/needsCompositing.html\">needsCompositing<\/a> needs to\nbe recomputed during the next <code>flushCompositingBits<\/code> engine phase.<\/p>\n<p>When the subtree is mutated, we need to recompute our\n<a href=\"rendering\/RenderObject\/needsCompositing.html\">needsCompositing<\/a> bit, and some of our ancestors need to do the\nsame (in case ours changed in a way that will change theirs). To\nthis end, <a href=\"rendering\/RenderObject\/adoptChild.html\">adoptChild<\/a> and <a href=\"rendering\/RenderObject\/dropChild.html\">dropChild<\/a> call this method, and, as\nnecessary, this method calls the parent's, etc, walking up the\ntree to mark all the nodes that need updating.<\/p>\n<p>This method does not schedule a rendering frame, because since\nit cannot be the case that <em>only<\/em> the compositing bits changed,\nsomething else will have scheduled a frame for us.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/markNeedsCompositingBitsUpdate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void markNeedsCompositingBitsUpdate() {\n  if (_needsCompositingBitsUpdate)\n    return;\n  _needsCompositingBitsUpdate = true;\n  if (parent is RenderObject) {\n    final RenderObject parent = this.parent;\n    if (parent._needsCompositingBitsUpdate)\n      return;\n    if (!isRepaintBoundary &amp;&amp; !parent.isRepaintBoundary) {\n      parent.markNeedsCompositingBitsUpdate();\n      return;\n    }\n  }\n  assert(() {\n    final AbstractNode parent = this.parent;\n    if (parent is RenderObject)\n      return parent._needsCompositing;\n    return true;\n  }());\n  \/\/ parent is fine (or there isn't one), but we are dirty\n  if (owner != null)\n    owner._nodesNeedingCompositingBitsUpdate.add(this);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "markNeedsLayout",
+            "type": "",
+            "desc": "<p>Mark this render object's layout information as dirty, and either register\nthis object with its <a href=\"rendering\/PipelineOwner-class.html\">PipelineOwner<\/a>, or defer to the parent, depending on\nwhether this object is a relayout boundary or not respectively.<\/p>\n<h2 id=\"background\">Background<\/h2>\n<p>Rather than eagerly updating layout information in response to writes into\na render object, we instead mark the layout information as dirty, which\nschedules a visual update. As part of the visual update, the rendering\npipeline updates the render object's layout information.<\/p>\n<p>This mechanism batches the layout work so that multiple sequential writes\nare coalesced, removing redundant computation.<\/p>\n<p>If a render object's parent indicates that it uses the size of one of its\nrender object children when computing its layout information, this\nfunction, when called for the child, will also mark the parent as needing\nlayout. In that case, since both the parent and the child need to have\ntheir layout recomputed, the pipeline owner is only notified about the\nparent; when the parent is laid out, it will call the child's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a>\nmethod and thus the child will be laid out as well.<\/p>\n<p>Once <a href=\"rendering\/RenderObject\/markNeedsLayout.html\">markNeedsLayout<\/a> has been called on a render object,\n<a href=\"rendering\/RenderObject\/debugNeedsLayout.html\">debugNeedsLayout<\/a> returns true for that render object until just after\nthe pipeline owner has called <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> on the render object.<\/p>\n<h2 id=\"special-cases\">Special cases<\/h2>\n<p>Some subclasses of <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>, notably <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, have other\nsituations in which the parent needs to be notified if the child is\ndirtied. Such subclasses override markNeedsLayout and either call\n<code>super.markNeedsLayout()<\/code>, in the normal case, or call\n<a href=\"rendering\/RenderObject\/markParentNeedsLayout.html\">markParentNeedsLayout<\/a>, in the case where the parent needs to be laid out\nas well as the child.<\/p>\n<p>If <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> has changed, calls\n<a href=\"rendering\/RenderObject\/markNeedsLayoutForSizedByParentChange.html\">markNeedsLayoutForSizedByParentChange<\/a> instead of <a href=\"rendering\/RenderObject\/markNeedsLayout.html\">markNeedsLayout<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/markNeedsLayout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void markNeedsLayout() {\n  assert(_debugCanPerformMutations);\n  if (_needsLayout) {\n    assert(_debugSubtreeRelayoutRootAlreadyMarkedNeedsLayout());\n    return;\n  }\n  assert(_relayoutBoundary != null);\n  if (_relayoutBoundary != this) {\n    markParentNeedsLayout();\n  } else {\n    _needsLayout = true;\n    if (owner != null) {\n      assert(() {\n        if (debugPrintMarkNeedsLayoutStacks)\n          debugPrintStack(label: 'markNeedsLayout() called for $this');\n        return true;\n      }());\n      owner._nodesNeedingLayout.add(this);\n      owner.requestVisualUpdate();\n    }\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "markNeedsLayoutForSizedByParentChange",
+            "type": "",
+            "desc": "<p>Mark this render object's layout information as dirty (like\n<a href=\"rendering\/RenderObject\/markNeedsLayout.html\">markNeedsLayout<\/a>), and additionally also handle any necessary work to\nhandle the case where <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> has changed value.<\/p>\n<p>This should be called whenever <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> might have changed.<\/p>\n<p>Only call this if <a href=\"foundation\/AbstractNode\/parent.html\">parent<\/a> is not null.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/markNeedsLayoutForSizedByParentChange.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void markNeedsLayoutForSizedByParentChange() {\n  markNeedsLayout();\n  markParentNeedsLayout();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "markNeedsPaint",
+            "type": "",
+            "desc": "<p>Mark this render object as having changed its visual appearance.<\/p>\n<p>Rather than eagerly updating this render object's display list\nin response to writes, we instead mark the render object as needing to\npaint, which schedules a visual update. As part of the visual update, the\nrendering pipeline will give this render object an opportunity to update\nits display list.<\/p>\n<p>This mechanism batches the painting work so that multiple sequential\nwrites are coalesced, removing redundant computation.<\/p>\n<p>Once <a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a> has been called on a render object,\n<a href=\"rendering\/RenderObject\/debugNeedsPaint.html\">debugNeedsPaint<\/a> returns true for that render object until just after\nthe pipeline owner has called <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> on the render object.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/RepaintBoundary-class.html\">RepaintBoundary<\/a>, to scope a subtree of render objects to their own\nlayer, thus limiting the number of nodes that <a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a> must mark\ndirty.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/markNeedsPaint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void markNeedsPaint() {\n  assert(owner == null || !owner.debugDoingPaint);\n  if (_needsPaint)\n    return;\n  _needsPaint = true;\n  if (isRepaintBoundary) {\n    assert(() {\n      if (debugPrintMarkNeedsPaintStacks)\n        debugPrintStack(label: 'markNeedsPaint() called for $this');\n      return true;\n    }());\n    \/\/ If we always have our own layer, then we can just repaint\n    \/\/ ourselves without involving any other nodes.\n    assert(_layer != null);\n    if (owner != null) {\n      owner._nodesNeedingPaint.add(this);\n      owner.requestVisualUpdate();\n    }\n  } else if (parent is RenderObject) {\n    \/\/ We don't have our own layer; one of our ancestors will take\n    \/\/ care of updating the layer we're in and when they do that\n    \/\/ we'll get our paint() method called.\n    assert(_layer == null);\n    final RenderObject parent = this.parent;\n    parent.markNeedsPaint();\n    assert(parent == this.parent);\n  } else {\n    assert(() {\n      if (debugPrintMarkNeedsPaintStacks)\n        debugPrintStack(label: 'markNeedsPaint() called for $this (root of render tree)');\n      return true;\n    }());\n    \/\/ If we're the root of the render tree (probably a RenderView),\n    \/\/ then we have to paint ourselves, since nobody else can paint\n    \/\/ us. We don't add ourselves to _nodesNeedingPaint in this\n    \/\/ case, because the root is always told to paint regardless.\n    if (owner != null)\n      owner.requestVisualUpdate();\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "markNeedsSemanticsUpdate",
+            "type": "",
+            "desc": "<p>Mark this node as needing an update to its semantics description.<\/p>\n<p>This must be called whenever the semantics configuration of this\n<a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> as annotated by <a href=\"rendering\/RenderObject\/describeSemanticsConfiguration.html\">describeSemanticsConfiguration<\/a> changes in\nany way to update the semantics tree.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/markNeedsSemanticsUpdate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void markNeedsSemanticsUpdate() {\n  assert(!attached || !owner._debugDoingSemantics);\n  if (!attached || owner._semanticsOwner == null) {\n    _cachedSemanticsConfiguration = null;\n    return;\n  }\n\n  \/\/ Dirty the semantics tree starting at `this` until we have reached a\n  \/\/ RenderObject that is a semantics boundary. All semantics past this\n  \/\/ RenderObject are still up-to date. Therefore, we will later only rebuild\n  \/\/ the semantics subtree starting at the identified semantics boundary.\n\n  final bool wasSemanticsBoundary = _semantics != null &amp;&amp; _cachedSemanticsConfiguration?.isSemanticBoundary == true;\n  _cachedSemanticsConfiguration = null;\n  bool isEffectiveSemanticsBoundary = _semanticsConfiguration.isSemanticBoundary &amp;&amp; wasSemanticsBoundary;\n  RenderObject node = this;\n\n  while (!isEffectiveSemanticsBoundary &amp;&amp; node.parent is RenderObject) {\n    if (node != this &amp;&amp; node._needsSemanticsUpdate)\n      break;\n    node._needsSemanticsUpdate = true;\n\n    node = node.parent;\n    isEffectiveSemanticsBoundary = node._semanticsConfiguration.isSemanticBoundary;\n    if (isEffectiveSemanticsBoundary &amp;&amp; node._semantics == null) {\n      \/\/ We have reached a semantics boundary that doesn't own a semantics node.\n      \/\/ That means the semantics of this branch are currently blocked and will\n      \/\/ not appear in the semantics tree. We can abort the walk here.\n      return;\n    }\n  }\n  if (node != this &amp;&amp; _semantics != null &amp;&amp; _needsSemanticsUpdate) {\n    \/\/ If `this` node has already been added to [owner._nodesNeedingSemantics]\n    \/\/ remove it as it is no longer guaranteed that its semantics\n    \/\/ node will continue to be in the tree. If it still is in the tree, the\n    \/\/ ancestor `node` added to [owner._nodesNeedingSemantics] at the end of\n    \/\/ this block will ensure that the semantics of `this` node actually gets\n    \/\/ updated.\n    \/\/ (See semantics_10_test.dart for an example why this is required).\n    owner._nodesNeedingSemantics.remove(this);\n  }\n  if (!node._needsSemanticsUpdate) {\n    node._needsSemanticsUpdate = true;\n    if (owner != null) {\n      assert(node._semanticsConfiguration.isSemanticBoundary || node.parent is! RenderObject);\n      owner._nodesNeedingSemantics.add(node);\n      owner.requestVisualUpdate();\n    }\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "markParentNeedsLayout",
+            "type": "",
+            "desc": "<p>Mark this render object's layout information as dirty, and then defer to\nthe parent.<\/p>\n<p>This function should only be called from <a href=\"rendering\/RenderObject\/markNeedsLayout.html\">markNeedsLayout<\/a> or\n<a href=\"rendering\/RenderObject\/markNeedsLayoutForSizedByParentChange.html\">markNeedsLayoutForSizedByParentChange<\/a> implementations of subclasses that\nintroduce more reasons for deferring the handling of dirty layout to the\nparent. See <a href=\"rendering\/RenderObject\/markNeedsLayout.html\">markNeedsLayout<\/a> for details.<\/p>\n<p>Only call this if <a href=\"foundation\/AbstractNode\/parent.html\">parent<\/a> is not null.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/markParentNeedsLayout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid markParentNeedsLayout() {\n  _needsLayout = true;\n  final RenderObject parent = this.parent;\n  if (!_doingThisLayoutWithCallback) {\n    parent.markNeedsLayout();\n  } else {\n    assert(parent._debugDoingThisLayout);\n  }\n  assert(parent == this.parent);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "paint",
+            "type": "",
+            "desc": "<p>Paint this render object into the given context at the given offset.<\/p>\n<p>Subclasses should override this method to provide a visual appearance\nfor themselves. The render object's local coordinate system is\naxis-aligned with the coordinate system of the context's canvas and the\nrender object's local origin (i.e, x=0 and y=0) is placed at the given\noffset in the context's canvas.<\/p>\n<p>Do not call this function directly. If you wish to paint yourself, call\n<a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a> instead to schedule a call to this function. If you wish\nto paint one of your children, call <a href=\"rendering\/PaintingContext\/paintChild.html\">PaintingContext.paintChild<\/a> on the\ngiven <code>context<\/code>.<\/p>\n<p>When painting one of your children (via a paint child function on the\ngiven context), the current canvas held by the context might change\nbecause draw operations before and after painting children might need to\nbe recorded on separate compositing layers.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "rendering.PaintingContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/paint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void paint(PaintingContext context, Offset offset) { }<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "performLayout",
+            "type": "",
+            "desc": "<p>Do the work of computing the layout for this render object.<\/p>\n<p>Do not call this function directly: call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> instead. This function\nis called by <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> when there is actually work to be done by this\nrender object during layout. The layout constraints provided by your\nparent are available via the <a href=\"rendering\/RenderObject\/constraints.html\">constraints<\/a> getter.<\/p>\n<p>If <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is true, then this function should not actually change\nthe dimensions of this render object. Instead, that work should be done by\n<a href=\"rendering\/RenderObject\/performResize.html\">performResize<\/a>. If <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is false, then this function should\nboth change the dimensions of this render object and instruct its children\nto layout.<\/p>\n<p>In implementing this function, you must call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> on each of your\nchildren, passing true for parentUsesSize if your layout information is\ndependent on your child's layout information. Passing true for\nparentUsesSize ensures that this render object will undergo layout if the\nchild undergoes layout. Otherwise, the child can change its layout\ninformation without informing this render object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/performLayout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid performLayout();<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "performResize",
+            "type": "",
+            "desc": "<p>Updates the render objects size using only the constraints.<\/p>\n<p>Do not call this function directly: call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> instead. This function\nis called by <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> when there is actually work to be done by this\nrender object during layout. The layout constraints provided by your\nparent are available via the <a href=\"rendering\/RenderObject\/constraints.html\">constraints<\/a> getter.<\/p>\n<p>Subclasses that set <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> to true should override this method\nto compute their size.<\/p>\n<p>This function is called only if <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is true.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/performResize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid performResize();<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "reassemble",
+            "type": "",
+            "desc": "<p>Cause the entire subtree rooted at the given <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> to be marked\ndirty for layout, paint, etc, so that the effects of a hot reload can be\nseen, or so that the effect of changing a global debug flag (such as\n<a href=\"rendering\/debugPaintSizeEnabled.html\">debugPaintSizeEnabled<\/a>) can be applied.<\/p>\n<p>This is called by the <a href=\"rendering\/RendererBinding-mixin.html\">RendererBinding<\/a> in response to the\n<code>ext.flutter.reassemble<\/code> hook, which is used by development tools when the\napplication code has changed, to cause the widget tree to pick up any\nchanged implementations.<\/p>\n<p>This is expensive and should not be called except during development.<\/p>\n<p>See also:<\/p>\n<ul><li><a href=\"foundation\/BindingBase\/reassembleApplication.html\">BindingBase.reassembleApplication<\/a><\/li><\/ul>",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/reassemble.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void reassemble() {\n  markNeedsLayout();\n  markNeedsCompositingBitsUpdate();\n  markNeedsPaint();\n  markNeedsSemanticsUpdate();\n  visitChildren((RenderObject child) {\n    child.reassemble();\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "replaceRootLayer",
+            "type": "",
+            "desc": "<p>Replace the layer. This is only valid for the root of a render\nobject subtree (whatever object <a href=\"rendering\/RenderObject\/scheduleInitialPaint.html\">scheduleInitialPaint<\/a> was\ncalled on).<\/p>\n<p>This might be called if, e.g., the device pixel ratio changed.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rootLayer",
+                    "type": "rendering.OffsetLayer",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/replaceRootLayer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void replaceRootLayer(OffsetLayer rootLayer) {\n  assert(rootLayer.attached);\n  assert(attached);\n  assert(parent is! RenderObject);\n  assert(!owner._debugDoingPaint);\n  assert(isRepaintBoundary);\n  assert(_layer != null); \/\/ use scheduleInitialPaint the first time\n  _layer.detach();\n  _layer = rootLayer;\n  markNeedsPaint();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "rotate",
+            "type": "",
+            "desc": "<p>Rotate this render object (not yet implemented).<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "oldAngle",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "newAngle",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "time",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/rotate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void rotate({\n  int oldAngle, \/\/ 0..3\n  int newAngle, \/\/ 0..3\n  Duration time,\n}) { }<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "scheduleInitialLayout",
+            "type": "",
+            "desc": "<p>Bootstrap the rendering pipeline by scheduling the very first layout.<\/p>\n<p>Requires this render object to be attached and that this render object\nis the root of the render tree.<\/p>\n<p>See <a href=\"rendering\/RenderView-class.html\">RenderView<\/a> for an example of how this function is used.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/scheduleInitialLayout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void scheduleInitialLayout() {\n  assert(attached);\n  assert(parent is! RenderObject);\n  assert(!owner._debugDoingLayout);\n  assert(_relayoutBoundary == null);\n  _relayoutBoundary = this;\n  assert(() {\n    _debugCanParentUseSize = false;\n    return true;\n  }());\n  owner._nodesNeedingLayout.add(this);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "scheduleInitialPaint",
+            "type": "",
+            "desc": "<p>Bootstrap the rendering pipeline by scheduling the very first paint.<\/p>\n<p>Requires that this render object is attached, is the root of the render\ntree, and has a composited layer.<\/p>\n<p>See <a href=\"rendering\/RenderView-class.html\">RenderView<\/a> for an example of how this function is used.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rootLayer",
+                    "type": "rendering.ContainerLayer",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/scheduleInitialPaint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void scheduleInitialPaint(ContainerLayer rootLayer) {\n  assert(rootLayer.attached);\n  assert(attached);\n  assert(parent is! RenderObject);\n  assert(!owner._debugDoingPaint);\n  assert(isRepaintBoundary);\n  assert(_layer == null);\n  _layer = rootLayer;\n  assert(_needsPaint);\n  owner._nodesNeedingPaint.add(this);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "scheduleInitialSemantics",
+            "type": "",
+            "desc": "<p>Bootstrap the semantics reporting mechanism by marking this node\nas needing a semantics update.<\/p>\n<p>Requires that this render object is attached, and is the root of\nthe render tree.<\/p>\n<p>See <a href=\"rendering\/RendererBinding-mixin.html\">RendererBinding<\/a> for an example of how this function is used.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/scheduleInitialSemantics.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void scheduleInitialSemantics() {\n  assert(attached);\n  assert(parent is! RenderObject);\n  assert(!owner._debugDoingSemantics);\n  assert(_semantics == null);\n  assert(_needsSemanticsUpdate);\n  assert(owner._semanticsOwner != null);\n  owner._nodesNeedingSemantics.add(this);\n  owner.requestVisualUpdate();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "sendSemanticsEvent",
+            "type": "",
+            "desc": "<p>Sends a <a href=\"semantics\/SemanticsEvent-class.html\">SemanticsEvent<\/a> associated with this render object's <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>.<\/p>\n<p>If this render object has no semantics information, the first parent\nrender object with a non-null semantic node is used.<\/p>\n<p>If semantics are disabled, no events are dispatched.<\/p>\n<p>See <a href=\"semantics\/SemanticsNode\/sendEvent.html\">SemanticsNode.sendEvent<\/a> for a full description of the behavior.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "semanticsEvent",
+                    "type": "semantics.SemanticsEvent",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/sendSemanticsEvent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void sendSemanticsEvent(SemanticsEvent semanticsEvent) {\n  if (owner.semanticsOwner == null)\n    return;\n  if (_semantics != null &amp;&amp; !_semantics.isMergedIntoParent) {\n    _semantics.sendEvent(semanticsEvent);\n  } else if (parent != null) {\n    final RenderObject renderParent = parent;\n    renderParent.sendSemanticsEvent(semanticsEvent);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "setupParentData",
+            "type": "",
+            "desc": "<p>Override to setup parent data correctly for your children.<\/p>\n<p>You can call this function to set up the parent data for child before the\nchild is added to the parent's child list.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/setupParentData.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setupParentData(covariant RenderObject child) {\n  assert(_debugCanPerformMutations);\n  if (child.parentData is! ParentData)\n    child.parentData = ParentData();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "showOnScreen",
+            "type": "",
+            "desc": "<p>Attempt to make (a portion of) this or a descendant <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> visible\non screen.<\/p>\n<p>If <code>descendant<\/code> is provided, that <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> is made visible. If\n<code>descendant<\/code> is omitted, this <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> is made visible.<\/p>\n<p>The optional <code>rect<\/code> parameter describes which area of that <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>\nshould be shown on screen. If <code>rect<\/code> is null, the entire\n<a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> (as defined by its <a href=\"rendering\/RenderObject\/paintBounds.html\">paintBounds<\/a>) will be revealed. The\n<code>rect<\/code> parameter is interpreted relative to the coordinate system of\n<code>descendant<\/code> if that argument is provided and relative to this\n<a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> otherwise.<\/p>\n<p>The <code>duration<\/code> parameter can be set to a non-zero value to bring the\ntarget object on screen in an animation defined by <code>curve<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "descendant",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "rect",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "duration",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "curve",
+                    "type": "animation.Curve",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/showOnScreen.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void showOnScreen({\n  RenderObject descendant,\n  Rect rect,\n  Duration duration = Duration.zero,\n  Curve curve = Curves.ease,\n}) {\n  if (parent is RenderObject) {\n    final RenderObject renderParent = parent;\n    renderParent.showOnScreen(\n      descendant: descendant ?? this,\n      rect: rect,\n      duration: duration,\n      curve: curve,\n    );\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "minLevel",
+                    "type": "foundation.DiagnosticLevel",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString({ DiagnosticLevel minLevel = DiagnosticLevel.debug }) =&gt; toStringShort();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toStringDeep",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a description of the tree rooted at this node.\nIf the prefix argument is provided, then every line in the output\nwill be prefixed by that string.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "prefixLineOne",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "prefixOtherLines",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "minLevel",
+                    "type": "foundation.DiagnosticLevel",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/toStringDeep.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toStringDeep({\n  String prefixLineOne = '',\n  String prefixOtherLines = '',\n  DiagnosticLevel minLevel = DiagnosticLevel.debug,\n}) {\n  RenderObject debugPreviousActiveLayout;\n  assert(() {\n    debugPreviousActiveLayout = _debugActiveLayout;\n    _debugActiveLayout = null;\n    return true;\n  }());\n  final String result = super.toStringDeep(\n    prefixLineOne: prefixLineOne,\n    prefixOtherLines: prefixOtherLines,\n    minLevel: minLevel,\n  );\n  assert(() {\n    _debugActiveLayout = debugPreviousActiveLayout;\n    return true;\n  }());\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toStringShallow",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a one-line detailed description of the render object.\nThis description is often somewhat long.<\/p>\n<p>This includes the same information for this RenderObject as given by\n<a href=\"rendering\/RenderObject\/toStringDeep.html\">toStringDeep<\/a>, but does not recurse to any children.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "joiner",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "minLevel",
+                    "type": "foundation.DiagnosticLevel",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/toStringShallow.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toStringShallow({\n  String joiner = ', ',\n  DiagnosticLevel minLevel = DiagnosticLevel.debug,\n}) {\n  RenderObject debugPreviousActiveLayout;\n  assert(() {\n    debugPreviousActiveLayout = _debugActiveLayout;\n    _debugActiveLayout = null;\n    return true;\n  }());\n  final String result = super.toStringShallow(joiner: joiner, minLevel: minLevel);\n  assert(() {\n    _debugActiveLayout = debugPreviousActiveLayout;\n    return true;\n  }());\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toStringShort",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a human understandable name.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/toStringShort.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toStringShort() {\n  String header = describeIdentity(this);\n  if (_relayoutBoundary != null &amp;&amp; _relayoutBoundary != this) {\n    int count = 1;\n    RenderObject target = parent;\n    while (target != null &amp;&amp; target != _relayoutBoundary) {\n      target = target.parent;\n      count += 1;\n    }\n    header += ' relayoutBoundary=up$count';\n  }\n  if (_needsLayout)\n    header += ' NEEDS-LAYOUT';\n  if (_needsPaint)\n    header += ' NEEDS-PAINT';\n  if (!attached)\n    header += ' DETACHED';\n  return header;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "visitChildren",
+            "type": "",
+            "desc": "<p>Calls visitor for each immediate child of this render object.<\/p>\n<p>Override in subclasses with children and call the visitor for each child.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "visitor",
+                    "type": "rendering.RenderObjectVisitor",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/visitChildren.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void visitChildren(RenderObjectVisitor visitor) { }<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "visitChildrenForSemantics",
+            "type": "",
+            "desc": "<p>Called when collecting the semantics of this node.<\/p>\n<p>The implementation has to return the children in paint order skipping all\nchildren that are not semantically relevant (e.g. because they are\ninvisible).<\/p>\n<p>The default implementation mirrors the behavior of\n<a href=\"rendering\/RenderObject\/visitChildren.html\">visitChildren()<\/a> (which is supposed to walk all the children).<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderObject",
+            "sig": "",
+            "params": [
+                {
+                    "name": "visitor",
+                    "type": "rendering.RenderObjectVisitor",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderObject\/visitChildrenForSemantics.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void visitChildrenForSemantics(RenderObjectVisitor visitor) {\n  visitChildren(visitor);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "alwaysNeedsCompositing",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether this render object always needs compositing.<\/p>\n<p>Override this in subclasses to indicate that your paint function always\ncreates at least one composited layer. For example, videos should return\ntrue if they use hardware decoders.<\/p>\n<p>You must call <a href=\"rendering\/RenderObject\/markNeedsCompositingBitsUpdate.html\">markNeedsCompositingBitsUpdate<\/a> if the value of this getter\nchanges. (This is implied when <a href=\"rendering\/RenderObject\/adoptChild.html\">adoptChild<\/a> or <a href=\"rendering\/RenderObject\/dropChild.html\">dropChild<\/a> are called.)<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/alwaysNeedsCompositing.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool get alwaysNeedsCompositing =&gt; false;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "constraints",
+            "type": "rendering.Constraints",
+            "types": [],
+            "desc": "<p>The layout constraints most recently supplied by the parent.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/constraints.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nConstraints get constraints =&gt; _constraints;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugActiveLayout",
+            "type": "rendering.RenderObject",
+            "types": [],
+            "desc": "<p>The render object that is actively computing layout.<\/p>\n<p>Only valid when asserts are enabled. In release builds, always returns\nnull.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/debugActiveLayout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">static RenderObject get debugActiveLayout =&gt; _debugActiveLayout;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugActivePaint",
+            "type": "rendering.RenderObject",
+            "types": [],
+            "desc": "<p>The render object that is actively painting.<\/p>\n<p>Only valid when asserts are enabled. In release builds, always returns\nnull.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/debugActivePaint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">static RenderObject get debugActivePaint =&gt; _debugActivePaint;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugCanParentUseSize",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether the parent render object is permitted to use this render object's\nsize.<\/p>\n<p>Determined by the <code>parentUsesSize<\/code> parameter to <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a>.<\/p>\n<p>Only valid when asserts are enabled. In release builds, always returns\nnull.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/debugCanParentUseSize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get debugCanParentUseSize =&gt; _debugCanParentUseSize;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugCheckingIntrinsics",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>When true, debugAssertDoesMeetConstraints() is currently\nexecuting asserts for verifying the consistent behavior of\nintrinsic dimensions methods.<\/p>\n<p>This should only be set by debugAssertDoesMeetConstraints()\nimplementations. It is used by tests to selectively ignore\ncustom layout callbacks. It should not be set outside of\ndebugAssertDoesMeetConstraints(), and should not be checked in\nrelease mode (where it will always be false).<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/debugCheckingIntrinsics.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">static bool debugCheckingIntrinsics = false\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugCreator",
+            "type": "",
+            "types": [],
+            "desc": "<p>The object responsible for creating this render object.<\/p>\n<p>Used in debug messages.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/debugCreator.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">dynamic debugCreator\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugDoingThisLayout",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether <a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a> for this render object is currently running.<\/p>\n<p>Only valid when asserts are enabled. In release builds, always returns\nfalse.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/debugDoingThisLayout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get debugDoingThisLayout =&gt; _debugDoingThisLayout;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugDoingThisPaint",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> for this render object is currently running.<\/p>\n<p>Only valid when asserts are enabled. In release builds, always returns\nfalse.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/debugDoingThisPaint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get debugDoingThisPaint =&gt; _debugDoingThisPaint;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugDoingThisResize",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether <a href=\"rendering\/RenderObject\/performResize.html\">performResize<\/a> for this render object is currently running.<\/p>\n<p>Only valid when asserts are enabled. In release builds, always returns\nfalse.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/debugDoingThisResize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get debugDoingThisResize =&gt; _debugDoingThisResize;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugLayer",
+            "type": "rendering.OffsetLayer",
+            "types": [],
+            "desc": "<p>In debug mode, the compositing layer that this render object uses to repaint.<\/p>\n<p>This getter is intended for debugging purposes only. In release builds, it\nalways returns null. In debug builds, it returns the layer even if the layer\nis dirty.<\/p>\n<p>For production code, consider <a href=\"rendering\/RenderObject\/layer.html\">layer<\/a>.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/debugLayer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">OffsetLayer get debugLayer {\n  OffsetLayer result;\n  assert(() {\n    result = _layer;\n    return true;\n  }());\n  return result;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugNeedsLayout",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether this render object's layout information is dirty.<\/p>\n<p>This is only set in debug mode. In general, render objects should not need\nto condition their runtime behavior on whether they are dirty or not,\nsince they should only be marked dirty immediately prior to being laid\nout and painted.<\/p>\n<p>It is intended to be used by tests and asserts.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/debugNeedsLayout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get debugNeedsLayout {\n  bool result;\n  assert(() {\n    result = _needsLayout;\n    return true;\n  }());\n  return result;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugNeedsPaint",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether this render object's paint information is dirty.<\/p>\n<p>This is only set in debug mode. In general, render objects should not need\nto condition their runtime behavior on whether they are dirty or not,\nsince they should only be marked dirty immediately prior to being laid\nout and painted.<\/p>\n<p>It is intended to be used by tests and asserts.<\/p>\n<p>It is possible (and indeed, quite common) for <a href=\"rendering\/RenderObject\/debugNeedsPaint.html\">debugNeedsPaint<\/a> to be\nfalse and <a href=\"rendering\/RenderObject\/debugNeedsLayout.html\">debugNeedsLayout<\/a> to be true. The render object will still be\nrepainted in the next frame when this is the case, because the\n<a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a> method is implicitly called by the framework after a\nrender object is laid out, prior to the paint phase.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/debugNeedsPaint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get debugNeedsPaint {\n  bool result;\n  assert(() {\n    result = _needsPaint;\n    return true;\n  }());\n  return result;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugSemantics",
+            "type": "semantics.SemanticsNode",
+            "types": [],
+            "desc": "<p>The semantics of this render object.<\/p>\n<p>Exposed only for testing and debugging. To learn about the semantics of\nrender objects in production, obtain a <a href=\"rendering\/SemanticsHandle-class.html\">SemanticsHandle<\/a> from\n<a href=\"rendering\/PipelineOwner\/ensureSemantics.html\">PipelineOwner.ensureSemantics<\/a>.<\/p>\n<p>Only valid when asserts are enabled. In release builds, always returns\nnull.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/debugSemantics.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">SemanticsNode get debugSemantics {\n  SemanticsNode result;\n  assert(() {\n    result = _semantics;\n    return true;\n  }());\n  return result;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isRepaintBoundary",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether this render object repaints separately from its parent.<\/p>\n<p>Override this in subclasses to indicate that instances of your class ought\nto repaint independently. For example, render objects that repaint\nfrequently might want to repaint themselves without requiring their parent\nto repaint.<\/p>\n<p>If this getter returns true, the <a href=\"rendering\/RenderObject\/paintBounds.html\">paintBounds<\/a> are applied to this object\nand all descendants.<\/p>\n<p>Warning: This getter must not change value over the lifetime of this object.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/isRepaintBoundary.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isRepaintBoundary =&gt; false;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "layer",
+            "type": "rendering.OffsetLayer",
+            "types": [],
+            "desc": "<p>The compositing layer that this render object uses to repaint.<\/p>\n<p>Call only when <a href=\"rendering\/RenderObject\/isRepaintBoundary.html\">isRepaintBoundary<\/a> is true and the render object has\nalready painted.<\/p>\n<p>To access the layer in debug code, even when it might be inappropriate to\naccess it (e.g. because it is dirty), consider <a href=\"rendering\/RenderObject\/debugLayer.html\">debugLayer<\/a>.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/layer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">OffsetLayer get layer {\n  assert(isRepaintBoundary, 'You can only access RenderObject.layer for render objects that are repaint boundaries.');\n  assert(!_needsPaint);\n  return _layer;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "needsCompositing",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether we or one of our descendants has a compositing layer.<\/p>\n<p>If this node needs compositing as indicated by this bit, then all ancestor\nnodes will also need compositing.<\/p>\n<p>Only legal to call after <a href=\"rendering\/PipelineOwner\/flushLayout.html\">PipelineOwner.flushLayout<\/a> and\n<a href=\"rendering\/PipelineOwner\/flushCompositingBits.html\">PipelineOwner.flushCompositingBits<\/a> have been called.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/needsCompositing.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get needsCompositing {\n  assert(!_needsCompositingBitsUpdate); \/\/ make sure we don't use this bit when it is dirty\n  return _needsCompositing;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "owner",
+            "type": "rendering.PipelineOwner",
+            "types": [],
+            "desc": "<p>The owner for this node (null if unattached).<\/p>\n<p>The entire subtree that this node belongs to will have the same owner.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/owner.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nPipelineOwner get owner =&gt; super.owner;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "paintBounds",
+            "type": "dart:ui.Rect",
+            "types": [],
+            "desc": "<p>An estimate of the bounds within which this render object will paint.\nUseful for debugging flags such as <a href=\"rendering\/debugPaintLayerBordersEnabled.html\">debugPaintLayerBordersEnabled<\/a>.<\/p>\n<p>These are also the bounds used by <a href=\"rendering\/RenderObject\/showOnScreen.html\">showOnScreen<\/a> to make a <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>\nvisible on screen.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/paintBounds.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect get paintBounds;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "parentData",
+            "type": "rendering.ParentData",
+            "types": [],
+            "desc": "<p>Data for use by the parent render object.<\/p>\n<p>The parent data is used by the render object that lays out this object\n(typically this object's parent in the render tree) to store information\nrelevant to itself and to any other nodes who happen to know exactly what\nthe data means. The parent data is opaque to the child.<\/p>\n<ul>\n<li>The parent data field must not be directly set, except by calling\n<a href=\"rendering\/RenderObject\/setupParentData.html\">setupParentData<\/a> on the parent node.<\/li>\n<li>The parent data can be set before the child is added to the parent, by\ncalling <a href=\"rendering\/RenderObject\/setupParentData.html\">setupParentData<\/a> on the future parent node.<\/li>\n<li>The conventions for using the parent data depend on the layout protocol\nused between the parent and child. For example, in box layout, the\nparent data is completely opaque but in sector layout the child is\npermitted to read some fields of the parent data.<\/li>\n<\/ul>",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/parentData.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">ParentData parentData\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "semanticBounds",
+            "type": "dart:ui.Rect",
+            "types": [],
+            "desc": "<p>The bounding box, in the local coordinate system, of this\nobject, for accessibility purposes.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/semanticBounds.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect get semanticBounds;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "sizedByParent",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether the constraints are the only input to the sizing algorithm (in\nparticular, child nodes have no impact).<\/p>\n<p>Returning false is always correct, but returning true can be more\nefficient when computing the size of this render object because we don't\nneed to recompute the size if the constraints don't change.<\/p>\n<p>Typically, subclasses will always return the same value. If the value can\nchange, then, when it does change, the subclass should make sure to call\n<a href=\"rendering\/RenderObject\/markNeedsLayoutForSizedByParentChange.html\">markNeedsLayoutForSizedByParentChange<\/a>.<\/p>\n        ",
+            "memberOf": "rendering.RenderObject",
+            "isConstant": false,
+            "href": "rendering\/RenderObject\/sizedByParent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool get sizedByParent =&gt; false;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [
+        "material.RenderToggleable",
+        "rendering.RenderAbsorbPointer",
+        "rendering.RenderAbstractViewport",
+        "rendering.RenderAligningShiftedBox",
+        "rendering.RenderAndroidView",
+        "rendering.RenderAnimatedOpacity",
+        "rendering.RenderAnimatedSize",
+        "rendering.RenderAnnotatedRegion",
+        "rendering.RenderAspectRatio",
+        "rendering.RenderBackdropFilter",
+        "rendering.RenderBaseline",
+        "rendering.RenderBlockSemantics",
+        "rendering.RenderBox",
+        "rendering.RenderClipOval",
+        "rendering.RenderClipPath",
+        "rendering.RenderClipRRect",
+        "rendering.RenderClipRect",
+        "rendering.RenderConstrainedBox",
+        "rendering.RenderConstrainedOverflowBox",
+        "rendering.RenderCustomMultiChildLayoutBox",
+        "rendering.RenderCustomPaint",
+        "rendering.RenderCustomSingleChildLayoutBox",
+        "rendering.RenderDecoratedBox",
+        "rendering.RenderEditable",
+        "rendering.RenderErrorBox",
+        "rendering.RenderExcludeSemantics",
+        "rendering.RenderFittedBox",
+        "rendering.RenderFlex",
+        "rendering.RenderFlow",
+        "rendering.RenderFollowerLayer",
+        "rendering.RenderFractionalTranslation",
+        "rendering.RenderFractionallySizedOverflowBox",
+        "rendering.RenderIgnorePointer",
+        "rendering.RenderImage",
+        "rendering.RenderIndexedSemantics",
+        "rendering.RenderIndexedStack",
+        "rendering.RenderIntrinsicHeight",
+        "rendering.RenderIntrinsicWidth",
+        "rendering.RenderLeaderLayer",
+        "rendering.RenderLimitedBox",
+        "rendering.RenderListBody",
+        "rendering.RenderListWheelViewport",
+        "rendering.RenderMergeSemantics",
+        "rendering.RenderMetaData",
+        "rendering.FlexParentData",
+        "rendering.FlowParentData",
+        "rendering.ListBodyParentData",
+        "rendering.ListWheelParentData",
+        "rendering.MultiChildLayoutParentData",
+        "rendering.RenderOffstage",
+        "rendering.RenderOpacity",
+        "rendering.RenderPadding",
+        "rendering.RenderParagraph",
+        "rendering.RenderPerformanceOverlay",
+        "rendering.RenderPhysicalModel",
+        "rendering.RenderPhysicalShape",
+        "rendering.RenderPointerListener",
+        "rendering.RenderPositionedBox",
+        "rendering.RenderProxyBox",
+        "rendering.RenderProxyBoxWithHitTestBehavior",
+        "rendering.RenderRepaintBoundary",
+        "rendering.RenderRotatedBox",
+        "rendering.RenderSemanticsAnnotations",
+        "rendering.RenderSemanticsGestureHandler",
+        "rendering.RenderShaderMask",
+        "rendering.RenderShiftedBox",
+        "rendering.RenderShrinkWrappingViewport",
+        "rendering.RenderSizedOverflowBox",
+        "rendering.RenderSliver",
+        "rendering.RenderSliverFillRemaining",
+        "rendering.RenderSliverFillViewport",
+        "rendering.RenderSliverFixedExtentBoxAdaptor",
+        "rendering.RenderSliverFixedExtentList",
+        "rendering.RenderSliverFloatingPersistentHeader",
+        "rendering.RenderSliverFloatingPinnedPersistentHeader",
+        "rendering.RenderSliverGrid",
+        "rendering.RenderSliverList",
+        "rendering.RenderSliverMultiBoxAdaptor",
+        "rendering.RenderSliverPadding",
+        "rendering.RenderSliverPersistentHeader",
+        "rendering.RenderSliverPinnedPersistentHeader",
+        "rendering.RenderSliverScrollingPersistentHeader",
+        "rendering.RenderSliverSingleBoxAdapter",
+        "rendering.RenderSliverToBoxAdapter",
+        "rendering.RenderStack",
+        "rendering.RenderTable",
+        "rendering.RenderTransform",
+        "rendering.RenderUiKitView",
+        "rendering.RenderUnconstrainedBox",
+        "rendering.RenderView",
+        "rendering.RenderViewport",
+        "rendering.RenderViewportBase",
+        "rendering.RenderWrap",
+        "rendering.TextureBox",
+        "widgets.RenderNestedScrollViewViewport",
+        "widgets.RenderSliverOverlapAbsorber",
+        "widgets.RenderSliverOverlapInjector"
+    ],
+    "realImplementors": [],
+    "cn": [],
+    "href": "rendering\/RenderObject-class.html",
+    "desc": "<p>An object in the render tree.<\/p>\n<p>The <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> class hierarchy is the core of the rendering\nlibrary's reason for being.<\/p>\n<p><a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s have a <a href=\"foundation\/AbstractNode\/parent.html\">parent<\/a>, and have a slot called <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> in\nwhich the parent <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> can store child-specific data, for example,\nthe child position. The <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> class also implements the basic\nlayout and paint protocols.<\/p>\n<p>The <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> class, however, does not define a child model (e.g.\nwhether a node has zero, one, or more children). It also doesn't define a\ncoordinate system (e.g. whether children are positioned in Cartesian\ncoordinates, in polar coordinates, etc) or a specific layout protocol (e.g.\nwhether the layout is width-in-height-out, or constraint-in-size-out, or\nwhether the parent sets the size and position of the child before or after\nthe child lays out, etc; or indeed whether the children are allowed to read\ntheir parent's <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> slot).<\/p>\n<p>The <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass introduces the opinion that the layout\nsystem uses Cartesian coordinates.<\/p>\n<h2 id=\"writing-a-renderobject-subclass\">Writing a RenderObject subclass<\/h2>\n<p>In most cases, subclassing <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> itself is overkill, and\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> would be a better starting point. However, if a render object\ndoesn't want to use a Cartesian coordinate system, then it should indeed\ninherit from <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> directly. This allows it to define its own\nlayout protocol by using a new subclass of <a href=\"rendering\/Constraints-class.html\">Constraints<\/a> rather than using\n<a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a>, and by potentially using an entirely new set of objects\nand values to represent the result of the output rather than just a <a href=\"dart-ui\/Size-class.html\">Size<\/a>.\nThis increased flexibility comes at the cost of not being able to rely on\nthe features of <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>. For example, <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> implements an\nintrinsic sizing protocol that allows you to measure a child without fully\nlaying it out, in such a way that if that child changes size, the parent\nwill be laid out again (to take into account the new dimensions of the\nchild). This is a subtle and bug-prone feature to get right.<\/p>\n<p>Most aspects of writing a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> apply to writing a <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> as\nwell, and therefore the discussion at <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> is recommended background\nreading. The main differences are around layout and hit testing, since those\nare the aspects that <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> primarily specializes.<\/p>\n<h3 id=\"layout\">Layout<\/h3>\n<p>A layout protocol begins with a subclass of <a href=\"rendering\/Constraints-class.html\">Constraints<\/a>. See the\ndiscussion at <a href=\"rendering\/Constraints-class.html\">Constraints<\/a> for more information on how to write a\n<a href=\"rendering\/Constraints-class.html\">Constraints<\/a> subclass.<\/p>\n<p>The <a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a> method should take the <a href=\"rendering\/RenderObject\/constraints.html\">constraints<\/a>, and apply them.\nThe output of the layout algorithm is fields set on the object that describe\nthe geometry of the object for the purposes of the parent's layout. For\nexample, with <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> the output is the <a href=\"rendering\/RenderBox\/size.html\">RenderBox.size<\/a> field. This\noutput should only be read by the parent if the parent specified\n<code>parentUsesSize<\/code> as true when calling <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> on the child.<\/p>\n<p>Anytime anything changes on a render object that would affect the layout of\nthat object, it should call <a href=\"rendering\/RenderObject\/markNeedsLayout.html\">markNeedsLayout<\/a>.<\/p>\n<h3 id=\"hit-testing\">Hit Testing<\/h3>\n<p>Hit testing is even more open-ended than layout. There is no method to\noverride, you are expected to provide one.<\/p>\n<p>The general behavior of your hit-testing method should be similar to the\nbehavior described for <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>. The main difference is that the input\nneed not be an <a href=\"dart-ui\/Offset-class.html\">Offset<\/a>. You are also allowed to use a different subclass of\n<a href=\"gestures\/HitTestEntry-class.html\">HitTestEntry<\/a> when adding entries to the <a href=\"gestures\/HitTestResult-class.html\">HitTestResult<\/a>. When the\n<a href=\"rendering\/RenderObject\/handleEvent.html\">handleEvent<\/a> method is called, the same object that was added to the\n<a href=\"gestures\/HitTestResult-class.html\">HitTestResult<\/a> will be passed in, so it can be used to track information\nlike the precise coordinate of the hit, in whatever coordinate system is\nused by the new layout protocol.<\/p>\n<h3 id=\"adapting-from-one-protocol-to-another\">Adapting from one protocol to another<\/h3>\n<p>In general, the root of a Flutter render object tree is a <a href=\"rendering\/RenderView-class.html\">RenderView<\/a>. This\nobject has a single child, which must be a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>. Thus, if you want to\nhave a custom <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> subclass in the render tree, you have two\nchoices: you either need to replace the <a href=\"rendering\/RenderView-class.html\">RenderView<\/a> itself, or you need to\nhave a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> that has your class as its child. (The latter is the much\nmore common case.)<\/p>\n<p>This <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass converts from the box protocol to the protocol of\nyour class.<\/p>\n<p>In particular, this means that for hit testing it overrides\n<a href=\"rendering\/RenderBox\/hitTest.html\">RenderBox.hitTest<\/a>, and calls whatever method you have in your class for\nhit testing.<\/p>\n<p>Similarly, it overrides <a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a> to create a <a href=\"rendering\/Constraints-class.html\">Constraints<\/a> object\nappropriate for your class and passes that to the child's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> method.<\/p>\n<h3 id=\"layout-interactions-between-render-objects\">Layout interactions between render objects<\/h3>\n<p>In general, the layout of a render object should only depend on the output of\nits child's layout, and then only if <code>parentUsesSize<\/code> is set to true in the\n<a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> call. Furthermore, if it is set to true, the parent must call the\nchild's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> if the child is to be rendered, because otherwise the\nparent will not be notified when the child changes its layout outputs.<\/p>\n<p>It is possible to set up render object protocols that transfer additional\ninformation. For example, in the <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> protocol you can query your\nchildren's intrinsic dimensions and baseline geometry. However, if this is\ndone then it is imperative that the child call <a href=\"rendering\/RenderObject\/markNeedsLayout.html\">markNeedsLayout<\/a> on the\nparent any time that additional information changes, if the parent used it\nin the last layout phase. For an example of how to implement this, see the\n<a href=\"rendering\/RenderObject\/markNeedsLayout.html\">RenderBox.markNeedsLayout<\/a> method. It overrides\n<a href=\"rendering\/RenderObject\/markNeedsLayout.html\">RenderObject.markNeedsLayout<\/a> so that if a parent has queried the intrinsic\nor baseline information, it gets marked dirty whenever the child's geometry\nchanges.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "RenderObject"
+}

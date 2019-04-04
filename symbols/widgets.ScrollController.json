@@ -1,0 +1,365 @@
+{
+    "name": "widgets.ScrollController",
+    "extends": [
+        "foundation.ChangeNotifier",
+        "dart:core.Object"
+    ],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "ScrollController",
+            "type": "",
+            "desc": "<p>Creates a controller for a scrollable widget.<\/p>\n<p>The values of <code>initialScrollOffset<\/code> and <code>keepScrollOffset<\/code> must not be null.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "initialScrollOffset",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "keepScrollOffset",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "debugLabel",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "widgets\/ScrollController\/ScrollController.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ScrollController({\n  double initialScrollOffset = 0.0,\n  this.keepScrollOffset = true,\n  this.debugLabel,\n}) : assert(initialScrollOffset != null),\n     assert(keepScrollOffset != null),\n     _initialScrollOffset = initialScrollOffset;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "animateTo",
+            "type": "dart:async.Future",
+            "desc": "<p>Animates the position from its current value to the given value.<\/p>\n<p>Any active animation is canceled. If the user is currently scrolling, that\naction is canceled.<\/p>\n<p>The returned <a href=\"dart-async\/Future-class.html\">Future<\/a> will complete when the animation ends, whether it\ncompleted successfully or whether it was interrupted prematurely.<\/p>\n<p>An animation will be interrupted whenever the user attempts to scroll\nmanually, or whenever another activity is started, or whenever the\nanimation reaches the edge of the viewport and attempts to overscroll. (If\nthe <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> does not overscroll but instead allows scrolling\nbeyond the extents, then going beyond the extents will not interrupt the\nanimation.)<\/p>\n<p>The animation is indifferent to changes to the viewport or content\ndimensions.<\/p>\n<p>Once the animation has completed, the scroll position will attempt to\nbegin a ballistic activity in case its value is not stable (for example,\nif it is scrolled beyond the extents and in that situation the scroll\nposition would normally bounce back).<\/p>\n<p>The duration must not be zero. To jump to a particular value without an\nanimation, use <a href=\"widgets\/ScrollController\/jumpTo.html\">jumpTo<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "offset",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "duration",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "curve",
+                    "type": "animation.Curve",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollController\/animateTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; animateTo(\n  double offset, {\n  @required Duration duration,\n  @required Curve curve,\n}) {\n  assert(_positions.isNotEmpty, 'ScrollController not attached to any scroll views.');\n  final List&lt;Future&lt;void&gt;&gt; animations = List&lt;Future&lt;void&gt;&gt;(_positions.length);\n  for (int i = 0; i &lt; _positions.length; i += 1)\n    animations[i] = _positions[i].animateTo(offset, duration: duration, curve: curve);\n  return Future.wait&lt;void&gt;(animations).then&lt;void&gt;((List&lt;void&gt; _) =&gt; null);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "attach",
+            "type": "",
+            "desc": "<p>Register the given position with this controller.<\/p>\n<p>After this function returns, the <a href=\"widgets\/ScrollController\/animateTo.html\">animateTo<\/a> and <a href=\"widgets\/ScrollController\/jumpTo.html\">jumpTo<\/a> methods on this\ncontroller will manipulate the given position.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "position",
+                    "type": "widgets.ScrollPosition",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollController\/attach.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void attach(ScrollPosition position) {\n  assert(!_positions.contains(position));\n  _positions.add(position);\n  position.addListener(notifyListeners);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "createScrollPosition",
+            "type": "widgets.ScrollPosition",
+            "desc": "<p>Creates a <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> for use by a <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a> widget.<\/p>\n<p>Subclasses can override this function to customize the <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a>\nused by the scrollable widgets they control. For example, <a href=\"widgets\/PageController-class.html\">PageController<\/a>\noverrides this function to return a page-oriented scroll position\nsubclass that keeps the same page visible when the scrollable widget\nresizes.<\/p>\n<p>By default, returns a <a href=\"widgets\/ScrollPositionWithSingleContext-class.html\">ScrollPositionWithSingleContext<\/a>.<\/p>\n<p>The arguments are generally passed to the <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> being created:<\/p>\n<ul>\n<li>\n<code>physics<\/code>: An instance of <a href=\"widgets\/ScrollPhysics-class.html\">ScrollPhysics<\/a> that determines how the\n<a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> should react to user interactions, how it should\nsimulate scrolling when released or flung, etc. The value will not be\nnull. It typically comes from the <a href=\"widgets\/ScrollView-class.html\">ScrollView<\/a> or other widget that\ncreates the <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a>, or, if none was provided, from the ambient\n<a href=\"widgets\/ScrollConfiguration-class.html\">ScrollConfiguration<\/a>.<\/li>\n<li>\n<code>context<\/code>: A <a href=\"widgets\/ScrollContext-class.html\">ScrollContext<\/a> used for communicating with the object\nthat is to own the <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> (typically, this is the\n<a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a> itself).<\/li>\n<li>\n<code>oldPosition<\/code>: If this is not the first time a <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> has\nbeen created for this <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a>, this will be the previous instance.\nThis is used when the environment has changed and the <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a>\nneeds to recreate the <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> object. It is null the first\ntime the <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> is created.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "widgets.ScrollController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "physics",
+                    "type": "widgets.ScrollPhysics",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "context",
+                    "type": "widgets.ScrollContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "oldPosition",
+                    "type": "widgets.ScrollPosition",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollController\/createScrollPosition.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ScrollPosition createScrollPosition(\n  ScrollPhysics physics,\n  ScrollContext context,\n  ScrollPosition oldPosition,\n) {\n  return ScrollPositionWithSingleContext(\n    physics: physics,\n    context: context,\n    initialPixels: initialScrollOffset,\n    keepScrollOffset: keepScrollOffset,\n    oldPosition: oldPosition,\n    debugLabel: debugLabel,\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugFillDescription",
+            "type": "",
+            "desc": "<p>Add additional information to the given description for use by <a href=\"widgets\/ScrollController\/toString.html\">toString<\/a>.<\/p>\n<p>This method makes it easier for subclasses to coordinate to provide a\nhigh-quality <a href=\"widgets\/ScrollController\/toString.html\">toString<\/a> implementation. The <a href=\"widgets\/ScrollController\/toString.html\">toString<\/a> implementation on\nthe <a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a> base class calls <a href=\"widgets\/ScrollController\/debugFillDescription.html\">debugFillDescription<\/a> to collect\nuseful information from subclasses to incorporate into its return value.<\/p>\n<p>If you override this, make sure to start your method with a call to\n<code>super.debugFillDescription(description)<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "description",
+                    "type": "dart:core.List<dart:core.String>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "dart:core.String"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollController\/debugFillDescription.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid debugFillDescription(List&lt;String&gt; description) {\n  if (debugLabel != null)\n    description.add(debugLabel);\n  if (initialScrollOffset != 0.0)\n    description.add('initialScrollOffset: ${initialScrollOffset.toStringAsFixed(1)}, ');\n  if (_positions.isEmpty) {\n    description.add('no clients');\n  } else if (_positions.length == 1) {\n    \/\/ Don't actually list the client itself, since its toString may refer to us.\n    description.add('one client, offset ${offset?.toStringAsFixed(1)}');\n  } else {\n    description.add('${_positions.length} clients');\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "detach",
+            "type": "",
+            "desc": "<p>Unregister the given position with this controller.<\/p>\n<p>After this function returns, the <a href=\"widgets\/ScrollController\/animateTo.html\">animateTo<\/a> and <a href=\"widgets\/ScrollController\/jumpTo.html\">jumpTo<\/a> methods on this\ncontroller will not manipulate the given position.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "position",
+                    "type": "widgets.ScrollPosition",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollController\/detach.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void detach(ScrollPosition position) {\n  assert(_positions.contains(position));\n  position.removeListener(notifyListeners);\n  _positions.remove(position);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "dispose",
+            "type": "",
+            "desc": "<p>Discards any resources used by the object. After this is called, the\nobject is not in a usable state and should be discarded (calls to\n<a href=\"foundation\/ChangeNotifier\/addListener.html\">addListener<\/a> and <a href=\"foundation\/ChangeNotifier\/removeListener.html\">removeListener<\/a> will throw after the object is\ndisposed).<\/p>\n<p>This method should only be called by the object's owner.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollController",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollController\/dispose.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  for (ScrollPosition position in _positions)\n    position.removeListener(notifyListeners);\n  super.dispose();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "jumpTo",
+            "type": "",
+            "desc": "<p>Jumps the scroll position from its current value to the given value,\nwithout animation, and without checking if the new value is in range.<\/p>\n<p>Any active animation is canceled. If the user is currently scrolling, that\naction is canceled.<\/p>\n<p>If this method changes the scroll position, a sequence of start\/update\/end\nscroll notifications will be dispatched. No overscroll notifications can\nbe generated by this method.<\/p>\n<p>Immediately after the jump, a ballistic activity is started, in case the\nvalue was out of range.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollController\/jumpTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void jumpTo(double value) {\n  assert(_positions.isNotEmpty, 'ScrollController not attached to any scroll views.');\n  for (ScrollPosition position in List&lt;ScrollPosition&gt;.from(_positions))\n    position.jumpTo(value);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollController",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollController\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() {\n  final List&lt;String&gt; description = &lt;String&gt;[];\n  debugFillDescription(description);\n  return '${describeIdentity(this)}(${description.join(\", \")})';\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "debugLabel",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>A label that is used in the <a href=\"widgets\/ScrollController\/toString.html\">toString<\/a> output. Intended to aid with\nidentifying scroll controller instances in debug output.<\/p>\n        ",
+            "memberOf": "widgets.ScrollController",
+            "isConstant": false,
+            "href": "widgets\/ScrollController\/debugLabel.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String debugLabel\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "hasClients",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether any <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> objects have attached themselves to the\n<a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a> using the <a href=\"widgets\/ScrollController\/attach.html\">attach<\/a> method.<\/p>\n<p>If this is false, then members that interact with the <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a>,\nsuch as <a href=\"widgets\/ScrollController\/position.html\">position<\/a>, <a href=\"widgets\/ScrollController\/offset.html\">offset<\/a>, <a href=\"widgets\/ScrollController\/animateTo.html\">animateTo<\/a>, and <a href=\"widgets\/ScrollController\/jumpTo.html\">jumpTo<\/a>, must not be\ncalled.<\/p>\n        ",
+            "memberOf": "widgets.ScrollController",
+            "isConstant": false,
+            "href": "widgets\/ScrollController\/hasClients.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasClients =&gt; _positions.isNotEmpty;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "initialScrollOffset",
+            "type": "dart:core.double",
+            "types": [],
+            "desc": "<p>The initial value to use for <a href=\"widgets\/ScrollController\/offset.html\">offset<\/a>.<\/p>\n<p>New <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> objects that are created and attached to this\ncontroller will have their offset initialized to this value\nif <a href=\"widgets\/ScrollController\/keepScrollOffset.html\">keepScrollOffset<\/a> is false or a scroll offset hasn't been saved yet.<\/p>\n<p>Defaults to 0.0.<\/p>\n        ",
+            "memberOf": "widgets.ScrollController",
+            "isConstant": false,
+            "href": "widgets\/ScrollController\/initialScrollOffset.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get initialScrollOffset =&gt; _initialScrollOffset;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "keepScrollOffset",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Each time a scroll completes, save the current scroll <a href=\"widgets\/ScrollController\/offset.html\">offset<\/a> with\n<a href=\"widgets\/PageStorage-class.html\">PageStorage<\/a> and restore it if this controller's scrollable is recreated.<\/p>\n<p>If this property is set to false, the scroll offset is never saved\nand <a href=\"widgets\/ScrollController\/initialScrollOffset.html\">initialScrollOffset<\/a> is always used to initialize the scroll\noffset. If true (the default), the initial scroll offset is used the\nfirst time the controller's scrollable is created, since there's no\nscroll offset to restore yet. Subsequently the saved offset is\nrestored and <a href=\"widgets\/ScrollController\/initialScrollOffset.html\">initialScrollOffset<\/a> is ignored.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/PageStorageKey-class.html\">PageStorageKey<\/a>, which should be used when more than one\nscrollable appears in the same route, to distinguish the <a href=\"widgets\/PageStorage-class.html\">PageStorage<\/a>\nlocations used to save scroll offsets.<\/li><\/ul>",
+            "memberOf": "widgets.ScrollController",
+            "isConstant": false,
+            "href": "widgets\/ScrollController\/keepScrollOffset.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool keepScrollOffset\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "offset",
+            "type": "dart:core.double",
+            "types": [],
+            "desc": "<p>The current scroll offset of the scrollable widget.<\/p>\n<p>Requires the controller to be controlling exactly one scrollable widget.<\/p>\n        ",
+            "memberOf": "widgets.ScrollController",
+            "isConstant": false,
+            "href": "widgets\/ScrollController\/offset.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get offset =&gt; position.pixels;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "position",
+            "type": "widgets.ScrollPosition",
+            "types": [],
+            "desc": "<p>Returns the attached <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a>, from which the actual scroll offset\nof the <a href=\"widgets\/ScrollView-class.html\">ScrollView<\/a> can be obtained.<\/p>\n<p>Calling this is only valid when only a single position is attached.<\/p>\n        ",
+            "memberOf": "widgets.ScrollController",
+            "isConstant": false,
+            "href": "widgets\/ScrollController\/position.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">ScrollPosition get position {\n  assert(_positions.isNotEmpty, 'ScrollController not attached to any scroll views.');\n  assert(_positions.length == 1, 'ScrollController attached to multiple scroll views.');\n  return _positions.single;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "positions",
+            "type": "dart:core.Iterable<widgets.ScrollPosition>",
+            "types": [
+                "dart:core.Iterable",
+                "widgets.ScrollPosition"
+            ],
+            "desc": "<p>The currently attached positions.<\/p>\n<p>This should not be mutated directly. <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> objects can be added\nand removed using <a href=\"widgets\/ScrollController\/attach.html\">attach<\/a> and <a href=\"widgets\/ScrollController\/detach.html\">detach<\/a>.<\/p>\n        ",
+            "memberOf": "widgets.ScrollController",
+            "isConstant": false,
+            "href": "widgets\/ScrollController\/positions.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nIterable&lt;ScrollPosition&gt; get positions =&gt; _positions;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [
+        "widgets.FixedExtentScrollController",
+        "widgets.PageController",
+        "widgets.TrackingScrollController"
+    ],
+    "realImplementors": [
+        "widgets.FixedExtentScrollController",
+        "widgets.PageController",
+        "widgets.TrackingScrollController"
+    ],
+    "cn": [],
+    "href": "widgets\/ScrollController-class.html",
+    "desc": "<p>Controls a scrollable widget.<\/p>\n<p>Scroll controllers are typically stored as member variables in <a href=\"widgets\/State-class.html\">State<\/a>\nobjects and are reused in each <a href=\"widgets\/State\/build.html\">State.build<\/a>. A single scroll controller can\nbe used to control multiple scrollable widgets, but some operations, such\nas reading the scroll <a href=\"widgets\/ScrollController\/offset.html\">offset<\/a>, require the controller to be used with a\nsingle scrollable widget.<\/p>\n<p>A scroll controller creates a <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> to manage the state specific\nto an individual <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a> widget. To use a custom <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a>,\nsubclass <a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a> and override <a href=\"widgets\/ScrollController\/createScrollPosition.html\">createScrollPosition<\/a>.<\/p>\n<p>A <a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a> is a <a href=\"foundation\/Listenable-class.html\">Listenable<\/a>. It notifies its listeners whenever\nany of the attached <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a>s notify <em>their<\/em> listeners (i.e.\nwhenever any of them scroll). It does not notify its listeners when the list\nof attached <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a>s changes.<\/p>\n<p>Typically used with <a href=\"widgets\/ListView-class.html\">ListView<\/a>, <a href=\"widgets\/GridView-class.html\">GridView<\/a>, <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ListView-class.html\">ListView<\/a>, <a href=\"widgets\/GridView-class.html\">GridView<\/a>, <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>, which can be controlled by a\n<a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a>.<\/li>\n<li>\n<a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a>, which is the lower-level widget that creates and associates\n<a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> objects with <a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a> objects.<\/li>\n<li>\n<a href=\"widgets\/PageController-class.html\">PageController<\/a>, which is an analogous object for controlling a\n<a href=\"widgets\/PageView-class.html\">PageView<\/a>.<\/li>\n<li>\n<a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a>, which manages the scroll offset for an individual\nscrolling widget.<\/li>\n<li>\n<a href=\"widgets\/ScrollNotification-class.html\">ScrollNotification<\/a> and <a href=\"widgets\/NotificationListener-class.html\">NotificationListener<\/a>, which can be used to watch\nthe scroll position without using a <a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a>.<\/li>\n<\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "ScrollController"
+}

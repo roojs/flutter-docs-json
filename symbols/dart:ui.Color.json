@@ -1,0 +1,472 @@
+{
+    "name": "dart:ui.Color",
+    "extends": [],
+    "memberOf": "dart:ui",
+    "events": [],
+    "methods": [
+        {
+            "name": "operator ==",
+            "type": "dart:core.bool",
+            "desc": "<p>The equality operator.<\/p>\n<p>The default behavior for all <a href=\"dart-core\/Object-class.html\">Object<\/a>s is to return true if and\nonly if <code>this<\/code> and <code>other<\/code> are the same object.<\/p>\n<p>Override this method to specify a different equality relation on\na class. The overriding method must still be an equivalence relation.\nThat is, it must be:<\/p>\n<ul>\n<li>\n<p>Total: It must return a boolean for all arguments. It should never throw\nor return <code>null<\/code>.<\/p>\n<\/li>\n<li>\n<p>Reflexive: For all objects <code>o<\/code>, <code>o == o<\/code> must be true.<\/p>\n<\/li>\n<li>\n<p>Symmetric: For all objects <code>o1<\/code> and <code>o2<\/code>, <code>o1 == o2<\/code> and <code>o2 == o1<\/code> must\neither both be true, or both be false.<\/p>\n<\/li>\n<li>\n<p>Transitive: For all objects <code>o1<\/code>, <code>o2<\/code>, and <code>o3<\/code>, if <code>o1 == o2<\/code> and\n<code>o2 == o3<\/code> are true, then <code>o1 == o3<\/code> must be true.<\/p>\n<\/li>\n<\/ul>\n<p>The method should also be consistent over time,\nso whether two objects are equal should only change\nif at least one of the objects was modified.<\/p>\n<p>If a subclass overrides the equality operator it should override\nthe <a href=\"dart-ui\/Color\/hashCode.html\">hashCode<\/a> method as well to maintain consistency.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Color",
+            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Color\/operator_equals.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool operator ==(dynamic other) {\n  if (identical(this, other))\n    return true;\n  if (other.runtimeType != runtimeType)\n    return false;\n  final Color typedOther = other;\n  return value == typedOther.value;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Color",
+            "type": "",
+            "desc": "<p>Construct a color from the lower 32 bits of an <a href=\"dart-core\/int-class.html\">int<\/a>.<\/p>\n<p>The bits are interpreted as follows:<\/p>\n<ul>\n<li>Bits 24-31 are the alpha value.<\/li>\n<li>Bits 16-23 are the red value.<\/li>\n<li>Bits 8-15 are the green value.<\/li>\n<li>Bits 0-7 are the blue value.<\/li>\n<\/ul>\n<p>In other words, if AA is the alpha value in hex, RR the red value in hex,\nGG the green value in hex, and BB the blue value in hex, a color can be\nexpressed as <code>const Color(0xAARRGGBB)<\/code>.<\/p>\n<p>For example, to get a fully opaque orange, you would use <code>const\nColor(0xFFFF9000)<\/code> (<code>FF<\/code> for the alpha, <code>FF<\/code> for the red, <code>90<\/code> for the\ngreen, and <code>00<\/code> for the blue).<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Color",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-ui\/Color\/Color.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@pragma('vm:entry-point')\nconst Color(int value) : value = value &amp; 0xFFFFFFFF;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "alphaBlend",
+            "type": "dart:ui.Color",
+            "desc": "<p>Combine the foreground color as a transparent color over top\nof a background color, and return the resulting combined color.<\/p>\n<p>This uses standard alpha blending (\"SRC over DST\") rules to produce a\nblended color from two colors. This can be used as a performance\nenhancement when trying to avoid needless alpha blending compositing\noperations for two things that are solid colors with the same shape, but\noverlay each other: instead, just paint one with the combined color.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Color",
+            "sig": "",
+            "params": [
+                {
+                    "name": "foreground",
+                    "type": "dart:ui.Color",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "background",
+                    "type": "dart:ui.Color",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Color\/alphaBlend.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Color alphaBlend(Color foreground, Color background) {\n  final int alpha = foreground.alpha;\n  if (alpha == 0x00) { \/\/ Foreground completely transparent.\n    return background;\n  }\n  final int invAlpha = 0xff - alpha;\n  int backAlpha = background.alpha;\n  if (backAlpha == 0xff) { \/\/ Opaque background case\n    return new Color.fromARGB(\n      0xff,\n      (alpha * foreground.red + invAlpha * background.red) ~\/ 0xff,\n      (alpha * foreground.green + invAlpha * background.green) ~\/ 0xff,\n      (alpha * foreground.blue + invAlpha * background.blue) ~\/ 0xff,\n    );\n  } else { \/\/ General case\n    backAlpha = (backAlpha * invAlpha) ~\/ 0xff;\n    final int outAlpha = alpha + backAlpha;\n    assert(outAlpha != 0x00);\n    return new Color.fromARGB(\n      outAlpha,\n      (foreground.red * alpha + background.red * backAlpha) ~\/ outAlpha,\n      (foreground.green * alpha + background.green * backAlpha) ~\/ outAlpha,\n      (foreground.blue * alpha + background.blue * backAlpha) ~\/ outAlpha,\n    );\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeLuminance",
+            "type": "dart:core.double",
+            "desc": "<p>Returns a brightness value between 0 for darkest and 1 for lightest.<\/p>\n<p>Represents the relative luminance of the color. This value is computationally\nexpensive to calculate.<\/p>\n<p>See <a href=\"https:\/\/en.wikipedia.org\/wiki\/Relative_luminance\">en.wikipedia.org\/wiki\/Relative_luminance<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Color",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-ui\/Color\/computeLuminance.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double computeLuminance() {\n  \/\/ See &lt;https:\/\/www.w3.org\/TR\/WCAG20\/#relativeluminancedef&gt;\n  final double R = _linearizeColorComponent(red \/ 0xFF);\n  final double G = _linearizeColorComponent(green \/ 0xFF);\n  final double B = _linearizeColorComponent(blue \/ 0xFF);\n  return 0.2126 * R + 0.7152 * G + 0.0722 * B;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Color.fromARGB",
+            "type": "",
+            "desc": "<p>Construct a color from the lower 8 bits of four integers.<\/p>\n<ul>\n<li>\n<code>a<\/code> is the alpha value, with 0 being transparent and 255 being fully\nopaque.<\/li>\n<li>\n<code>r<\/code> is <a href=\"dart-ui\/Color\/red.html\">red<\/a>, from 0 to 255.<\/li>\n<li>\n<code>g<\/code> is <a href=\"dart-ui\/Color\/green.html\">green<\/a>, from 0 to 255.<\/li>\n<li>\n<code>b<\/code> is <a href=\"dart-ui\/Color\/blue.html\">blue<\/a>, from 0 to 255.<\/li>\n<\/ul>\n<p>Out of range values are brought into range using modulo 255.<\/p>\n<p>See also <a href=\"dart-ui\/Color\/Color.fromRGBO.html\">fromRGBO<\/a>, which takes the alpha value as a floating point\nvalue.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Color",
+            "sig": "",
+            "params": [
+                {
+                    "name": "a",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "r",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "g",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "b",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-ui\/Color\/Color.fromARGB.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Color.fromARGB(int a, int r, int g, int b) :\n  value = (((a &amp; 0xff) &lt;&lt; 24) |\n           ((r &amp; 0xff) &lt;&lt; 16) |\n           ((g &amp; 0xff) &lt;&lt; 8)  |\n           ((b &amp; 0xff) &lt;&lt; 0)) &amp; 0xFFFFFFFF;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Color.fromRGBO",
+            "type": "",
+            "desc": "<p>Create a color from red, green, blue, and opacity, similar to <code>rgba()<\/code> in CSS.<\/p>\n<ul>\n<li>\n<code>r<\/code> is <a href=\"dart-ui\/Color\/red.html\">red<\/a>, from 0 to 255.<\/li>\n<li>\n<code>g<\/code> is <a href=\"dart-ui\/Color\/green.html\">green<\/a>, from 0 to 255.<\/li>\n<li>\n<code>b<\/code> is <a href=\"dart-ui\/Color\/blue.html\">blue<\/a>, from 0 to 255.<\/li>\n<li>\n<code>opacity<\/code> is alpha channel of this color as a double, with 0.0 being\ntransparent and 1.0 being fully opaque.<\/li>\n<\/ul>\n<p>Out of range values are brought into range using modulo 255.<\/p>\n<p>See also <a href=\"dart-ui\/Color\/Color.fromARGB.html\">fromARGB<\/a>, which takes the opacity as an integer value.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Color",
+            "sig": "",
+            "params": [
+                {
+                    "name": "r",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "g",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "b",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "opacity",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-ui\/Color\/Color.fromRGBO.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Color.fromRGBO(int r, int g, int b, double opacity) :\n  value = ((((opacity * 0xff ~\/ 1) &amp; 0xff) &lt;&lt; 24) |\n            ((r                    &amp; 0xff) &lt;&lt; 16) |\n            ((g                    &amp; 0xff) &lt;&lt; 8)  |\n            ((b                    &amp; 0xff) &lt;&lt; 0)) &amp; 0xFFFFFFFF;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "lerp",
+            "type": "dart:ui.Color",
+            "desc": "<p>Linearly interpolate between two colors.<\/p>\n<p>This is intended to be fast but as a result may be ugly. Consider\n<a href=\"painting\/HSVColor-class.html\">HSVColor<\/a> or writing custom logic for interpolating colors.<\/p>\n<p>If either color is null, this function linearly interpolates from a\ntransparent instance of the other color. This is usually preferable to\ninterpolating from <a href=\"material\/Colors\/transparent-constant.html\">material.Colors.transparent<\/a> (<code>const\nColor(0x00000000)<\/code>), which is specifically transparent <em>black<\/em>.<\/p>\n<p>The <code>t<\/code> argument represents position on the timeline, with 0.0 meaning\nthat the interpolation has not started, returning <code>a<\/code> (or something\nequivalent to <code>a<\/code>), 1.0 meaning that the interpolation has finished,\nreturning <code>b<\/code> (or something equivalent to <code>b<\/code>), and values in between\nmeaning that the interpolation is at the relevant point on the timeline\nbetween <code>a<\/code> and <code>b<\/code>. The interpolation can be extrapolated beyond 0.0 and\n1.0, so negative values and values greater than 1.0 are valid (and can\neasily be generated by curves such as <a href=\"animation\/Curves\/elasticInOut-constant.html\">Curves.elasticInOut<\/a>). Each channel\nwill be clamped to the range 0 to 255.<\/p>\n<p>Values for <code>t<\/code> are usually obtained from an <a href=\"animation\/Animation-class.html\">Animation&lt;double&gt;<\/a>, such as\nan <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Color",
+            "sig": "",
+            "params": [
+                {
+                    "name": "a",
+                    "type": "dart:ui.Color",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "b",
+                    "type": "dart:ui.Color",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "t",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Color\/lerp.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Color lerp(Color a, Color b, double t) {\n  assert(t != null);\n  if (a == null &amp;&amp; b == null)\n    return null;\n  if (a == null)\n    return _scaleAlpha(b, t);\n  if (b == null)\n    return _scaleAlpha(a, 1.0 - t);\n  return new Color.fromARGB(\n    lerpDouble(a.alpha, b.alpha, t).toInt().clamp(0, 255),\n    lerpDouble(a.red, b.red, t).toInt().clamp(0, 255),\n    lerpDouble(a.green, b.green, t).toInt().clamp(0, 255),\n    lerpDouble(a.blue, b.blue, t).toInt().clamp(0, 255),\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Color",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-ui\/Color\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; 'Color(0x${value.toRadixString(16).padLeft(8, '0')})';<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "withAlpha",
+            "type": "dart:ui.Color",
+            "desc": "<p>Returns a new color that matches this color with the alpha channel\nreplaced with <code>a<\/code> (which ranges from 0 to 255).<\/p>\n<p>Out of range values will have unexpected effects.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Color",
+            "sig": "",
+            "params": [
+                {
+                    "name": "a",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Color\/withAlpha.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Color withAlpha(int a) {\n  return new Color.fromARGB(a, red, green, blue);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "withBlue",
+            "type": "dart:ui.Color",
+            "desc": "<p>Returns a new color that matches this color with the blue channel replaced\nwith <code>b<\/code> (which ranges from 0 to 255).<\/p>\n<p>Out of range values will have unexpected effects.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Color",
+            "sig": "",
+            "params": [
+                {
+                    "name": "b",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Color\/withBlue.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Color withBlue(int b) {\n  return new Color.fromARGB(alpha, red, green, b);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "withGreen",
+            "type": "dart:ui.Color",
+            "desc": "<p>Returns a new color that matches this color with the green channel\nreplaced with <code>g<\/code> (which ranges from 0 to 255).<\/p>\n<p>Out of range values will have unexpected effects.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Color",
+            "sig": "",
+            "params": [
+                {
+                    "name": "g",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Color\/withGreen.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Color withGreen(int g) {\n  return new Color.fromARGB(alpha, red, g, blue);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "withOpacity",
+            "type": "dart:ui.Color",
+            "desc": "<p>Returns a new color that matches this color with the alpha channel\nreplaced with the given <code>opacity<\/code> (which ranges from 0.0 to 1.0).<\/p>\n<p>Out of range values will have unexpected effects.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Color",
+            "sig": "",
+            "params": [
+                {
+                    "name": "opacity",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Color\/withOpacity.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Color withOpacity(double opacity) {\n  assert(opacity &gt;= 0.0 &amp;&amp; opacity &lt;= 1.0);\n  return withAlpha((255.0 * opacity).round());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "withRed",
+            "type": "dart:ui.Color",
+            "desc": "<p>Returns a new color that matches this color with the red channel replaced\nwith <code>r<\/code> (which ranges from 0 to 255).<\/p>\n<p>Out of range values will have unexpected effects.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Color",
+            "sig": "",
+            "params": [
+                {
+                    "name": "r",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Color\/withRed.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Color withRed(int r) {\n  return new Color.fromARGB(alpha, r, green, blue);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "alpha",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The alpha channel of this color in an 8 bit value.<\/p>\n<p>A value of 0 means this color is fully transparent. A value of 255 means\nthis color is fully opaque.<\/p>\n        ",
+            "memberOf": "dart:ui.Color",
+            "isConstant": false,
+            "href": "dart-ui\/Color\/alpha.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get alpha =&gt; (0xff000000 &amp; value) &gt;&gt; 24;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "blue",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The blue channel of this color in an 8 bit value.<\/p>\n        ",
+            "memberOf": "dart:ui.Color",
+            "isConstant": false,
+            "href": "dart-ui\/Color\/blue.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get blue =&gt; (0x000000ff &amp; value) &gt;&gt; 0;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "green",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The green channel of this color in an 8 bit value.<\/p>\n        ",
+            "memberOf": "dart:ui.Color",
+            "isConstant": false,
+            "href": "dart-ui\/Color\/green.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get green =&gt; (0x0000ff00 &amp; value) &gt;&gt; 8;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "hashCode",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The hash code for this object.<\/p>\n<p>A hash code is a single integer which represents the state of the object\nthat affects <a href=\"dart-ui\/Color\/operator_equals.html\">operator ==<\/a> comparisons.<\/p>\n<p>All objects have hash codes.\nThe default hash code represents only the identity of the object,\nthe same way as the default <a href=\"dart-ui\/Color\/operator_equals.html\">operator ==<\/a> implementation only considers objects\nequal if they are identical (see <a href=\"dart-core\/identityHashCode.html\">identityHashCode<\/a>).<\/p>\n<p>If <a href=\"dart-ui\/Color\/operator_equals.html\">operator ==<\/a> is overridden to use the object state instead,\nthe hash code must also be changed to represent that state.<\/p>\n<p>Hash codes must be the same for objects that are equal to each other\naccording to <a href=\"dart-ui\/Color\/operator_equals.html\">operator ==<\/a>.\nThe hash code of an object should only change if the object changes\nin a way that affects equality.\nThere are no further requirements for the hash codes.\nThey need not be consistent between executions of the same program\nand there are no distribution guarantees.<\/p>\n<p>Objects that are not equal are allowed to have the same hash code,\nit is even technically allowed that all instances have the same hash code,\nbut if clashes happen too often, it may reduce the efficiency of hash-based\ndata structures like <a href=\"dart-collection\/HashSet-class.html\">HashSet<\/a> or <a href=\"dart-collection\/HashMap-class.html\">HashMap<\/a>.<\/p>\n<p>If a subclass overrides <a href=\"dart-ui\/Color\/hashCode.html\">hashCode<\/a>, it should override the\n<a href=\"dart-ui\/Color\/operator_equals.html\">operator ==<\/a> operator as well to maintain consistency.<\/p>\n        ",
+            "memberOf": "dart:ui.Color",
+            "isConstant": false,
+            "href": "dart-ui\/Color\/hashCode.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get hashCode =&gt; value.hashCode;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "opacity",
+            "type": "dart:core.double",
+            "types": [],
+            "desc": "<p>The alpha channel of this color as a double.<\/p>\n<p>A value of 0.0 means this color is fully transparent. A value of 1.0 means\nthis color is fully opaque.<\/p>\n        ",
+            "memberOf": "dart:ui.Color",
+            "isConstant": false,
+            "href": "dart-ui\/Color\/opacity.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get opacity =&gt; alpha \/ 0xFF;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "red",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The red channel of this color in an 8 bit value.<\/p>\n        ",
+            "memberOf": "dart:ui.Color",
+            "isConstant": false,
+            "href": "dart-ui\/Color\/red.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get red =&gt; (0x00ff0000 &amp; value) &gt;&gt; 16;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "value",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>A 32 bit value representing this color.<\/p>\n<p>The bits are assigned as follows:<\/p>\n<ul>\n<li>Bits 24-31 are the alpha value.<\/li>\n<li>Bits 16-23 are the red value.<\/li>\n<li>Bits 8-15 are the green value.<\/li>\n<li>Bits 0-7 are the blue value.<\/li>\n<\/ul>",
+            "memberOf": "dart:ui.Color",
+            "isConstant": false,
+            "href": "dart-ui\/Color\/value.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int value\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [
+        "animation.ColorTween",
+        "material.MaterialAccentColor",
+        "material.MaterialColor",
+        "painting.ColorSwatch"
+    ],
+    "realImplementors": [
+        "animation.ColorTween",
+        "material.MaterialAccentColor",
+        "material.MaterialColor",
+        "painting.ColorSwatch"
+    ],
+    "cn": [],
+    "href": "dart-ui\/Color-class.html",
+    "desc": "<p>An immutable 32 bit color value in ARGB format.<\/p>\n<p>Consider the light teal of the Flutter logo. It is fully opaque, with a red\nchannel value of 0x42 (66), a green channel value of 0xA5 (165), and a blue\nchannel value of 0xF5 (245). In the common \"hash syntax\" for color values,\nit would be described as <code>#42A5F5<\/code>.<\/p>\n<p>Here are some ways it could be constructed:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Color c = const Color(0xFF42A5F5);\nColor c = const Color.fromARGB(0xFF, 0x42, 0xA5, 0xF5);\nColor c = const Color.fromARGB(255, 66, 165, 245);\nColor c = const Color.fromRGBO(66, 165, 245, 1.0);\n<\/code><\/pre>\n<p>If you are having a problem with <code>Color<\/code> wherein it seems your color is just\nnot painting, check to make sure you are specifying the full 8 hexadecimal\ndigits. If you only specify six, then the leading two digits are assumed to\nbe zero, which means fully-transparent:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Color c1 = const Color(0xFFFFFF); \/\/ fully transparent white (invisible)\nColor c2 = const Color(0xFFFFFFFF); \/\/ fully opaque white (visible)\n<\/code><\/pre>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"https:\/\/docs.flutter.io\/flutter\/material\/Colors-class.html\">Colors<\/a>, which\ndefines the colors found in the Material Design specification.<\/li><\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Color"
+}

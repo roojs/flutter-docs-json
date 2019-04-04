@@ -1,0 +1,1381 @@
+{
+    "name": "dart:async.Stream",
+    "extends": [],
+    "memberOf": "dart:async",
+    "events": [],
+    "methods": [
+        {
+            "name": "Stream",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "dart-async\/Stream\/Stream.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "any",
+            "type": "dart:async.Future<dart:core.bool>",
+            "desc": "<p>Checks whether <code>test<\/code> accepts any element provided by this stream.<\/p>\n<p>Calls <code>test<\/code> on each element of this stream.\nIf the call returns <code>true<\/code>, the returned future is completed with <code>true<\/code>\nand processing stops.<\/p>\n<p>If this stream ends without finding an element that <code>test<\/code> accepts,\nthe returned future is completed with <code>false<\/code>.<\/p>\n<p>If this stream emits an error, or if the call to <code>test<\/code> throws,\nthe returned future is completed with that error,\nand processing stops.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/any.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;bool&gt; any(bool test(T element)) {\n  _Future&lt;bool&gt; future = new _Future&lt;bool&gt;();\n  StreamSubscription subscription;\n  subscription = this.listen(\n      (T element) {\n        _runUserCode(() =&gt; test(element), (bool isMatch) {\n          if (isMatch) {\n            _cancelAndValue(subscription, future, true);\n          }\n        }, _cancelAndErrorClosure(subscription, future));\n      },\n      onError: future._completeError,\n      onDone: () {\n        future._complete(false);\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.bool"
+            ]
+        },
+        {
+            "name": "asBroadcastStream",
+            "type": "dart:async.Stream",
+            "desc": "<p>Returns a multi-subscription stream that produces the same events as this.<\/p>\n<p>The returned stream will subscribe to this stream when its first\nsubscriber is added, and will stay subscribed until this stream ends,\nor a callback cancels the subscription.<\/p>\n<p>If <code>onListen<\/code> is provided, it is called with a subscription-like object\nthat represents the underlying subscription to this stream. It is\npossible to pause, resume or cancel the subscription during the call\nto <code>onListen<\/code>. It is not possible to change the event handlers, including\nusing <a href=\"dart-async\/StreamSubscription\/asFuture.html\">StreamSubscription.asFuture<\/a>.<\/p>\n<p>If <code>onCancel<\/code> is provided, it is called in a similar way to <code>onListen<\/code>\nwhen the returned stream stops having listener. If it later gets\na new listener, the <code>onListen<\/code> function is called again.<\/p>\n<p>Use the callbacks, for example, for pausing the underlying subscription\nwhile having no subscribers to prevent losing events, or canceling the\nsubscription when there are no listeners.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "subscription",
+                    "type": "dart:async.StreamSubscription",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "subscription",
+                    "type": "dart:async.StreamSubscription",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "subscription",
+                    "type": "dart:async.StreamSubscription",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "subscription",
+                    "type": "dart:async.StreamSubscription",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/asBroadcastStream.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; asBroadcastStream(\n    {void onListen(StreamSubscription&lt;T&gt; subscription),\n    void onCancel(StreamSubscription&lt;T&gt; subscription)}) {\n  return new _AsBroadcastStream&lt;T&gt;(this, onListen, onCancel);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "asyncExpand",
+            "type": "dart:async.Stream",
+            "desc": "<p>Transforms each element into a sequence of asynchronous events.<\/p>\n<p>Returns a new stream and for each event of this stream, do the following:<\/p>\n<ul>\n<li>If the event is an error event or a done event, it is emitted directly\nby the returned stream.<\/li>\n<li>Otherwise it is an element. Then the <code>convert<\/code> function is called\nwith the element as argument to produce a convert-stream for the element.<\/li>\n<li>If that call throws, the error is emitted on the returned stream.<\/li>\n<li>If the call returns <code>null<\/code>, no further action is taken for the elements.<\/li>\n<li>Otherwise, this stream is paused and convert-stream is listened to.\nEvery data and error event of the convert-stream is emitted on the returned\nstream in the order it is produced.\nWhen the convert-stream ends, this stream is resumed.<\/li>\n<\/ul>\n<p>The returned stream is a broadcast stream if this stream is.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "event",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "event",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/asyncExpand.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;E&gt; asyncExpand&lt;E&gt;(Stream&lt;E&gt; convert(T event)) {\n  _StreamControllerBase&lt;E&gt; controller;\n  StreamSubscription&lt;T&gt; subscription;\n  void onListen() {\n    assert(controller is _StreamController ||\n        controller is _BroadcastStreamController);\n    subscription = this.listen((T event) {\n      Stream&lt;E&gt; newStream;\n      try {\n        newStream = convert(event);\n      } catch (e, s) {\n        controller.addError(e, s);\n        return;\n      }\n      if (newStream != null) {\n        subscription.pause();\n        controller.addStream(newStream).whenComplete(subscription.resume);\n      }\n    },\n        onError: controller._addError, \/\/ Avoid Zone error replacement.\n        onDone: controller.close);\n  }\n\n  if (this.isBroadcast) {\n    controller = new StreamController&lt;E&gt;.broadcast(\n        onListen: onListen,\n        onCancel: () {\n          subscription.cancel();\n        },\n        sync: true);\n  } else {\n    controller = new StreamController&lt;E&gt;(\n        onListen: onListen,\n        onPause: () {\n          subscription.pause();\n        },\n        onResume: () {\n          subscription.resume();\n        },\n        onCancel: () =&gt; subscription.cancel(),\n        sync: true);\n  }\n  return controller.stream;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "asyncMap",
+            "type": "dart:async.Stream",
+            "desc": "<p>Creates a new stream with each data event of this stream asynchronously\nmapped to a new event.<\/p>\n<p>This acts like <a href=\"dart-async\/Stream\/map.html\">map<\/a>, except that <code>convert<\/code> may return a <a href=\"dart-async\/Future-class.html\">Future<\/a>,\nand in that case, this stream waits for that future to complete before\ncontinuing with its result.<\/p>\n<p>The returned stream is a broadcast stream if this stream is.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "event",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "event",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/asyncMap.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;E&gt; asyncMap&lt;E&gt;(FutureOr&lt;E&gt; convert(T event)) {\n  _StreamControllerBase&lt;E&gt; controller;\n  StreamSubscription&lt;T&gt; subscription;\n\n  void onListen() {\n    final add = controller.add;\n    assert(controller is _StreamController&lt;E&gt; ||\n        controller is _BroadcastStreamController);\n    final addError = controller._addError;\n    subscription = this.listen((T event) {\n      FutureOr&lt;E&gt; newValue;\n      try {\n        newValue = convert(event);\n      } catch (e, s) {\n        controller.addError(e, s);\n        return;\n      }\n      if (newValue is Future&lt;E&gt;) {\n        subscription.pause();\n        newValue\n            .then(add, onError: addError)\n            .whenComplete(subscription.resume);\n      } else {\n        controller.add(newValue);\n      }\n    }, onError: addError, onDone: controller.close);\n  }\n\n  if (this.isBroadcast) {\n    controller = new StreamController&lt;E&gt;.broadcast(\n        onListen: onListen,\n        onCancel: () {\n          subscription.cancel();\n        },\n        sync: true);\n  } else {\n    controller = new StreamController&lt;E&gt;(\n        onListen: onListen,\n        onPause: () {\n          subscription.pause();\n        },\n        onResume: () {\n          subscription.resume();\n        },\n        onCancel: () =&gt; subscription.cancel(),\n        sync: true);\n  }\n  return controller.stream;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "cast",
+            "type": "dart:async.Stream",
+            "desc": "<p>Adapt this stream to be a <code>Stream&lt;R&gt;<\/code>.<\/p>\n<p>This stream is wrapped as a <code>Stream&lt;R&gt;<\/code> which checks at run-time that\neach data event emitted by this stream is also an instance of <code>R<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/cast.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;R&gt; cast&lt;R&gt;() =&gt; Stream.castFrom&lt;T, R&gt;(this);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "castFrom",
+            "type": "dart:async.Stream",
+            "desc": "<p>Adapts <code>source<\/code> to be a <code>Stream&lt;T&gt;<\/code>.<\/p>\n<p>This allows <code>source<\/code> to be used at the new type, but at run-time it\nmust satisfy the requirements of both the new type and its original type.<\/p>\n<p>Data events created by the source stream must also be instances of <code>T<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "source",
+                    "type": "dart:async.Stream",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/castFrom.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Stream&lt;T&gt; castFrom&lt;S, T&gt;(Stream&lt;S&gt; source) =&gt;\n    new CastStream&lt;S, T&gt;(source);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "contains",
+            "type": "dart:async.Future<dart:core.bool>",
+            "desc": "<p>Returns whether <code>needle<\/code> occurs in the elements provided by this stream.<\/p>\n<p>Compares each element of this stream to <code>needle<\/code> using <a href=\"dart-core\/Object\/operator_equals.html\">Object.==<\/a>.\nIf an equal element is found, the returned future is completed with <code>true<\/code>.\nIf this stream ends without finding a match, the future is completed with\n<code>false<\/code>.<\/p>\n<p>If this stream emits an error, or the call to <a href=\"dart-core\/Object\/operator_equals.html\">Object.==<\/a> throws,\nthe returned future is completed with that error,\nand processing stops.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "needle",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/contains.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;bool&gt; contains(Object needle) {\n  _Future&lt;bool&gt; future = new _Future&lt;bool&gt;();\n  StreamSubscription subscription;\n  subscription = this.listen(\n      (T element) {\n        _runUserCode(() =&gt; (element == needle), (bool isMatch) {\n          if (isMatch) {\n            _cancelAndValue(subscription, future, true);\n          }\n        }, _cancelAndErrorClosure(subscription, future));\n      },\n      onError: future._completeError,\n      onDone: () {\n        future._complete(false);\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.bool"
+            ]
+        },
+        {
+            "name": "distinct",
+            "type": "dart:async.Stream",
+            "desc": "<p>Skips data events if they are equal to the previous data event.<\/p>\n<p>The returned stream provides the same events as this stream, except\nthat it never provides two consecutive data events that are equal.\nThat is, errors are passed through to the returned stream, and\ndata events are passed through if they are distinct from the most\nrecently emitted data event.<\/p>\n<p>Equality is determined by the provided <code>equals<\/code> method. If that is\nomitted, the '==' operator on the last provided data element is used.<\/p>\n<p>If <code>equals<\/code> throws, the data event is replaced by an error event\ncontaining the thrown error. The behavior is equivalent to the\noriginal stream emitting the error event, and it doesn't change\nthe what the most recently emitted data event is.<\/p>\n<p>The returned stream is a broadcast stream if this stream is.\nIf a broadcast stream is listened to more than once, each subscription\nwill individually perform the <code>equals<\/code> test.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "next",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "previous",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "next",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/distinct.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; distinct([bool equals(T previous, T next)]) {\n  return new _DistinctStream&lt;T&gt;(this, equals);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "drain",
+            "type": "dart:async.Future",
+            "desc": "<p>Discards all data on this stream, but signals when it is done or an error\noccurred.<\/p>\n<p>When subscribing using <a href=\"dart-async\/Stream\/drain.html\">drain<\/a>, cancelOnError will be true. This means\nthat the future will complete with the first error on this stream and then\ncancel the subscription.\nIf this stream emits an error, or the call to <code>combine<\/code> throws,\nthe returned future is completed with that error,\nand processing is stopped.<\/p>\n<p>In case of a <code>done<\/code> event the future completes with the given\n<code>futureValue<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "futureValue",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/drain.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;E&gt; drain&lt;E&gt;([E futureValue]) =&gt;\n    listen(null, cancelOnError: true).asFuture&lt;E&gt;(futureValue);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "elementAt",
+            "type": "dart:async.Future",
+            "desc": "<p>Returns the value of the <code>index<\/code>th data event of this stream.<\/p>\n<p>Stops listening to this stream after the <code>index<\/code>th data event has been\nreceived.<\/p>\n<p>Internally the method cancels its subscription after these elements. This\nmeans that single-subscription (non-broadcast) streams are closed and\ncannot be reused after a call to this method.<\/p>\n<p>If an error event occurs before the value is found, the future completes\nwith this error.<\/p>\n<p>If a done event occurs before the value is found, the future completes\nwith a <a href=\"dart-core\/RangeError-class.html\">RangeError<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "index",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/elementAt.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; elementAt(int index) {\n  ArgumentError.checkNotNull(index, \"index\");\n  RangeError.checkNotNegative(index, \"index\");\n  _Future&lt;T&gt; future = new _Future&lt;T&gt;();\n  StreamSubscription subscription;\n  int elementIndex = 0;\n  subscription = this.listen(\n      (T value) {\n        if (index == elementIndex) {\n          _cancelAndValue(subscription, future, value);\n          return;\n        }\n        elementIndex += 1;\n      },\n      onError: future._completeError,\n      onDone: () {\n        future._completeError(\n            new RangeError.index(index, this, \"index\", null, elementIndex));\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Stream.empty",
+            "type": "",
+            "desc": "<p>Creates an empty broadcast stream.<\/p>\n<p>This is a stream which does nothing except sending a done event\nwhen it's listened to.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "dart-async\/Stream\/Stream.empty.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const factory Stream.empty() = _EmptyStream&lt;T&gt;;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Stream.eventTransformed",
+            "type": "",
+            "desc": "<p>Creates a stream where all events of an existing stream are piped through\na sink-transformation.<\/p>\n<p>The given <code>mapSink<\/code> closure is invoked when the returned stream is\nlistened to. All events from the <code>source<\/code> are added into the event sink\nthat is returned from the invocation. The transformation puts all\ntransformed events into the sink the <code>mapSink<\/code> closure received during\nits invocation. Conceptually the <code>mapSink<\/code> creates a transformation pipe\nwith the input sink being the returned <a href=\"dart-async\/EventSink-class.html\">EventSink<\/a> and the output sink\nbeing the sink it received.<\/p>\n<p>This constructor is frequently used to build transformers.<\/p>\n<p>Example use for a duplicating transformer:<\/p>\n<pre class=\"language-dart\"><code>class DuplicationSink implements EventSink&lt;String&gt; {\n  final EventSink&lt;String&gt; _outputSink;\n  DuplicationSink(this._outputSink);\n\n  void add(String data) {\n    _outputSink.add(data);\n    _outputSink.add(data);\n  }\n\n  void addError(e, [st]) { _outputSink.addError(e, st); }\n  void close() { _outputSink.close(); }\n}\n\nclass DuplicationTransformer extends StreamTransformerBase&lt;String, String&gt; {\n  \/\/ Some generic types omitted for brevity.\n  Stream bind(Stream stream) =&gt; new Stream&lt;String&gt;.eventTransformed(\n      stream,\n      (EventSink sink) =&gt; new DuplicationSink(sink));\n}\n\nstringStream.transform(new DuplicationTransformer());\n<\/code><\/pre>\n<p>The resulting stream is a broadcast stream if <code>source<\/code> is.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "source",
+                    "type": "dart:async.Stream",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "sink",
+                    "type": "dart:async.EventSink",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "sink",
+                    "type": "dart:async.EventSink",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-async\/Stream\/Stream.eventTransformed.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Stream.eventTransformed(\n    Stream source, EventSink mapSink(EventSink&lt;T&gt; sink)) {\n  return new _BoundSinkStream(source, mapSink);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "every",
+            "type": "dart:async.Future<dart:core.bool>",
+            "desc": "<p>Checks whether <code>test<\/code> accepts all elements provided by this stream.<\/p>\n<p>Calls <code>test<\/code> on each element of this stream.\nIf the call returns <code>false<\/code>, the returned future is completed with <code>false<\/code>\nand processing stops.<\/p>\n<p>If this stream ends without finding an element that <code>test<\/code> rejects,\nthe returned future is completed with <code>true<\/code>.<\/p>\n<p>If this stream emits an error, or if the call to <code>test<\/code> throws,\nthe returned future is completed with that error,\nand processing stops.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/every.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;bool&gt; every(bool test(T element)) {\n  _Future&lt;bool&gt; future = new _Future&lt;bool&gt;();\n  StreamSubscription subscription;\n  subscription = this.listen(\n      (T element) {\n        _runUserCode(() =&gt; test(element), (bool isMatch) {\n          if (!isMatch) {\n            _cancelAndValue(subscription, future, false);\n          }\n        }, _cancelAndErrorClosure(subscription, future));\n      },\n      onError: future._completeError,\n      onDone: () {\n        future._complete(true);\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.bool"
+            ]
+        },
+        {
+            "name": "expand",
+            "type": "dart:async.Stream",
+            "desc": "<p>Transforms each element of this stream into a sequence of elements.<\/p>\n<p>Returns a new stream where each element of this stream is replaced\nby zero or more data events.\nThe event values are provided as an <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> by a call to <code>convert<\/code>\nwith the element as argument, and the elements of that iterable is\nemitted in iteration order.\nIf calling <code>convert<\/code> throws, or if the iteration of the returned values\nthrows, the error is emitted on the returned stream and iteration ends\nfor that element of this stream.<\/p>\n<p>Error events and the done event of this stream are forwarded directly\nto the returned stream.<\/p>\n<p>The returned stream is a broadcast stream if this stream is.\nIf a broadcast stream is listened to more than once, each subscription\nwill individually call <code>convert<\/code> and expand the events.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/expand.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;S&gt; expand&lt;S&gt;(Iterable&lt;S&gt; convert(T element)) {\n  return new _ExpandStream&lt;T, S&gt;(this, convert);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "firstWhere",
+            "type": "dart:async.Future",
+            "desc": "<p>Finds the first element of this stream matching <code>test<\/code>.<\/p>\n<p>Returns a future that is completed with the first element of this stream\nthat <code>test<\/code> returns <code>true<\/code> for.<\/p>\n<p>If no such element is found before this stream is done, and a\n<code>orElse<\/code> function is provided, the result of calling <code>orElse<\/code>\nbecomes the value of the future. If <code>orElse<\/code> throws, the returned\nfuture is completed with that error.<\/p>\n<p>If this stream emits an error before the first matching element,\nthe returned future is completed with that error, and processing stops.<\/p>\n<p>Stops listening to this stream after the first matching element or error\nhas been received.<\/p>\n<p>Internally the method cancels its subscription after the first element that\nmatches the predicate. This means that single-subscription (non-broadcast)\nstreams are closed and cannot be reused after a call to this method.<\/p>\n<p>If an error occurs, or if this stream ends without finding a match and\nwith no <code>orElse<\/code> function provided,\nthe returned future is completed with an error.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "orElse",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/firstWhere.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; firstWhere(bool test(T element), {T orElse()}) {\n  _Future&lt;T&gt; future = new _Future();\n  StreamSubscription subscription;\n  subscription = this.listen(\n      (T value) {\n        _runUserCode(() =&gt; test(value), (bool isMatch) {\n          if (isMatch) {\n            _cancelAndValue(subscription, future, value);\n          }\n        }, _cancelAndErrorClosure(subscription, future));\n      },\n      onError: future._completeError,\n      onDone: () {\n        if (orElse != null) {\n          _runUserCode(orElse, future._complete, future._completeError);\n          return;\n        }\n        try {\n          throw IterableElementError.noElement();\n        } catch (e, s) {\n          _completeWithErrorCallback(future, e, s);\n        }\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "fold",
+            "type": "dart:async.Future",
+            "desc": "<p>Combines a sequence of values by repeatedly applying <code>combine<\/code>.<\/p>\n<p>Similar to <a href=\"dart-async\/Stream\/fold.html\">Iterable.fold<\/a>, this function maintains a value,\nstarting with <code>initialValue<\/code> and updated for each element of\nthis stream.\nFor each element, the value is updated to the result of calling\n<code>combine<\/code> with the previous value and the element.<\/p>\n<p>When this stream is done, the returned future is completed with\nthe value at that time.\nFor an empty stream, the future is completed with <code>initialValue<\/code>.<\/p>\n<p>If this stream emits an error, or the call to <code>combine<\/code> throws,\nthe returned future is completed with that error,\nand processing is stopped.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "initialValue",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "previous",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/fold.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;S&gt; fold&lt;S&gt;(S initialValue, S combine(S previous, T element)) {\n  _Future&lt;S&gt; result = new _Future&lt;S&gt;();\n  S value = initialValue;\n  StreamSubscription subscription;\n  subscription = this.listen(\n      (T element) {\n        _runUserCode(() =&gt; combine(value, element), (S newValue) {\n          value = newValue;\n        }, _cancelAndErrorClosure(subscription, result));\n      },\n      onError: result._completeError,\n      onDone: () {\n        result._complete(value);\n      },\n      cancelOnError: true);\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "forEach",
+            "type": "dart:async.Future",
+            "desc": "<p>Executes <code>action<\/code> on each element of this stream.<\/p>\n<p>Completes the returned <a href=\"dart-async\/Future-class.html\">Future<\/a> when all elements of this stream\nhave been processed.<\/p>\n<p>If this stream emits an error, or if the call to <code>action<\/code> throws,\nthe returned future completes with that error,\nand processing stops.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/forEach.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future forEach(void action(T element)) {\n  _Future future = new _Future();\n  StreamSubscription subscription;\n  subscription = this.listen(\n      (T element) {\n        \/\/ TODO(floitsch): the type should be 'void' and inferred.\n        _runUserCode&lt;dynamic&gt;(() =&gt; action(element), (_) {},\n            _cancelAndErrorClosure(subscription, future));\n      },\n      onError: future._completeError,\n      onDone: () {\n        future._complete(null);\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Stream.fromFuture",
+            "type": "",
+            "desc": "<p>Creates a new single-subscription stream from the future.<\/p>\n<p>When the future completes, the stream will fire one event, either\ndata or error, and then close with a done-event.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "future",
+                    "type": "dart:async.Future",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-async\/Stream\/Stream.fromFuture.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Stream.fromFuture(Future&lt;T&gt; future) {\n  \/\/ Use the controller's buffering to fill in the value even before\n  \/\/ the stream has a listener. For a single value, it's not worth it\n  \/\/ to wait for a listener before doing the `then` on the future.\n  _StreamController&lt;T&gt; controller = new StreamController&lt;T&gt;(sync: true);\n  future.then((value) {\n    controller._add(value);\n    controller._closeUnchecked();\n  }, onError: (error, stackTrace) {\n    controller._addError(error, stackTrace);\n    controller._closeUnchecked();\n  });\n  return controller.stream;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Stream.fromFutures",
+            "type": "",
+            "desc": "<p>Create a stream from a group of futures.<\/p>\n<p>The stream reports the results of the futures on the stream in the order\nin which the futures complete.\nEach future provides either a data event or an error event,\ndepending on how the future completes.<\/p>\n<p>If some futures have already completed when <code>Stream.fromFutures<\/code> is called,\ntheir results will be emitted in some unspecified order.<\/p>\n<p>When all futures have completed, the stream is closed.<\/p>\n<p>If <code>futures<\/code> is empty, the stream closes as soon as possible.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "futures",
+                    "type": "dart:core.Iterable<dart:async.Future>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.Iterable",
+                        "dart:async.Future"
+                    ]
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-async\/Stream\/Stream.fromFutures.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Stream.fromFutures(Iterable&lt;Future&lt;T&gt;&gt; futures) {\n  _StreamController&lt;T&gt; controller = new StreamController&lt;T&gt;(sync: true);\n  int count = 0;\n  \/\/ Declare these as variables holding closures instead of as\n  \/\/ function declarations.\n  \/\/ This avoids creating a new closure from the functions for each future.\n  var onValue = (T value) {\n    if (!controller.isClosed) {\n      controller._add(value);\n      if (--count == 0) controller._closeUnchecked();\n    }\n  };\n  var onError = (error, StackTrace stack) {\n    if (!controller.isClosed) {\n      controller._addError(error, stack);\n      if (--count == 0) controller._closeUnchecked();\n    }\n  };\n  \/\/ The futures are already running, so start listening to them immediately\n  \/\/ (instead of waiting for the stream to be listened on).\n  \/\/ If we wait, we might not catch errors in the futures in time.\n  for (var future in futures) {\n    count++;\n    future.then(onValue, onError: onError);\n  }\n  \/\/ Use schedule microtask since controller is sync.\n  if (count == 0) scheduleMicrotask(controller.close);\n  return controller.stream;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Stream.fromIterable",
+            "type": "",
+            "desc": "<p>Creates a single-subscription stream that gets its data from <code>elements<\/code>.<\/p>\n<p>The iterable is iterated when the stream receives a listener, and stops\niterating if the listener cancels the subscription, or if the\n<a href=\"dart-core\/Iterator\/moveNext.html\">Iterator.moveNext<\/a> method returns <code>false<\/code> or throws.\nIteration is suspended while the stream subscription is paused.<\/p>\n<p>If calling <a href=\"dart-core\/Iterator\/moveNext.html\">Iterator.moveNext<\/a> on <code>elements.iterator<\/code> throws,\nthe stream emits that error and then it closes.\nIf reading <a href=\"dart-core\/Iterator\/current.html\">Iterator.current<\/a> on <code>elements.iterator<\/code> throws,\nthe stream emits that error, but keeps iterating.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "elements",
+                    "type": "dart:core.Iterable",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-async\/Stream\/Stream.fromIterable.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Stream.fromIterable(Iterable&lt;T&gt; elements) {\n  return new _GeneratedStreamImpl&lt;T&gt;(\n      () =&gt; new _IterablePendingEvents&lt;T&gt;(elements));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "handleError",
+            "type": "dart:async.Stream",
+            "desc": "<p>Creates a wrapper Stream that intercepts some errors from this stream.<\/p>\n<p>If this stream sends an error that matches <code>test<\/code>, then it is intercepted\nby the <code>onError<\/code> function.<\/p>\n<p>The <code>onError<\/code> callback must be of type <code>void onError(error)<\/code> or\n<code>void onError(error, StackTrace stackTrace)<\/code>.\nThe function type determines whether <code>onError<\/code> is invoked with a stack\ntrace argument.\nThe stack trace argument may be <code>null<\/code> if this stream received an error\nwithout a stack trace.<\/p>\n<p>An asynchronous error <code>error<\/code> is matched by a test function if\n<code>test(error)<\/code> returns true. If <code>test<\/code> is omitted, every error is considered\nmatching.<\/p>\n<p>If the error is intercepted, the <code>onError<\/code> function can decide what to do\nwith it. It can throw if it wants to raise a new (or the same) error,\nor simply return to make this stream forget the error.\nIf the received <code>error<\/code> value is thrown again by the <code>onError<\/code> function,\nit acts like a <code>rethrow<\/code> and it is emitted along with its original\nstack trace, not the stack trace of the <code>throw<\/code> inside <code>onError<\/code>.<\/p>\n<p>If you need to transform an error into a data event, use the more generic\n<a href=\"dart-async\/Stream\/transform.html\">Stream.transform<\/a> to handle the event by writing a data event to\nthe output sink.<\/p>\n<p>The returned stream is a broadcast stream if this stream is.\nIf a broadcast stream is listened to more than once, each subscription\nwill individually perform the <code>test<\/code> and handle the error.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "onError",
+                    "type": "dart:core.Function",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "error",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "error",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/handleError.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; handleError(Function onError, {bool test(error)}) {\n  return new _HandleErrorStream&lt;T&gt;(this, onError, test);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "join",
+            "type": "dart:async.Future<dart:core.String>",
+            "desc": "<p>Combines the string representation of elements into a single string.<\/p>\n<p>Each element is converted to a string using its <a href=\"dart-core\/Object\/toString.html\">Object.toString<\/a> method.\nIf <code>separator<\/code> is provided, it is inserted between element string\nrepresentations.<\/p>\n<p>The returned future is completed with the combined string when this stream\nis done.<\/p>\n<p>If this stream emits an error, or the call to <a href=\"dart-core\/Object\/toString.html\">Object.toString<\/a> throws,\nthe returned future is completed with that error,\nand processing stops.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "separator",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/join.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;String&gt; join([String separator = \"\"]) {\n  _Future&lt;String&gt; result = new _Future&lt;String&gt;();\n  StringBuffer buffer = new StringBuffer();\n  StreamSubscription subscription;\n  bool first = true;\n  subscription = this.listen(\n      (T element) {\n        if (!first) {\n          buffer.write(separator);\n        }\n        first = false;\n        try {\n          buffer.write(element);\n        } catch (e, s) {\n          _cancelAndErrorWithReplacement(subscription, result, e, s);\n        }\n      },\n      onError: result._completeError,\n      onDone: () {\n        result._complete(buffer.toString());\n      },\n      cancelOnError: true);\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.String"
+            ]
+        },
+        {
+            "name": "lastWhere",
+            "type": "dart:async.Future",
+            "desc": "<p>Finds the last element in this stream matching <code>test<\/code>.<\/p>\n<p>If this stream emits an error, the returned future is completed with that\nerror, and processing stops.<\/p>\n<p>Otherwise as <a href=\"dart-async\/Stream\/firstWhere.html\">firstWhere<\/a>, except that the last matching element is found\ninstead of the first.\nThat means that a non-error result cannot be provided before this stream\nis done.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "orElse",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/lastWhere.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; lastWhere(bool test(T element), {T orElse()}) {\n  _Future&lt;T&gt; future = new _Future();\n  T result;\n  bool foundResult = false;\n  StreamSubscription subscription;\n  subscription = this.listen(\n      (T value) {\n        _runUserCode(() =&gt; true == test(value), (bool isMatch) {\n          if (isMatch) {\n            foundResult = true;\n            result = value;\n          }\n        }, _cancelAndErrorClosure(subscription, future));\n      },\n      onError: future._completeError,\n      onDone: () {\n        if (foundResult) {\n          future._complete(result);\n          return;\n        }\n        if (orElse != null) {\n          _runUserCode(orElse, future._complete, future._completeError);\n          return;\n        }\n        try {\n          throw IterableElementError.noElement();\n        } catch (e, s) {\n          _completeWithErrorCallback(future, e, s);\n        }\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "listen",
+            "type": "dart:async.StreamSubscription",
+            "desc": "<p>Adds a subscription to this stream.<\/p>\n<p>Returns a <a href=\"dart-async\/StreamSubscription-class.html\">StreamSubscription<\/a> which handles events from this stream using\nthe provided <code>onData<\/code>, <code>onError<\/code> and <code>onDone<\/code> handlers.\nThe handlers can be changed on the subscription, but they start out\nas the provided functions.<\/p>\n<p>On each data event from this stream, the subscriber's <code>onData<\/code> handler\nis called. If <code>onData<\/code> is <code>null<\/code>, nothing happens.<\/p>\n<p>On errors from this stream, the <code>onError<\/code> handler is called with the\nerror object and possibly a stack trace.<\/p>\n<p>The <code>onError<\/code> callback must be of type <code>void onError(error)<\/code> or\n<code>void onError(error, StackTrace stackTrace)<\/code>. If <code>onError<\/code> accepts\ntwo arguments it is called with the error object and the stack trace\n(which could be <code>null<\/code> if this stream itself received an error without\nstack trace).\nOtherwise it is called with just the error object.\nIf <code>onError<\/code> is omitted, any errors on this stream are considered unhandled,\nand will be passed to the current <a href=\"dart-async\/Zone-class.html\">Zone<\/a>'s error handler.\nBy default unhandled async errors are treated\nas if they were uncaught top-level errors.<\/p>\n<p>If this stream closes and sends a done event, the <code>onDone<\/code> handler is\ncalled. If <code>onDone<\/code> is <code>null<\/code>, nothing happens.<\/p>\n<p>If <code>cancelOnError<\/code> is true, the subscription is automatically canceled\nwhen the first error event is delivered. The default is <code>false<\/code>.<\/p>\n<p>While a subscription is paused, or when it has been canceled,\nthe subscription doesn't receive events and none of the\nevent handler functions are called.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "event",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "event",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "onError",
+                    "type": "dart:core.Function",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "onDone",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "cancelOnError",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/listen.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamSubscription&lt;T&gt; listen(void onData(T event),\n    {Function onError, void onDone(), bool cancelOnError});<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "map",
+            "type": "dart:async.Stream",
+            "desc": "<p>Transforms each element of this stream into a new stream event.<\/p>\n<p>Creates a new stream that converts each element of this stream\nto a new value using the <code>convert<\/code> function, and emits the result.<\/p>\n<p>For each data event, <code>o<\/code>, in this stream, the returned stream\nprovides a data event with the value <code>convert(o)<\/code>.\nIf <code>convert<\/code> throws, the returned stream reports it as an error\nevent instead.<\/p>\n<p>Error and done events are passed through unchanged to the returned stream.<\/p>\n<p>The returned stream is a broadcast stream if this stream is.\nThe <code>convert<\/code> function is called once per data event per listener.\nIf a broadcast stream is listened to more than once, each subscription\nwill individually call <code>convert<\/code> on each data event.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "event",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "event",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/map.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;S&gt; map&lt;S&gt;(S convert(T event)) {\n  return new _MapStream&lt;T, S&gt;(this, convert);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Stream.periodic",
+            "type": "",
+            "desc": "<p>Creates a stream that repeatedly emits events at <code>period<\/code> intervals.<\/p>\n<p>The event values are computed by invoking <code>computation<\/code>. The argument to\nthis callback is an integer that starts with 0 and is incremented for\nevery event.<\/p>\n<p>If <code>computation<\/code> is omitted the event values will all be <code>null<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "period",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "computationCount",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "computationCount",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-async\/Stream\/Stream.periodic.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Stream.periodic(Duration period,\n    [T computation(int computationCount)]) {\n  Timer timer;\n  int computationCount = 0;\n  StreamController&lt;T&gt; controller;\n  \/\/ Counts the time that the Stream was running (and not paused).\n  Stopwatch watch = new Stopwatch();\n\n  void sendEvent() {\n    watch.reset();\n    T data;\n    if (computation != null) {\n      try {\n        data = computation(computationCount++);\n      } catch (e, s) {\n        controller.addError(e, s);\n        return;\n      }\n    }\n    controller.add(data);\n  }\n\n  void startPeriodicTimer() {\n    assert(timer == null);\n    timer = new Timer.periodic(period, (Timer timer) {\n      sendEvent();\n    });\n  }\n\n  controller = new StreamController&lt;T&gt;(\n      sync: true,\n      onListen: () {\n        watch.start();\n        startPeriodicTimer();\n      },\n      onPause: () {\n        timer.cancel();\n        timer = null;\n        watch.stop();\n      },\n      onResume: () {\n        assert(timer == null);\n        Duration elapsed = watch.elapsed;\n        watch.start();\n        timer = new Timer(period - elapsed, () {\n          timer = null;\n          startPeriodicTimer();\n          sendEvent();\n        });\n      },\n      onCancel: () {\n        if (timer != null) timer.cancel();\n        timer = null;\n        return Future._nullFuture;\n      });\n  return controller.stream;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "pipe",
+            "type": "dart:async.Future",
+            "desc": "<p>Pipes the events of this stream into <code>streamConsumer<\/code>.<\/p>\n<p>All events of this stream are added to <code>streamConsumer<\/code> using\n<a href=\"dart-async\/StreamConsumer\/addStream.html\">StreamConsumer.addStream<\/a>.\nThe <code>streamConsumer<\/code> is closed when this stream has been successfully added\nto it - when the future returned by <code>addStream<\/code> completes without an error.<\/p>\n<p>Returns a future which completes when this stream has been consumed\nand the consumer has been closed.<\/p>\n<p>The returned future completes with the same result as the future returned\nby <a href=\"dart-async\/StreamConsumer\/close.html\">StreamConsumer.close<\/a>.\nIf the call to <a href=\"dart-async\/StreamConsumer\/addStream.html\">StreamConsumer.addStream<\/a> fails in some way, this\nmethod fails in the same way.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "streamConsumer",
+                    "type": "dart:async.StreamConsumer",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/pipe.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future pipe(StreamConsumer&lt;T&gt; streamConsumer) {\n  return streamConsumer.addStream(this).then((_) =&gt; streamConsumer.close());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "reduce",
+            "type": "dart:async.Future",
+            "desc": "<p>Combines a sequence of values by repeatedly applying <code>combine<\/code>.<\/p>\n<p>Similar to <a href=\"dart-async\/Stream\/reduce.html\">Iterable.reduce<\/a>, this function maintains a value,\nstarting with the first element of this stream\nand updated for each further element of this stream.\nFor each element after the first,\nthe value is updated to the result of calling <code>combine<\/code>\nwith the previous value and the element.<\/p>\n<p>When this stream is done, the returned future is completed with\nthe value at that time.<\/p>\n<p>If this stream is empty, the returned future is completed with\nan error.\nIf this stream emits an error, or the call to <code>combine<\/code> throws,\nthe returned future is completed with that error,\nand processing is stopped.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "previous",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/reduce.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; reduce(T combine(T previous, T element)) {\n  _Future&lt;T&gt; result = new _Future&lt;T&gt;();\n  bool seenFirst = false;\n  T value;\n  StreamSubscription subscription;\n  subscription = this.listen(\n      (T element) {\n        if (seenFirst) {\n          _runUserCode(() =&gt; combine(value, element), (T newValue) {\n            value = newValue;\n          }, _cancelAndErrorClosure(subscription, result));\n        } else {\n          value = element;\n          seenFirst = true;\n        }\n      },\n      onError: result._completeError,\n      onDone: () {\n        if (!seenFirst) {\n          try {\n            \/\/ Throw and recatch, instead of just doing\n            \/\/  _completeWithErrorCallback, e, theError, StackTrace.current),\n            \/\/ to ensure that the stackTrace is set on the error.\n            throw IterableElementError.noElement();\n          } catch (e, s) {\n            _completeWithErrorCallback(result, e, s);\n          }\n        } else {\n          result._complete(value);\n        }\n      },\n      cancelOnError: true);\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "singleWhere",
+            "type": "dart:async.Future",
+            "desc": "<p>Finds the single element in this stream matching <code>test<\/code>.<\/p>\n<p>Like <a href=\"dart-async\/Stream\/lastWhere.html\">lastWhere<\/a>, except that it is an error if more than one\nmatching element occurs in this stream.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "orElse",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/singleWhere.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; singleWhere(bool test(T element), {T orElse()}) {\n  _Future&lt;T&gt; future = new _Future&lt;T&gt;();\n  T result;\n  bool foundResult = false;\n  StreamSubscription subscription;\n  subscription = this.listen(\n      (T value) {\n        _runUserCode(() =&gt; true == test(value), (bool isMatch) {\n          if (isMatch) {\n            if (foundResult) {\n              try {\n                throw IterableElementError.tooMany();\n              } catch (e, s) {\n                _cancelAndErrorWithReplacement(subscription, future, e, s);\n              }\n              return;\n            }\n            foundResult = true;\n            result = value;\n          }\n        }, _cancelAndErrorClosure(subscription, future));\n      },\n      onError: future._completeError,\n      onDone: () {\n        if (foundResult) {\n          future._complete(result);\n          return;\n        }\n        try {\n          if (orElse != null) {\n            _runUserCode(orElse, future._complete, future._completeError);\n            return;\n          }\n          throw IterableElementError.noElement();\n        } catch (e, s) {\n          _completeWithErrorCallback(future, e, s);\n        }\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "skip",
+            "type": "dart:async.Stream",
+            "desc": "<p>Skips the first <code>count<\/code> data events from this stream.<\/p>\n<p>Returns a stream that emits the same events as this stream would\nif listened to at the same time, except that the first <code>count<\/code>\ndata events are not emitted.\nThe returned stream is done when this stream is.<\/p>\n<p>If this stream emits fewer than <code>count<\/code> data events\nbefore being done, the returned stream emits no data events.<\/p>\n<p>The returned stream is a broadcast stream if this stream is.\nFor a broadcast stream, the events are only counted from the time\nthe returned stream is listened to.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "count",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/skip.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; skip(int count) {\n  return new _SkipStream&lt;T&gt;(this, count);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "skipWhile",
+            "type": "dart:async.Stream",
+            "desc": "<p>Skip data events from this stream while they are matched by <code>test<\/code>.<\/p>\n<p>Returns a stream that emits the same events as this stream,\nexcept that data events are not emitted until a data event fails <code>test<\/code>.\nThe test fails when called with a data event\nif it returns a non-<code>true<\/code> value or if the call to <code>test<\/code> throws.\nIf the call throws, the error is emitted as an error event\non the returned stream instead of the data event,\notherwise the event that made <code>test<\/code> return non-true is emitted as the\nfirst data event.<\/p>\n<p>Error and done events are provided by the returned stream unmodified.<\/p>\n<p>The returned stream is a broadcast stream if this stream is.\nFor a broadcast stream, the events are only tested from the time\nthe returned stream is listened to.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/skipWhile.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; skipWhile(bool test(T element)) {\n  return new _SkipWhileStream&lt;T&gt;(this, test);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "take",
+            "type": "dart:async.Stream",
+            "desc": "<p>Provides at most the first <code>count<\/code> data events of this stream.<\/p>\n<p>Returns a stream that emits the same events that this stream would\nif listened to at the same time,\nuntil either this stream ends or it has emitted <code>count<\/code> data events,\nat which point the returned stream is done.<\/p>\n<p>If this stream produces fewer than <code>count<\/code> data events before it's done,\nso will the returned stream.<\/p>\n<p>Starts listening to this stream when the returned stream is listened to\nand stops listening when the first <code>count<\/code> data events have been received.<\/p>\n<p>This means that if this is a single-subscription (non-broadcast) streams\nit cannot be reused after the returned stream has been listened to.<\/p>\n<p>If this is a broadcast stream, the returned stream is a broadcast stream.\nIn that case, the events are only counted from the time\nthe returned stream is listened to.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "count",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/take.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; take(int count) {\n  return new _TakeStream&lt;T&gt;(this, count);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "takeWhile",
+            "type": "dart:async.Stream",
+            "desc": "<p>Forwards data events while <code>test<\/code> is successful.<\/p>\n<p>Returns a stream that provides the same events as this stream\nuntil <code>test<\/code> fails for a data event.\nThe returned stream is done when either this stream is done,\nor when this stream first emits a data event that fails <code>test<\/code>.<\/p>\n<p>The <code>test<\/code> call is considered failing if it returns a non-<code>true<\/code> value\nor if it throws. If the <code>test<\/code> call throws, the error is emitted as the\nlast event on the returned streams.<\/p>\n<p>Stops listening to this stream after the accepted elements.<\/p>\n<p>Internally the method cancels its subscription after these elements. This\nmeans that single-subscription (non-broadcast) streams are closed and\ncannot be reused after a call to this method.<\/p>\n<p>The returned stream is a broadcast stream if this stream is.\nFor a broadcast stream, the events are only tested from the time\nthe returned stream is listened to.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/takeWhile.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; takeWhile(bool test(T element)) {\n  return new _TakeWhileStream&lt;T&gt;(this, test);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "timeout",
+            "type": "dart:async.Stream",
+            "desc": "<p>Creates a new stream with the same events as this stream.<\/p>\n<p>Whenever more than <code>timeLimit<\/code> passes between two events from this stream,\nthe <code>onTimeout<\/code> function is called, which can emit further events on\nthe returned stream.<\/p>\n<p>The countdown doesn't start until the returned stream is listened to.\nThe countdown is reset every time an event is forwarded from this stream,\nor when this stream is paused and resumed.<\/p>\n<p>The <code>onTimeout<\/code> function is called with one argument: an\n<a href=\"dart-async\/EventSink-class.html\">EventSink<\/a> that allows putting events into the returned stream.\nThis <code>EventSink<\/code> is only valid during the call to <code>onTimeout<\/code>.\nCalling <a href=\"dart-async\/EventSink\/close.html\">EventSink.close<\/a> on the sink passed to <code>onTimeout<\/code> closes the\nreturned stream, and no further events are processed.<\/p>\n<p>If <code>onTimeout<\/code> is omitted, a timeout will just put a <a href=\"dart-async\/TimeoutException-class.html\">TimeoutException<\/a>\ninto the error channel of the returned stream.\nIf the call to <code>onTimeout<\/code> throws, the error is emitted on the returned\nstream.<\/p>\n<p>The returned stream is a broadcast stream if this stream is.\nIf a broadcast stream is listened to more than once, each subscription\nwill have its individually timer that starts counting on listen,\nand the subscriptions' timers can be paused individually.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "timeLimit",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "sink",
+                    "type": "dart:async.EventSink",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "sink",
+                    "type": "dart:async.EventSink",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/timeout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; timeout(Duration timeLimit, {void onTimeout(EventSink&lt;T&gt; sink)}) {\n  _StreamControllerBase&lt;T&gt; controller;\n  \/\/ The following variables are set on listen.\n  StreamSubscription&lt;T&gt; subscription;\n  Timer timer;\n  Zone zone;\n  _TimerCallback timeout;\n\n  void onData(T event) {\n    timer.cancel();\n    controller.add(event);\n    timer = zone.createTimer(timeLimit, timeout);\n  }\n\n  void onError(error, StackTrace stackTrace) {\n    timer.cancel();\n    assert(controller is _StreamController ||\n        controller is _BroadcastStreamController);\n    controller._addError(error, stackTrace); \/\/ Avoid Zone error replacement.\n    timer = zone.createTimer(timeLimit, timeout);\n  }\n\n  void onDone() {\n    timer.cancel();\n    controller.close();\n  }\n\n  void onListen() {\n    \/\/ This is the onListen callback for of controller.\n    \/\/ It runs in the same zone that the subscription was created in.\n    \/\/ Use that zone for creating timers and running the onTimeout\n    \/\/ callback.\n    zone = Zone.current;\n    if (onTimeout == null) {\n      timeout = () {\n        controller.addError(\n            new TimeoutException(\"No stream event\", timeLimit), null);\n      };\n    } else {\n      \/\/ TODO(floitsch): the return type should be 'void', and the type\n      \/\/ should be inferred.\n      var registeredOnTimeout =\n          zone.registerUnaryCallback&lt;dynamic, EventSink&lt;T&gt;&gt;(onTimeout);\n      var wrapper = new _ControllerEventSinkWrapper&lt;T&gt;(null);\n      timeout = () {\n        wrapper._sink = controller; \/\/ Only valid during call.\n        zone.runUnaryGuarded(registeredOnTimeout, wrapper);\n        wrapper._sink = null;\n      };\n    }\n\n    subscription = this.listen(onData, onError: onError, onDone: onDone);\n    timer = zone.createTimer(timeLimit, timeout);\n  }\n\n  Future onCancel() {\n    timer.cancel();\n    Future result = subscription.cancel();\n    subscription = null;\n    return result;\n  }\n\n  controller = isBroadcast\n      ? new _SyncBroadcastStreamController&lt;T&gt;(onListen, onCancel)\n      : new _SyncStreamController&lt;T&gt;(onListen, () {\n          \/\/ Don't null the timer, onCancel may call cancel again.\n          timer.cancel();\n          subscription.pause();\n        }, () {\n          subscription.resume();\n          timer = zone.createTimer(timeLimit, timeout);\n        }, onCancel);\n  return controller.stream;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toList",
+            "type": "dart:async.Future<dart:core.List>",
+            "desc": "<p>Collects all elements of this stream in a <a href=\"dart-core\/List-class.html\">List<\/a>.<\/p>\n<p>Creates a <code>List&lt;T&gt;<\/code> and adds all elements of this stream to the list\nin the order they arrive.\nWhen this stream ends, the returned future is completed with that list.<\/p>\n<p>If this stream emits an error,\nthe returned future is completed with that error,\nand processing stops.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/toList.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;List&lt;T&gt;&gt; toList() {\n  List&lt;T&gt; result = &lt;T&gt;[];\n  _Future&lt;List&lt;T&gt;&gt; future = new _Future&lt;List&lt;T&gt;&gt;();\n  this.listen(\n      (T data) {\n        result.add(data);\n      },\n      onError: future._completeError,\n      onDone: () {\n        future._complete(result);\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.List"
+            ]
+        },
+        {
+            "name": "toSet",
+            "type": "dart:async.Future<dart:core.Set>",
+            "desc": "<p>Collects the data of this stream in a <a href=\"dart-core\/Set-class.html\">Set<\/a>.<\/p>\n<p>Creates a <code>Set&lt;T&gt;<\/code> and adds all elements of this stream to the set.\nin the order they arrive.\nWhen this stream ends, the returned future is completed with that set.<\/p>\n<p>The returned set is the same type as returned by <code>new Set&lt;T&gt;()<\/code>.\nIf another type of set is needed, either use <a href=\"dart-async\/Stream\/forEach.html\">forEach<\/a> to add each\nelement to the set, or use\n<code>toList().then((list) =&gt; new SomeOtherSet.from(list))<\/code>\nto create the set.<\/p>\n<p>If this stream emits an error,\nthe returned future is completed with that error,\nand processing stops.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/toSet.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;Set&lt;T&gt;&gt; toSet() {\n  Set&lt;T&gt; result = new Set&lt;T&gt;();\n  _Future&lt;Set&lt;T&gt;&gt; future = new _Future&lt;Set&lt;T&gt;&gt;();\n  this.listen(\n      (T data) {\n        result.add(data);\n      },\n      onError: future._completeError,\n      onDone: () {\n        future._complete(result);\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.Set"
+            ]
+        },
+        {
+            "name": "transform",
+            "type": "dart:async.Stream",
+            "desc": "<p>Applies  <code>streamTransformer<\/code> to this stream.<\/p>\n<p>Returns the transformed stream,\nthat is, the result of <code>streamTransformer.bind(this)<\/code>.\nThis method simply allows writing the call to <code>streamTransformer.bind<\/code>\nin a chained fashion, like<\/p>\n<pre class=\"language-dart\"><code>stream.map(mapping).transform(transformation).toList()\n<\/code><\/pre>\n<p>which can be more convenient than calling <code>bind<\/code> directly.<\/p>\n<p>The <code>streamTransformer<\/code> can return any stream.\nWhether the returned stream is a broadcast stream or not,\nand which elements it will contain,\nis entirely up to the transformation.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "streamTransformer",
+                    "type": "dart:async.StreamTransformer",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/transform.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;S&gt; transform&lt;S&gt;(StreamTransformer&lt;T, S&gt; streamTransformer) {\n  return streamTransformer.bind(this);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "where",
+            "type": "dart:async.Stream",
+            "desc": "<p>Creates a new stream from this stream that discards some elements.<\/p>\n<p>The new stream sends the same error and done events as this stream,\nbut it only sends the data events that satisfy the <code>test<\/code>.<\/p>\n<p>If the <code>test<\/code> function throws, the data event is dropped and the\nerror is emitted on the returned stream instead.<\/p>\n<p>The returned stream is a broadcast stream if this stream is.\nIf a broadcast stream is listened to more than once, each subscription\nwill individually perform the <code>test<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Stream",
+            "sig": "",
+            "params": [
+                {
+                    "name": "event",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "event",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Stream\/where.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; where(bool test(T event)) {\n  return new _WhereStream&lt;T&gt;(this, test);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "first",
+            "type": "dart:async.Future",
+            "types": [],
+            "desc": "<p>The first element of this stream.<\/p>\n<p>Stops listening to this stream after the first element has been received.<\/p>\n<p>Internally the method cancels its subscription after the first element.\nThis means that single-subscription (non-broadcast) streams are closed\nand cannot be reused after a call to this getter.<\/p>\n<p>If an error event occurs before the first data event, the returned future\nis completed with that error.<\/p>\n<p>If this stream is empty (a done event occurs before the first data event),\nthe returned future completes with an error.<\/p>\n<p>Except for the type of the error, this method is equivalent to\n<code>this.elementAt(0)<\/code>.<\/p>\n        ",
+            "memberOf": "dart:async.Stream",
+            "isConstant": false,
+            "href": "dart-async\/Stream\/first.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; get first {\n  _Future&lt;T&gt; future = new _Future&lt;T&gt;();\n  StreamSubscription subscription;\n  subscription = this.listen(\n      (T value) {\n        _cancelAndValue(subscription, future, value);\n      },\n      onError: future._completeError,\n      onDone: () {\n        try {\n          throw IterableElementError.noElement();\n        } catch (e, s) {\n          _completeWithErrorCallback(future, e, s);\n        }\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isBroadcast",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether this stream is a broadcast stream.<\/p>\n        ",
+            "memberOf": "dart:async.Stream",
+            "isConstant": false,
+            "href": "dart-async\/Stream\/isBroadcast.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isBroadcast =&gt; false;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isEmpty",
+            "type": "dart:async.Future<dart:core.bool>",
+            "types": [
+                "dart:async.Future",
+                "dart:core.bool"
+            ],
+            "desc": "<p>Whether this stream contains any elements.<\/p>\n<p>Waits for the first element of this stream, then completes the returned\nfuture with <code>true<\/code>.\nIf this stream ends without emitting any elements, the returned future is\ncompleted with <code>false<\/code>.<\/p>\n<p>If the first event is an error, the returned future is completed with that\nerror.<\/p>\n<p>This operation listens to this stream, and a non-broadcast stream cannot\nbe reused after checking whether it is empty.<\/p>\n        ",
+            "memberOf": "dart:async.Stream",
+            "isConstant": false,
+            "href": "dart-async\/Stream\/isEmpty.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;bool&gt; get isEmpty {\n  _Future&lt;bool&gt; future = new _Future&lt;bool&gt;();\n  StreamSubscription subscription;\n  subscription = this.listen(\n      (_) {\n        _cancelAndValue(subscription, future, false);\n      },\n      onError: future._completeError,\n      onDone: () {\n        future._complete(true);\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "last",
+            "type": "dart:async.Future",
+            "types": [],
+            "desc": "<p>The last element of this stream.<\/p>\n<p>If this stream emits an error event,\nthe returned future is completed with that error\nand processing stops.<\/p>\n<p>If this stream is empty (the done event is the first event),\nthe returned future completes with an error.<\/p>\n        ",
+            "memberOf": "dart:async.Stream",
+            "isConstant": false,
+            "href": "dart-async\/Stream\/last.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; get last {\n  _Future&lt;T&gt; future = new _Future&lt;T&gt;();\n  T result;\n  bool foundResult = false;\n  listen(\n      (T value) {\n        foundResult = true;\n        result = value;\n      },\n      onError: future._completeError,\n      onDone: () {\n        if (foundResult) {\n          future._complete(result);\n          return;\n        }\n        try {\n          throw IterableElementError.noElement();\n        } catch (e, s) {\n          _completeWithErrorCallback(future, e, s);\n        }\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "length",
+            "type": "dart:async.Future<dart:core.int>",
+            "types": [
+                "dart:async.Future",
+                "dart:core.int"
+            ],
+            "desc": "<p>The number of elements in this stream.<\/p>\n<p>Waits for all elements of this stream. When this stream ends,\nthe returned future is completed with the number of elements.<\/p>\n<p>If this stream emits an error,\nthe returned future is completed with that error,\nand processing stops.<\/p>\n<p>This operation listens to this stream, and a non-broadcast stream cannot\nbe reused after finding its length.<\/p>\n        ",
+            "memberOf": "dart:async.Stream",
+            "isConstant": false,
+            "href": "dart-async\/Stream\/length.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;int&gt; get length {\n  _Future&lt;int&gt; future = new _Future&lt;int&gt;();\n  int count = 0;\n  this.listen(\n      (_) {\n        count++;\n      },\n      onError: future._completeError,\n      onDone: () {\n        future._complete(count);\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "single",
+            "type": "dart:async.Future",
+            "types": [],
+            "desc": "<p>The single element of this stream.<\/p>\n<p>If this stream emits an error event,\nthe returned future is completed with that error\nand processing stops.<\/p>\n<p>If <a href=\"dart-async\/Stream-class.html\">this<\/a> is empty or has more than one element,\nthe returned future completes with an error.<\/p>\n        ",
+            "memberOf": "dart:async.Stream",
+            "isConstant": false,
+            "href": "dart-async\/Stream\/single.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; get single {\n  _Future&lt;T&gt; future = new _Future&lt;T&gt;();\n  T result;\n  bool foundResult = false;\n  StreamSubscription subscription;\n  subscription = this.listen(\n      (T value) {\n        if (foundResult) {\n          \/\/ This is the second element we get.\n          try {\n            throw IterableElementError.tooMany();\n          } catch (e, s) {\n            _cancelAndErrorWithReplacement(subscription, future, e, s);\n          }\n          return;\n        }\n        foundResult = true;\n        result = value;\n      },\n      onError: future._completeError,\n      onDone: () {\n        if (foundResult) {\n          future._complete(result);\n          return;\n        }\n        try {\n          throw IterableElementError.noElement();\n        } catch (e, s) {\n          _completeWithErrorCallback(future, e, s);\n        }\n      },\n      cancelOnError: true);\n  return future;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [
+        "async.DelegatingStream",
+        "async.LazyStream",
+        "async.StreamZip",
+        "async.SubscriptionStream",
+        "dart:async.StreamView",
+        "dart:io.RawDatagramSocket",
+        "dart:io.RawSecureServerSocket",
+        "dart:io.SecureServerSocket",
+        "dart:io.Stdin",
+        "quiver.async.CountdownTimer",
+        "quiver.async.FutureStream",
+        "quiver.async.Metronome"
+    ],
+    "realImplementors": [
+        "async.DelegatingStream",
+        "async.LazyStream",
+        "async.StreamZip",
+        "async.SubscriptionStream",
+        "dart:async.StreamView"
+    ],
+    "cn": [],
+    "href": "dart-async\/Stream-class.html",
+    "desc": "<p>A source of asynchronous data events.<\/p>\n<p>A Stream provides a way to receive a sequence of events.\nEach event is either a data event, also called an <em>element<\/em> of the stream,\nor an error event, which is a notification that something has failed.\nWhen a stream has emitted all its event,\na single \"done\" event will notify the listener that the end has been reached.<\/p>\n<p>You <a href=\"dart-async\/Stream\/listen.html\">listen<\/a> on a stream to make it start generating events,\nand to set up listeners that receive the events.\nWhen you listen, you receive a <a href=\"dart-async\/StreamSubscription-class.html\">StreamSubscription<\/a> object\nwhich is the active object providing the events,\nand which can be used to stop listening again,\nor to temporarily pause events from the subscription.<\/p>\n<p>There are two kinds of streams: \"Single-subscription\" streams and\n\"broadcast\" streams.<\/p>\n<p><em>A single-subscription stream<\/em> allows only a single listener during the whole\nlifetime of the stream.\nIt doesn't start generating events until it has a listener,\nand it stops sending events when the listener is unsubscribed,\neven if the source of events could still provide more.<\/p>\n<p>Listening twice on a single-subscription stream is not allowed, even after\nthe first subscription has been canceled.<\/p>\n<p>Single-subscription streams are generally used for streaming chunks of\nlarger contiguous data like file I\/O.<\/p>\n<p><em>A broadcast stream<\/em> allows any number of listeners, and it fires\nits events when they are ready, whether there are listeners or not.<\/p>\n<p>Broadcast streams are used for independent events\/observers.<\/p>\n<p>If several listeners want to listen to a single subscription stream,\nuse <a href=\"dart-async\/Stream\/asBroadcastStream.html\">asBroadcastStream<\/a> to create a broadcast stream on top of the\nnon-broadcast stream.<\/p>\n<p>On either kind of stream, stream transformations, such as <a href=\"dart-async\/Stream\/where.html\">where<\/a> and\n<a href=\"dart-async\/Stream\/skip.html\">skip<\/a>, return the same type of stream as the one the method was called on,\nunless otherwise noted.<\/p>\n<p>When an event is fired, the listener(s) at that time will receive the event.\nIf a listener is added to a broadcast stream while an event is being fired,\nthat listener will not receive the event currently being fired.\nIf a listener is canceled, it immediately stops receiving events.\nListening on a broadcast stream can be treated as listening on a new stream\ncontaining only the events that have not yet been emitted when the <a href=\"dart-async\/Stream\/listen.html\">listen<\/a>\ncall occurs.\nFor example, the <a href=\"dart-async\/Stream\/first.html\">first<\/a> getter listens to the stream, then returns the first\nevent that listener receives.\nThis is not necessarily the first even emitted by the stream, but the first\nof the <em>remaining<\/em> events of the broadcast stream.<\/p>\n<p>When the \"done\" event is fired, subscribers are unsubscribed before\nreceiving the event. After the event has been sent, the stream has no\nsubscribers. Adding new subscribers to a broadcast stream after this point\nis allowed, but they will just receive a new \"done\" event as soon\nas possible.<\/p>\n<p>Stream subscriptions always respect \"pause\" requests. If necessary they need\nto buffer their input, but often, and preferably, they can simply request\ntheir input to pause too.<\/p>\n<p>The default implementation of <a href=\"dart-async\/Stream\/isBroadcast.html\">isBroadcast<\/a> returns false.\nA broadcast stream inheriting from <a href=\"dart-async\/Stream-class.html\">Stream<\/a> must override <a href=\"dart-async\/Stream\/isBroadcast.html\">isBroadcast<\/a>\nto return <code>true<\/code>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Stream"
+}

@@ -1,0 +1,1517 @@
+{
+    "name": "scheduler",
+    "href": "scheduler\/scheduler-library.html",
+    "cn": [
+        {
+            "name": "scheduler.FrameCallback",
+            "type": "",
+            "desc": "<p>Signature for frame-related callbacks from the scheduler.<\/p>\n<p>The <code>timeStamp<\/code> is the number of milliseconds since the beginning of the\nscheduler's epoch. Use timeStamp to determine how far to advance animation\ntimelines so that all the animations in the system are synchronized to a\ncommon time base.<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler",
+            "sig": "",
+            "params": [
+                {
+                    "name": "timeStamp",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "scheduler\/FrameCallback.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">typedef FrameCallback = void Function(Duration timeStamp);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": true,
+            "isConstant": false,
+            "dtype": "typedef",
+            "types": []
+        },
+        {
+            "name": "scheduler.Priority",
+            "extends": [],
+            "memberOf": "scheduler",
+            "events": [],
+            "methods": [
+                {
+                    "name": "operator +",
+                    "type": "scheduler.Priority",
+                    "desc": "<p>Returns a priority relative to this priority.<\/p>\n<p>A positive <code>offset<\/code> indicates a higher priority.<\/p>\n<p>The parameter <code>offset<\/code> is clamped to \u00b1<a href=\"scheduler\/Priority\/kMaxOffset-constant.html\">kMaxOffset<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.Priority",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "offset",
+                            "type": "dart:core.int",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/Priority\/operator_plus.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Priority operator +(int offset) {\n  if (offset.abs() &gt; kMaxOffset) {\n    \/\/ Clamp the input offset.\n    offset = kMaxOffset * offset.sign;\n  }\n  return Priority._(_value + offset);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "operator -",
+                    "type": "scheduler.Priority",
+                    "desc": "<p>Returns a priority relative to this priority.<\/p>\n<p>A positive offset indicates a lower priority.<\/p>\n<p>The parameter <code>offset<\/code> is clamped to \u00b1<a href=\"scheduler\/Priority\/kMaxOffset-constant.html\">kMaxOffset<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.Priority",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "offset",
+                            "type": "dart:core.int",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/Priority\/operator_minus.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Priority operator -(int offset) =&gt; this + (-offset);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                }
+            ],
+            "props": [
+                {
+                    "type": "",
+                    "href": "scheduler\/Priority\/animation-constant.html",
+                    "desc": "<p>A task to run even when animations are running.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const Priority animation = Priority._(100000)\n\n<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "name": "animation",
+                    "memberOf": "scheduler.Priority"
+                },
+                {
+                    "type": "",
+                    "href": "scheduler\/Priority\/idle-constant.html",
+                    "desc": "<p>A task to run after all other tasks, when no animations are running.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const Priority idle = Priority._(0)\n\n<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "name": "idle",
+                    "memberOf": "scheduler.Priority"
+                },
+                {
+                    "type": "",
+                    "href": "scheduler\/Priority\/kMaxOffset-constant.html",
+                    "desc": "<p>Maximum offset by which to clamp relative priorities.<\/p>\n<p>It is still possible to have priorities that are offset by more\nthan this amount by repeatedly taking relative offsets, but that\nis generally discouraged.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const int kMaxOffset = 10000\n\n<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "name": "kMaxOffset",
+                    "memberOf": "scheduler.Priority"
+                },
+                {
+                    "type": "",
+                    "href": "scheduler\/Priority\/touch-constant.html",
+                    "desc": "<p>A task to run even when the user is interacting with the device.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const Priority touch = Priority._(200000)\n\n<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "name": "touch",
+                    "memberOf": "scheduler.Priority"
+                },
+                {
+                    "name": "value",
+                    "type": "dart:core.int",
+                    "types": [],
+                    "desc": "<p>Integer that describes this Priority value.<\/p>\n        ",
+                    "memberOf": "scheduler.Priority",
+                    "isConstant": false,
+                    "href": "scheduler\/Priority\/value.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get value =&gt; _value;<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                }
+            ],
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": false,
+            "isConstant": false,
+            "isAbstract": false,
+            "implementors": [],
+            "realImplementors": [],
+            "cn": [],
+            "href": "scheduler\/Priority-class.html",
+            "desc": "<p>A task priority, as passed to <a href=\"scheduler\/SchedulerBinding\/scheduleTask.html\">SchedulerBinding.scheduleTask<\/a>.<\/p>\n    ",
+            "example": "",
+            "isDeprecated": false,
+            "dtype": "class",
+            "shortname": "Priority"
+        },
+        {
+            "name": "scheduler.SchedulerBinding",
+            "extends": [],
+            "memberOf": "scheduler",
+            "events": [],
+            "methods": [
+                {
+                    "name": "SchedulerBinding",
+                    "type": "",
+                    "desc": "",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": true,
+                    "href": "scheduler\/SchedulerBinding\/SchedulerBinding.html",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "addPersistentFrameCallback",
+                    "type": "",
+                    "desc": "<p>Adds a persistent frame callback.<\/p>\n<p>Persistent callbacks are called after transient\n(non-persistent) frame callbacks.<\/p>\n<p>Does <em>not<\/em> request a new frame. Conceptually, persistent frame\ncallbacks are observers of \"begin frame\" events. Since they are\nexecuted after the transient frame callbacks they can drive the\nrendering pipeline.<\/p>\n<p>Persistent frame callbacks cannot be unregistered. Once registered, they\nare called for every frame for the lifetime of the application.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "callback",
+                            "type": "scheduler.FrameCallback",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/addPersistentFrameCallback.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addPersistentFrameCallback(FrameCallback callback) {\n  _persistentCallbacks.add(callback);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "addPostFrameCallback",
+                    "type": "",
+                    "desc": "<p>Schedule a callback for the end of this frame.<\/p>\n<p>Does <em>not<\/em> request a new frame.<\/p>\n<p>This callback is run during a frame, just after the persistent\nframe callbacks (which is when the main rendering pipeline has\nbeen flushed). If a frame is in progress and post-frame\ncallbacks haven't been executed yet, then the registered\ncallback is still executed during the frame. Otherwise, the\nregistered callback is executed during the next frame.<\/p>\n<p>The callbacks are executed in the order in which they have been\nadded.<\/p>\n<p>Post-frame callbacks cannot be unregistered. They are called exactly once.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"scheduler\/SchedulerBinding\/scheduleFrameCallback.html\">scheduleFrameCallback<\/a>, which registers a callback for the start of\nthe next frame.<\/li><\/ul>",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "callback",
+                            "type": "scheduler.FrameCallback",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/addPostFrameCallback.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addPostFrameCallback(FrameCallback callback) {\n  _postFrameCallbacks.add(callback);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "cancelFrameCallbackWithId",
+                    "type": "",
+                    "desc": "<p>Cancels the transient frame callback with the given <code>id<\/code>.<\/p>\n<p>Removes the given callback from the list of frame callbacks. If a frame\nhas been requested, this does not also cancel that request.<\/p>\n<p>Transient frame callbacks are those registered using\n<a href=\"scheduler\/SchedulerBinding\/scheduleFrameCallback.html\">scheduleFrameCallback<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "id",
+                            "type": "dart:core.int",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/cancelFrameCallbackWithId.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void cancelFrameCallbackWithId(int id) {\n  assert(id &gt; 0);\n  _transientCallbacks.remove(id);\n  _removedIds.add(id);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "debugAssertNoTransientCallbacks",
+                    "type": "dart:core.bool",
+                    "desc": "<p>Asserts that there are no registered transient callbacks; if\nthere are, prints their locations and throws an exception.<\/p>\n<p>A transient frame callback is one that was registered with\n<a href=\"scheduler\/SchedulerBinding\/scheduleFrameCallback.html\">scheduleFrameCallback<\/a>.<\/p>\n<p>This is expected to be called at the end of tests (the\nflutter_test framework does it automatically in normal cases).<\/p>\n<p>Call this method when you expect there to be no transient\ncallbacks registered, in an assert statement with a message that\nyou want printed when a transient callback is registered:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">assert(SchedulerBinding.instance.debugAssertNoTransientCallbacks(\n  'A leak of transient callbacks was detected while doing foo.'\n));\n<\/code><\/pre>\n<p>Does nothing if asserts are disabled. Always returns true.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "reason",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/debugAssertNoTransientCallbacks.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool debugAssertNoTransientCallbacks(String reason) {\n  assert(() {\n    if (transientCallbackCount &gt; 0) {\n      \/\/ We cache the values so that we can produce them later\n      \/\/ even if the information collector is called after\n      \/\/ the problem has been resolved.\n      final int count = transientCallbackCount;\n      final Map&lt;int, _FrameCallbackEntry&gt; callbacks = Map&lt;int, _FrameCallbackEntry&gt;.from(_transientCallbacks);\n      FlutterError.reportError(FlutterErrorDetails(\n        exception: reason,\n        library: 'scheduler library',\n        informationCollector: (StringBuffer information) {\n          if (count == 1) {\n            information.writeln(\n              'There was one transient callback left. '\n              'The stack trace for when it was registered is as follows:'\n            );\n          } else {\n            information.writeln(\n              'There were $count transient callbacks left. '\n              'The stack traces for when they were registered are as follows:'\n            );\n          }\n          for (int id in callbacks.keys) {\n            final _FrameCallbackEntry entry = callbacks[id];\n            information.writeln('\u2500\u2500 callback $id \u2500\u2500');\n            FlutterError.defaultStackFilter(entry.debugStack.toString().trimRight().split('\\n')).forEach(information.writeln);\n          }\n        },\n      ));\n    }\n    return true;\n  }());\n  return true;\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "debugPrintTransientCallbackRegistrationStack",
+                    "type": "",
+                    "desc": "<p>Prints the stack for where the current transient callback was registered.<\/p>\n<p>A transient frame callback is one that was registered with\n<a href=\"scheduler\/SchedulerBinding\/scheduleFrameCallback.html\">scheduleFrameCallback<\/a>.<\/p>\n<p>When called in debug more and in the context of a transient callback, this\nfunction prints the stack trace from where the current transient callback\nwas registered (i.e. where it first called <a href=\"scheduler\/SchedulerBinding\/scheduleFrameCallback.html\">scheduleFrameCallback<\/a>).<\/p>\n<p>When called in debug mode in other contexts, it prints a message saying\nthat this function was not called in the context a transient callback.<\/p>\n<p>In release mode, this function does nothing.<\/p>\n<p>To call this function, use the following code:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">SchedulerBinding.debugPrintTransientCallbackRegistrationStack();\n<\/code><\/pre>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/debugPrintTransientCallbackRegistrationStack.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static void debugPrintTransientCallbackRegistrationStack() {\n  assert(() {\n    if (_FrameCallbackEntry.debugCurrentCallbackStack != null) {\n      debugPrint('When the current transient callback was registered, this was the stack:');\n      debugPrint(\n        FlutterError.defaultStackFilter(\n          _FrameCallbackEntry.debugCurrentCallbackStack.toString().trimRight().split('\\n')\n        ).join('\\n')\n      );\n    } else {\n      debugPrint('No transient callback is currently executing.');\n    }\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "ensureVisualUpdate",
+                    "type": "",
+                    "desc": "<p>Schedules a new frame using <a href=\"scheduler\/SchedulerBinding\/scheduleFrame.html\">scheduleFrame<\/a> if this object is not\ncurrently producing a frame.<\/p>\n<p>Calling this method ensures that <a href=\"scheduler\/SchedulerBinding\/handleDrawFrame.html\">handleDrawFrame<\/a> will eventually be\ncalled, unless it's already in progress.<\/p>\n<p>This has no effect if <a href=\"scheduler\/SchedulerBinding\/schedulerPhase.html\">schedulerPhase<\/a> is\n<a href=\"scheduler\/SchedulerPhase-class.html\">SchedulerPhase.transientCallbacks<\/a> or <a href=\"scheduler\/SchedulerPhase-class.html\">SchedulerPhase.midFrameMicrotasks<\/a>\n(because a frame is already being prepared in that case), or\n<a href=\"scheduler\/SchedulerPhase-class.html\">SchedulerPhase.persistentCallbacks<\/a> (because a frame is actively being\nrendered in that case). It will schedule a frame if the <a href=\"scheduler\/SchedulerBinding\/schedulerPhase.html\">schedulerPhase<\/a>\nis <a href=\"scheduler\/SchedulerPhase-class.html\">SchedulerPhase.idle<\/a> (in between frames) or\n<a href=\"scheduler\/SchedulerPhase-class.html\">SchedulerPhase.postFrameCallbacks<\/a> (after a frame).<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/ensureVisualUpdate.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void ensureVisualUpdate() {\n  switch (schedulerPhase) {\n    case SchedulerPhase.idle:\n    case SchedulerPhase.postFrameCallbacks:\n      scheduleFrame();\n      return;\n    case SchedulerPhase.transientCallbacks:\n    case SchedulerPhase.midFrameMicrotasks:\n    case SchedulerPhase.persistentCallbacks:\n      return;\n  }\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "handleAppLifecycleStateChanged",
+                    "type": "",
+                    "desc": "<p>Called when the application lifecycle state changes.<\/p>\n<p>Notifies all the observers using\n<a href=\"widgets\/WidgetsBindingObserver\/didChangeAppLifecycleState.html\">WidgetsBindingObserver.didChangeAppLifecycleState<\/a>.<\/p>\n<p>This method exposes notifications from <a href=\"services\/SystemChannels\/lifecycle-constant.html\">SystemChannels.lifecycle<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "state",
+                            "type": "dart:ui.AppLifecycleState",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/handleAppLifecycleStateChanged.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\nvoid handleAppLifecycleStateChanged(AppLifecycleState state) {\n  assert(state != null);\n  _lifecycleState = state;\n  switch (state) {\n    case AppLifecycleState.resumed:\n    case AppLifecycleState.inactive:\n      _setFramesEnabledState(true);\n      break;\n    case AppLifecycleState.paused:\n    case AppLifecycleState.suspending:\n      _setFramesEnabledState(false);\n      break;\n  }\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "handleBeginFrame",
+                    "type": "",
+                    "desc": "<p>Called by the engine to prepare the framework to produce a new frame.<\/p>\n<p>This function calls all the transient frame callbacks registered by\n<a href=\"scheduler\/SchedulerBinding\/scheduleFrameCallback.html\">scheduleFrameCallback<\/a>. It then returns, any scheduled microtasks are run\n(e.g. handlers for any <a href=\"dart-async\/Future-class.html\">Future<\/a>s resolved by transient frame callbacks),\nand <a href=\"scheduler\/SchedulerBinding\/handleDrawFrame.html\">handleDrawFrame<\/a> is called to continue the frame.<\/p>\n<p>If the given time stamp is null, the time stamp from the last frame is\nreused.<\/p>\n<p>To have a banner shown at the start of every frame in debug mode, set\n<a href=\"scheduler\/debugPrintBeginFrameBanner.html\">debugPrintBeginFrameBanner<\/a> to true. The banner will be printed to the\nconsole using <a href=\"foundation\/debugPrint.html\">debugPrint<\/a> and will contain the frame number (which\nincrements by one for each frame), and the time stamp of the frame. If the\ngiven time stamp was null, then the string \"warm-up frame\" is shown\ninstead of the time stamp. This allows frames eagerly pushed by the\nframework to be distinguished from those requested by the engine in\nresponse to the \"Vsync\" signal from the operating system.<\/p>\n<p>You can also show a banner at the end of every frame by setting\n<a href=\"scheduler\/debugPrintEndFrameBanner.html\">debugPrintEndFrameBanner<\/a> to true. This allows you to distinguish log\nstatements printed during a frame from those printed between frames (e.g.\nin response to events or timers).<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "rawTimeStamp",
+                            "type": "dart:core.Duration",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/handleBeginFrame.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void handleBeginFrame(Duration rawTimeStamp) {\n  Timeline.startSync('Frame', arguments: timelineWhitelistArguments);\n  _firstRawTimeStampInEpoch ??= rawTimeStamp;\n  _currentFrameTimeStamp = _adjustForEpoch(rawTimeStamp ?? _lastRawTimeStamp);\n  if (rawTimeStamp != null)\n    _lastRawTimeStamp = rawTimeStamp;\n\n  if (!kReleaseMode) {\n    _profileFrameNumber += 1;\n    _profileFrameStopwatch.reset();\n    _profileFrameStopwatch.start();\n  }\n\n  assert(() {\n    if (debugPrintBeginFrameBanner || debugPrintEndFrameBanner) {\n      final StringBuffer frameTimeStampDescription = StringBuffer();\n      if (rawTimeStamp != null) {\n        _debugDescribeTimeStamp(_currentFrameTimeStamp, frameTimeStampDescription);\n      } else {\n        frameTimeStampDescription.write('(warm-up frame)');\n      }\n      _debugBanner = '\u2584\u2584\u2584\u2584\u2584\u2584\u2584\u2584 Frame ${_profileFrameNumber.toString().padRight(7)}   ${frameTimeStampDescription.toString().padLeft(18)} \u2584\u2584\u2584\u2584\u2584\u2584\u2584\u2584';\n      if (debugPrintBeginFrameBanner)\n        debugPrint(_debugBanner);\n    }\n    return true;\n  }());\n\n  assert(schedulerPhase == SchedulerPhase.idle);\n  _hasScheduledFrame = false;\n  try {\n    \/\/ TRANSIENT FRAME CALLBACKS\n    Timeline.startSync('Animate', arguments: timelineWhitelistArguments);\n    _schedulerPhase = SchedulerPhase.transientCallbacks;\n    final Map&lt;int, _FrameCallbackEntry&gt; callbacks = _transientCallbacks;\n    _transientCallbacks = &lt;int, _FrameCallbackEntry&gt;{};\n    callbacks.forEach((int id, _FrameCallbackEntry callbackEntry) {\n      if (!_removedIds.contains(id))\n        _invokeFrameCallback(callbackEntry.callback, _currentFrameTimeStamp, callbackEntry.debugStack);\n    });\n    _removedIds.clear();\n  } finally {\n    _schedulerPhase = SchedulerPhase.midFrameMicrotasks;\n  }\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "handleDrawFrame",
+                    "type": "",
+                    "desc": "<p>Called by the engine to produce a new frame.<\/p>\n<p>This method is called immediately after <a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">handleBeginFrame<\/a>. It calls all\nthe callbacks registered by <a href=\"scheduler\/SchedulerBinding\/addPersistentFrameCallback.html\">addPersistentFrameCallback<\/a>, which typically\ndrive the rendering pipeline, and then calls the callbacks registered by\n<a href=\"scheduler\/SchedulerBinding\/addPostFrameCallback.html\">addPostFrameCallback<\/a>.<\/p>\n<p>See <a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">handleBeginFrame<\/a> for a discussion about debugging hooks that may be\nuseful when working with frame callbacks.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/handleDrawFrame.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void handleDrawFrame() {\n  assert(_schedulerPhase == SchedulerPhase.midFrameMicrotasks);\n  Timeline.finishSync(); \/\/ end the \"Animate\" phase\n  try {\n    \/\/ PERSISTENT FRAME CALLBACKS\n    _schedulerPhase = SchedulerPhase.persistentCallbacks;\n    for (FrameCallback callback in _persistentCallbacks)\n      _invokeFrameCallback(callback, _currentFrameTimeStamp);\n\n    \/\/ POST-FRAME CALLBACKS\n    _schedulerPhase = SchedulerPhase.postFrameCallbacks;\n    final List&lt;FrameCallback&gt; localPostFrameCallbacks =\n        List&lt;FrameCallback&gt;.from(_postFrameCallbacks);\n    _postFrameCallbacks.clear();\n    for (FrameCallback callback in localPostFrameCallbacks)\n      _invokeFrameCallback(callback, _currentFrameTimeStamp);\n  } finally {\n    _schedulerPhase = SchedulerPhase.idle;\n    Timeline.finishSync(); \/\/ end the Frame\n    if (!kReleaseMode) {\n      _profileFrameStopwatch.stop();\n      _profileFramePostEvent();\n    }\n    assert(() {\n      if (debugPrintEndFrameBanner)\n        debugPrint('\u2580' * _debugBanner.length);\n      _debugBanner = null;\n      return true;\n    }());\n    _currentFrameTimeStamp = null;\n  }\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "handleEventLoopCallback",
+                    "type": "dart:core.bool",
+                    "desc": "<p>Execute the highest-priority task, if it is of a high enough priority.<\/p>\n<p>Returns true if a task was executed and there are other tasks remaining\n(even if they are not high-enough priority).<\/p>\n<p>Returns false if no task was executed, which can occur if there are no\ntasks scheduled, if the scheduler is <a href=\"foundation\/BindingBase\/locked.html\">locked<\/a>, or if the highest-priority\ntask is of too low a priority given the current <a href=\"scheduler\/SchedulerBinding\/schedulingStrategy.html\">schedulingStrategy<\/a>.<\/p>\n<p>Also returns false if there are no tasks remaining.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/handleEventLoopCallback.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@visibleForTesting\nbool handleEventLoopCallback() {\n  if (_taskQueue.isEmpty || locked)\n    return false;\n  final _TaskEntry&lt;dynamic&gt; entry = _taskQueue.first;\n  if (schedulingStrategy(priority: entry.priority, scheduler: this)) {\n    try {\n      _taskQueue.removeFirst();\n      entry.run();\n    } catch (exception, exceptionStack) {\n      StackTrace callbackStack;\n      assert(() {\n        callbackStack = entry.debugStack;\n        return true;\n      }());\n      FlutterError.reportError(FlutterErrorDetails(\n        exception: exception,\n        stack: exceptionStack,\n        library: 'scheduler library',\n        context: 'during a task callback',\n        informationCollector: (callbackStack == null) ? null : (StringBuffer information) {\n          information.writeln(\n            '\\nThis exception was thrown in the context of a task callback. '\n            'When the task callback was _registered_ (as opposed to when the '\n            'exception was thrown), this was the stack:'\n          );\n          FlutterError.defaultStackFilter(callbackStack.toString().trimRight().split('\\n')).forEach(information.writeln);\n        },\n      ));\n    }\n    return _taskQueue.isNotEmpty;\n  }\n  return false;\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "initInstances",
+                    "type": "",
+                    "desc": "<p>The initialization method. Subclasses override this method to hook into\nthe platform and otherwise configure their services. Subclasses must call\n\"super.initInstances()\".<\/p>\n<p>By convention, if the service is to be provided as a singleton, it should\nbe exposed as <code>MixinClassName.instance<\/code>, a static getter that returns\n<code>MixinClassName._instance<\/code>, a static field that is set by\n<code>initInstances()<\/code>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/initInstances.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid initInstances() {\n  super.initInstances();\n  _instance = this;\n  window.onBeginFrame = _handleBeginFrame;\n  window.onDrawFrame = _handleDrawFrame;\n  SystemChannels.lifecycle.setMessageHandler(_handleLifecycleMessage);\n  readInitialLifecycleStateFromNativeWindow();\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "initServiceExtensions",
+                    "type": "",
+                    "desc": "<p>Called when the binding is initialized, to register service\nextensions.<\/p>\n<p>Bindings that want to expose service extensions should overload\nthis method to register them using calls to\n<a href=\"foundation\/BindingBase\/registerSignalServiceExtension.html\">registerSignalServiceExtension<\/a>,\n<a href=\"foundation\/BindingBase\/registerBoolServiceExtension.html\">registerBoolServiceExtension<\/a>,\n<a href=\"foundation\/BindingBase\/registerNumericServiceExtension.html\">registerNumericServiceExtension<\/a>, and\n<a href=\"foundation\/BindingBase\/registerServiceExtension.html\">registerServiceExtension<\/a> (in increasing order of complexity).<\/p>\n<p>Implementations of this method must call their superclass\nimplementation.<\/p>\n<p>A registered service extension can only be activated if the vm-service\nis included in the build, which only happens in debug and profile mode.\nAlthough a service extension cannot be used in release mode its code may\nstill be included in the Dart snapshot and blow up binary size if it is\nnot wrapped in a guard that allows the tree shaker to remove it (see\nsample code below).<\/p>\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}The following code registers a service extension that is only included in\ndebug builds.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  assert(() {\n    \/\/ Register your service extension here.\n    return true;\n  }());\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}A service extension registered with the following code snippet is\navailable in debug and profile mode.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  \/\/ kReleaseMode is defined in the 'flutter\/foundation.dart' package.\n  if (!kReleaseMode) {\n    \/\/ Register your service extension here.\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>Both guards ensure that Dart's tree shaker can remove the code for the\nservice extension in release builds.<\/p>\n<p>See also:<\/p>\n<ul><li><a href=\"https:\/\/github.com\/dart-lang\/sdk\/blob\/master\/runtime\/vm\/service\/service.md#rpcs-requests-and-responses\">github.com\/dart-lang\/sdk\/blob\/master\/runtime\/vm\/service\/service.md#rpcs-requests-and-responses<\/a><\/li><\/ul>",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/initServiceExtensions.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid initServiceExtensions() {\n  super.initServiceExtensions();\n\n  if (!kReleaseMode) {\n    registerNumericServiceExtension(\n      name: 'timeDilation',\n      getter: () async =&gt; timeDilation,\n      setter: (double value) async {\n        timeDilation = value;\n      },\n    );\n  }\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "readInitialLifecycleStateFromNativeWindow",
+                    "type": "",
+                    "desc": "<p>Initializes the <a href=\"scheduler\/SchedulerBinding\/lifecycleState.html\">lifecycleState<\/a> with the <code>initialLifecycleState<\/code> from the\nwindow.<\/p>\n<p>Once the <a href=\"scheduler\/SchedulerBinding\/lifecycleState.html\">lifecycleState<\/a> is populated through any means (including this\nmethod), this method will do nothing. This is because the\n<code>initialLifecycleState<\/code> may already be stale and it no longer makes sense\nto use the initial state at dart vm startup as the current state anymore.<\/p>\n<p>The latest state should be obtained by subscribing to\n<a href=\"widgets\/WidgetsBindingObserver\/didChangeAppLifecycleState.html\">WidgetsBindingObserver.didChangeAppLifecycleState<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/readInitialLifecycleStateFromNativeWindow.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid readInitialLifecycleStateFromNativeWindow() {\n  if (_lifecycleState == null &amp;&amp; _parseAppLifecycleMessage(window.initialLifecycleState) != null) {\n    _handleLifecycleMessage(window.initialLifecycleState);\n  }\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "resetEpoch",
+                    "type": "",
+                    "desc": "<p>Prepares the scheduler for a non-monotonic change to how time stamps are\ncalculated.<\/p>\n<p>Callbacks received from the scheduler assume that their time stamps are\nmonotonically increasing. The raw time stamp passed to <a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">handleBeginFrame<\/a>\nis monotonic, but the scheduler might adjust those time stamps to provide\n<a href=\"scheduler\/timeDilation.html\">timeDilation<\/a>. Without careful handling, these adjusts could cause time\nto appear to run backwards.<\/p>\n<p>The <a href=\"scheduler\/SchedulerBinding\/resetEpoch.html\">resetEpoch<\/a> function ensures that the time stamps are monotonic by\nresetting the base time stamp used for future time stamp adjustments to the\ncurrent value. For example, if the <a href=\"scheduler\/timeDilation.html\">timeDilation<\/a> decreases, rather than\nscaling down the <a href=\"dart-core\/Duration-class.html\">Duration<\/a> since the beginning of time, <a href=\"scheduler\/SchedulerBinding\/resetEpoch.html\">resetEpoch<\/a> will\nensure that we only scale down the duration since <a href=\"scheduler\/SchedulerBinding\/resetEpoch.html\">resetEpoch<\/a> was called.<\/p>\n<p>Setting <a href=\"scheduler\/timeDilation.html\">timeDilation<\/a> calls <a href=\"scheduler\/SchedulerBinding\/resetEpoch.html\">resetEpoch<\/a> automatically. You don't need to\ncall <a href=\"scheduler\/SchedulerBinding\/resetEpoch.html\">resetEpoch<\/a> yourself.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/resetEpoch.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void resetEpoch() {\n  _epochStart = _adjustForEpoch(_lastRawTimeStamp);\n  _firstRawTimeStampInEpoch = null;\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "scheduleForcedFrame",
+                    "type": "",
+                    "desc": "<p>Schedules a new frame by calling <a href=\"scheduler\/SchedulerBinding\/scheduleFrame.html\">Window.scheduleFrame<\/a>.<\/p>\n<p>After this is called, the engine will call <a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">handleBeginFrame<\/a>, even if\nframes would normally not be scheduled by <a href=\"scheduler\/SchedulerBinding\/scheduleFrame.html\">scheduleFrame<\/a> (e.g. even if\nthe device's screen is turned off).<\/p>\n<p>The framework uses this to force a frame to be rendered at the correct\nsize when the phone is rotated, so that a correctly-sized rendering is\navailable when the screen is turned back on.<\/p>\n<p>To have a stack trace printed to the console any time this function\nschedules a frame, set <a href=\"scheduler\/debugPrintScheduleFrameStacks.html\">debugPrintScheduleFrameStacks<\/a> to true.<\/p>\n<p>Prefer using <a href=\"scheduler\/SchedulerBinding\/scheduleFrame.html\">scheduleFrame<\/a> unless it is imperative that a frame be\nscheduled immediately, since using <code>scheduleForceFrame<\/code> will cause\nsignificantly higher battery usage when the device should be idle.<\/p>\n<p>Consider using <a href=\"scheduler\/SchedulerBinding\/scheduleWarmUpFrame.html\">scheduleWarmUpFrame<\/a> instead if the goal is to update the\nrendering as soon as possible (e.g. at application startup).<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/scheduleForcedFrame.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void scheduleForcedFrame() {\n  if (_hasScheduledFrame)\n    return;\n  assert(() {\n    if (debugPrintScheduleFrameStacks)\n      debugPrintStack(label: 'scheduleForcedFrame() called. Current phase is $schedulerPhase.');\n    return true;\n  }());\n  window.scheduleFrame();\n  _hasScheduledFrame = true;\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "scheduleFrame",
+                    "type": "",
+                    "desc": "<p>If necessary, schedules a new frame by calling\n<a href=\"scheduler\/SchedulerBinding\/scheduleFrame.html\">Window.scheduleFrame<\/a>.<\/p>\n<p>After this is called, the engine will (eventually) call\n<a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">handleBeginFrame<\/a>. (This call might be delayed, e.g. if the device's\nscreen is turned off it will typically be delayed until the screen is on\nand the application is visible.) Calling this during a frame forces\nanother frame to be scheduled, even if the current frame has not yet\ncompleted.<\/p>\n<p>Scheduled frames are serviced when triggered by a \"Vsync\" signal provided\nby the operating system. The \"Vsync\" signal, or vertical synchronization\nsignal, was historically related to the display refresh, at a time when\nhardware physically moved a beam of electrons vertically between updates\nof the display. The operation of contemporary hardware is somewhat more\nsubtle and complicated, but the conceptual \"Vsync\" refresh signal continue\nto be used to indicate when applications should update their rendering.<\/p>\n<p>To have a stack trace printed to the console any time this function\nschedules a frame, set <a href=\"scheduler\/debugPrintScheduleFrameStacks.html\">debugPrintScheduleFrameStacks<\/a> to true.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"scheduler\/SchedulerBinding\/scheduleForcedFrame.html\">scheduleForcedFrame<\/a>, which ignores the <a href=\"scheduler\/SchedulerBinding\/lifecycleState.html\">lifecycleState<\/a> when\nscheduling a frame.<\/li>\n<li>\n<a href=\"scheduler\/SchedulerBinding\/scheduleWarmUpFrame.html\">scheduleWarmUpFrame<\/a>, which ignores the \"Vsync\" signal entirely and\ntriggers a frame immediately.<\/li>\n<\/ul>",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/scheduleFrame.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void scheduleFrame() {\n  if (_hasScheduledFrame || !_framesEnabled)\n    return;\n  assert(() {\n    if (debugPrintScheduleFrameStacks)\n      debugPrintStack(label: 'scheduleFrame() called. Current phase is $schedulerPhase.');\n    return true;\n  }());\n  window.scheduleFrame();\n  _hasScheduledFrame = true;\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "scheduleFrameCallback",
+                    "type": "dart:core.int",
+                    "desc": "<p>Schedules the given transient frame callback.<\/p>\n<p>Adds the given callback to the list of frame callbacks and ensures that a\nframe is scheduled.<\/p>\n<p>If this is a one-off registration, ignore the <code>rescheduling<\/code> argument.<\/p>\n<p>If this is a callback that will be re-registered each time it fires, then\nwhen you re-register the callback, set the <code>rescheduling<\/code> argument to\ntrue. This has no effect in release builds, but in debug builds, it\nensures that the stack trace that is stored for this callback is the\noriginal stack trace for when the callback was <em>first<\/em> registered, rather\nthan the stack trace for when the callback is re-registered. This makes it\neasier to track down the original reason that a particular callback was\ncalled. If <code>rescheduling<\/code> is true, the call must be in the context of a\nframe callback.<\/p>\n<p>Callbacks registered with this method can be canceled using\n<a href=\"scheduler\/SchedulerBinding\/cancelFrameCallbackWithId.html\">cancelFrameCallbackWithId<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "callback",
+                            "type": "scheduler.FrameCallback",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "rescheduling",
+                            "type": "dart:core.bool",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/scheduleFrameCallback.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int scheduleFrameCallback(FrameCallback callback, { bool rescheduling = false }) {\n  scheduleFrame();\n  _nextFrameCallbackId += 1;\n  _transientCallbacks[_nextFrameCallbackId] = _FrameCallbackEntry(callback, rescheduling: rescheduling);\n  return _nextFrameCallbackId;\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "scheduleTask",
+                    "type": "dart:async.Future",
+                    "desc": "<p>Schedules the given <code>task<\/code> with the given <code>priority<\/code> and returns a\n<a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>task<\/code>'s eventual return value.<\/p>\n<p>The <code>debugLabel<\/code> and <code>flow<\/code> are used to report the task to the <a href=\"dart-developer\/Timeline-class.html\">Timeline<\/a>,\nfor use when profiling.<\/p>\n<h2 id=\"processing-model\">Processing model<\/h2>\n<p>Tasks will be executed between frames, in priority order,\nexcluding tasks that are skipped by the current\n<a href=\"scheduler\/SchedulerBinding\/schedulingStrategy.html\">schedulingStrategy<\/a>. Tasks should be short (as in, up to a\nmillisecond), so as to not cause the regular frame callbacks to\nget delayed.<\/p>\n<p>If an animation is running, including, for instance, a <a href=\"material\/ProgressIndicator-class.html\">ProgressIndicator<\/a>\nindicating that there are pending tasks, then tasks with a priority below\n<a href=\"scheduler\/Priority\/animation-constant.html\">Priority.animation<\/a> won't run (at least, not with the\n<a href=\"scheduler\/defaultSchedulingStrategy.html\">defaultSchedulingStrategy<\/a>; this can be configured using\n<a href=\"scheduler\/SchedulerBinding\/schedulingStrategy.html\">schedulingStrategy<\/a>).<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "task",
+                            "type": "scheduler.TaskCallback",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "priority",
+                            "type": "scheduler.Priority",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "debugLabel",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "flow",
+                            "type": "dart:developer.Flow",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/scheduleTask.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; scheduleTask&lt;T&gt;(\n  TaskCallback&lt;T&gt; task,\n  Priority priority, {\n  String debugLabel,\n  Flow flow,\n}) {\n  final bool isFirstTask = _taskQueue.isEmpty;\n  final _TaskEntry&lt;T&gt; entry = _TaskEntry&lt;T&gt;(\n    task,\n    priority.value,\n    debugLabel,\n    flow,\n  );\n  _taskQueue.add(entry);\n  if (isFirstTask &amp;&amp; !locked)\n    _ensureEventLoopCallback();\n  return entry.completer.future;\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "scheduleWarmUpFrame",
+                    "type": "",
+                    "desc": "<p>Schedule a frame to run as soon as possible, rather than waiting for\nthe engine to request a frame in response to a system \"Vsync\" signal.<\/p>\n<p>This is used during application startup so that the first frame (which is\nlikely to be quite expensive) gets a few extra milliseconds to run.<\/p>\n<p>Locks events dispatching until the scheduled frame has completed.<\/p>\n<p>If a frame has already been scheduled with <a href=\"scheduler\/SchedulerBinding\/scheduleFrame.html\">scheduleFrame<\/a> or\n<a href=\"scheduler\/SchedulerBinding\/scheduleForcedFrame.html\">scheduleForcedFrame<\/a>, this call may delay that frame.<\/p>\n<p>If any scheduled frame has already begun or if another\n<a href=\"scheduler\/SchedulerBinding\/scheduleWarmUpFrame.html\">scheduleWarmUpFrame<\/a> was already called, this call will be ignored.<\/p>\n<p>Prefer <a href=\"scheduler\/SchedulerBinding\/scheduleFrame.html\">scheduleFrame<\/a> to update the display in normal operation.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/scheduleWarmUpFrame.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void scheduleWarmUpFrame() {\n  if (_warmUpFrame || schedulerPhase != SchedulerPhase.idle)\n    return;\n\n  _warmUpFrame = true;\n  Timeline.startSync('Warm-up frame');\n  final bool hadScheduledFrame = _hasScheduledFrame;\n  \/\/ We use timers here to ensure that microtasks flush in between.\n  Timer.run(() {\n    assert(_warmUpFrame);\n    handleBeginFrame(null);\n  });\n  Timer.run(() {\n    assert(_warmUpFrame);\n    handleDrawFrame();\n    \/\/ We call resetEpoch after this frame so that, in the hot reload case,\n    \/\/ the very next frame pretends to have occurred immediately after this\n    \/\/ warm-up frame. The warm-up frame's timestamp will typically be far in\n    \/\/ the past (the time of the last real frame), so if we didn't reset the\n    \/\/ epoch we would see a sudden jump from the old time in the warm-up frame\n    \/\/ to the new time in the \"real\" frame. The biggest problem with this is\n    \/\/ that implicit animations end up being triggered at the old time and\n    \/\/ then skipping every frame and finishing in the new time.\n    resetEpoch();\n    _warmUpFrame = false;\n    if (hadScheduledFrame)\n      scheduleFrame();\n  });\n\n  \/\/ Lock events so touch events etc don't insert themselves until the\n  \/\/ scheduled frame has finished.\n  lockEvents(() async {\n    await endOfFrame;\n    Timeline.finishSync();\n  });\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "unlocked",
+                    "type": "",
+                    "desc": "<p>Called by <a href=\"foundation\/BindingBase\/lockEvents.html\">lockEvents<\/a> when events get unlocked.<\/p>\n<p>This should flush any events that were queued while <a href=\"foundation\/BindingBase\/locked.html\">locked<\/a> was true.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerBinding\/unlocked.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid unlocked() {\n  super.unlocked();\n  if (_taskQueue.isNotEmpty)\n    _ensureEventLoopCallback();\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "props": [
+                {
+                    "name": "currentFrameTimeStamp",
+                    "type": "dart:core.Duration",
+                    "types": [],
+                    "desc": "<p>The time stamp for the frame currently being processed.<\/p>\n<p>This is only valid while <a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">handleBeginFrame<\/a> is running, i.e. while a frame\nis being produced.<\/p>\n        ",
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "isConstant": false,
+                    "href": "scheduler\/SchedulerBinding\/currentFrameTimeStamp.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Duration get currentFrameTimeStamp {\n  assert(_currentFrameTimeStamp != null);\n  return _currentFrameTimeStamp;\n}<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "endOfFrame",
+                    "type": "dart:async.Future",
+                    "types": [],
+                    "desc": "<p>Returns a Future that completes after the frame completes.<\/p>\n<p>If this is called between frames, a frame is immediately scheduled if\nnecessary. If this is called during a frame, the Future completes after\nthe current frame.<\/p>\n<p>If the device's screen is currently turned off, this may wait a very long\ntime, since frames are not scheduled while the device's screen is turned\noff.<\/p>\n        ",
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "isConstant": false,
+                    "href": "scheduler\/SchedulerBinding\/endOfFrame.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; get endOfFrame {\n  if (_nextFrameCompleter == null) {\n    if (schedulerPhase == SchedulerPhase.idle)\n      scheduleFrame();\n    _nextFrameCompleter = Completer&lt;void&gt;();\n    addPostFrameCallback((Duration timeStamp) {\n      _nextFrameCompleter.complete();\n      _nextFrameCompleter = null;\n    });\n  }\n  return _nextFrameCompleter.future;\n}<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "framesEnabled",
+                    "type": "dart:core.bool",
+                    "types": [],
+                    "desc": "<p>Whether frames are currently being scheduled when <a href=\"scheduler\/SchedulerBinding\/scheduleFrame.html\">scheduleFrame<\/a> is called.<\/p>\n<p>This value depends on the value of the <a href=\"scheduler\/SchedulerBinding\/lifecycleState.html\">lifecycleState<\/a>.<\/p>\n        ",
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "isConstant": false,
+                    "href": "scheduler\/SchedulerBinding\/framesEnabled.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get framesEnabled =&gt; _framesEnabled;<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "hasScheduledFrame",
+                    "type": "dart:core.bool",
+                    "types": [],
+                    "desc": "<p>Whether this scheduler has requested that <a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">handleBeginFrame<\/a> be called soon.<\/p>\n        ",
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "isConstant": false,
+                    "href": "scheduler\/SchedulerBinding\/hasScheduledFrame.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasScheduledFrame =&gt; _hasScheduledFrame;<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "instance",
+                    "type": "scheduler.SchedulerBinding",
+                    "types": [],
+                    "desc": "<p>The current <a href=\"scheduler\/SchedulerBinding-mixin.html\">SchedulerBinding<\/a>, if one has been created.<\/p>\n        ",
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "isConstant": false,
+                    "href": "scheduler\/SchedulerBinding\/instance.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">static SchedulerBinding get instance =&gt; _instance;<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "lifecycleState",
+                    "type": "dart:ui.AppLifecycleState",
+                    "types": [],
+                    "desc": "<p>Whether the application is visible, and if so, whether it is currently\ninteractive.<\/p>\n<p>This is set by <a href=\"scheduler\/SchedulerBinding\/handleAppLifecycleStateChanged.html\">handleAppLifecycleStateChanged<\/a> when the\n<a href=\"services\/SystemChannels\/lifecycle-constant.html\">SystemChannels.lifecycle<\/a> notification is dispatched.<\/p>\n<p>The preferred way to watch for changes to this value is using\n<a href=\"widgets\/WidgetsBindingObserver\/didChangeAppLifecycleState.html\">WidgetsBindingObserver.didChangeAppLifecycleState<\/a>.<\/p>\n        ",
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "isConstant": false,
+                    "href": "scheduler\/SchedulerBinding\/lifecycleState.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">AppLifecycleState get lifecycleState =&gt; _lifecycleState;<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "schedulerPhase",
+                    "type": "scheduler.SchedulerPhase",
+                    "types": [],
+                    "desc": "<p>The phase that the scheduler is currently operating under.<\/p>\n        ",
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "isConstant": false,
+                    "href": "scheduler\/SchedulerBinding\/schedulerPhase.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">SchedulerPhase get schedulerPhase =&gt; _schedulerPhase;<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "schedulingStrategy",
+                    "type": "scheduler.SchedulingStrategy",
+                    "types": [],
+                    "desc": "<p>The strategy to use when deciding whether to run a task or not.<\/p>\n<p>Defaults to <a href=\"scheduler\/defaultSchedulingStrategy.html\">defaultSchedulingStrategy<\/a>.<\/p>\n        ",
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "isConstant": false,
+                    "href": "scheduler\/SchedulerBinding\/schedulingStrategy.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">SchedulingStrategy schedulingStrategy = defaultSchedulingStrategy\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "transientCallbackCount",
+                    "type": "dart:core.int",
+                    "types": [],
+                    "desc": "<p>The current number of transient frame callbacks scheduled.<\/p>\n<p>This is reset to zero just before all the currently scheduled\ntransient callbacks are called, at the start of a frame.<\/p>\n<p>This number is primarily exposed so that tests can verify that\nthere are no unexpected transient callbacks still registered\nafter a test's resources have been gracefully disposed.<\/p>\n        ",
+                    "memberOf": "scheduler.SchedulerBinding",
+                    "isConstant": false,
+                    "href": "scheduler\/SchedulerBinding\/transientCallbackCount.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get transientCallbackCount =&gt; _transientCallbacks.length;<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                }
+            ],
+            "isMixin": true,
+            "isEnum": false,
+            "isTypedef": false,
+            "isConstant": false,
+            "isAbstract": false,
+            "implementors": [],
+            "realImplementors": [],
+            "cn": [],
+            "href": "scheduler\/SchedulerBinding-mixin.html",
+            "desc": "<p>Scheduler for running the following:<\/p>\n<ul>\n<li>\n<p><em>Transient callbacks<\/em>, triggered by the system's <a href=\"dart-ui\/Window\/onBeginFrame.html\">Window.onBeginFrame<\/a>\ncallback, for synchronizing the application's behavior to the system's\ndisplay. For example, <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a>s and <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>s trigger from\nthese.<\/p>\n<\/li>\n<li>\n<p><em>Persistent callbacks<\/em>, triggered by the system's <a href=\"dart-ui\/Window\/onDrawFrame.html\">Window.onDrawFrame<\/a>\ncallback, for updating the system's display after transient callbacks have\nexecuted. For example, the rendering layer uses this to drive its\nrendering pipeline.<\/p>\n<\/li>\n<li>\n<p><em>Post-frame callbacks<\/em>, which are run after persistent callbacks, just\nbefore returning from the <a href=\"dart-ui\/Window\/onDrawFrame.html\">Window.onDrawFrame<\/a> callback.<\/p>\n<\/li>\n<li>\n<p>Non-rendering tasks, to be run between frames. These are given a\npriority and are executed in priority order according to a\n<a href=\"scheduler\/SchedulerBinding\/schedulingStrategy.html\">schedulingStrategy<\/a>.<\/p>\n<\/li>\n<\/ul>",
+            "example": "",
+            "isDeprecated": false,
+            "dtype": "mixin",
+            "shortname": "SchedulerBinding"
+        },
+        {
+            "type": "",
+            "name": "scheduler.SchedulerPhase",
+            "extends": [],
+            "memberOf": "scheduler",
+            "events": [],
+            "methods": [
+                {
+                    "name": "toString",
+                    "type": "dart:core.String",
+                    "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.SchedulerPhase",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/SchedulerPhase\/toString.html",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "props": [],
+            "isMixin": false,
+            "isEnum": true,
+            "isTypedef": false,
+            "isConstant": false,
+            "isAbstract": false,
+            "implementors": [],
+            "realImplementors": [],
+            "cn": [],
+            "href": "scheduler\/SchedulerPhase-class.html",
+            "desc": "<p>The various phases that a <a href=\"scheduler\/SchedulerBinding-mixin.html\">SchedulerBinding<\/a> goes through during\n<a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">SchedulerBinding.handleBeginFrame<\/a>.<\/p>\n<p>This is exposed by <a href=\"scheduler\/SchedulerBinding\/schedulerPhase.html\">SchedulerBinding.schedulerPhase<\/a>.<\/p>\n<p>The values of this enum are ordered in the same order as the phases occur,\nso their relative index values can be compared to each other.<\/p>\n<p>See also the discussion at <a href=\"widgets\/WidgetsBinding\/drawFrame.html\">WidgetsBinding.drawFrame<\/a>.<\/p>\n    ",
+            "example": "",
+            "isDeprecated": false,
+            "dtype": "enum",
+            "shortname": "SchedulerPhase"
+        },
+        {
+            "name": "scheduler.SchedulingStrategy",
+            "type": "dart:core.bool",
+            "desc": "<p>Signature for the <a href=\"scheduler\/SchedulerBinding\/schedulingStrategy.html\">SchedulerBinding.schedulingStrategy<\/a> callback. Called\nwhenever the system needs to decide whether a task at a given\npriority needs to be run.<\/p>\n<p>Return true if a task with the given priority should be executed\nat this time, false otherwise.<\/p>\n<p>See also <a href=\"scheduler\/defaultSchedulingStrategy.html\">defaultSchedulingStrategy<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler",
+            "sig": "",
+            "params": [
+                {
+                    "name": "priority",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "scheduler",
+                    "type": "scheduler.SchedulerBinding",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "scheduler\/SchedulingStrategy.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">typedef SchedulingStrategy = bool Function({ int priority, SchedulerBinding scheduler });<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": true,
+            "isConstant": false,
+            "dtype": "typedef"
+        },
+        {
+            "name": "scheduler.TaskCallback",
+            "type": "",
+            "desc": "<p>Signature for <code>Scheduler.scheduleTask<\/code> callbacks.<\/p>\n<p>The type argument <code>T<\/code> is the task's return value. Consider <code>void<\/code> if the\ntask does not return a value.<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "scheduler\/TaskCallback.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">typedef TaskCallback&lt;T&gt; = T Function();<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": true,
+            "isConstant": false,
+            "dtype": "typedef",
+            "types": []
+        },
+        {
+            "name": "scheduler.Ticker",
+            "extends": [],
+            "memberOf": "scheduler",
+            "events": [],
+            "methods": [
+                {
+                    "name": "Ticker",
+                    "type": "",
+                    "desc": "<p>Creates a ticker that will call the provided callback once per frame while\nrunning.<\/p>\n<p>An optional label can be provided for debugging purposes. That label\nwill appear in the <a href=\"scheduler\/Ticker\/toString.html\">toString<\/a> output in debug builds.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.Ticker",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "_onTick",
+                            "type": "scheduler.TickerCallback",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "debugLabel",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "scheduler\/Ticker\/Ticker.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Ticker(this._onTick, { this.debugLabel }) {\n  assert(() {\n    _debugCreationStack = StackTrace.current;\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "absorbTicker",
+                    "type": "",
+                    "desc": "<p>Makes this <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> take the state of another ticker, and disposes the\nother ticker.<\/p>\n<p>This is useful if an object with a <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> is given a new\n<a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> but needs to maintain continuity. In particular, this\nmaintains the identity of the <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> returned by the <a href=\"scheduler\/Ticker\/start.html\">start<\/a>\nfunction of the original <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> if the original ticker is active.<\/p>\n<p>This ticker must not be active when this method is called.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.Ticker",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "originalTicker",
+                            "type": "scheduler.Ticker",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/Ticker\/absorbTicker.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void absorbTicker(Ticker originalTicker) {\n  assert(!isActive);\n  assert(_future == null);\n  assert(_startTime == null);\n  assert(_animationId == null);\n  assert((originalTicker._future == null) == (originalTicker._startTime == null), 'Cannot absorb Ticker after it has been disposed.');\n  if (originalTicker._future != null) {\n    _future = originalTicker._future;\n    _startTime = originalTicker._startTime;\n    if (shouldScheduleTick)\n      scheduleTick();\n    originalTicker._future = null; \/\/ so that it doesn't get disposed when we dispose of originalTicker\n    originalTicker.unscheduleTick();\n  }\n  originalTicker.dispose();\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "dispose",
+                    "type": "",
+                    "desc": "<p>Release the resources used by this object. The object is no longer usable\nafter this method is called.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.Ticker",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/Ticker\/dispose.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid dispose() {\n  if (_future != null) {\n    final TickerFuture localFuture = _future;\n    _future = null;\n    assert(!isActive);\n    unscheduleTick();\n    localFuture._cancel(this);\n  }\n  assert(() {\n    \/\/ We intentionally don't null out _startTime. This means that if start()\n    \/\/ was ever called, the object is now in a bogus state. This weakly helps\n    \/\/ catch cases of use-after-dispose.\n    _startTime = Duration.zero;\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "scheduleTick",
+                    "type": "",
+                    "desc": "<p>Schedules a tick for the next frame.<\/p>\n<p>This should only be called if <a href=\"scheduler\/Ticker\/shouldScheduleTick.html\">shouldScheduleTick<\/a> is true.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.Ticker",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "rescheduling",
+                            "type": "dart:core.bool",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/Ticker\/scheduleTick.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid scheduleTick({ bool rescheduling = false }) {\n  assert(!scheduled);\n  assert(shouldScheduleTick);\n  _animationId = SchedulerBinding.instance.scheduleFrameCallback(_tick, rescheduling: rescheduling);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "start",
+                    "type": "scheduler.TickerFuture",
+                    "desc": "<p>Starts the clock for this <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a>. If the ticker is not <a href=\"scheduler\/Ticker\/muted.html\">muted<\/a>, then this\nalso starts calling the ticker's callback once per animation frame.<\/p>\n<p>The returned future resolves once the ticker <a href=\"scheduler\/Ticker\/stop.html\">stop<\/a>s ticking. If the\nticker is disposed, the future does not resolve. A derivative future is\navailable from the returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> object that resolves with an\nerror in that case, via <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>.<\/p>\n<p>Calling this sets <a href=\"scheduler\/Ticker\/isActive.html\">isActive<\/a> to true.<\/p>\n<p>This method cannot be called while the ticker is active. To restart the\nticker, first <a href=\"scheduler\/Ticker\/stop.html\">stop<\/a> it.<\/p>\n<p>By convention, this method is used by the object that receives the ticks\n(as opposed to the <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> which created the ticker).<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.Ticker",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/Ticker\/start.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture start() {\n  assert(() {\n    if (isActive) {\n      throw FlutterError(\n        'A ticker was started twice.\\n'\n        'A ticker that is already active cannot be started again without first stopping it.\\n'\n        'The affected ticker was: ${ toString(debugIncludeStack: true) }'\n      );\n    }\n    return true;\n  }());\n  assert(_startTime == null);\n  _future = TickerFuture._();\n  if (shouldScheduleTick) {\n    scheduleTick();\n  }\n  if (SchedulerBinding.instance.schedulerPhase.index &gt; SchedulerPhase.idle.index &amp;&amp;\n      SchedulerBinding.instance.schedulerPhase.index &lt; SchedulerPhase.postFrameCallbacks.index)\n    _startTime = SchedulerBinding.instance.currentFrameTimeStamp;\n  return _future;\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "stop",
+                    "type": "",
+                    "desc": "<p>Stops calling this <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a>'s callback.<\/p>\n<p>If called with the <code>canceled<\/code> argument set to false (the default), causes\nthe future returned by <a href=\"scheduler\/Ticker\/start.html\">start<\/a> to resolve. If called with the <code>canceled<\/code>\nargument set to true, the future does not resolve, and the future obtained\nfrom <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>, if any, resolves with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a>\nerror.<\/p>\n<p>Calling this sets <a href=\"scheduler\/Ticker\/isActive.html\">isActive<\/a> to false.<\/p>\n<p>This method does nothing if called when the ticker is inactive.<\/p>\n<p>By convention, this method is used by the object that receives the ticks\n(as opposed to the <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> which created the ticker).<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.Ticker",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "canceled",
+                            "type": "dart:core.bool",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/Ticker\/stop.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void stop({ bool canceled = false }) {\n  if (!isActive)\n    return;\n\n  \/\/ We take the _future into a local variable so that isTicking is false\n  \/\/ when we actually complete the future (isTicking uses _future to\n  \/\/ determine its state).\n  final TickerFuture localFuture = _future;\n  _future = null;\n  _startTime = null;\n  assert(!isActive);\n\n  unscheduleTick();\n  if (canceled) {\n    localFuture._cancel(this);\n  } else {\n    localFuture._complete();\n  }\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "toString",
+                    "type": "dart:core.String",
+                    "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.Ticker",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "debugIncludeStack",
+                            "type": "dart:core.bool",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/Ticker\/toString.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString({ bool debugIncludeStack = false }) {\n  final StringBuffer buffer = StringBuffer();\n  buffer.write('$runtimeType(');\n  assert(() {\n    buffer.write(debugLabel ?? '');\n    return true;\n  }());\n  buffer.write(')');\n  assert(() {\n    if (debugIncludeStack) {\n      buffer.writeln();\n      buffer.writeln('The stack trace when the $runtimeType was actually created was:');\n      FlutterError.defaultStackFilter(_debugCreationStack.toString().trimRight().split('\\n')).forEach(buffer.writeln);\n    }\n    return true;\n  }());\n  return buffer.toString();\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "unscheduleTick",
+                    "type": "",
+                    "desc": "<p>Cancels the frame callback that was requested by <a href=\"scheduler\/Ticker\/scheduleTick.html\">scheduleTick<\/a>, if any.<\/p>\n<p>Calling this method when no tick is <a href=\"scheduler\/Ticker\/scheduled.html\">scheduled<\/a> is harmless.<\/p>\n<p>This method should not be called when <a href=\"scheduler\/Ticker\/shouldScheduleTick.html\">shouldScheduleTick<\/a> would return\ntrue if no tick was scheduled.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.Ticker",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/Ticker\/unscheduleTick.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid unscheduleTick() {\n  if (scheduled) {\n    SchedulerBinding.instance.cancelFrameCallbackWithId(_animationId);\n    _animationId = null;\n  }\n  assert(!shouldScheduleTick);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "props": [
+                {
+                    "name": "debugLabel",
+                    "type": "dart:core.String",
+                    "types": [],
+                    "desc": "<p>An optional label can be provided for debugging purposes.<\/p>\n<p>This label will appear in the <a href=\"scheduler\/Ticker\/toString.html\">toString<\/a> output in debug builds.<\/p>\n        ",
+                    "memberOf": "scheduler.Ticker",
+                    "isConstant": false,
+                    "href": "scheduler\/Ticker\/debugLabel.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String debugLabel\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "isActive",
+                    "type": "dart:core.bool",
+                    "types": [],
+                    "desc": "<p>Whether time is elapsing for this <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a>. Becomes true when <a href=\"scheduler\/Ticker\/start.html\">start<\/a> is\ncalled and false when <a href=\"scheduler\/Ticker\/stop.html\">stop<\/a> is called.<\/p>\n<p>A ticker can be active yet not be actually ticking (i.e. not be calling\nthe callback). To determine if a ticker is actually ticking, use\n<a href=\"scheduler\/Ticker\/isTicking.html\">isTicking<\/a>.<\/p>\n        ",
+                    "memberOf": "scheduler.Ticker",
+                    "isConstant": false,
+                    "href": "scheduler\/Ticker\/isActive.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isActive =&gt; _future != null;<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "isTicking",
+                    "type": "dart:core.bool",
+                    "types": [],
+                    "desc": "<p>Whether this <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> has scheduled a call to call its callback\non the next frame.<\/p>\n<p>A ticker that is <a href=\"scheduler\/Ticker\/muted.html\">muted<\/a> can be active (see <a href=\"scheduler\/Ticker\/isActive.html\">isActive<\/a>) yet not be\nticking. In that case, the ticker will not call its callback, and\n<a href=\"scheduler\/Ticker\/isTicking.html\">isTicking<\/a> will be false, but time will still be progressing.<\/p>\n<p>This will return false if the <code>Scheduler.lifecycleState<\/code> is one that\nindicates the application is not currently visible (e.g. if the device's\nscreen is turned off).<\/p>\n        ",
+                    "memberOf": "scheduler.Ticker",
+                    "isConstant": false,
+                    "href": "scheduler\/Ticker\/isTicking.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isTicking {\n  if (_future == null)\n    return false;\n  if (muted)\n    return false;\n  if (SchedulerBinding.instance.framesEnabled)\n    return true;\n  if (SchedulerBinding.instance.schedulerPhase != SchedulerPhase.idle)\n    return true; \/\/ for example, we might be in a warm-up frame or forced frame\n  return false;\n}<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "muted",
+                    "type": "dart:core.bool",
+                    "types": [],
+                    "desc": "<p>Whether this ticker has been silenced.<\/p>\n<p>While silenced, a ticker's clock can still run, but the callback will not\nbe called.<\/p>\n        ",
+                    "memberOf": "scheduler.Ticker",
+                    "isConstant": false,
+                    "href": "scheduler\/Ticker\/muted.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get muted =&gt; _muted;<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "scheduled",
+                    "type": "dart:core.bool",
+                    "types": [],
+                    "desc": "<p>Whether this <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> has already scheduled a frame callback.<\/p>\n        ",
+                    "memberOf": "scheduler.Ticker",
+                    "isConstant": false,
+                    "href": "scheduler\/Ticker\/scheduled.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool get scheduled =&gt; _animationId != null;<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "shouldScheduleTick",
+                    "type": "dart:core.bool",
+                    "types": [],
+                    "desc": "<p>Whether a tick should be scheduled.<\/p>\n<p>If this is true, then calling <a href=\"scheduler\/Ticker\/scheduleTick.html\">scheduleTick<\/a> should succeed.<\/p>\n<p>Reasons why a tick should not be scheduled include:<\/p>\n<ul>\n<li>A tick has already been scheduled for the coming frame.<\/li>\n<li>The ticker is not active (<a href=\"scheduler\/Ticker\/start.html\">start<\/a> has not been called).<\/li>\n<li>The ticker is not ticking, e.g. because it is <a href=\"scheduler\/Ticker\/muted.html\">muted<\/a> (see <a href=\"scheduler\/Ticker\/isTicking.html\">isTicking<\/a>).<\/li>\n<\/ul>",
+                    "memberOf": "scheduler.Ticker",
+                    "isConstant": false,
+                    "href": "scheduler\/Ticker\/shouldScheduleTick.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool get shouldScheduleTick =&gt; !muted &amp;&amp; isActive &amp;&amp; !scheduled;<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                }
+            ],
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": false,
+            "isConstant": false,
+            "isAbstract": false,
+            "implementors": [],
+            "realImplementors": [],
+            "cn": [],
+            "href": "scheduler\/Ticker-class.html",
+            "desc": "<p>Calls its callback once per animation frame.<\/p>\n<p>When created, a ticker is initially disabled. Call <a href=\"scheduler\/Ticker\/start.html\">start<\/a> to\nenable the ticker.<\/p>\n<p>A <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> can be silenced by setting <a href=\"scheduler\/Ticker\/muted.html\">muted<\/a> to true. While silenced, time\nstill elapses, and <a href=\"scheduler\/Ticker\/start.html\">start<\/a> and <a href=\"scheduler\/Ticker\/stop.html\">stop<\/a> can still be called, but no callbacks\nare called.<\/p>\n<p>By convention, the <a href=\"scheduler\/Ticker\/start.html\">start<\/a> and <a href=\"scheduler\/Ticker\/stop.html\">stop<\/a> methods are used by the ticker's\nconsumer, and the <a href=\"scheduler\/Ticker\/muted.html\">muted<\/a> property is controlled by the <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a>\nthat created the ticker.<\/p>\n<p>Tickers are driven by the <a href=\"scheduler\/SchedulerBinding-mixin.html\">SchedulerBinding<\/a>. See\n<a href=\"scheduler\/SchedulerBinding\/scheduleFrameCallback.html\">SchedulerBinding.scheduleFrameCallback<\/a>.<\/p>\n    ",
+            "example": "",
+            "isDeprecated": false,
+            "dtype": "class",
+            "shortname": "Ticker"
+        },
+        {
+            "name": "scheduler.TickerCallback",
+            "type": "",
+            "desc": "<p>Signature for the callback passed to the <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> class's constructor.<\/p>\n<p>The argument is the time that the object had spent enabled so far\nat the time of the callback being called.<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler",
+            "sig": "",
+            "params": [
+                {
+                    "name": "elapsed",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "scheduler\/TickerCallback.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">typedef TickerCallback = void Function(Duration elapsed);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": true,
+            "isConstant": false,
+            "dtype": "typedef",
+            "types": []
+        },
+        {
+            "name": "scheduler.TickerCanceled",
+            "extends": [],
+            "memberOf": "scheduler",
+            "events": [],
+            "methods": [
+                {
+                    "name": "TickerCanceled",
+                    "type": "",
+                    "desc": "<p>Creates a canceled-ticker exception.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.TickerCanceled",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "ticker",
+                            "type": "scheduler.Ticker",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "scheduler\/TickerCanceled\/TickerCanceled.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const TickerCanceled([this.ticker]);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "toString",
+                    "type": "dart:core.String",
+                    "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.TickerCanceled",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/TickerCanceled\/toString.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() {\n  if (ticker != null)\n    return 'This ticker was canceled: $ticker';\n  return 'The ticker was canceled before the \"orCancel\" property was first used.';\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                }
+            ],
+            "props": [
+                {
+                    "name": "ticker",
+                    "type": "scheduler.Ticker",
+                    "types": [],
+                    "desc": "<p>Reference to the <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> object that was canceled.<\/p>\n<p>This may be null in the case that the <a href=\"dart-async\/Future-class.html\">Future<\/a> created for\n<a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a> was created after the ticker was canceled.<\/p>\n        ",
+                    "memberOf": "scheduler.TickerCanceled",
+                    "isConstant": false,
+                    "href": "scheduler\/TickerCanceled\/ticker.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Ticker ticker\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                }
+            ],
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": false,
+            "isConstant": false,
+            "isAbstract": false,
+            "implementors": [],
+            "realImplementors": [],
+            "cn": [],
+            "href": "scheduler\/TickerCanceled-class.html",
+            "desc": "<p>Exception thrown by <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> objects on the <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a> future\nwhen the ticker is canceled.<\/p>\n    ",
+            "example": "",
+            "isDeprecated": false,
+            "dtype": "class",
+            "shortname": "TickerCanceled"
+        },
+        {
+            "name": "scheduler.TickerFuture",
+            "extends": [],
+            "memberOf": "scheduler",
+            "events": [],
+            "methods": [
+                {
+                    "name": "asStream",
+                    "type": "dart:async.Stream",
+                    "desc": "<p>Creates a <a href=\"dart-async\/Stream-class.html\">Stream<\/a> containing the result of this future.<\/p>\n<p>The stream will produce single data or error event containing the\ncompletion result of this future, and then it will close with a\ndone event.<\/p>\n<p>If the future never completes, the stream will not produce any events.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.TickerFuture",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/TickerFuture\/asStream.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nStream&lt;void&gt; asStream() {\n  return _primaryCompleter.future.asStream();\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "catchError",
+                    "type": "dart:async.Future",
+                    "desc": "<p>Handles errors emitted by this <a href=\"dart-async\/Future-class.html\">Future<\/a>.<\/p>\n<p>This is the asynchronous equivalent of a \"catch\" block.<\/p>\n<p>Returns a new <a href=\"dart-async\/Future-class.html\">Future<\/a> that will be completed with either the result of\nthis future or the result of calling the <code>onError<\/code> callback.<\/p>\n<p>If this future completes with a value,\nthe returned future completes with the same value.<\/p>\n<p>If this future completes with an error,\nthen <code>test<\/code> is first called with the error value.<\/p>\n<p>If <code>test<\/code> returns false, the exception is not handled by this <code>catchError<\/code>,\nand the returned future completes with the same error and stack trace\nas this future.<\/p>\n<p>If <code>test<\/code> returns <code>true<\/code>,\n<code>onError<\/code> is called with the error and possibly stack trace,\nand the returned future is completed with the result of this call\nin exactly the same way as for <a href=\"scheduler\/TickerFuture\/then.html\">then<\/a>'s <code>onError<\/code>.<\/p>\n<p>If <code>test<\/code> is omitted, it defaults to a function that always returns true.\nThe <code>test<\/code> function should not throw, but if it does, it is handled as\nif the <code>onError<\/code> function had thrown.<\/p>\n<p>Note that futures don't delay reporting of errors until listeners are\nadded. If the first <code>catchError<\/code> (or <code>then<\/code>) call happens after this future\nhas completed with an error then the error is reported as unhandled error.\nSee the description on <a href=\"dart-async\/Future-class.html\">Future<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.TickerFuture",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "onError",
+                            "type": "dart:core.Function",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "error",
+                            "type": "",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false,
+                            "types": []
+                        },
+                        {
+                            "name": "error",
+                            "type": "",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false,
+                            "types": []
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/TickerFuture\/catchError.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;void&gt; catchError(Function onError, { bool test(dynamic error) }) {\n  return _primaryCompleter.future.catchError(onError, test: test);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "TickerFuture.complete",
+                    "type": "",
+                    "desc": "<p>Creates a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> instance that represents an already-complete\n<a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> sequence.<\/p>\n<p>This is useful for implementing objects that normally defer to a <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a>\nbut sometimes can skip the ticker because the animation is of zero\nduration, but which still need to represent the completed animation in the\nform of a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.TickerFuture",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": true,
+                    "href": "scheduler\/TickerFuture\/TickerFuture.complete.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture.complete() {\n  _complete();\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "then",
+                    "type": "dart:async.Future",
+                    "desc": "<p>Register callbacks to be called when this future completes.<\/p>\n<p>When this future completes with a value,\nthe <code>onValue<\/code> callback will be called with that value.\nIf this future is already completed, the callback will not be called\nimmediately, but will be scheduled in a later microtask.<\/p>\n<p>If <code>onError<\/code> is provided, and this future completes with an error,\nthe <code>onError<\/code> callback is called with that error and its stack trace.\nThe <code>onError<\/code> callback must accept either one argument or two arguments\nwhere the latter is a <a href=\"dart-core\/StackTrace-class.html\">StackTrace<\/a>.\nIf <code>onError<\/code> accepts two arguments,\nit is called with both the error and the stack trace,\notherwise it is called with just the error object.\nThe <code>onError<\/code> callback must return a value or future that can be used\nto complete the returned future, so it must be something assignable to\n<code>FutureOr&lt;R&gt;<\/code>.<\/p>\n<p>Returns a new <a href=\"dart-async\/Future-class.html\">Future<\/a>\nwhich is completed with the result of the call to <code>onValue<\/code>\n(if this future completes with a value)\nor to <code>onError<\/code> (if this future completes with an error).<\/p>\n<p>If the invoked callback throws,\nthe returned future is completed with the thrown error\nand a stack trace for the error.\nIn the case of <code>onError<\/code>,\nif the exception thrown is <code>identical<\/code> to the error argument to <code>onError<\/code>,\nthe throw is considered a rethrow,\nand the original stack trace is used instead.<\/p>\n<p>If the callback returns a <a href=\"dart-async\/Future-class.html\">Future<\/a>,\nthe future returned by <code>then<\/code> will be completed with\nthe same result as the future returned by the callback.<\/p>\n<p>If <code>onError<\/code> is not given, and this future completes with an error,\nthe error is forwarded directly to the returned future.<\/p>\n<p>In most cases, it is more readable to use <a href=\"scheduler\/TickerFuture\/catchError.html\">catchError<\/a> separately, possibly\nwith a <code>test<\/code> parameter, instead of handling both value and error in a\nsingle <a href=\"scheduler\/TickerFuture\/then.html\">then<\/a> call.<\/p>\n<p>Note that futures don't delay reporting of errors until listeners are\nadded. If the first <code>then<\/code> or <code>catchError<\/code> call happens after this future\nhas completed with an error then the error is reported as unhandled error.\nSee the description on <a href=\"dart-async\/Future-class.html\">Future<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.TickerFuture",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "value",
+                            "type": "",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false,
+                            "types": []
+                        },
+                        {
+                            "name": "value",
+                            "type": "",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false,
+                            "types": []
+                        },
+                        {
+                            "name": "onError",
+                            "type": "dart:core.Function",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/TickerFuture\/then.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;E&gt; then&lt;E&gt;(dynamic f(void value), { Function onError }) {\n  return _primaryCompleter.future.then&lt;E&gt;(f, onError: onError);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:async.Future",
+                    "desc": "<p>Time-out the future computation after <code>timeLimit<\/code> has passed.<\/p>\n<p>Returns a new future that completes with the same value as this future,\nif this future completes in time.<\/p>\n<p>If this future does not complete before <code>timeLimit<\/code> has passed,\nthe <code>onTimeout<\/code> action is executed instead, and its result (whether it\nreturns or throws) is used as the result of the returned future.\nThe <code>onTimeout<\/code> function must return a <code>T<\/code> or a <code>Future&lt;T&gt;<\/code>.<\/p>\n<p>If <code>onTimeout<\/code> is omitted, a timeout will cause the returned future to\ncomplete with a <a href=\"dart-async\/TimeoutException-class.html\">TimeoutException<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.TickerFuture",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "timeLimit",
+                            "type": "dart:core.Duration",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "onTimeout",
+                            "type": "",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false,
+                            "types": []
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/TickerFuture\/timeout.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;void&gt; timeout(Duration timeLimit, { dynamic onTimeout() }) {\n  return _primaryCompleter.future.timeout(timeLimit, onTimeout: onTimeout);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "toString",
+                    "type": "dart:core.String",
+                    "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.TickerFuture",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "scheduler\/TickerFuture\/toString.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; '${describeIdentity(this)}(${ _completed == null ? \"active\" : _completed ? \"complete\" : \"canceled\" })';<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "whenComplete",
+                    "type": "dart:async.Future",
+                    "desc": "<p>Registers a function to be called when this future completes.<\/p>\n<p>The <code>action<\/code> function is called when this future completes, whether it\ndoes so with a value or with an error.<\/p>\n<p>This is the asynchronous equivalent of a \"finally\" block.<\/p>\n<p>The future returned by this call, <code>f<\/code>, will complete the same way\nas this future unless an error occurs in the <code>action<\/code> call, or in\na <a href=\"dart-async\/Future-class.html\">Future<\/a> returned by the <code>action<\/code> call. If the call to <code>action<\/code>\ndoes not return a future, its return value is ignored.<\/p>\n<p>If the call to <code>action<\/code> throws, then <code>f<\/code> is completed with the\nthrown error.<\/p>\n<p>If the call to <code>action<\/code> returns a <a href=\"dart-async\/Future-class.html\">Future<\/a>, <code>f2<\/code>, then completion of\n<code>f<\/code> is delayed until <code>f2<\/code> completes. If <code>f2<\/code> completes with\nan error, that will be the result of <code>f<\/code> too. The value of <code>f2<\/code> is always\nignored.<\/p>\n<p>This method is equivalent to:<\/p>\n<pre class=\"language-dart\"><code>Future&lt;T&gt; whenComplete(action()) {\n  return this.then((v) {\n    var f2 = action();\n    if (f2 is Future) return f2.then((_) =&gt; v);\n    return v\n  }, onError: (e) {\n    var f2 = action();\n    if (f2 is Future) return f2.then((_) { throw e; });\n    throw e;\n  });\n}\n<\/code><\/pre>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.TickerFuture",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "action",
+                            "type": "",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false,
+                            "types": []
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/TickerFuture\/whenComplete.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;void&gt; whenComplete(dynamic action()) {\n  return _primaryCompleter.future.whenComplete(action);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "whenCompleteOrCancel",
+                    "type": "",
+                    "desc": "<p>Calls <code>callback<\/code> either when this future resolves or when the ticker is\ncanceled.<\/p>\n<p>Calling this method registers an exception handler for the <a href=\"scheduler\/TickerFuture\/orCancel.html\">orCancel<\/a>\nfuture, so even if the <a href=\"scheduler\/TickerFuture\/orCancel.html\">orCancel<\/a> property is accessed, canceling the\nticker will not cause an uncaught exception in the current zone.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.TickerFuture",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "callback",
+                            "type": "dart:ui.VoidCallback",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/TickerFuture\/whenCompleteOrCancel.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void whenCompleteOrCancel(VoidCallback callback) {\n  void thunk(dynamic value) {\n    callback();\n  }\n  orCancel.then&lt;void&gt;(thunk, onError: thunk);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "props": [
+                {
+                    "name": "orCancel",
+                    "type": "dart:async.Future",
+                    "types": [],
+                    "desc": "<p>A future that resolves when this future resolves or throws when the ticker\nis canceled.<\/p>\n<p>If this property is never accessed, then canceling the ticker does not\nthrow any exceptions. Once this property is accessed, though, if the\ncorresponding ticker is canceled, then the <a href=\"dart-async\/Future-class.html\">Future<\/a> returned by this\ngetter will complete with an error, and if that error is not caught, there\nwill be an uncaught exception in the current zone.<\/p>\n        ",
+                    "memberOf": "scheduler.TickerFuture",
+                    "isConstant": false,
+                    "href": "scheduler\/TickerFuture\/orCancel.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; get orCancel {\n  if (_secondaryCompleter == null) {\n    _secondaryCompleter = Completer&lt;void&gt;();\n    if (_completed != null) {\n      if (_completed) {\n        _secondaryCompleter.complete();\n      } else {\n        _secondaryCompleter.completeError(const TickerCanceled());\n      }\n    }\n  }\n  return _secondaryCompleter.future;\n}<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                }
+            ],
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": false,
+            "isConstant": false,
+            "isAbstract": false,
+            "implementors": [],
+            "realImplementors": [],
+            "cn": [],
+            "href": "scheduler\/TickerFuture-class.html",
+            "desc": "<p>An object representing an ongoing <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> sequence.<\/p>\n<p>The <a href=\"scheduler\/Ticker\/start.html\">Ticker.start<\/a> method returns a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>. The <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> will\ncomplete successfully if the <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> is stopped using <a href=\"scheduler\/Ticker\/stop.html\">Ticker.stop<\/a> with\nthe <code>canceled<\/code> argument set to false (the default).<\/p>\n<p>If the <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> is disposed without being stopped, or if it is stopped with\n<code>canceled<\/code> set to true, then this Future will never complete.<\/p>\n<p>This class works like a normal <a href=\"dart-async\/Future-class.html\">Future<\/a>, but has an additional property,\n<a href=\"scheduler\/TickerFuture\/orCancel.html\">orCancel<\/a>, which returns a derivative <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes with an error\nif the <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> that returned the <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> was stopped with <code>canceled<\/code>\nset to true, or if it was disposed without being stopped.<\/p>\n<p>To run a callback when either this future resolves or when the ticker is\ncanceled, use <a href=\"scheduler\/TickerFuture\/whenCompleteOrCancel.html\">whenCompleteOrCancel<\/a>.<\/p>\n    ",
+            "example": "",
+            "isDeprecated": false,
+            "dtype": "class",
+            "shortname": "TickerFuture"
+        },
+        {
+            "name": "scheduler.TickerProvider",
+            "extends": [],
+            "memberOf": "scheduler",
+            "events": [],
+            "methods": [
+                {
+                    "name": "TickerProvider",
+                    "type": "",
+                    "desc": "<p>Abstract const constructor. This constructor enables subclasses to provide\nconst constructors so that they can be used in const expressions.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.TickerProvider",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": true,
+                    "href": "scheduler\/TickerProvider\/TickerProvider.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const TickerProvider();<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "createTicker",
+                    "type": "scheduler.Ticker",
+                    "desc": "<p>Creates a ticker with the given callback.<\/p>\n<p>The kind of ticker provided depends on the kind of ticker provider.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "scheduler.TickerProvider",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "onTick",
+                            "type": "scheduler.TickerCallback",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "scheduler\/TickerProvider\/createTicker.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Ticker createTicker(TickerCallback onTick);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                }
+            ],
+            "props": [],
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": false,
+            "isConstant": false,
+            "isAbstract": true,
+            "implementors": [],
+            "realImplementors": [],
+            "cn": [],
+            "href": "scheduler\/TickerProvider-class.html",
+            "desc": "<p>An interface implemented by classes that can vend <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> objects.<\/p>\n<p>Tickers can be used by any object that wants to be notified whenever a frame\ntriggers, but are most commonly used indirectly via an\n<a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>. <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>s need a <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> to\nobtain their <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a>. If you are creating an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> from a\n<a href=\"widgets\/State-class.html\">State<\/a>, then you can use the <a href=\"widgets\/TickerProviderStateMixin-mixin.html\">TickerProviderStateMixin<\/a> and\n<a href=\"widgets\/SingleTickerProviderStateMixin-mixin.html\">SingleTickerProviderStateMixin<\/a> classes to obtain a suitable\n<a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a>. The widget test framework <a href=\"flutter_test\/WidgetTester-class.html\">WidgetTester<\/a> object can be\nused as a ticker provider in the context of tests. In other contexts, you\nwill have to either pass a <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> from a higher level (e.g.\nindirectly from a <a href=\"widgets\/State-class.html\">State<\/a> that mixes in <a href=\"widgets\/TickerProviderStateMixin-mixin.html\">TickerProviderStateMixin<\/a>), or\ncreate a custom <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> subclass.<\/p>\n    ",
+            "example": "",
+            "isDeprecated": false,
+            "dtype": "class",
+            "shortname": "TickerProvider"
+        },
+        {
+            "name": "debugAssertAllSchedulerVarsUnset",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns true if none of the scheduler library debug variables have been changed.<\/p>\n<p>This function is used by the test framework to ensure that debug variables\nhaven't been inadvertently changed.<\/p>\n<p>See <code>https:\/\/docs.flutter.io\/flutter\/scheduler\/scheduler-library.html<\/code> for\na complete list.<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler",
+            "sig": "",
+            "params": [
+                {
+                    "name": "reason",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "reason",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "scheduler\/debugAssertAllSchedulerVarsUnset.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool debugAssertAllSchedulerVarsUnset(String reason) {\n  assert(() {\n    if (debugPrintBeginFrameBanner ||\n        debugPrintEndFrameBanner) {\n      throw FlutterError(reason);\n    }\n    return true;\n  }());\n  return true;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "defaultSchedulingStrategy",
+            "type": "dart:core.bool",
+            "desc": "<p>The default <a href=\"scheduler\/SchedulingStrategy.html\">SchedulingStrategy<\/a> for <a href=\"scheduler\/SchedulerBinding\/schedulingStrategy.html\">SchedulerBinding.schedulingStrategy<\/a>.<\/p>\n<p>If there are any frame callbacks registered, only runs tasks with\na <a href=\"scheduler\/Priority-class.html\">Priority<\/a> of <a href=\"scheduler\/Priority\/animation-constant.html\">Priority.animation<\/a> or higher. Otherwise, runs\nall tasks.<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler",
+            "sig": "",
+            "params": [
+                {
+                    "name": "priority",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "scheduler",
+                    "type": "scheduler.SchedulerBinding",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "priority",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "scheduler",
+                    "type": "scheduler.SchedulerBinding",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "scheduler\/defaultSchedulingStrategy.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool defaultSchedulingStrategy({ int priority, SchedulerBinding scheduler }) {\n  if (scheduler.transientCallbackCount &gt; 0)\n    return priority &gt;= Priority.animation.value;\n  return true;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "isFakeNamespace": false,
+    "desc": "",
+    "example": "",
+    "isDeprecated": false
+}

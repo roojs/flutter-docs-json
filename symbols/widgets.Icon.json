@@ -1,0 +1,200 @@
+{
+    "name": "widgets.Icon",
+    "extends": [
+        "widgets.StatelessWidget",
+        "widgets.Widget",
+        "foundation.DiagnosticableTree",
+        "foundation.Diagnosticable",
+        "dart:core.Object"
+    ],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "Icon",
+            "type": "",
+            "desc": "<p>Creates an icon.<\/p>\n<p>The <code>size<\/code> and <code>color<\/code> default to the value given by the current <a href=\"widgets\/IconTheme-class.html\">IconTheme<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.Icon",
+            "sig": "",
+            "params": [
+                {
+                    "name": "icon",
+                    "type": "widgets.IconData",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "key",
+                    "type": "foundation.Key",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "size",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "color",
+                    "type": "dart:ui.Color",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "semanticLabel",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "textDirection",
+                    "type": "dart:ui.TextDirection",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "widgets\/Icon\/Icon.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Icon(\n  this.icon, {\n  Key key,\n  this.size,\n  this.color,\n  this.semanticLabel,\n  this.textDirection,\n}) : super(key: key);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "build",
+            "type": "widgets.Widget",
+            "desc": "<p>Describes the part of the user interface represented by this widget.<\/p>\n<p>The framework calls this method when this widget is inserted into the\ntree in a given <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> and when the dependencies of this widget\nchange (e.g., an <a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> referenced by this widget changes).<\/p>\n<p>The framework replaces the subtree below this widget with the widget\nreturned by this method, either by updating the existing subtree or by\nremoving the subtree and inflating a new subtree, depending on whether the\nwidget returned by this method can update the root of the existing\nsubtree, as determined by calling <a href=\"widgets\/Widget\/canUpdate.html\">Widget.canUpdate<\/a>.<\/p>\n<p>Typically implementations return a newly created constellation of widgets\nthat are configured with information from this widget's constructor and\nfrom the given <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a>.<\/p>\n<p>The given <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> contains information about the location in the\ntree at which this widget is being built. For example, the context\nprovides the set of inherited widgets for this location in the tree. A\ngiven widget might be built with multiple different <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a>\narguments over time if the widget is moved around the tree or if the\nwidget is inserted into the tree in multiple places at once.<\/p>\n<p>The implementation of this method must only depend on:<\/p>\n<ul>\n<li>the fields of the widget, which themselves must not change over time,\nand<\/li>\n<li>any ambient state obtained from the <code>context<\/code> using\n<a href=\"widgets\/BuildContext\/inheritFromWidgetOfExactType.html\">BuildContext.inheritFromWidgetOfExactType<\/a>.<\/li>\n<\/ul>\n<p>If a widget's <a href=\"widgets\/Icon\/build.html\">build<\/a> method is to depend on anything else, use a\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> instead.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/StatelessWidget-class.html\">StatelessWidget<\/a>, which contains the discussion on performance considerations.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "widgets.Icon",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "widgets.BuildContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/Icon\/build.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nWidget build(BuildContext context) {\n  assert(this.textDirection != null || debugCheckHasDirectionality(context));\n  final TextDirection textDirection = this.textDirection ?? Directionality.of(context);\n\n  final IconThemeData iconTheme = IconTheme.of(context);\n\n  final double iconSize = size ?? iconTheme.size;\n\n  if (icon == null) {\n    return Semantics(\n      label: semanticLabel,\n      child: SizedBox(width: iconSize, height: iconSize),\n    );\n  }\n\n  final double iconOpacity = iconTheme.opacity;\n  Color iconColor = color ?? iconTheme.color;\n  if (iconOpacity != 1.0)\n    iconColor = iconColor.withOpacity(iconColor.opacity * iconOpacity);\n\n  Widget iconWidget = RichText(\n    overflow: TextOverflow.visible, \/\/ Never clip.\n    textDirection: textDirection, \/\/ Since we already fetched it for the assert...\n    text: TextSpan(\n      text: String.fromCharCode(icon.codePoint),\n      style: TextStyle(\n        inherit: false,\n        color: iconColor,\n        fontSize: iconSize,\n        fontFamily: icon.fontFamily,\n        package: icon.fontPackage,\n      ),\n    ),\n  );\n\n  if (icon.matchTextDirection) {\n    switch (textDirection) {\n      case TextDirection.rtl:\n        iconWidget = Transform(\n          transform: Matrix4.identity()..scale(-1.0, 1.0, 1.0),\n          alignment: Alignment.center,\n          transformHitTests: false,\n          child: iconWidget,\n        );\n        break;\n      case TextDirection.ltr:\n        break;\n    }\n  }\n\n  return Semantics(\n    label: semanticLabel,\n    child: ExcludeSemantics(\n      child: SizedBox(\n        width: iconSize,\n        height: iconSize,\n        child: Center(\n          child: iconWidget,\n        ),\n      ),\n    ),\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugFillProperties",
+            "type": "",
+            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"widgets\/Icon\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTree\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/Diagnosticable\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.Icon",
+            "sig": "",
+            "params": [
+                {
+                    "name": "properties",
+                    "type": "foundation.DiagnosticPropertiesBuilder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/Icon\/debugFillProperties.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false));\n  properties.add(DoubleProperty('size', size, defaultValue: null));\n  properties.add(DiagnosticsProperty&lt;Color&gt;('color', color, defaultValue: null));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "color",
+            "type": "dart:ui.Color",
+            "types": [],
+            "desc": "<p>The color to use when drawing the icon.<\/p>\n<p>Defaults to the current <a href=\"widgets\/IconTheme-class.html\">IconTheme<\/a> color, if any.<\/p>\n<p>The given color will be adjusted by the opacity of the current\n<a href=\"widgets\/IconTheme-class.html\">IconTheme<\/a>, if any.<\/p>\n<p>In material apps, if there is a <a href=\"material\/Theme-class.html\">Theme<\/a> without any <a href=\"widgets\/IconTheme-class.html\">IconTheme<\/a>s\nspecified, icon colors default to white if the theme is dark\nand black if the theme is light.<\/p>\n<p>If no <a href=\"widgets\/IconTheme-class.html\">IconTheme<\/a> and no <a href=\"material\/Theme-class.html\">Theme<\/a> is specified, icons will default to black.<\/p>\n<p>See <a href=\"material\/Theme-class.html\">Theme<\/a> to set the current theme and <a href=\"material\/ThemeData\/brightness.html\">ThemeData.brightness<\/a>\nfor setting the current theme's brightness.<\/p>\n<p>Typically, a material design color will be used, as follows:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Icon(\n  icon: Icons.widgets,\n  color: Colors.blue.shade400,\n)\n<\/code><\/pre>\n        ",
+            "memberOf": "widgets.Icon",
+            "isConstant": false,
+            "href": "widgets\/Icon\/color.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Color color\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "icon",
+            "type": "widgets.IconData",
+            "types": [],
+            "desc": "<p>The icon to display. The available icons are described in <a href=\"material\/Icons-class.html\">Icons<\/a>.<\/p>\n<p>The icon can be null, in which case the widget will render as an empty\nspace of the specified <a href=\"widgets\/Icon\/size.html\">size<\/a>.<\/p>\n        ",
+            "memberOf": "widgets.Icon",
+            "isConstant": false,
+            "href": "widgets\/Icon\/icon.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final IconData icon\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "semanticLabel",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>Semantic label for the icon.<\/p>\n<p>Announced in accessibility modes (e.g TalkBack\/VoiceOver).\nThis label does not show in the UI.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<code>Semantics.label<\/code>, which is set to <a href=\"widgets\/Icon\/semanticLabel.html\">semanticLabel<\/a> in the underlying\n<a href=\"widgets\/Semantics-class.html\">Semantics<\/a> widget.<\/li><\/ul>",
+            "memberOf": "widgets.Icon",
+            "isConstant": false,
+            "href": "widgets\/Icon\/semanticLabel.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String semanticLabel\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "size",
+            "type": "dart:core.double",
+            "types": [],
+            "desc": "<p>The size of the icon in logical pixels.<\/p>\n<p>Icons occupy a square with width and height equal to size.<\/p>\n<p>Defaults to the current <a href=\"widgets\/IconTheme-class.html\">IconTheme<\/a> size, if any. If there is no\n<a href=\"widgets\/IconTheme-class.html\">IconTheme<\/a>, or it does not specify an explicit size, then it defaults to\n24.0.<\/p>\n<p>If this <a href=\"widgets\/Icon-class.html\">Icon<\/a> is being placed inside an <a href=\"material\/IconButton-class.html\">IconButton<\/a>, then use\n<a href=\"material\/IconButton\/iconSize.html\">IconButton.iconSize<\/a> instead, so that the <a href=\"material\/IconButton-class.html\">IconButton<\/a> can make the splash\narea the appropriate size as well. The <a href=\"material\/IconButton-class.html\">IconButton<\/a> uses an <a href=\"widgets\/IconTheme-class.html\">IconTheme<\/a> to\npass down the size to the <a href=\"widgets\/Icon-class.html\">Icon<\/a>.<\/p>\n        ",
+            "memberOf": "widgets.Icon",
+            "isConstant": false,
+            "href": "widgets\/Icon\/size.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double size\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "textDirection",
+            "type": "dart:ui.TextDirection",
+            "types": [],
+            "desc": "<p>The text direction to use for rendering the icon.<\/p>\n<p>If this is null, the ambient <a href=\"widgets\/Directionality-class.html\">Directionality<\/a> is used instead.<\/p>\n<p>Some icons follow the reading direction. For example, \"back\" buttons point\nleft in left-to-right environments and right in right-to-left\nenvironments. Such icons have their <a href=\"widgets\/IconData\/matchTextDirection.html\">IconData.matchTextDirection<\/a> field\nset to true, and the <a href=\"widgets\/Icon-class.html\">Icon<\/a> widget uses the <a href=\"widgets\/Icon\/textDirection.html\">textDirection<\/a> to determine\nthe orientation in which to draw the icon.<\/p>\n<p>This property has no effect if the <a href=\"widgets\/Icon\/icon.html\">icon<\/a>'s <a href=\"widgets\/IconData\/matchTextDirection.html\">IconData.matchTextDirection<\/a>\nfield is false, but for consistency a text direction value must always be\nspecified, either directly using this property or using <a href=\"widgets\/Directionality-class.html\">Directionality<\/a>.<\/p>\n        ",
+            "memberOf": "widgets.Icon",
+            "isConstant": false,
+            "href": "widgets\/Icon\/textDirection.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextDirection textDirection\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "widgets\/Icon-class.html",
+    "desc": "<p>A graphical icon widget drawn with a glyph from a font described in\nan <a href=\"widgets\/IconData-class.html\">IconData<\/a> such as material's predefined <a href=\"widgets\/IconData-class.html\">IconData<\/a>s in <a href=\"material\/Icons-class.html\">Icons<\/a>.<\/p>\n<p>Icons are not interactive. For an interactive icon, consider material's\n<a href=\"material\/IconButton-class.html\">IconButton<\/a>.<\/p>\n<p>There must be an ambient <a href=\"widgets\/Directionality-class.html\">Directionality<\/a> widget when using <a href=\"widgets\/Icon-class.html\">Icon<\/a>.\nTypically this is introduced automatically by the <a href=\"widgets\/WidgetsApp-class.html\">WidgetsApp<\/a> or\n<a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a>.<\/p>\n<p>This widget assumes that the rendered icon is squared. Non-squared icons may\nrender incorrectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows how to use <a href=\"widgets\/Icon-class.html\">Icon<\/a> to create an addition icon, in the\ncolor pink, and 30 x 30 pixels in size.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">Icon(\n  Icons.add,\n  color: Colors.pink,\n  size: 30.0,\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"material\/IconButton-class.html\">IconButton<\/a>, for interactive icons.<\/li>\n<li>\n<a href=\"material\/Icons-class.html\">Icons<\/a>, for the list of available icons for use with this class.<\/li>\n<li>\n<a href=\"widgets\/IconTheme-class.html\">IconTheme<\/a>, which provides ambient configuration for icons.<\/li>\n<li>\n<a href=\"widgets\/ImageIcon-class.html\">ImageIcon<\/a>, for showing icons from <a href=\"painting\/AssetImage-class.html\">AssetImage<\/a>s or other <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a>s.<\/li>\n<\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Icon"
+}

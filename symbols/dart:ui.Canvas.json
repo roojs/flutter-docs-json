@@ -1,0 +1,1309 @@
+{
+    "name": "dart:ui.Canvas",
+    "extends": [],
+    "memberOf": "dart:ui",
+    "events": [],
+    "methods": [
+        {
+            "name": "Canvas",
+            "type": "",
+            "desc": "<p>Creates a canvas for recording graphical operations into the\ngiven picture recorder.<\/p>\n<p>Graphical operations that affect pixels entirely outside the given\n<code>cullRect<\/code> might be discarded by the implementation. However, the\nimplementation might draw outside these bounds if, for example, a command\ndraws partially inside and outside the <code>cullRect<\/code>. To ensure that pixels\noutside a given region are discarded, consider using a <a href=\"dart-ui\/Canvas\/clipRect.html\">clipRect<\/a>. The\n<code>cullRect<\/code> is optional; by default, all operations are kept.<\/p>\n<p>To end the recording, call <a href=\"dart-ui\/PictureRecorder\/endRecording.html\">PictureRecorder.endRecording<\/a> on the\ngiven recorder.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "recorder",
+                    "type": "dart:ui.PictureRecorder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "cullRect",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-ui\/Canvas\/Canvas.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@pragma('vm:entry-point')\nCanvas(PictureRecorder recorder, [ Rect cullRect ]) : assert(recorder != null) {\n  if (recorder.isRecording)\n    throw new ArgumentError('\"recorder\" must not already be associated with another Canvas.');\n  cullRect ??= Rect.largest;\n  _constructor(recorder, cullRect.left, cullRect.top, cullRect.right, cullRect.bottom);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "clipPath",
+            "type": "",
+            "desc": "<p>Reduces the clip region to the intersection of the current clip and the\ngiven <a href=\"dart-ui\/Path-class.html\">Path<\/a>.<\/p>\n<p>If <code>doAntiAlias<\/code> is true, then the clip will be anti-aliased.<\/p>\n<p>If multiple draw commands intersect with the clip boundary, this can result\nmultiple draw commands intersect with the clip boundary, this can result\nin incorrect blending at the clip boundary. See <a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a> for a\ndiscussion of how to address that.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:ui.Path",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "doAntiAlias",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/clipPath.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void clipPath(Path path, {bool doAntiAlias = true}) {\n  assert(path != null); \/\/ path is checked on the engine side\n  assert(doAntiAlias != null);\n  _clipPath(path, doAntiAlias);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "clipRRect",
+            "type": "",
+            "desc": "<p>Reduces the clip region to the intersection of the current clip and the\ngiven rounded rectangle.<\/p>\n<p>If <code>doAntiAlias<\/code> is true, then the clip will be anti-aliased.<\/p>\n<p>If multiple draw commands intersect with the clip boundary, this can result\nin incorrect blending at the clip boundary. See <a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a> for a\ndiscussion of how to address that and some examples of using <a href=\"dart-ui\/Canvas\/clipRRect.html\">clipRRect<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rrect",
+                    "type": "dart:ui.RRect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "doAntiAlias",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/clipRRect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void clipRRect(RRect rrect, {bool doAntiAlias = true}) {\n  assert(_rrectIsValid(rrect));\n  assert(doAntiAlias != null);\n  _clipRRect(rrect._value, doAntiAlias);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "clipRect",
+            "type": "",
+            "desc": "<p>Reduces the clip region to the intersection of the current clip and the\ngiven rectangle.<\/p>\n<p>If <code>doAntiAlias<\/code> is true, then the clip will be anti-aliased.<\/p>\n<p>If multiple draw commands intersect with the clip boundary, this can result\nin incorrect blending at the clip boundary. See <a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a> for a\ndiscussion of how to address that.<\/p>\n<p>Use <a href=\"dart-ui\/ClipOp-class.html\">ClipOp.difference<\/a> to subtract the provided rectangle from the\ncurrent clip.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rect",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "clipOp",
+                    "type": "dart:ui.ClipOp",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "doAntiAlias",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/clipRect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void clipRect(Rect rect, { ClipOp clipOp: ClipOp.intersect, bool doAntiAlias = true }) {\n  assert(_rectIsValid(rect));\n  assert(clipOp != null);\n  assert(doAntiAlias != null);\n  _clipRect(rect.left, rect.top, rect.right, rect.bottom, clipOp.index, doAntiAlias);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawArc",
+            "type": "",
+            "desc": "<p>Draw an arc scaled to fit inside the given rectangle. It starts from\nstartAngle radians around the oval up to startAngle + sweepAngle\nradians around the oval, with zero radians being the point on\nthe right hand side of the oval that crosses the horizontal line\nthat intersects the center of the rectangle and with positive\nangles going clockwise around the oval. If useCenter is true, the arc is\nclosed back to the center, forming a circle sector. Otherwise, the arc is\nnot closed, forming a circle segment.<\/p>\n<p>This method is optimized for drawing arcs and should be faster than <a href=\"dart-ui\/Path\/arcTo.html\">Path.arcTo<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rect",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "startAngle",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "sweepAngle",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "useCenter",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawArc.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawArc(Rect rect, double startAngle, double sweepAngle, bool useCenter, Paint paint) {\n  assert(_rectIsValid(rect));\n  assert(paint != null);\n  _drawArc(rect.left, rect.top, rect.right, rect.bottom, startAngle,\n           sweepAngle, useCenter, paint._objects, paint._data);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawAtlas",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "atlas",
+                    "type": "dart:ui.Image",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "transforms",
+                    "type": "dart:core.List<dart:ui.RSTransform>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "dart:ui.RSTransform"
+                    ]
+                },
+                {
+                    "name": "rects",
+                    "type": "dart:core.List<dart:ui.Rect>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "dart:ui.Rect"
+                    ]
+                },
+                {
+                    "name": "colors",
+                    "type": "dart:core.List<dart:ui.Color>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "dart:ui.Color"
+                    ]
+                },
+                {
+                    "name": "blendMode",
+                    "type": "dart:ui.BlendMode",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "cullRect",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawAtlas.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawAtlas(Image atlas,\n               List&lt;RSTransform&gt; transforms,\n               List&lt;Rect&gt; rects,\n               List&lt;Color&gt; colors,\n               BlendMode blendMode,\n               Rect cullRect,\n               Paint paint) {\n  assert(atlas != null); \/\/ atlas is checked on the engine side\n  assert(transforms != null);\n  assert(rects != null);\n  assert(colors != null);\n  assert(blendMode != null);\n  assert(paint != null);\n\n  final int rectCount = rects.length;\n  if (transforms.length != rectCount)\n    throw new ArgumentError('\"transforms\" and \"rects\" lengths must match.');\n  if (colors.isNotEmpty &amp;&amp; colors.length != rectCount)\n    throw new ArgumentError('If non-null, \"colors\" length must match that of \"transforms\" and \"rects\".');\n\n  final Float32List rstTransformBuffer = new Float32List(rectCount * 4);\n  final Float32List rectBuffer = new Float32List(rectCount * 4);\n\n  for (int i = 0; i &lt; rectCount; ++i) {\n    final int index0 = i * 4;\n    final int index1 = index0 + 1;\n    final int index2 = index0 + 2;\n    final int index3 = index0 + 3;\n    final RSTransform rstTransform = transforms[i];\n    final Rect rect = rects[i];\n    assert(_rectIsValid(rect));\n    rstTransformBuffer[index0] = rstTransform.scos;\n    rstTransformBuffer[index1] = rstTransform.ssin;\n    rstTransformBuffer[index2] = rstTransform.tx;\n    rstTransformBuffer[index3] = rstTransform.ty;\n    rectBuffer[index0] = rect.left;\n    rectBuffer[index1] = rect.top;\n    rectBuffer[index2] = rect.right;\n    rectBuffer[index3] = rect.bottom;\n  }\n\n  final Int32List colorBuffer = colors.isEmpty ? null : _encodeColorList(colors);\n  final Float32List cullRectBuffer = cullRect?._value;\n\n  _drawAtlas(\n    paint._objects, paint._data, atlas, rstTransformBuffer, rectBuffer,\n    colorBuffer, blendMode.index, cullRectBuffer\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawCircle",
+            "type": "",
+            "desc": "<p>Draws a circle centered at the point given by the first argument and\nthat has the radius given by the second argument, with the <a href=\"dart-ui\/Paint-class.html\">Paint<\/a> given in\nthe third argument. Whether the circle is filled or stroked (or both) is\ncontrolled by <a href=\"dart-ui\/Paint\/style.html\">Paint.style<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "c",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "radius",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawCircle.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawCircle(Offset c, double radius, Paint paint) {\n  assert(_offsetIsValid(c));\n  assert(paint != null);\n  _drawCircle(c.dx, c.dy, radius, paint._objects, paint._data);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawColor",
+            "type": "",
+            "desc": "<p>Paints the given <a href=\"dart-ui\/Color-class.html\">Color<\/a> onto the canvas, applying the given\n<a href=\"dart-ui\/BlendMode-class.html\">BlendMode<\/a>, with the given color being the source and the background\nbeing the destination.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "color",
+                    "type": "dart:ui.Color",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "blendMode",
+                    "type": "dart:ui.BlendMode",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawColor.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawColor(Color color, BlendMode blendMode) {\n  assert(color != null);\n  assert(blendMode != null);\n  _drawColor(color.value, blendMode.index);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawDRRect",
+            "type": "",
+            "desc": "<p>Draws a shape consisting of the difference between two rounded rectangles\nwith the given <a href=\"dart-ui\/Paint-class.html\">Paint<\/a>. Whether this shape is filled or stroked (or both)\nis controlled by <a href=\"dart-ui\/Paint\/style.html\">Paint.style<\/a>.<\/p>\n<p>This shape is almost but not quite entirely unlike an annulus.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "outer",
+                    "type": "dart:ui.RRect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "inner",
+                    "type": "dart:ui.RRect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawDRRect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawDRRect(RRect outer, RRect inner, Paint paint) {\n  assert(_rrectIsValid(outer));\n  assert(_rrectIsValid(inner));\n  assert(paint != null);\n  _drawDRRect(outer._value, inner._value, paint._objects, paint._data);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawImage",
+            "type": "",
+            "desc": "<p>Draws the given <a href=\"dart-ui\/Image-class.html\">Image<\/a> into the canvas with its top-left corner at the\ngiven <a href=\"dart-ui\/Offset-class.html\">Offset<\/a>. The image is composited into the canvas using the given <a href=\"dart-ui\/Paint-class.html\">Paint<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "image",
+                    "type": "dart:ui.Image",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "p",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawImage.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawImage(Image image, Offset p, Paint paint) {\n  assert(image != null); \/\/ image is checked on the engine side\n  assert(_offsetIsValid(p));\n  assert(paint != null);\n  _drawImage(image, p.dx, p.dy, paint._objects, paint._data);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawImageNine",
+            "type": "",
+            "desc": "<p>Draws the given <a href=\"dart-ui\/Image-class.html\">Image<\/a> into the canvas using the given <a href=\"dart-ui\/Paint-class.html\">Paint<\/a>.<\/p>\n<p>The image is drawn in nine portions described by splitting the image by\ndrawing two horizontal lines and two vertical lines, where the <code>center<\/code>\nargument describes the rectangle formed by the four points where these\nfour lines intersect each other. (This forms a 3-by-3 grid of regions,\nthe center region being described by the <code>center<\/code> argument.)<\/p>\n<p>The four regions in the corners are drawn, without scaling, in the four\ncorners of the destination rectangle described by <code>dst<\/code>. The remaining\nfive regions are drawn by stretching them to fit such that they exactly\ncover the destination rectangle while maintaining their relative\npositions.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "image",
+                    "type": "dart:ui.Image",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "center",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "dst",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawImageNine.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawImageNine(Image image, Rect center, Rect dst, Paint paint) {\n  assert(image != null); \/\/ image is checked on the engine side\n  assert(_rectIsValid(center));\n  assert(_rectIsValid(dst));\n  assert(paint != null);\n  _drawImageNine(image,\n                 center.left,\n                 center.top,\n                 center.right,\n                 center.bottom,\n                 dst.left,\n                 dst.top,\n                 dst.right,\n                 dst.bottom,\n                 paint._objects,\n                 paint._data);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawImageRect",
+            "type": "",
+            "desc": "<p>Draws the subset of the given image described by the <code>src<\/code> argument into\nthe canvas in the axis-aligned rectangle given by the <code>dst<\/code> argument.<\/p>\n<p>This might sample from outside the <code>src<\/code> rect by up to half the width of\nan applied filter.<\/p>\n<p>Multiple calls to this method with different arguments (from the same\nimage) can be batched into a single call to <a href=\"dart-ui\/Canvas\/drawAtlas.html\">drawAtlas<\/a> to improve\nperformance.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "image",
+                    "type": "dart:ui.Image",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "src",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "dst",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawImageRect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawImageRect(Image image, Rect src, Rect dst, Paint paint) {\n  assert(image != null); \/\/ image is checked on the engine side\n  assert(_rectIsValid(src));\n  assert(_rectIsValid(dst));\n  assert(paint != null);\n  _drawImageRect(image,\n                 src.left,\n                 src.top,\n                 src.right,\n                 src.bottom,\n                 dst.left,\n                 dst.top,\n                 dst.right,\n                 dst.bottom,\n                 paint._objects,\n                 paint._data);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawLine",
+            "type": "",
+            "desc": "<p>Draws a line between the given points using the given paint. The line is\nstroked, the value of the <a href=\"dart-ui\/Paint\/style.html\">Paint.style<\/a> is ignored for this call.<\/p>\n<p>The <code>p1<\/code> and <code>p2<\/code> arguments are interpreted as offsets from the origin.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "p1",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "p2",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawLine.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawLine(Offset p1, Offset p2, Paint paint) {\n  assert(_offsetIsValid(p1));\n  assert(_offsetIsValid(p2));\n  assert(paint != null);\n  _drawLine(p1.dx, p1.dy, p2.dx, p2.dy, paint._objects, paint._data);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawOval",
+            "type": "",
+            "desc": "<p>Draws an axis-aligned oval that fills the given axis-aligned rectangle\nwith the given <a href=\"dart-ui\/Paint-class.html\">Paint<\/a>. Whether the oval is filled or stroked (or both) is\ncontrolled by <a href=\"dart-ui\/Paint\/style.html\">Paint.style<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rect",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawOval.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawOval(Rect rect, Paint paint) {\n  assert(_rectIsValid(rect));\n  assert(paint != null);\n  _drawOval(rect.left, rect.top, rect.right, rect.bottom,\n            paint._objects, paint._data);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawPaint",
+            "type": "",
+            "desc": "<p>Fills the canvas with the given <a href=\"dart-ui\/Paint-class.html\">Paint<\/a>.<\/p>\n<p>To fill the canvas with a solid color and blend mode, consider\n<a href=\"dart-ui\/Canvas\/drawColor.html\">drawColor<\/a> instead.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawPaint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawPaint(Paint paint) {\n  assert(paint != null);\n  _drawPaint(paint._objects, paint._data);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawParagraph",
+            "type": "",
+            "desc": "<p>Draws the text in the given <a href=\"dart-ui\/Paragraph-class.html\">Paragraph<\/a> into this canvas at the given\n<a href=\"dart-ui\/Offset-class.html\">Offset<\/a>.<\/p>\n<p>The <a href=\"dart-ui\/Paragraph-class.html\">Paragraph<\/a> object must have had <a href=\"dart-ui\/Paragraph\/layout.html\">Paragraph.layout<\/a> called on it\nfirst.<\/p>\n<p>To align the text, set the <code>textAlign<\/code> on the <a href=\"dart-ui\/ParagraphStyle-class.html\">ParagraphStyle<\/a> object\npassed to the <a href=\"dart-ui\/ParagraphBuilder\/ParagraphBuilder.html\">new ParagraphBuilder<\/a> constructor. For more details see\n<a href=\"dart-ui\/TextAlign-class.html\">TextAlign<\/a> and the discussion at <a href=\"dart-ui\/ParagraphStyle\/ParagraphStyle.html\">new ParagraphStyle<\/a>.<\/p>\n<p>If the text is left aligned or justified, the left margin will be at the\nposition specified by the <code>offset<\/code> argument's <a href=\"dart-ui\/Offset\/dx.html\">Offset.dx<\/a> coordinate.<\/p>\n<p>If the text is right aligned or justified, the right margin will be at the\nposition described by adding the <a href=\"dart-ui\/ParagraphConstraints\/width.html\">ParagraphConstraints.width<\/a> given to\n<a href=\"dart-ui\/Paragraph\/layout.html\">Paragraph.layout<\/a>, to the <code>offset<\/code> argument's <a href=\"dart-ui\/Offset\/dx.html\">Offset.dx<\/a> coordinate.<\/p>\n<p>If the text is centered, the centering axis will be at the position\ndescribed by adding half of the <a href=\"dart-ui\/ParagraphConstraints\/width.html\">ParagraphConstraints.width<\/a> given to\n<a href=\"dart-ui\/Paragraph\/layout.html\">Paragraph.layout<\/a>, to the <code>offset<\/code> argument's <a href=\"dart-ui\/Offset\/dx.html\">Offset.dx<\/a> coordinate.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "paragraph",
+                    "type": "dart:ui.Paragraph",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawParagraph.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawParagraph(Paragraph paragraph, Offset offset) {\n  assert(paragraph != null);\n  assert(_offsetIsValid(offset));\n  paragraph._paint(this, offset.dx, offset.dy);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawPath",
+            "type": "",
+            "desc": "<p>Draws the given <a href=\"dart-ui\/Path-class.html\">Path<\/a> with the given <a href=\"dart-ui\/Paint-class.html\">Paint<\/a>. Whether this shape is\nfilled or stroked (or both) is controlled by <a href=\"dart-ui\/Paint\/style.html\">Paint.style<\/a>. If the path is\nfilled, then sub-paths within it are implicitly closed (see <a href=\"dart-ui\/Path\/close.html\">Path.close<\/a>).<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:ui.Path",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawPath.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawPath(Path path, Paint paint) {\n  assert(path != null); \/\/ path is checked on the engine side\n  assert(paint != null);\n  _drawPath(path, paint._objects, paint._data);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawPicture",
+            "type": "",
+            "desc": "<p>Draw the given picture onto the canvas. To create a picture, see\n<a href=\"dart-ui\/PictureRecorder-class.html\">PictureRecorder<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "picture",
+                    "type": "dart:ui.Picture",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawPicture.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawPicture(Picture picture) {\n  assert(picture != null); \/\/ picture is checked on the engine side\n  _drawPicture(picture);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawPoints",
+            "type": "",
+            "desc": "<p>Draws a sequence of points according to the given <a href=\"dart-ui\/PointMode-class.html\">PointMode<\/a>.<\/p>\n<p>The <code>points<\/code> argument is interpreted as offsets from the origin.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"dart-ui\/Canvas\/drawRawPoints.html\">drawRawPoints<\/a>, which takes <code>points<\/code> as a <a href=\"dart-typed_data\/Float32List-class.html\">Float32List<\/a> rather than a\n<a href=\"dart-core\/List-class.html\">List&lt;Offset&gt;<\/a>.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "pointMode",
+                    "type": "dart:ui.PointMode",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "points",
+                    "type": "dart:core.List<dart:ui.Offset>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "dart:ui.Offset"
+                    ]
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawPoints.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawPoints(PointMode pointMode, List&lt;Offset&gt; points, Paint paint) {\n  assert(pointMode != null);\n  assert(points != null);\n  assert(paint != null);\n  _drawPoints(paint._objects, paint._data, pointMode.index, _encodePointList(points));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawRRect",
+            "type": "",
+            "desc": "<p>Draws a rounded rectangle with the given <a href=\"dart-ui\/Paint-class.html\">Paint<\/a>. Whether the rectangle is\nfilled or stroked (or both) is controlled by <a href=\"dart-ui\/Paint\/style.html\">Paint.style<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rrect",
+                    "type": "dart:ui.RRect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawRRect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawRRect(RRect rrect, Paint paint) {\n  assert(_rrectIsValid(rrect));\n  assert(paint != null);\n  _drawRRect(rrect._value, paint._objects, paint._data);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawRawAtlas",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "atlas",
+                    "type": "dart:ui.Image",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "rstTransforms",
+                    "type": "dart:typed_data.Float32List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "rects",
+                    "type": "dart:typed_data.Float32List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "colors",
+                    "type": "dart:typed_data.Int32List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "blendMode",
+                    "type": "dart:ui.BlendMode",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "cullRect",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawRawAtlas.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawRawAtlas(Image atlas,\n                  Float32List rstTransforms,\n                  Float32List rects,\n                  Int32List colors,\n                  BlendMode blendMode,\n                  Rect cullRect,\n                  Paint paint) {\n  assert(atlas != null); \/\/ atlas is checked on the engine side\n  assert(rstTransforms != null);\n  assert(rects != null);\n  assert(colors != null);\n  assert(blendMode != null);\n  assert(paint != null);\n\n  final int rectCount = rects.length;\n  if (rstTransforms.length != rectCount)\n    throw new ArgumentError('\"rstTransforms\" and \"rects\" lengths must match.');\n  if (rectCount % 4 != 0)\n    throw new ArgumentError('\"rstTransforms\" and \"rects\" lengths must be a multiple of four.');\n  if (colors != null &amp;&amp; colors.length * 4 != rectCount)\n    throw new ArgumentError('If non-null, \"colors\" length must be one fourth the length of \"rstTransforms\" and \"rects\".');\n\n  _drawAtlas(\n    paint._objects, paint._data, atlas, rstTransforms, rects,\n    colors, blendMode.index, cullRect?._value\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawRawPoints",
+            "type": "",
+            "desc": "<p>Draws a sequence of points according to the given <a href=\"dart-ui\/PointMode-class.html\">PointMode<\/a>.<\/p>\n<p>The <code>points<\/code> argument is interpreted as a list of pairs of floating point\nnumbers, where each pair represents an x and y offset from the origin.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"dart-ui\/Canvas\/drawPoints.html\">drawPoints<\/a>, which takes <code>points<\/code> as a <a href=\"dart-core\/List-class.html\">List&lt;Offset&gt;<\/a> rather than a\n<a href=\"dart-core\/List-class.html\">List&lt;Float32List&gt;<\/a>.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "pointMode",
+                    "type": "dart:ui.PointMode",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "points",
+                    "type": "dart:typed_data.Float32List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawRawPoints.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawRawPoints(PointMode pointMode, Float32List points, Paint paint) {\n  assert(pointMode != null);\n  assert(points != null);\n  assert(paint != null);\n  if (points.length % 2 != 0)\n    throw new ArgumentError('\"points\" must have an even number of values.');\n  _drawPoints(paint._objects, paint._data, pointMode.index, points);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawRect",
+            "type": "",
+            "desc": "<p>Draws a rectangle with the given <a href=\"dart-ui\/Paint-class.html\">Paint<\/a>. Whether the rectangle is filled\nor stroked (or both) is controlled by <a href=\"dart-ui\/Paint\/style.html\">Paint.style<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rect",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawRect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawRect(Rect rect, Paint paint) {\n  assert(_rectIsValid(rect));\n  assert(paint != null);\n  _drawRect(rect.left, rect.top, rect.right, rect.bottom,\n            paint._objects, paint._data);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawShadow",
+            "type": "",
+            "desc": "<p>Draws a shadow for a <a href=\"dart-ui\/Path-class.html\">Path<\/a> representing the given material elevation.<\/p>\n<p>The <code>transparentOccluder<\/code> argument should be true if the occluding object\nis not opaque.<\/p>\n<p>The arguments must not be null.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:ui.Path",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "color",
+                    "type": "dart:ui.Color",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "elevation",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "transparentOccluder",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawShadow.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawShadow(Path path, Color color, double elevation, bool transparentOccluder) {\n  assert(path != null); \/\/ path is checked on the engine side\n  assert(color != null);\n  assert(transparentOccluder != null);\n  _drawShadow(path, color.value, elevation, transparentOccluder);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawVertices",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "vertices",
+                    "type": "dart:ui.Vertices",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "blendMode",
+                    "type": "dart:ui.BlendMode",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/drawVertices.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void drawVertices(Vertices vertices, BlendMode blendMode, Paint paint) {\n  assert(vertices != null); \/\/ vertices is checked on the engine side\n  assert(paint != null);\n  assert(blendMode != null);\n  _drawVertices(vertices, blendMode.index, paint._objects, paint._data);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "getSaveCount",
+            "type": "dart:core.int",
+            "desc": "<p>Returns the number of items on the save stack, including the\ninitial state. This means it returns 1 for a clean canvas, and\nthat each call to <a href=\"dart-ui\/Canvas\/save.html\">save<\/a> and <a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a> increments it, and that\neach matching call to <a href=\"dart-ui\/Canvas\/restore.html\">restore<\/a> decrements it.<\/p>\n<p>This number cannot go below 1.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/getSaveCount.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int getSaveCount() native 'Canvas_getSaveCount';<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "restore",
+            "type": "",
+            "desc": "<p>Pops the current save stack, if there is anything to pop.\nOtherwise, does nothing.<\/p>\n<p>Use <a href=\"dart-ui\/Canvas\/save.html\">save<\/a> and <a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a> to push state onto the stack.<\/p>\n<p>If the state was pushed with with <a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a>, then this call will also\ncause the new layer to be composited into the previous layer.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/restore.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void restore() native 'Canvas_restore';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "rotate",
+            "type": "",
+            "desc": "<p>Add a rotation to the current transform. The argument is in radians clockwise.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "radians",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/rotate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void rotate(double radians) native 'Canvas_rotate';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "save",
+            "type": "",
+            "desc": "<p>Saves a copy of the current transform and clip on the save stack.<\/p>\n<p>Call <a href=\"dart-ui\/Canvas\/restore.html\">restore<\/a> to pop the save stack.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a>, which does the same thing but additionally also groups the\ncommands done until the matching <a href=\"dart-ui\/Canvas\/restore.html\">restore<\/a>.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/save.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void save() native 'Canvas_save';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "saveLayer",
+            "type": "",
+            "desc": "<p>Saves a copy of the current transform and clip on the save stack, and then\ncreates a new group which subsequent calls will become a part of. When the\nsave stack is later popped, the group will be flattened into a layer and\nhave the given <code>paint<\/code>'s <a href=\"dart-ui\/Paint\/colorFilter.html\">Paint.colorFilter<\/a> and <a href=\"dart-ui\/Paint\/blendMode.html\">Paint.blendMode<\/a>\napplied.<\/p>\n<p>This lets you create composite effects, for example making a group of\ndrawing commands semi-transparent. Without using <a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a>, each part of\nthe group would be painted individually, so where they overlap would be\ndarker than where they do not. By using <a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a> to group them\ntogether, they can be drawn with an opaque color at first, and then the\nentire group can be made transparent using the <a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a>'s paint.<\/p>\n<p>Call <a href=\"dart-ui\/Canvas\/restore.html\">restore<\/a> to pop the save stack and apply the paint to the group.<\/p>\n<h2 id=\"using-savelayer-with-clips\">Using saveLayer with clips<\/h2>\n<p>When a rectangular clip operation (from <a href=\"dart-ui\/Canvas\/clipRect.html\">clipRect<\/a>) is not axis-aligned\nwith the raster buffer, or when the clip operation is not rectilinear\n(e.g. because it is a rounded rectangle clip created by <a href=\"dart-ui\/Canvas\/clipRRect.html\">clipRRect<\/a> or an\narbitrarily complicated path clip created by <a href=\"dart-ui\/Canvas\/clipPath.html\">clipPath<\/a>), the edge of the\nclip needs to be anti-aliased.<\/p>\n<p>If two draw calls overlap at the edge of such a clipped region, without\nusing <a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a>, the first drawing will be anti-aliased with the\nbackground first, and then the second will be anti-aliased with the result\nof blending the first drawing and the background. On the other hand, if\n<a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a> is used immediately after establishing the clip, the second\ndrawing will cover the first in the layer, and thus the second alone will\nbe anti-aliased with the background when the layer is clipped and\ncomposited (when <a href=\"dart-ui\/Canvas\/restore.html\">restore<\/a> is called).<\/p>\n<p>For example, this <a href=\"rendering\/CustomPainter\/paint.html\">CustomPainter.paint<\/a> method paints a clean white\nrounded rectangle:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">void paint(Canvas canvas, Size size) {\n  Rect rect = Offset.zero &amp; size;\n  canvas.save();\n  canvas.clipRRect(new RRect.fromRectXY(rect, 100.0, 100.0));\n  canvas.saveLayer(rect, new Paint());\n  canvas.drawPaint(new Paint()..color = Colors.red);\n  canvas.drawPaint(new Paint()..color = Colors.white);\n  canvas.restore();\n  canvas.restore();\n}\n<\/code><\/pre>\n<p>On the other hand, this one renders a red outline, the result of the red\npaint being anti-aliased with the background at the clip edge, then the\nwhite paint being similarly anti-aliased with the background <em>including\nthe clipped red paint<\/em>:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">void paint(Canvas canvas, Size size) {\n  \/\/ (this example renders poorly, prefer the example above)\n  Rect rect = Offset.zero &amp; size;\n  canvas.save();\n  canvas.clipRRect(new RRect.fromRectXY(rect, 100.0, 100.0));\n  canvas.drawPaint(new Paint()..color = Colors.red);\n  canvas.drawPaint(new Paint()..color = Colors.white);\n  canvas.restore();\n}\n<\/code><\/pre>\n<p>This point is moot if the clip only clips one draw operation. For example,\nthe following paint method paints a pair of clean white rounded\nrectangles, even though the clips are not done on a separate layer:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">void paint(Canvas canvas, Size size) {\n  canvas.save();\n  canvas.clipRRect(new RRect.fromRectXY(Offset.zero &amp; (size \/ 2.0), 50.0, 50.0));\n  canvas.drawPaint(new Paint()..color = Colors.white);\n  canvas.restore();\n  canvas.save();\n  canvas.clipRRect(new RRect.fromRectXY(size.center(Offset.zero) &amp; (size \/ 2.0), 50.0, 50.0));\n  canvas.drawPaint(new Paint()..color = Colors.white);\n  canvas.restore();\n}\n<\/code><\/pre>\n<p>(Incidentally, rather than using <a href=\"dart-ui\/Canvas\/clipRRect.html\">clipRRect<\/a> and <a href=\"dart-ui\/Canvas\/drawPaint.html\">drawPaint<\/a> to draw\nrounded rectangles like this, prefer the <a href=\"dart-ui\/Canvas\/drawRRect.html\">drawRRect<\/a> method. These\nexamples are using <a href=\"dart-ui\/Canvas\/drawPaint.html\">drawPaint<\/a> as a proxy for \"complicated draw operations\nthat will get clipped\", to illustrate the point.)<\/p>\n<h2 id=\"performance-considerations\">Performance considerations<\/h2>\n<p>Generally speaking, <a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a> is relatively expensive.<\/p>\n<p>There are a several different hardware architectures for GPUs (graphics\nprocessing units, the hardware that handles graphics), but most of them\ninvolve batching commands and reordering them for performance. When layers\nare used, they cause the rendering pipeline to have to switch render\ntarget (from one layer to another). Render target switches can flush the\nGPU's command buffer, which typically means that optimizations that one\ncould get with larger batching are lost. Render target switches also\ngenerate a lot of memory churn because the GPU needs to copy out the\ncurrent frame buffer contents from the part of memory that's optimized for\nwriting, and then needs to copy it back in once the previous render target\n(layer) is restored.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"dart-ui\/Canvas\/save.html\">save<\/a>, which saves the current state, but does not create a new layer\nfor subsequent commands.<\/li>\n<li>\n<a href=\"dart-ui\/BlendMode-class.html\">BlendMode<\/a>, which discusses the use of <a href=\"dart-ui\/Paint\/blendMode.html\">Paint.blendMode<\/a> with\n<a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a>.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "bounds",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "paint",
+                    "type": "dart:ui.Paint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/saveLayer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void saveLayer(Rect bounds, Paint paint) {\n  assert(paint != null);\n  if (bounds == null) {\n    _saveLayerWithoutBounds(paint._objects, paint._data);\n  } else {\n    assert(_rectIsValid(bounds));\n    _saveLayer(bounds.left, bounds.top, bounds.right, bounds.bottom,\n               paint._objects, paint._data);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "scale",
+            "type": "",
+            "desc": "<p>Add an axis-aligned scale to the current transform, scaling by the first\nargument in the horizontal direction and the second in the vertical\ndirection.<\/p>\n<p>If <code>sy<\/code> is unspecified, <code>sx<\/code> will be used for the scale in both\ndirections.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "sx",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "sy",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/scale.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void scale(double sx, [double sy]) =&gt; _scale(sx, sy ?? sx);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "skew",
+            "type": "",
+            "desc": "<p>Add an axis-aligned skew to the current transform, with the first argument\nbeing the horizontal skew in radians clockwise around the origin, and the\nsecond argument being the vertical skew in radians clockwise around the\norigin.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "sx",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "sy",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/skew.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void skew(double sx, double sy) native 'Canvas_skew';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "transform",
+            "type": "",
+            "desc": "<p>Multiply the current transform by the specified 4\u2a094 transformation matrix\nspecified as a list of values in column-major order.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "matrix4",
+                    "type": "dart:typed_data.Float64List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/transform.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void transform(Float64List matrix4) {\n  assert(matrix4 != null);\n  if (matrix4.length != 16)\n    throw new ArgumentError('\"matrix4\" must have 16 entries.');\n  _transform(matrix4);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "translate",
+            "type": "",
+            "desc": "<p>Add a translation to the current transform, shifting the coordinate space\nhorizontally by the first argument and vertically by the second argument.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Canvas",
+            "sig": "",
+            "params": [
+                {
+                    "name": "dx",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "dy",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Canvas\/translate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void translate(double dx, double dy) native 'Canvas_translate';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "dart-ui\/Canvas-class.html",
+    "desc": "<p>An interface for recording graphical operations.<\/p>\n<p><a href=\"dart-ui\/Canvas-class.html\">Canvas<\/a> objects are used in creating <a href=\"dart-ui\/Picture-class.html\">Picture<\/a> objects, which can\nthemselves be used with a <a href=\"dart-ui\/SceneBuilder-class.html\">SceneBuilder<\/a> to build a <a href=\"dart-ui\/Scene-class.html\">Scene<\/a>. In\nnormal usage, however, this is all handled by the framework.<\/p>\n<p>A canvas has a current transformation matrix which is applied to all\noperations. Initially, the transformation matrix is the identity transform.\nIt can be modified using the <a href=\"dart-ui\/Canvas\/translate.html\">translate<\/a>, <a href=\"dart-ui\/Canvas\/scale.html\">scale<\/a>, <a href=\"dart-ui\/Canvas\/rotate.html\">rotate<\/a>, <a href=\"dart-ui\/Canvas\/skew.html\">skew<\/a>,\nand <a href=\"dart-ui\/Canvas\/transform.html\">transform<\/a> methods.<\/p>\n<p>A canvas also has a current clip region which is applied to all operations.\nInitially, the clip region is infinite. It can be modified using the\n<a href=\"dart-ui\/Canvas\/clipRect.html\">clipRect<\/a>, <a href=\"dart-ui\/Canvas\/clipRRect.html\">clipRRect<\/a>, and <a href=\"dart-ui\/Canvas\/clipPath.html\">clipPath<\/a> methods.<\/p>\n<p>The current transform and clip can be saved and restored using the stack\nmanaged by the <a href=\"dart-ui\/Canvas\/save.html\">save<\/a>, <a href=\"dart-ui\/Canvas\/saveLayer.html\">saveLayer<\/a>, and <a href=\"dart-ui\/Canvas\/restore.html\">restore<\/a> methods.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Canvas"
+}

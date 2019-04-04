@@ -1,0 +1,392 @@
+{
+    "name": "rendering.RenderPhysicalShape",
+    "extends": [
+        "rendering.RenderProxyBox",
+        "rendering.RenderBox",
+        "rendering.RenderObject",
+        "foundation.AbstractNode",
+        "dart:core.Object"
+    ],
+    "memberOf": "rendering",
+    "events": [],
+    "methods": [
+        {
+            "name": "RenderPhysicalShape",
+            "type": "",
+            "desc": "<p>Creates an arbitrary shape clip.<\/p>\n<p>The <code>color<\/code> and <code>shape<\/code> parameters are required.<\/p>\n<p>The <code>clipper<\/code>, <code>elevation<\/code>, <code>color<\/code> and <code>shadowColor<\/code> must not be null.\nAdditionally, the <code>elevation<\/code> must be non-negative.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderPhysicalShape",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderBox",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "clipper",
+                    "type": "rendering.CustomClipper<dart:ui.Path>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "rendering.CustomClipper",
+                        "dart:ui.Path"
+                    ]
+                },
+                {
+                    "name": "clipBehavior",
+                    "type": "dart:ui.Clip",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "elevation",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "color",
+                    "type": "dart:ui.Color",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "shadowColor",
+                    "type": "dart:ui.Color",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "rendering\/RenderPhysicalShape\/RenderPhysicalShape.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RenderPhysicalShape({\n  RenderBox child,\n  @required CustomClipper&lt;Path&gt; clipper,\n  Clip clipBehavior = Clip.none,\n  double elevation = 0.0,\n  @required Color color,\n  Color shadowColor = const Color(0xFF000000),\n}) : assert(clipper != null),\n     assert(elevation != null &amp;&amp; elevation &gt;= 0.0),\n     assert(color != null),\n     assert(shadowColor != null),\n     super(\n       child: child,\n       elevation: elevation,\n       color: color,\n       shadowColor: shadowColor,\n       clipper: clipper,\n       clipBehavior: clipBehavior\n     );<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "attach",
+            "type": "",
+            "desc": "<p>Mark this node as attached to the given owner.<\/p>\n<p>Typically called only from the <a href=\"foundation\/AbstractNode\/parent.html\">parent<\/a>'s <a href=\"rendering\/RenderPhysicalShape\/attach.html\">attach<\/a> method, and by the\n<code>owner<\/code> to mark the root of a tree as attached.<\/p>\n<p>Subclasses with children should override this method to first call their\ninherited <a href=\"rendering\/RenderPhysicalShape\/attach.html\">attach<\/a> method, and then <a href=\"rendering\/RenderPhysicalShape\/attach.html\">attach<\/a> all their children to the\nsame <code>owner<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderPhysicalShape",
+            "sig": "",
+            "params": [
+                {
+                    "name": "owner",
+                    "type": "rendering.PipelineOwner",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderPhysicalShape\/attach.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid attach(PipelineOwner owner) {\n  super.attach(owner);\n  _clipper?._reclip?.addListener(_markNeedsClip);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugFillProperties",
+            "type": "",
+            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"rendering\/RenderPhysicalShape\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTreeMixin\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"rendering\/RenderObject\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderPhysicalShape",
+            "sig": "",
+            "params": [
+                {
+                    "name": "description",
+                    "type": "foundation.DiagnosticPropertiesBuilder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderPhysicalShape\/debugFillProperties.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder description) {\n  super.debugFillProperties(description);\n  description.add(DiagnosticsProperty&lt;CustomClipper&lt;Path&gt;&gt;('clipper', clipper));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugPaintSize",
+            "type": "",
+            "desc": "<p>In debug mode, paints a border around this render box.<\/p>\n<p>Called for every <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> when <a href=\"rendering\/debugPaintSizeEnabled.html\">debugPaintSizeEnabled<\/a> is true.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderPhysicalShape",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "rendering.PaintingContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderPhysicalShape\/debugPaintSize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugPaintSize(PaintingContext context, Offset offset) {\n  assert(() {\n    _debugPaint ??= Paint()\n      ..shader = ui.Gradient.linear(\n        const Offset(0.0, 0.0),\n        const Offset(10.0, 10.0),\n        &lt;Color&gt;[const Color(0x00000000), const Color(0xFFFF00FF), const Color(0xFFFF00FF), const Color(0x00000000)],\n        &lt;double&gt;[0.25, 0.25, 0.75, 0.75],\n        TileMode.repeated,\n      )\n      ..strokeWidth = 2.0\n      ..style = PaintingStyle.stroke;\n    _debugText ??= TextPainter(\n      text: const TextSpan(\n        text: '\u2702',\n        style: TextStyle(\n          color: Color(0xFFFF00FF),\n            fontSize: 14.0,\n          ),\n        ),\n        textDirection: TextDirection.rtl, \/\/ doesn't matter, it's one character\n      )\n      ..layout();\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "describeApproximatePaintClip",
+            "type": "dart:ui.Rect",
+            "desc": "<p>Returns a rect in this object's coordinate system that describes\nthe approximate bounding box of the clip rect that would be\napplied to the given child during the paint phase, if any.<\/p>\n<p>Returns null if the child would not be clipped.<\/p>\n<p>This is used in the semantics phase to avoid including children\nthat are not physically visible.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderPhysicalShape",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderPhysicalShape\/describeApproximatePaintClip.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nRect describeApproximatePaintClip(RenderObject child) {\n  return _clipper?.getApproximateClipRect(size) ?? Offset.zero &amp; size;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "describeSemanticsConfiguration",
+            "type": "",
+            "desc": "<p>Report the semantics of this node, for example for accessibility purposes.<\/p>\n<p>This method should be overridden by subclasses that have interesting\nsemantic information.<\/p>\n<p>The given <a href=\"semantics\/SemanticsConfiguration-class.html\">SemanticsConfiguration<\/a> object is mutable and should be\nannotated in a manner that describes the current state. No reference\nshould be kept to that object; mutating it outside of the context of the\n<a href=\"rendering\/RenderPhysicalShape\/describeSemanticsConfiguration.html\">describeSemanticsConfiguration<\/a> call (for example as a result of\nasynchronous computation) will at best have no useful effect and at worse\nwill cause crashes as the data will be in an inconsistent state.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following snippet will describe the node as a button that responds to\ntap actions.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">abstract class SemanticButtonRenderObject extends RenderObject {\n  @override\n  void describeSemanticsConfiguration(SemanticsConfiguration config) {\n    super.describeSemanticsConfiguration(config);\n    config\n      ..onTap = _handleTap\n      ..label = 'I am a button'\n      ..isButton = true;\n  }\n\n  void _handleTap() {\n    \/\/ Do something.\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderPhysicalShape",
+            "sig": "",
+            "params": [
+                {
+                    "name": "config",
+                    "type": "semantics.SemanticsConfiguration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderPhysicalShape\/describeSemanticsConfiguration.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid describeSemanticsConfiguration(SemanticsConfiguration config) {\n  super.describeSemanticsConfiguration(config);\n  config.elevation = elevation;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "detach",
+            "type": "",
+            "desc": "<p>Mark this node as detached.<\/p>\n<p>Typically called only from the <a href=\"foundation\/AbstractNode\/parent.html\">parent<\/a>'s <a href=\"rendering\/RenderPhysicalShape\/detach.html\">detach<\/a>, and by the <a href=\"rendering\/RenderObject\/owner.html\">owner<\/a> to\nmark the root of a tree as detached.<\/p>\n<p>Subclasses with children should override this method to first call their\ninherited <a href=\"rendering\/RenderPhysicalShape\/detach.html\">detach<\/a> method, and then <a href=\"rendering\/RenderPhysicalShape\/detach.html\">detach<\/a> all their children.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderPhysicalShape",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderPhysicalShape\/detach.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid detach() {\n  _clipper?._reclip?.removeListener(_markNeedsClip);\n  super.detach();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "hitTest",
+            "type": "dart:core.bool",
+            "desc": "<p>Determines the set of render objects located at the given position.<\/p>\n<p>Returns true, and adds any render objects that contain the point to the\ngiven hit test result, if this render object or one of its descendants\nabsorbs the hit (preventing objects below this one from being hit).\nReturns false if the hit can continue to other objects below this one.<\/p>\n<p>The caller is responsible for transforming <code>position<\/code> from global\ncoordinates to its location relative to the origin of this <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>.\nThis <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> is responsible for checking whether the given position is\nwithin its bounds.<\/p>\n<p>Hit testing requires layout to be up-to-date but does not require painting\nto be up-to-date. That means a render object can rely upon <a href=\"rendering\/RenderPhysicalShape\/performLayout.html\">performLayout<\/a>\nhaving been called in <a href=\"rendering\/RenderPhysicalShape\/hitTest.html\">hitTest<\/a> but cannot rely upon <a href=\"rendering\/RenderPhysicalShape\/paint.html\">paint<\/a> having been\ncalled. For example, a render object might be a child of a <a href=\"rendering\/RenderOpacity-class.html\">RenderOpacity<\/a>\nobject, which calls <a href=\"rendering\/RenderPhysicalShape\/hitTest.html\">hitTest<\/a> on its children when its opacity is zero\neven through it does not <a href=\"rendering\/RenderPhysicalShape\/paint.html\">paint<\/a> its children.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderPhysicalShape",
+            "sig": "",
+            "params": [
+                {
+                    "name": "result",
+                    "type": "gestures.HitTestResult",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "position",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderPhysicalShape\/hitTest.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool hitTest(HitTestResult result, { Offset position }) {\n  if (_clipper != null) {\n    _updateClip();\n    assert(_clip != null);\n    if (!_clip.contains(position))\n      return false;\n  }\n  return super.hitTest(result, position: position);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "paint",
+            "type": "",
+            "desc": "<p>Paint this render object into the given context at the given offset.<\/p>\n<p>Subclasses should override this method to provide a visual appearance\nfor themselves. The render object's local coordinate system is\naxis-aligned with the coordinate system of the context's canvas and the\nrender object's local origin (i.e, x=0 and y=0) is placed at the given\noffset in the context's canvas.<\/p>\n<p>Do not call this function directly. If you wish to paint yourself, call\n<a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a> instead to schedule a call to this function. If you wish\nto paint one of your children, call <a href=\"rendering\/PaintingContext\/paintChild.html\">PaintingContext.paintChild<\/a> on the\ngiven <code>context<\/code>.<\/p>\n<p>When painting one of your children (via a paint child function on the\ngiven context), the current canvas held by the context might change\nbecause draw operations before and after painting children might need to\nbe recorded on separate compositing layers.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderPhysicalShape",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "rendering.PaintingContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderPhysicalShape\/paint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid paint(PaintingContext context, Offset offset) {\n  if (child != null) {\n    _updateClip();\n    final Rect offsetBounds = offset &amp; size;\n    final Path offsetPath = _clip.shift(offset);\n    bool paintShadows = true;\n    assert(() {\n      if (debugDisableShadows) {\n        if (elevation &gt; 0.0) {\n          context.canvas.drawPath(\n            offsetPath,\n            Paint()\n              ..color = shadowColor\n              ..style = PaintingStyle.stroke\n              ..strokeWidth = elevation * 2.0,\n          );\n        }\n        paintShadows = false;\n      }\n      return true;\n    }());\n    final PhysicalModelLayer physicalModel = PhysicalModelLayer(\n      clipPath: offsetPath,\n      clipBehavior: clipBehavior,\n      elevation: paintShadows ? elevation : 0.0,\n      color: color,\n      shadowColor: shadowColor,\n    );\n    context.pushLayer(physicalModel, super.paint, offset, childPaintBounds: offsetBounds);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "performLayout",
+            "type": "",
+            "desc": "<p>Do the work of computing the layout for this render object.<\/p>\n<p>Do not call this function directly: call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> instead. This function\nis called by <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> when there is actually work to be done by this\nrender object during layout. The layout constraints provided by your\nparent are available via the <a href=\"rendering\/RenderBox\/constraints.html\">constraints<\/a> getter.<\/p>\n<p>If <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is true, then this function should not actually change\nthe dimensions of this render object. Instead, that work should be done by\n<a href=\"rendering\/RenderBox\/performResize.html\">performResize<\/a>. If <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is false, then this function should\nboth change the dimensions of this render object and instruct its children\nto layout.<\/p>\n<p>In implementing this function, you must call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> on each of your\nchildren, passing true for parentUsesSize if your layout information is\ndependent on your child's layout information. Passing true for\nparentUsesSize ensures that this render object will undergo layout if the\nchild undergoes layout. Otherwise, the child can change its layout\ninformation without informing this render object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderPhysicalShape",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderPhysicalShape\/performLayout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid performLayout() {\n  final Size oldSize = hasSize ? size : null;\n  super.performLayout();\n  if (oldSize != size)\n    _clip = null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "alwaysNeedsCompositing",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether this render object always needs compositing.<\/p>\n<p>Override this in subclasses to indicate that your paint function always\ncreates at least one composited layer. For example, videos should return\ntrue if they use hardware decoders.<\/p>\n<p>You must call <a href=\"rendering\/RenderObject\/markNeedsCompositingBitsUpdate.html\">markNeedsCompositingBitsUpdate<\/a> if the value of this getter\nchanges. (This is implied when <a href=\"rendering\/RenderObject\/adoptChild.html\">adoptChild<\/a> or <a href=\"rendering\/RenderObject\/dropChild.html\">dropChild<\/a> are called.)<\/p>\n        ",
+            "memberOf": "rendering.RenderPhysicalShape",
+            "isConstant": false,
+            "href": "rendering\/RenderPhysicalShape\/alwaysNeedsCompositing.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get alwaysNeedsCompositing =&gt; true;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "clipBehavior",
+            "type": "dart:ui.Clip",
+            "types": [],
+            "desc": "",
+            "memberOf": "rendering.RenderPhysicalShape",
+            "isConstant": false,
+            "href": "rendering\/RenderPhysicalShape\/clipBehavior.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Clip clipBehavior\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "clipper",
+            "type": "rendering.CustomClipper<dart:ui.Path>",
+            "types": [
+                "rendering.CustomClipper",
+                "dart:ui.Path"
+            ],
+            "desc": "<p>If non-null, determines which clip to use on the child.<\/p>\n        ",
+            "memberOf": "rendering.RenderPhysicalShape",
+            "isConstant": false,
+            "href": "rendering\/RenderPhysicalShape\/clipper.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">CustomClipper&lt;T&gt; get clipper =&gt; _clipper;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "color",
+            "type": "dart:ui.Color",
+            "types": [],
+            "desc": "<p>The background color.<\/p>\n        ",
+            "memberOf": "rendering.RenderPhysicalShape",
+            "isConstant": false,
+            "href": "rendering\/RenderPhysicalShape\/color.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Color get color =&gt; _color;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "elevation",
+            "type": "dart:core.double",
+            "types": [],
+            "desc": "<p>The z-coordinate relative to the parent at which to place this material.<\/p>\n<p>The value is non-negative.<\/p>\n<p>If <a href=\"painting\/debugDisableShadows.html\">debugDisableShadows<\/a> is set, this value is ignored and no shadow is\ndrawn (an outline is rendered instead).<\/p>\n        ",
+            "memberOf": "rendering.RenderPhysicalShape",
+            "isConstant": false,
+            "href": "rendering\/RenderPhysicalShape\/elevation.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get elevation =&gt; _elevation;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "shadowColor",
+            "type": "dart:ui.Color",
+            "types": [],
+            "desc": "<p>The shadow color.<\/p>\n        ",
+            "memberOf": "rendering.RenderPhysicalShape",
+            "isConstant": false,
+            "href": "rendering\/RenderPhysicalShape\/shadowColor.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Color get shadowColor =&gt; _shadowColor;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "rendering\/RenderPhysicalShape-class.html",
+    "desc": "<p>Creates a physical shape layer that clips its child to a <a href=\"dart-ui\/Path-class.html\">Path<\/a>.<\/p>\n<p>A physical shape layer casts a shadow based on its <a href=\"rendering\/RenderPhysicalShape\/elevation.html\">elevation<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/RenderPhysicalModel-class.html\">RenderPhysicalModel<\/a>, which is optimized for rounded rectangles and\ncircles.<\/li><\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "RenderPhysicalShape"
+}

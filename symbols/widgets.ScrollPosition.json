@@ -1,0 +1,889 @@
+{
+    "name": "widgets.ScrollPosition",
+    "extends": [
+        "rendering.ViewportOffset",
+        "foundation.ChangeNotifier",
+        "dart:core.Object"
+    ],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "ScrollPosition",
+            "type": "",
+            "desc": "<p>Creates an object that determines which portion of the content is visible\nin a scroll view.<\/p>\n<p>The <code>physics<\/code>, <code>context<\/code>, and <code>keepScrollOffset<\/code> parameters must not be null.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "physics",
+                    "type": "widgets.ScrollPhysics",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "context",
+                    "type": "widgets.ScrollContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "keepScrollOffset",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "oldPosition",
+                    "type": "widgets.ScrollPosition",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "debugLabel",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "widgets\/ScrollPosition\/ScrollPosition.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ScrollPosition({\n  @required this.physics,\n  @required this.context,\n  this.keepScrollOffset = true,\n  ScrollPosition oldPosition,\n  this.debugLabel,\n}) : assert(physics != null),\n     assert(context != null),\n     assert(context.vsync != null),\n     assert(keepScrollOffset != null) {\n  if (oldPosition != null)\n    absorb(oldPosition);\n  if (keepScrollOffset)\n    restoreScrollOffset();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "absorb",
+            "type": "",
+            "desc": "<p>Take any current applicable state from the given <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a>.<\/p>\n<p>This method is called by the constructor if it is given an <code>oldPosition<\/code>.\nThe <code>other<\/code> argument might not have the same <a href=\"dart-core\/Object\/runtimeType.html\">runtimeType<\/a> as this object.<\/p>\n<p>This method can be destructive to the other <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a>. The other\nobject must be disposed immediately after this call (in the same call\nstack, before microtask resolution, by whomever called this object's\nconstructor).<\/p>\n<p>If the old <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> object is a different <a href=\"dart-core\/Object\/runtimeType.html\">runtimeType<\/a> than this\none, the <a href=\"widgets\/ScrollActivity\/resetActivity.html\">ScrollActivity.resetActivity<\/a> method is invoked on the newly\nadopted <a href=\"widgets\/ScrollActivity-class.html\">ScrollActivity<\/a>.<\/p>\n<h2 id=\"overriding\">Overriding<\/h2>\n<p>Overrides of this method must call <code>super.absorb<\/code> after setting any\nmetrics-related or activity-related state, since this method may restart\nthe activity and scroll activities tend to use those metrics when being\nrestarted.<\/p>\n<p>Overrides of this method might need to start an <a href=\"widgets\/IdleScrollActivity-class.html\">IdleScrollActivity<\/a> if\nthey are unable to absorb the activity from the other <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a>.<\/p>\n<p>Overrides of this method might also need to update the delegates of\nabsorbed scroll activities if they use themselves as a\n<a href=\"widgets\/ScrollActivityDelegate-class.html\">ScrollActivityDelegate<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "type": "widgets.ScrollPosition",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/absorb.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\nvoid absorb(ScrollPosition other) {\n  assert(other != null);\n  assert(other.context == context);\n  assert(_pixels == null);\n  _minScrollExtent = other.minScrollExtent;\n  _maxScrollExtent = other.maxScrollExtent;\n  _pixels = other._pixels;\n  _viewportDimension = other.viewportDimension;\n\n  assert(activity == null);\n  assert(other.activity != null);\n  _activity = other.activity;\n  other._activity = null;\n  if (other.runtimeType != runtimeType)\n    activity.resetActivity();\n  context.setIgnorePointer(activity.shouldIgnorePointer);\n  isScrollingNotifier.value = activity.isScrolling;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "animateTo",
+            "type": "dart:async.Future",
+            "desc": "<p>Animates the position from its current value to the given value.<\/p>\n<p>Any active animation is canceled. If the user is currently scrolling, that\naction is canceled.<\/p>\n<p>The returned <a href=\"dart-async\/Future-class.html\">Future<\/a> will complete when the animation ends, whether it\ncompleted successfully or whether it was interrupted prematurely.<\/p>\n<p>An animation will be interrupted whenever the user attempts to scroll\nmanually, or whenever another activity is started, or whenever the\nanimation reaches the edge of the viewport and attempts to overscroll. (If\nthe <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> does not overscroll but instead allows scrolling\nbeyond the extents, then going beyond the extents will not interrupt the\nanimation.)<\/p>\n<p>The animation is indifferent to changes to the viewport or content\ndimensions.<\/p>\n<p>Once the animation has completed, the scroll position will attempt to\nbegin a ballistic activity in case its value is not stable (for example,\nif it is scrolled beyond the extents and in that situation the scroll\nposition would normally bounce back).<\/p>\n<p>The duration must not be zero. To jump to a particular value without an\nanimation, use <a href=\"widgets\/ScrollPosition\/jumpTo.html\">jumpTo<\/a>.<\/p>\n<p>The animation is typically handled by an <a href=\"widgets\/DrivenScrollActivity-class.html\">DrivenScrollActivity<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "to",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "duration",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "curve",
+                    "type": "animation.Curve",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/animateTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;void&gt; animateTo(\n  double to, {\n  @required Duration duration,\n  @required Curve curve,\n});<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "applyBoundaryConditions",
+            "type": "dart:core.double",
+            "desc": "<p>Returns the overscroll by applying the boundary conditions.<\/p>\n<p>If the given value is in bounds, returns 0.0. Otherwise, returns the\namount of value that cannot be applied to <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> as a result of the\nboundary conditions. If the <a href=\"widgets\/ScrollPosition\/physics.html\">physics<\/a> allow out-of-bounds scrolling, this\nmethod always returns 0.0.<\/p>\n<p>The default implementation defers to the <a href=\"widgets\/ScrollPosition\/physics.html\">physics<\/a> object's\n<a href=\"widgets\/ScrollPosition\/applyBoundaryConditions.html\">ScrollPhysics.applyBoundaryConditions<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/applyBoundaryConditions.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\ndouble applyBoundaryConditions(double value) {\n  final double result = physics.applyBoundaryConditions(this, value);\n  assert(() {\n    final double delta = value - pixels;\n    if (result.abs() &gt; delta.abs()) {\n      throw FlutterError(\n        '${physics.runtimeType}.applyBoundaryConditions returned invalid overscroll value.\\n'\n        'The method was called to consider a change from $pixels to $value, which is a '\n        'delta of ${delta.toStringAsFixed(1)} units. However, it returned an overscroll of '\n        '${result.toStringAsFixed(1)} units, which has a greater magnitude than the delta. '\n        'The applyBoundaryConditions method is only supposed to reduce the possible range '\n        'of movement, not increase it.\\n'\n        'The scroll extents are $minScrollExtent .. $maxScrollExtent, and the '\n        'viewport dimension is $viewportDimension.'\n      );\n    }\n    return true;\n  }());\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "applyContentDimensions",
+            "type": "dart:core.bool",
+            "desc": "<p>Called when the viewport's content extents are established.<\/p>\n<p>The arguments are the minimum and maximum scroll extents respectively. The\nminimum will be equal to or less than zero, the maximum will be equal to\nor greater than zero.<\/p>\n<p>The maximum scroll extent has the viewport dimension subtracted from it.\nFor instance, if there is 100.0 pixels of scrollable content, and the\nviewport is 80.0 pixels high, then the minimum scroll extent will\ntypically be 0.0 and the maximum scroll extent will typically be 20.0,\nbecause there's only 20.0 pixels of actual scroll slack.<\/p>\n<p>If applying the content dimensions changes the scroll offset, return\nfalse. Otherwise, return true. If you return false, the <a href=\"rendering\/RenderViewport-class.html\">RenderViewport<\/a>\nwill be laid out again with the new scroll offset. This is expensive. (The\nreturn value is answering the question \"did you accept these content\ndimensions unconditionally?\"; if the new dimensions change the\n<a href=\"rendering\/ViewportOffset-class.html\">ViewportOffset<\/a>'s actual <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> value, then the viewport will need to\nbe laid out again.)<\/p>\n<p>This is called at least once each time the <a href=\"rendering\/RenderViewport-class.html\">RenderViewport<\/a> is laid out,\neven if the values have not changed. It may be called many times if the\nscroll offset is corrected (if this returns false). This is always called\nafter <a href=\"widgets\/ScrollPosition\/applyViewportDimension.html\">applyViewportDimension<\/a>, if that method is called.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "minScrollExtent",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "maxScrollExtent",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/applyContentDimensions.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool applyContentDimensions(double minScrollExtent, double maxScrollExtent) {\n  if (!nearEqual(_minScrollExtent, minScrollExtent, Tolerance.defaultTolerance.distance) ||\n      !nearEqual(_maxScrollExtent, maxScrollExtent, Tolerance.defaultTolerance.distance) ||\n      _didChangeViewportDimensionOrReceiveCorrection) {\n    _minScrollExtent = minScrollExtent;\n    _maxScrollExtent = maxScrollExtent;\n    _haveDimensions = true;\n    applyNewDimensions();\n    _didChangeViewportDimensionOrReceiveCorrection = false;\n  }\n  return true;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "applyNewDimensions",
+            "type": "",
+            "desc": "<p>Notifies the activity that the dimensions of the underlying viewport or\ncontents have changed.<\/p>\n<p>Called after <a href=\"widgets\/ScrollPosition\/applyViewportDimension.html\">applyViewportDimension<\/a> or <a href=\"widgets\/ScrollPosition\/applyContentDimensions.html\">applyContentDimensions<\/a> have\nchanged the <a href=\"widgets\/ScrollPosition\/minScrollExtent.html\">minScrollExtent<\/a>, the <a href=\"widgets\/ScrollPosition\/maxScrollExtent.html\">maxScrollExtent<\/a>, or the\n<a href=\"widgets\/ScrollPosition\/viewportDimension.html\">viewportDimension<\/a>. When this method is called, it should be called\n<em>after<\/em> any corrections are applied to <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> using <a href=\"widgets\/ScrollPosition\/correctPixels.html\">correctPixels<\/a>, not\nbefore.<\/p>\n<p>The default implementation informs the <a href=\"widgets\/ScrollPosition\/activity.html\">activity<\/a> of the new dimensions by\ncalling its <a href=\"widgets\/ScrollPosition\/applyNewDimensions.html\">ScrollActivity.applyNewDimensions<\/a> method.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ScrollPosition\/applyViewportDimension.html\">applyViewportDimension<\/a>, which is called when new\nviewport dimensions are established.<\/li>\n<li>\n<a href=\"widgets\/ScrollPosition\/applyContentDimensions.html\">applyContentDimensions<\/a>, which is called after new\nviewport dimensions are established, and also if new content dimensions\nare established, and which calls <a href=\"widgets\/ScrollPosition\/applyNewDimensions.html\">ScrollPosition.applyNewDimensions<\/a>.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/applyNewDimensions.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\nvoid applyNewDimensions() {\n  assert(pixels != null);\n  activity.applyNewDimensions();\n  _updateSemanticActions(); \/\/ will potentially request a semantics update.\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "applyViewportDimension",
+            "type": "dart:core.bool",
+            "desc": "<p>Called when the viewport's extents are established.<\/p>\n<p>The argument is the dimension of the <a href=\"rendering\/RenderViewport-class.html\">RenderViewport<\/a> in the main axis\n(e.g. the height, for a vertical viewport).<\/p>\n<p>This may be called redundantly, with the same value, each frame. This is\ncalled during layout for the <a href=\"rendering\/RenderViewport-class.html\">RenderViewport<\/a>. If the viewport is\nconfigured to shrink-wrap its contents, it may be called several times,\nsince the layout is repeated each time the scroll offset is corrected.<\/p>\n<p>If this is called, it is called before <a href=\"widgets\/ScrollPosition\/applyContentDimensions.html\">applyContentDimensions<\/a>. If this\nis called, <a href=\"widgets\/ScrollPosition\/applyContentDimensions.html\">applyContentDimensions<\/a> will be called soon afterwards in the\nsame layout phase. If the viewport is not configured to shrink-wrap its\ncontents, then this will only be called when the viewport recomputes its\nsize (i.e. when its parent lays out), and not during normal scrolling.<\/p>\n<p>If applying the viewport dimensions changes the scroll offset, return\nfalse. Otherwise, return true. If you return false, the <a href=\"rendering\/RenderViewport-class.html\">RenderViewport<\/a>\nwill be laid out again with the new scroll offset. This is expensive. (The\nreturn value is answering the question \"did you accept these viewport\ndimensions unconditionally?\"; if the new dimensions change the\n<a href=\"rendering\/ViewportOffset-class.html\">ViewportOffset<\/a>'s actual <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> value, then the viewport will need to\nbe laid out again.)<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "viewportDimension",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/applyViewportDimension.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool applyViewportDimension(double viewportDimension) {\n  if (_viewportDimension != viewportDimension) {\n    _viewportDimension = viewportDimension;\n    _didChangeViewportDimensionOrReceiveCorrection = true;\n    \/\/ If this is called, you can rely on applyContentDimensions being called\n    \/\/ soon afterwards in the same layout phase. So we put all the logic that\n    \/\/ relies on both values being computed into applyContentDimensions.\n  }\n  return true;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "beginActivity",
+            "type": "",
+            "desc": "<p>Change the current <a href=\"widgets\/ScrollPosition\/activity.html\">activity<\/a>, disposing of the old one and\nsending scroll notifications as necessary.<\/p>\n<p>If the argument is null, this method has no effect. This is convenient for\ncases where the new activity is obtained from another method, and that\nmethod might return null, since it means the caller does not have to\nexplicitly null-check the argument.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "newActivity",
+                    "type": "widgets.ScrollActivity",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/beginActivity.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void beginActivity(ScrollActivity newActivity) {\n  if (newActivity == null)\n    return;\n  bool wasScrolling, oldIgnorePointer;\n  if (_activity != null) {\n    oldIgnorePointer = _activity.shouldIgnorePointer;\n    wasScrolling = _activity.isScrolling;\n    if (wasScrolling &amp;&amp; !newActivity.isScrolling)\n      didEndScroll(); \/\/ notifies and then saves the scroll offset\n    _activity.dispose();\n  } else {\n    oldIgnorePointer = false;\n    wasScrolling = false;\n  }\n  _activity = newActivity;\n  if (oldIgnorePointer != activity.shouldIgnorePointer)\n    context.setIgnorePointer(activity.shouldIgnorePointer);\n  isScrollingNotifier.value = activity.isScrolling;\n  if (!wasScrolling &amp;&amp; _activity.isScrolling)\n    didStartScroll();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "correctBy",
+            "type": "",
+            "desc": "<p>Apply a layout-time correction to the scroll offset.<\/p>\n<p>This method should change the <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> value by <code>correction<\/code>, but without\ncalling <a href=\"widgets\/ScrollPosition\/notifyListeners.html\">notifyListeners<\/a>. It is called during layout by the\n<a href=\"rendering\/RenderViewport-class.html\">RenderViewport<\/a>, before <a href=\"widgets\/ScrollPosition\/applyContentDimensions.html\">applyContentDimensions<\/a>. After this method is\ncalled, the layout will be recomputed and that may result in this method\nbeing called again, though this should be very rare.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ScrollPosition\/jumpTo.html\">jumpTo<\/a>, for also changing the scroll position when not in layout.\n<a href=\"widgets\/ScrollPosition\/jumpTo.html\">jumpTo<\/a> applies the change immediately and notifies its listeners.<\/li>\n<li>\n<a href=\"widgets\/ScrollPosition\/correctPixels.html\">correctPixels<\/a>, which is used by the <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> itself to\nset the offset initially during construction or after\n<a href=\"widgets\/ScrollPosition\/applyViewportDimension.html\">applyViewportDimension<\/a> or <a href=\"widgets\/ScrollPosition\/applyContentDimensions.html\">applyContentDimensions<\/a> is called.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "correction",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/correctBy.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid correctBy(double correction) {\n  assert(\n    _pixels != null,\n    'An initial pixels value must exist by caling correctPixels on the ScrollPosition',\n  );\n  _pixels += correction;\n  _didChangeViewportDimensionOrReceiveCorrection = true;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "correctPixels",
+            "type": "",
+            "desc": "<p>Change the value of <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> to the new value, without notifying any\ncustomers.<\/p>\n<p>This is used to adjust the position while doing layout. In particular,\nthis is typically called as a response to <a href=\"widgets\/ScrollPosition\/applyViewportDimension.html\">applyViewportDimension<\/a> or\n<a href=\"widgets\/ScrollPosition\/applyContentDimensions.html\">applyContentDimensions<\/a> (in both cases, if this method is called, those\nmethods should then return false to indicate that the position has been\nadjusted).<\/p>\n<p>Calling this is rarely correct in other contexts. It will not immediately\ncause the rendering to change, since it does not notify the widgets or\nrender objects that might be listening to this object: they will only\nchange when they next read the value, which could be arbitrarily later. It\nis generally only appropriate in the very specific case of the value being\ncorrected during layout (since then the value is immediately read), in the\nspecific case of a <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> with a single viewport customer.<\/p>\n<p>To cause the position to jump or animate to a new value, consider <a href=\"widgets\/ScrollPosition\/jumpTo.html\">jumpTo<\/a>\nor <a href=\"widgets\/ScrollPosition\/animateTo.html\">animateTo<\/a>, which will honor the normal conventions for changing the\nscroll offset.<\/p>\n<p>To force the <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> to a particular value without honoring the normal\nconventions for changing the scroll offset, consider <a href=\"widgets\/ScrollPosition\/forcePixels.html\">forcePixels<\/a>. (But\nsee the discussion there for why that might still be a bad idea.)<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ScrollPosition\/correctBy.html\">correctBy<\/a>, which is a method of <a href=\"rendering\/ViewportOffset-class.html\">ViewportOffset<\/a> used\nby viewport render objects to correct the offset during layout\nwithout notifying its listeners.<\/li>\n<li>\n<a href=\"widgets\/ScrollPosition\/jumpTo.html\">jumpTo<\/a>, for making changes to position while not in the\nmiddle of layout and applying the new position immediately.<\/li>\n<li>\n<a href=\"widgets\/ScrollPosition\/animateTo.html\">animateTo<\/a>, which is like <a href=\"widgets\/ScrollPosition\/jumpTo.html\">jumpTo<\/a> but animating to the\ndestination offset.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/correctPixels.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void correctPixels(double value) {\n  _pixels = value;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugFillDescription",
+            "type": "",
+            "desc": "<p>Add additional information to the given description for use by <a href=\"rendering\/ViewportOffset\/toString.html\">toString<\/a>.<\/p>\n<p>This method makes it easier for subclasses to coordinate to provide a\nhigh-quality <a href=\"rendering\/ViewportOffset\/toString.html\">toString<\/a> implementation. The <a href=\"rendering\/ViewportOffset\/toString.html\">toString<\/a> implementation on\nthe <a href=\"widgets\/State-class.html\">State<\/a> base class calls <a href=\"widgets\/ScrollPosition\/debugFillDescription.html\">debugFillDescription<\/a> to collect useful\ninformation from subclasses to incorporate into its return value.<\/p>\n<p>If you override this, make sure to start your method with a call to\n<code>super.debugFillDescription(description)<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "description",
+                    "type": "dart:core.List<dart:core.String>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "dart:core.String"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/debugFillDescription.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillDescription(List&lt;String&gt; description) {\n  if (debugLabel != null)\n    description.add(debugLabel);\n  super.debugFillDescription(description);\n  description.add('range: ${minScrollExtent?.toStringAsFixed(1)}..${maxScrollExtent?.toStringAsFixed(1)}');\n  description.add('viewport: ${viewportDimension?.toStringAsFixed(1)}');\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "didEndScroll",
+            "type": "",
+            "desc": "<p>Called by <a href=\"widgets\/ScrollPosition\/beginActivity.html\">beginActivity<\/a> to report when an activity has ended.<\/p>\n<p>This also saves the scroll offset using <a href=\"widgets\/ScrollPosition\/saveScrollOffset.html\">saveScrollOffset<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/didEndScroll.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void didEndScroll() {\n  activity.dispatchScrollEndNotification(copyWith(), context.notificationContext);\n  if (keepScrollOffset)\n    saveScrollOffset();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "didOverscrollBy",
+            "type": "",
+            "desc": "<p>Called by <a href=\"widgets\/ScrollPosition\/setPixels.html\">setPixels<\/a> to report overscroll when an attempt is made to\nchange the <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> position. Overscroll is the amount of change that was\nnot applied to the <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> value.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/didOverscrollBy.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void didOverscrollBy(double value) {\n  assert(activity.isScrolling);\n  activity.dispatchOverscrollNotification(copyWith(), context.notificationContext, value);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "didStartScroll",
+            "type": "",
+            "desc": "<p>Called by <a href=\"widgets\/ScrollPosition\/beginActivity.html\">beginActivity<\/a> to report when an activity has started.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/didStartScroll.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void didStartScroll() {\n  activity.dispatchScrollStartNotification(copyWith(), context.notificationContext);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "didUpdateScrollDirection",
+            "type": "",
+            "desc": "<p>Dispatches a notification that the <a href=\"rendering\/ViewportOffset\/userScrollDirection.html\">userScrollDirection<\/a> has changed.<\/p>\n<p>Subclasses should call this function when they change <a href=\"rendering\/ViewportOffset\/userScrollDirection.html\">userScrollDirection<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "direction",
+                    "type": "rendering.ScrollDirection",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/didUpdateScrollDirection.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void didUpdateScrollDirection(ScrollDirection direction) {\n  UserScrollNotification(metrics: copyWith(), context: context.notificationContext, direction: direction).dispatch(context.notificationContext);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "didUpdateScrollPositionBy",
+            "type": "",
+            "desc": "<p>Called by <a href=\"widgets\/ScrollPosition\/setPixels.html\">setPixels<\/a> to report a change to the <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> position.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "delta",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/didUpdateScrollPositionBy.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void didUpdateScrollPositionBy(double delta) {\n  activity.dispatchScrollUpdateNotification(copyWith(), context.notificationContext, delta);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "dispose",
+            "type": "",
+            "desc": "<p>Discards any resources used by the object. After this is called, the\nobject is not in a usable state and should be discarded (calls to\n<a href=\"foundation\/ChangeNotifier\/addListener.html\">addListener<\/a> and <a href=\"foundation\/ChangeNotifier\/removeListener.html\">removeListener<\/a> will throw after the object is\ndisposed).<\/p>\n<p>This method should only be called by the object's owner.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/dispose.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  assert(pixels != null);\n  activity?.dispose(); \/\/ it will be null if it got absorbed by another ScrollPosition\n  _activity = null;\n  super.dispose();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drag",
+            "type": "gestures.Drag",
+            "desc": "<p>Start a drag activity corresponding to the given <a href=\"gestures\/DragStartDetails-class.html\">DragStartDetails<\/a>.<\/p>\n<p>The <code>onDragCanceled<\/code> argument will be invoked if the drag is ended\nprematurely (e.g. from another activity taking over). See\n<a href=\"widgets\/ScrollDragController\/onDragCanceled.html\">ScrollDragController.onDragCanceled<\/a> for details.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "details",
+                    "type": "gestures.DragStartDetails",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "dragCancelCallback",
+                    "type": "dart:ui.VoidCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/drag.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Drag drag(DragStartDetails details, VoidCallback dragCancelCallback);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "ensureVisible",
+            "type": "dart:async.Future",
+            "desc": "<p>Animates the position such that the given object is as visible as possible\nby just scrolling this position.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "object",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "alignment",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "duration",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "curve",
+                    "type": "animation.Curve",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/ensureVisible.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; ensureVisible(\n  RenderObject object, {\n  double alignment = 0.0,\n  Duration duration = Duration.zero,\n  Curve curve = Curves.ease,\n}) {\n  assert(object.attached);\n  final RenderAbstractViewport viewport = RenderAbstractViewport.of(object);\n  assert(viewport != null);\n\n  final double target = viewport.getOffsetToReveal(object, alignment).offset.clamp(minScrollExtent, maxScrollExtent);\n\n  if (target == pixels)\n    return Future&lt;void&gt;.value();\n\n  if (duration == Duration.zero) {\n    jumpTo(target);\n    return Future&lt;void&gt;.value();\n  }\n\n  return animateTo(target, duration: duration, curve: curve);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "forcePixels",
+            "type": "",
+            "desc": "<p>Change the value of <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> to the new value, and notify any customers,\nbut without honoring normal conventions for changing the scroll offset.<\/p>\n<p>This is used to implement <a href=\"widgets\/ScrollPosition\/jumpTo.html\">jumpTo<\/a>. It can also be used adjust the\nposition when the dimensions of the viewport change. It should only be\nused when manually implementing the logic for honoring the relevant\nconventions of the class. For example, <a href=\"widgets\/ScrollPositionWithSingleContext-class.html\">ScrollPositionWithSingleContext<\/a>\nintroduces <a href=\"widgets\/ScrollActivity-class.html\">ScrollActivity<\/a> objects and uses <a href=\"widgets\/ScrollPosition\/forcePixels.html\">forcePixels<\/a> in conjunction\nwith adjusting the activity, e.g. by calling\n<a href=\"widgets\/ScrollPositionWithSingleContext\/goIdle.html\">ScrollPositionWithSingleContext.goIdle<\/a>, so that the activity does\nnot immediately set the value back. (Consider, for instance, a case where\none is using a <a href=\"widgets\/DrivenScrollActivity-class.html\">DrivenScrollActivity<\/a>. That object will ignore any calls\nto <a href=\"widgets\/ScrollPosition\/forcePixels.html\">forcePixels<\/a>, which would result in the rendering stuttering: changing\nin response to <a href=\"widgets\/ScrollPosition\/forcePixels.html\">forcePixels<\/a>, and then changing back to the next value\nderived from the animation.)<\/p>\n<p>To cause the position to jump or animate to a new value, consider <a href=\"widgets\/ScrollPosition\/jumpTo.html\">jumpTo<\/a>\nor <a href=\"widgets\/ScrollPosition\/animateTo.html\">animateTo<\/a>.<\/p>\n<p>This should not be called during layout (e.g. when setting the initial\nscroll offset). Consider <a href=\"widgets\/ScrollPosition\/correctPixels.html\">correctPixels<\/a> if you find you need to adjust\nthe position during layout.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/forcePixels.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid forcePixels(double value) {\n  assert(pixels != null);\n  _pixels = value;\n  notifyListeners();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "hold",
+            "type": "widgets.ScrollHoldController",
+            "desc": "<p>Stop the current activity and start a <a href=\"widgets\/HoldScrollActivity-class.html\">HoldScrollActivity<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "holdCancelCallback",
+                    "type": "dart:ui.VoidCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/hold.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ScrollHoldController hold(VoidCallback holdCancelCallback);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "jumpTo",
+            "type": "",
+            "desc": "<p>Jumps the scroll position from its current value to the given value,\nwithout animation, and without checking if the new value is in range.<\/p>\n<p>Any active animation is canceled. If the user is currently scrolling, that\naction is canceled.<\/p>\n<p>If this method changes the scroll position, a sequence of start\/update\/end\nscroll notifications will be dispatched. No overscroll notifications can\nbe generated by this method.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/jumpTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid jumpTo(double value);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "jumpToWithoutSettling",
+            "type": "",
+            "desc": "<p>Deprecated. Use <a href=\"widgets\/ScrollPosition\/jumpTo.html\">jumpTo<\/a> or a custom <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> instead.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/jumpToWithoutSettling.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@Deprecated('This will lead to bugs.')\nvoid jumpToWithoutSettling(double value);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "moveTo",
+            "type": "dart:async.Future",
+            "desc": "<p>Calls <a href=\"widgets\/ScrollPosition\/jumpTo.html\">jumpTo<\/a> if duration is null or <a href=\"rendering\/ViewportOffset\/ViewportOffset.zero.html\">Duration.zero<\/a>, otherwise\n<a href=\"widgets\/ScrollPosition\/animateTo.html\">animateTo<\/a> is called.<\/p>\n<p>If <code>clamp<\/code> is true (the default) then <code>to<\/code> is adjusted to prevent over or\nunderscroll.<\/p>\n<p>If <a href=\"widgets\/ScrollPosition\/animateTo.html\">animateTo<\/a> is called then <code>curve<\/code> defaults to <a href=\"animation\/Curves\/ease-constant.html\">Curves.ease<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "to",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "duration",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "curve",
+                    "type": "animation.Curve",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "clamp",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/moveTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;void&gt; moveTo(\n  double to, {\n  Duration duration,\n  Curve curve,\n  bool clamp = true,\n}) {\n  assert(to != null);\n  assert(clamp != null);\n\n  if (clamp)\n    to = to.clamp(minScrollExtent, maxScrollExtent);\n\n  return super.moveTo(to, duration: duration, curve: curve);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "notifyListeners",
+            "type": "",
+            "desc": "<p>Call all the registered listeners.<\/p>\n<p>Call this method whenever the object changes, to notify any clients the\nobject may have. Listeners that are added during this iteration will not\nbe visited. Listeners that are removed during this iteration will not be\nvisited after they are removed.<\/p>\n<p>Exceptions thrown by listeners will be caught and reported using\n<a href=\"foundation\/FlutterError\/reportError.html\">FlutterError.reportError<\/a>.<\/p>\n<p>This method must not be called after <a href=\"widgets\/ScrollPosition\/dispose.html\">dispose<\/a> has been called.<\/p>\n<p>Surprising behavior can result when reentrantly removing a listener (i.e.\nin response to a notification) that has been registered multiple times.\nSee the discussion at <a href=\"foundation\/ChangeNotifier\/removeListener.html\">removeListener<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/notifyListeners.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid notifyListeners() {\n  _updateSemanticActions(); \/\/ will potentially request a semantics update.\n  super.notifyListeners();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "restoreScrollOffset",
+            "type": "",
+            "desc": "<p>Called whenever the <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> is created, to restore the scroll\noffset if possible.<\/p>\n<p>The value is stored by <a href=\"widgets\/ScrollPosition\/saveScrollOffset.html\">saveScrollOffset<\/a> when the scroll position\nchanges, so that it can be restored in the case of the <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a> being\ndisposed then recreated in the same session. This might happen, for\ninstance, if a <a href=\"widgets\/ListView-class.html\">ListView<\/a> is on one of the pages inside a <a href=\"material\/TabBarView-class.html\">TabBarView<\/a>,\nand that page is displayed, then hidden, then displayed again.<\/p>\n<p>The default implementation reads the value from the nearest <a href=\"widgets\/PageStorage-class.html\">PageStorage<\/a>\nfound from the <a href=\"widgets\/ScrollPosition\/context.html\">context<\/a>'s <a href=\"widgets\/ScrollContext\/storageContext.html\">ScrollContext.storageContext<\/a> property, and\nsets it using <a href=\"widgets\/ScrollPosition\/correctPixels.html\">correctPixels<\/a>, if <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> is still null.<\/p>\n<p>This method is called from the constructor, so layout has not yet\noccurred, and the viewport dimensions aren't yet known when it is called.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/restoreScrollOffset.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid restoreScrollOffset() {\n  if (pixels == null) {\n    final double value = PageStorage.of(context.storageContext)?.readState(context.storageContext);\n    if (value != null)\n      correctPixels(value);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "saveScrollOffset",
+            "type": "",
+            "desc": "<p>Called whenever scrolling ends, to store the current scroll offset in a\nstorage mechanism with a lifetime that matches the app's lifetime.<\/p>\n<p>The stored value will be used by <a href=\"widgets\/ScrollPosition\/restoreScrollOffset.html\">restoreScrollOffset<\/a> when the\n<a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> is recreated, in the case of the <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a> being\ndisposed then recreated in the same session. This might happen, for\ninstance, if a <a href=\"widgets\/ListView-class.html\">ListView<\/a> is on one of the pages inside a <a href=\"material\/TabBarView-class.html\">TabBarView<\/a>,\nand that page is displayed, then hidden, then displayed again.<\/p>\n<p>The default implementation writes the <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> using the nearest\n<a href=\"widgets\/PageStorage-class.html\">PageStorage<\/a> found from the <a href=\"widgets\/ScrollPosition\/context.html\">context<\/a>'s <a href=\"widgets\/ScrollContext\/storageContext.html\">ScrollContext.storageContext<\/a>\nproperty.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/saveScrollOffset.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid saveScrollOffset() {\n  PageStorage.of(context.storageContext)?.writeState(context.storageContext, pixels);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "setPixels",
+            "type": "dart:core.double",
+            "desc": "<p>Update the scroll position (<a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a>) to a given pixel value.<\/p>\n<p>This should only be called by the current <a href=\"widgets\/ScrollActivity-class.html\">ScrollActivity<\/a>, either during\nthe transient callback phase or in response to user input.<\/p>\n<p>Returns the overscroll, if any. If the return value is 0.0, that means\nthat <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> now returns the given <code>value<\/code>. If the return value is\npositive, then <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> is less than the requested <code>value<\/code> by the given\namount (overscroll past the max extent), and if it is negative, it is\ngreater than the requested <code>value<\/code> by the given amount (underscroll past\nthe min extent).<\/p>\n<p>The amount of overscroll is computed by <a href=\"widgets\/ScrollPosition\/applyBoundaryConditions.html\">applyBoundaryConditions<\/a>.<\/p>\n<p>The amount of the change that is applied is reported using <a href=\"widgets\/ScrollPosition\/didUpdateScrollPositionBy.html\">didUpdateScrollPositionBy<\/a>.\nIf there is any overscroll, it is reported using <a href=\"widgets\/ScrollPosition\/didOverscrollBy.html\">didOverscrollBy<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollPosition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "newPixels",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollPosition\/setPixels.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double setPixels(double newPixels) {\n  assert(_pixels != null);\n  assert(SchedulerBinding.instance.schedulerPhase.index &lt;= SchedulerPhase.transientCallbacks.index);\n  if (newPixels != pixels) {\n    final double overscroll = applyBoundaryConditions(newPixels);\n    assert(() {\n      final double delta = newPixels - pixels;\n      if (overscroll.abs() &gt; delta.abs()) {\n        throw FlutterError(\n          '$runtimeType.applyBoundaryConditions returned invalid overscroll value.\\n'\n          'setPixels() was called to change the scroll offset from $pixels to $newPixels.\\n'\n          'That is a delta of $delta units.\\n'\n          '$runtimeType.applyBoundaryConditions reported an overscroll of $overscroll units.'\n        );\n      }\n      return true;\n    }());\n    final double oldPixels = _pixels;\n    _pixels = newPixels - overscroll;\n    if (_pixels != oldPixels) {\n      notifyListeners();\n      didUpdateScrollPositionBy(_pixels - oldPixels);\n    }\n    if (overscroll != 0.0) {\n      didOverscrollBy(overscroll);\n      return overscroll;\n    }\n  }\n  return 0.0;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "activity",
+            "type": "widgets.ScrollActivity",
+            "types": [],
+            "desc": "<p>The currently operative <a href=\"widgets\/ScrollActivity-class.html\">ScrollActivity<\/a>.<\/p>\n<p>If the scroll position is not performing any more specific activity, the\nactivity will be an <a href=\"widgets\/IdleScrollActivity-class.html\">IdleScrollActivity<\/a>. To determine whether the scroll\nposition is idle, check the <a href=\"widgets\/ScrollPosition\/isScrollingNotifier.html\">isScrollingNotifier<\/a>.<\/p>\n<p>Call <a href=\"widgets\/ScrollPosition\/beginActivity.html\">beginActivity<\/a> to change the current activity.<\/p>\n        ",
+            "memberOf": "widgets.ScrollPosition",
+            "isConstant": false,
+            "href": "widgets\/ScrollPosition\/activity.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@visibleForTesting\nScrollActivity get activity =&gt; _activity;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "allowImplicitScrolling",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether a viewport is allowed to change <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> implicitly to respond to\na call to <a href=\"rendering\/RenderObject\/showOnScreen.html\">RenderObject.showOnScreen<\/a>.<\/p>\n<p><a href=\"rendering\/RenderObject\/showOnScreen.html\">RenderObject.showOnScreen<\/a> is for example used to bring a text field\nfully on screen after it has received focus. This property controls\nwhether the viewport associated with this offset is allowed to change the\noffset's <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> value to fulfill such a request.<\/p>\n        ",
+            "memberOf": "widgets.ScrollPosition",
+            "isConstant": false,
+            "href": "widgets\/ScrollPosition\/allowImplicitScrolling.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get allowImplicitScrolling =&gt; physics.allowImplicitScrolling;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "context",
+            "type": "widgets.ScrollContext",
+            "types": [],
+            "desc": "<p>Where the scrolling is taking place.<\/p>\n<p>Typically implemented by <a href=\"widgets\/ScrollableState-class.html\">ScrollableState<\/a>.<\/p>\n        ",
+            "memberOf": "widgets.ScrollPosition",
+            "isConstant": false,
+            "href": "widgets\/ScrollPosition\/context.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final ScrollContext context\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugLabel",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>A label that is used in the <a href=\"rendering\/ViewportOffset\/toString.html\">toString<\/a> output.<\/p>\n<p>Intended to aid with identifying animation controller instances in debug\noutput.<\/p>\n        ",
+            "memberOf": "widgets.ScrollPosition",
+            "isConstant": false,
+            "href": "widgets\/ScrollPosition\/debugLabel.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String debugLabel\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "haveDimensions",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether <a href=\"widgets\/ScrollPosition\/viewportDimension.html\">viewportDimension<\/a>, <a href=\"widgets\/ScrollPosition\/minScrollExtent.html\">minScrollExtent<\/a>, <a href=\"widgets\/ScrollPosition\/maxScrollExtent.html\">maxScrollExtent<\/a>,\n<a href=\"widgets\/ScrollMetrics\/outOfRange.html\">outOfRange<\/a>, and <a href=\"widgets\/ScrollMetrics\/atEdge.html\">atEdge<\/a> are available.<\/p>\n<p>Set to true just before the first time <a href=\"widgets\/ScrollPosition\/applyNewDimensions.html\">applyNewDimensions<\/a> is called.<\/p>\n        ",
+            "memberOf": "widgets.ScrollPosition",
+            "isConstant": false,
+            "href": "widgets\/ScrollPosition\/haveDimensions.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get haveDimensions =&gt; _haveDimensions;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isScrollingNotifier",
+            "type": "foundation.ValueNotifier<dart:core.bool>",
+            "types": [
+                "foundation.ValueNotifier",
+                "dart:core.bool"
+            ],
+            "desc": "<p>This notifier's value is true if a scroll is underway and false if the scroll\nposition is idle.<\/p>\n<p>Listeners added by stateful widgets should be removed in the widget's\n<a href=\"widgets\/ScrollPosition\/dispose.html\">State.dispose<\/a> method.<\/p>\n        ",
+            "memberOf": "widgets.ScrollPosition",
+            "isConstant": false,
+            "href": "widgets\/ScrollPosition\/isScrollingNotifier.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final ValueNotifier&lt;bool&gt; isScrollingNotifier = ValueNotifier&lt;bool&gt;(false)\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "keepScrollOffset",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Save the current scroll offset with <a href=\"widgets\/PageStorage-class.html\">PageStorage<\/a> and restore it if\nthis scroll position's scrollable is recreated.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/ScrollPosition\/keepScrollOffset.html\">ScrollController.keepScrollOffset<\/a> and <a href=\"widgets\/PageController\/keepPage.html\">PageController.keepPage<\/a>, which\ncreate scroll positions and initialize this property.<\/li><\/ul>",
+            "memberOf": "widgets.ScrollPosition",
+            "isConstant": false,
+            "href": "widgets\/ScrollPosition\/keepScrollOffset.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool keepScrollOffset\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "maxScrollExtent",
+            "type": "dart:core.double",
+            "types": [],
+            "desc": "<p>The maximum in-range value for <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a>.<\/p>\n<p>The actual <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> value might be <a href=\"widgets\/ScrollMetrics\/outOfRange.html\">outOfRange<\/a>.<\/p>\n<p>This value can be infinity, if the scroll is unbounded.<\/p>\n        ",
+            "memberOf": "widgets.ScrollPosition",
+            "isConstant": false,
+            "href": "widgets\/ScrollPosition\/maxScrollExtent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble get maxScrollExtent =&gt; _maxScrollExtent;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "minScrollExtent",
+            "type": "dart:core.double",
+            "types": [],
+            "desc": "<p>The minimum in-range value for <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a>.<\/p>\n<p>The actual <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> value might be <a href=\"widgets\/ScrollMetrics\/outOfRange.html\">outOfRange<\/a>.<\/p>\n<p>This value can be negative infinity, if the scroll is unbounded.<\/p>\n        ",
+            "memberOf": "widgets.ScrollPosition",
+            "isConstant": false,
+            "href": "widgets\/ScrollPosition\/minScrollExtent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble get minScrollExtent =&gt; _minScrollExtent;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "physics",
+            "type": "widgets.ScrollPhysics",
+            "types": [],
+            "desc": "<p>How the scroll position should respond to user input.<\/p>\n<p>For example, determines how the widget continues to animate after the\nuser stops dragging the scroll view.<\/p>\n        ",
+            "memberOf": "widgets.ScrollPosition",
+            "isConstant": false,
+            "href": "widgets\/ScrollPosition\/physics.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final ScrollPhysics physics\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "pixels",
+            "type": "dart:core.double",
+            "types": [],
+            "desc": "<p>The number of pixels to offset the children in the opposite of the axis direction.<\/p>\n<p>For example, if the axis direction is down, then the pixel value\nrepresents the number of logical pixels to move the children <em>up<\/em> the\nscreen. Similarly, if the axis direction is left, then the pixels value\nrepresents the number of logical pixels to move the children to <em>right<\/em>.<\/p>\n<p>This object notifies its listeners when this value changes (except when\nthe value changes due to <a href=\"widgets\/ScrollPosition\/correctBy.html\">correctBy<\/a>).<\/p>\n        ",
+            "memberOf": "widgets.ScrollPosition",
+            "isConstant": false,
+            "href": "widgets\/ScrollPosition\/pixels.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble get pixels =&gt; _pixels;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "viewportDimension",
+            "type": "dart:core.double",
+            "types": [],
+            "desc": "<p>The extent of the viewport along the <a href=\"widgets\/ScrollMetrics\/axisDirection.html\">axisDirection<\/a>.<\/p>\n        ",
+            "memberOf": "widgets.ScrollPosition",
+            "isConstant": false,
+            "href": "widgets\/ScrollPosition\/viewportDimension.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble get viewportDimension =&gt; _viewportDimension;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [
+        "widgets.ScrollPositionWithSingleContext"
+    ],
+    "realImplementors": [
+        "widgets.ScrollPositionWithSingleContext"
+    ],
+    "cn": [],
+    "href": "widgets\/ScrollPosition-class.html",
+    "desc": "<p>Determines which portion of the content is visible in a scroll view.<\/p>\n<p>The <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a> value determines the scroll offset that the scroll view uses to\nselect which part of its content to display. As the user scrolls the\nviewport, this value changes, which changes the content that is displayed.<\/p>\n<p>The <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> applies <a href=\"widgets\/ScrollPosition\/physics.html\">physics<\/a> to scrolling, and stores the\n<a href=\"widgets\/ScrollPosition\/minScrollExtent.html\">minScrollExtent<\/a> and <a href=\"widgets\/ScrollPosition\/maxScrollExtent.html\">maxScrollExtent<\/a>.<\/p>\n<p>Scrolling is controlled by the current <a href=\"widgets\/ScrollPosition\/activity.html\">activity<\/a>, which is set by\n<a href=\"widgets\/ScrollPosition\/beginActivity.html\">beginActivity<\/a>. <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> itself does not start any activities.\nInstead, concrete subclasses, such as <a href=\"widgets\/ScrollPositionWithSingleContext-class.html\">ScrollPositionWithSingleContext<\/a>,\ntypically start activities in response to user input or instructions from a\n<a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a>.<\/p>\n<p>This object is a <a href=\"foundation\/Listenable-class.html\">Listenable<\/a> that notifies its listeners when <a href=\"widgets\/ScrollPosition\/pixels.html\">pixels<\/a>\nchanges.<\/p>\n<h2 id=\"subclassing-scrollposition\">Subclassing ScrollPosition<\/h2>\n<p>Over time, a <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a> might have many different <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a>\nobjects. For example, if <a href=\"widgets\/ScrollPosition\/physics.html\">Scrollable.physics<\/a> changes type, <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a>\ncreates a new <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> with the new physics. To transfer state from\nthe old instance to the new instance, subclasses implement <a href=\"widgets\/ScrollPosition\/absorb.html\">absorb<\/a>. See\n<a href=\"widgets\/ScrollPosition\/absorb.html\">absorb<\/a> for more details.<\/p>\n<p>Subclasses also need to call <a href=\"widgets\/ScrollPosition\/didUpdateScrollDirection.html\">didUpdateScrollDirection<\/a> whenever\n<a href=\"rendering\/ViewportOffset\/userScrollDirection.html\">userScrollDirection<\/a> changes values.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a>, which uses a <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a> to determine which portion of\nits content to display.<\/li>\n<li>\n<a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a>, which can be used with <a href=\"widgets\/ListView-class.html\">ListView<\/a>, <a href=\"widgets\/GridView-class.html\">GridView<\/a> and\nother scrollable widgets to control a <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a>.<\/li>\n<li>\n<a href=\"widgets\/ScrollPositionWithSingleContext-class.html\">ScrollPositionWithSingleContext<\/a>, which is the most commonly used\nconcrete subclass of <a href=\"widgets\/ScrollPosition-class.html\">ScrollPosition<\/a>.<\/li>\n<li>\n<a href=\"widgets\/ScrollNotification-class.html\">ScrollNotification<\/a> and <a href=\"widgets\/NotificationListener-class.html\">NotificationListener<\/a>, which can be used to watch\nthe scroll position without using a <a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a>.<\/li>\n<\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "ScrollPosition"
+}

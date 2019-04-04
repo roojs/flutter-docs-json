@@ -1,0 +1,159 @@
+{
+    "name": "widgets.ScrollBehavior",
+    "extends": [],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "ScrollBehavior",
+            "type": "",
+            "desc": "<p>Creates a description of how <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a> widgets should behave.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollBehavior",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "widgets\/ScrollBehavior\/ScrollBehavior.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const ScrollBehavior();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "buildViewportChrome",
+            "type": "widgets.Widget",
+            "desc": "<p>Wraps the given widget, which scrolls in the given <a href=\"painting\/AxisDirection-class.html\">AxisDirection<\/a>.<\/p>\n<p>For example, on Android, this method wraps the given widget with a\n<a href=\"widgets\/GlowingOverscrollIndicator-class.html\">GlowingOverscrollIndicator<\/a> to provide visual feedback when the user\noverscrolls.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollBehavior",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "widgets.BuildContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "child",
+                    "type": "widgets.Widget",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "axisDirection",
+                    "type": "painting.AxisDirection",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollBehavior\/buildViewportChrome.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Widget buildViewportChrome(BuildContext context, Widget child, AxisDirection axisDirection) {\n  \/\/ When modifying this function, consider modifying the implementation in\n  \/\/ _MaterialScrollBehavior as well.\n  switch (getPlatform(context)) {\n    case TargetPlatform.iOS:\n      return child;\n    case TargetPlatform.android:\n    case TargetPlatform.fuchsia:\n      return GlowingOverscrollIndicator(\n        child: child,\n        axisDirection: axisDirection,\n        color: _kDefaultGlowColor,\n      );\n  }\n  return null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "getPlatform",
+            "type": "foundation.TargetPlatform",
+            "desc": "<p>The platform whose scroll physics should be implemented.<\/p>\n<p>Defaults to the current platform.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollBehavior",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "widgets.BuildContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollBehavior\/getPlatform.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TargetPlatform getPlatform(BuildContext context) =&gt; defaultTargetPlatform;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "getScrollPhysics",
+            "type": "widgets.ScrollPhysics",
+            "desc": "<p>The scroll physics to use for the platform given by <a href=\"widgets\/ScrollBehavior\/getPlatform.html\">getPlatform<\/a>.<\/p>\n<p>Defaults to <a href=\"widgets\/BouncingScrollPhysics-class.html\">BouncingScrollPhysics<\/a> on iOS and <a href=\"widgets\/ClampingScrollPhysics-class.html\">ClampingScrollPhysics<\/a> on\nAndroid.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollBehavior",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "widgets.BuildContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollBehavior\/getScrollPhysics.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ScrollPhysics getScrollPhysics(BuildContext context) {\n  switch (getPlatform(context)) {\n    case TargetPlatform.iOS:\n      return const BouncingScrollPhysics();\n    case TargetPlatform.android:\n    case TargetPlatform.fuchsia:\n      return const ClampingScrollPhysics();\n  }\n  return null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "shouldNotify",
+            "type": "dart:core.bool",
+            "desc": "<p>Called whenever a <a href=\"widgets\/ScrollConfiguration-class.html\">ScrollConfiguration<\/a> is rebuilt with a new\n<a href=\"widgets\/ScrollBehavior-class.html\">ScrollBehavior<\/a> of the same <a href=\"dart-core\/Object\/runtimeType.html\">runtimeType<\/a>.<\/p>\n<p>If the new instance represents different information than the old\ninstance, then the method should return true, otherwise it should return\nfalse.<\/p>\n<p>If this method returns true, all the widgets that inherit from the\n<a href=\"widgets\/ScrollConfiguration-class.html\">ScrollConfiguration<\/a> will rebuild using the new <a href=\"widgets\/ScrollBehavior-class.html\">ScrollBehavior<\/a>. If this\nmethod returns false, the rebuilds might be optimized away.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollBehavior",
+            "sig": "",
+            "params": [
+                {
+                    "name": "oldDelegate",
+                    "type": "widgets.ScrollBehavior",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/ScrollBehavior\/shouldNotify.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool shouldNotify(covariant ScrollBehavior oldDelegate) =&gt; false;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.ScrollBehavior",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/ScrollBehavior\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; '$runtimeType';<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "widgets\/ScrollBehavior-class.html",
+    "desc": "<p>Describes how <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a> widgets should behave.<\/p>\n<p>Used by <a href=\"widgets\/ScrollConfiguration-class.html\">ScrollConfiguration<\/a> to configure the <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a> widgets in a\nsubtree.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "ScrollBehavior"
+}

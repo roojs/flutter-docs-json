@@ -1,0 +1,254 @@
+{
+    "name": "dart:async.StreamTransformer",
+    "extends": [],
+    "memberOf": "dart:async",
+    "events": [],
+    "methods": [
+        {
+            "name": "StreamTransformer",
+            "type": "",
+            "desc": "<p>Creates a <a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a> based on the given <code>onListen<\/code> callback.<\/p>\n<p>The returned stream transformer uses the provided <code>onListen<\/code> callback\nwhen a transformed stream is listened to. At that time, the callback\nreceives the input stream (the one passed to <a href=\"dart-async\/StreamTransformer\/bind.html\">bind<\/a>) and a\nboolean flag <code>cancelOnError<\/code> to create a <a href=\"dart-async\/StreamSubscription-class.html\">StreamSubscription<\/a>.<\/p>\n<p>The <code>onListen<\/code> callback does <em>not<\/em> receive the handlers that were passed\nto <a href=\"dart-async\/Stream\/listen.html\">Stream.listen<\/a>. These are automatically set after the call to the\n<code>onListen<\/code> callback (using <a href=\"dart-async\/StreamSubscription\/onData.html\">StreamSubscription.onData<\/a>,\n<a href=\"dart-async\/StreamSubscription\/onError.html\">StreamSubscription.onError<\/a> and <a href=\"dart-async\/StreamSubscription\/onDone.html\">StreamSubscription.onDone<\/a>).<\/p>\n<p>Most commonly, an <code>onListen<\/code> callback will first call <a href=\"dart-async\/Stream\/listen.html\">Stream.listen<\/a> on\nthe provided stream (with the corresponding <code>cancelOnError<\/code> flag), and then\nreturn a new <a href=\"dart-async\/StreamSubscription-class.html\">StreamSubscription<\/a>.<\/p>\n<p>There are two common ways to create a StreamSubscription:<\/p>\n<ol>\n<li>by allocating a <a href=\"dart-async\/StreamController-class.html\">StreamController<\/a> and to return the result of\nlistening to its stream. It's important to forward pause, resume and\ncancel events (unless the transformer intentionally wants to change\nthis behavior).<\/li>\n<li>by creating a new class that implements <a href=\"dart-async\/StreamSubscription-class.html\">StreamSubscription<\/a>.\nNote that the subscription should run callbacks in the <a href=\"dart-async\/Zone-class.html\">Zone<\/a> the\nstream was listened to (see <a href=\"dart-async\/Zone-class.html\">Zone<\/a> and <a href=\"dart-async\/Zone\/bindCallback.html\">Zone.bindCallback<\/a>).<\/li>\n<\/ol>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>\/\/\/ Starts listening to [input] and duplicates all non-error events.\nStreamSubscription&lt;int&gt; _onListen(Stream&lt;int&gt; input, bool cancelOnError) {\n  StreamSubscription&lt;String&gt; subscription;\n  \/\/ Create controller that forwards pause, resume and cancel events.\n  var controller = new StreamController&lt;String&gt;(\n      onPause: () {\n        subscription.pause();\n      },\n      onResume: () {\n        subscription.resume();\n      },\n      onCancel: () =&gt; subscription.cancel(),\n      sync: true); \/\/ \"sync\" is correct here, since events are forwarded.\n\n  \/\/ Listen to the provided stream using `cancelOnError`.\n  subscription = input.listen((data) {\n    \/\/ Duplicate the data.\n    controller.add(data);\n    controller.add(data);\n  },\n      onError: controller.addError,\n      onDone: controller.close,\n      cancelOnError: cancelOnError);\n\n  \/\/ Return a new [StreamSubscription] by listening to the controller's\n  \/\/ stream.\n  return controller.stream.listen(null);\n}\n\n\/\/ Instantiate a transformer:\nvar duplicator = const StreamTransformer&lt;int, int&gt;(_onListen);\n\n\/\/ Use as follows:\nintStream.transform(duplicator);\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "dart:async.StreamTransformer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "cancelOnError",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "stream",
+                    "type": "dart:async.Stream",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "cancelOnError",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-async\/StreamTransformer\/StreamTransformer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const factory StreamTransformer(\n        StreamSubscription&lt;T&gt; onListen(\n            Stream&lt;S&gt; stream, bool cancelOnError)) =\n    _StreamSubscriptionTransformer&lt;S, T&gt;;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "bind",
+            "type": "dart:async.Stream",
+            "desc": "<p>Transforms the provided <code>stream<\/code>.<\/p>\n<p>Returns a new stream with events that are computed from events of the\nprovided <code>stream<\/code>.<\/p>\n<p>The <a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a> interface is completely generic,\nso it cannot say what subclasses do.\nEach <a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a> should document clearly how it transforms the\nstream (on the class or variable used to access the transformer),\nas well as any differences from the following typical behavior:<\/p>\n<ul>\n<li>When the returned stream is listened to, it starts listening to the\ninput <code>stream<\/code>.<\/li>\n<li>Subscriptions of the returned stream forward (in a reasonable time)\na <a href=\"dart-async\/StreamSubscription\/pause.html\">StreamSubscription.pause<\/a> call to the subscription of the input\n<code>stream<\/code>.<\/li>\n<li>Similarly, canceling a subscription of the returned stream eventually\n(in reasonable time) cancels the subscription of the input <code>stream<\/code>.<\/li>\n<\/ul>\n<p>\"Reasonable time\" depends on the transformer and stream. Some transformers,\nlike a \"timeout\" transformer, might make these operations depend on a\nduration. Others might not delay them at all, or just by a microtask.<\/p>\n<p>Transformers are free to handle errors in any way.\nA transformer implementation may choose to propagate errors,\nor convert them to other events, or ignore them completely,\nbut if errors are ignored, it should be documented explicitly.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.StreamTransformer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "stream",
+                    "type": "dart:async.Stream",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/StreamTransformer\/bind.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; bind(Stream&lt;S&gt; stream);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "cast",
+            "type": "dart:async.StreamTransformer",
+            "desc": "<p>Provides a <code>StreamTransformer&lt;RS, RT&gt;<\/code> view of this stream transformer.<\/p>\n<p>The resulting transformer will check at run-time that all data events\nof the stream it transforms are actually instances of <code>S<\/code>,\nand it will check that all data events produced by this transformer\nare actually instances of <code>RT<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.StreamTransformer",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-async\/StreamTransformer\/cast.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamTransformer&lt;RS, RT&gt; cast&lt;RS, RT&gt;();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "castFrom",
+            "type": "dart:async.StreamTransformer",
+            "desc": "<p>Adapts <code>source<\/code> to be a <code>StreamTransformer&lt;TS, TT&gt;<\/code>.<\/p>\n<p>This allows <code>source<\/code> to be used at the new type, but at run-time it\nmust satisfy the requirements of both the new type and its original type.<\/p>\n<p>Data events passed into the returned transformer must also be instances\nof <code>SS<\/code>, and data events produced by <code>source<\/code> for those events must\nalso be instances of <code>TT<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.StreamTransformer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "source",
+                    "type": "dart:async.StreamTransformer",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/StreamTransformer\/castFrom.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static StreamTransformer&lt;TS, TT&gt; castFrom&lt;SS, ST, TS, TT&gt;(\n    StreamTransformer&lt;SS, ST&gt; source) {\n  return new CastStreamTransformer&lt;SS, ST, TS, TT&gt;(source);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "StreamTransformer.fromBind",
+            "type": "",
+            "desc": "<p>Creates a <a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a> based on a <code>bind<\/code> callback.<\/p>\n<p>The returned stream transformer uses the <code>bind<\/code> argument to implement the\n<a href=\"dart-async\/StreamTransformer\/bind.html\">StreamTransformer.bind<\/a> API and can be used when the transformation is\navailable as a stream-to-stream function.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">final splitDecoded = StreamTransformer&lt;List&lt;int&gt;, String&gt;.fromBind(\n    (stream) =&gt; stream.transform(utf8.decoder).transform(LineSplitter()));\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "dart:async.StreamTransformer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "bind",
+                    "type": "dart:async.Stream",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "",
+                    "type": "dart:async.Stream",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-async\/StreamTransformer\/StreamTransformer.fromBind.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@Since(\"2.1\")\nfactory StreamTransformer.fromBind(Stream&lt;T&gt; Function(Stream&lt;S&gt;) bind) =\n    _StreamBindTransformer&lt;S, T&gt;;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "StreamTransformer.fromHandlers",
+            "type": "",
+            "desc": "<p>Creates a <a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a> that delegates events to the given functions.<\/p>\n<p>Example use of a duplicating transformer:<\/p>\n<pre class=\"language-dart\"><code>stringStream.transform(new StreamTransformer&lt;String, String&gt;.fromHandlers(\n    handleData: (String value, EventSink&lt;String&gt; sink) {\n      sink.add(value);\n      sink.add(value);  \/\/ Duplicate the incoming events.\n    }));\n<\/code><\/pre>\n<p>Transformers that are constructed this way cannot use captured state if\nthey are used in streams that can be listened to multiple times.<\/p>\n<pre class=\"language-dart\"><code>StreamController&lt;String&gt; controller;\ncontroller = new StreamController.broadcast(onListen: () {\n  scheduleMicrotask(() {\n    controller.addError(\"Bad\");\n    controller.addError(\"Worse\");\n    controller.addError(\"Worst\");\n  });\n});\nvar sharedState = 0;\nvar transformedStream = controller.stream.transform(\n    new StreamTransformer&lt;String&gt;.fromHandlers(\n        handleError: (error, stackTrace, sink) {\n  sharedState++; \/\/ Increment shared error-counter.\n  sink.add(\"Error $sharedState: $error\");\n}));\n\ntransformedStream.listen(print);\ntransformedStream.listen(print); \/\/ Listen twice.\n\/\/ Listening twice to the same stream makes the transformer share the same\n\/\/ state. Instead of having \"Error 1: Bad\", \"Error 2: Worse\",\n\/\/ \"Error 3: Worst\" as output (each twice for the separate subscriptions),\n\/\/ this program emits:\n\/\/ Error 1: Bad\n\/\/ Error 2: Bad\n\/\/ Error 3: Worse\n\/\/ Error 4: Worse\n\/\/ Error 5: Worst\n\/\/ Error 6: Worst\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "dart:async.StreamTransformer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "sink",
+                    "type": "dart:async.EventSink",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "data",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "sink",
+                    "type": "dart:async.EventSink",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "sink",
+                    "type": "dart:async.EventSink",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "error",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "stackTrace",
+                    "type": "dart:core.StackTrace",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "sink",
+                    "type": "dart:async.EventSink",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "sink",
+                    "type": "dart:async.EventSink",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "sink",
+                    "type": "dart:async.EventSink",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-async\/StreamTransformer\/StreamTransformer.fromHandlers.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory StreamTransformer.fromHandlers(\n    {void handleData(S data, EventSink&lt;T&gt; sink),\n    void handleError(Object error, StackTrace stackTrace, EventSink&lt;T&gt; sink),\n    void handleDone(EventSink&lt;T&gt; sink)}) = _StreamHandlerTransformer&lt;S, T&gt;;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "dart-async\/StreamTransformer-class.html",
+    "desc": "<p>Transforms a Stream.<\/p>\n<p>When a stream's <a href=\"dart-async\/Stream\/transform.html\">Stream.transform<\/a> method is invoked with a\n<a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a>, the stream calls the <a href=\"dart-async\/StreamTransformer\/bind.html\">bind<\/a> method on the provided\ntransformer. The resulting stream is then returned from the\n<a href=\"dart-async\/Stream\/transform.html\">Stream.transform<\/a> method.<\/p>\n<p>Conceptually, a transformer is simply a function from <a href=\"dart-async\/Stream-class.html\">Stream<\/a> to <a href=\"dart-async\/Stream-class.html\">Stream<\/a>\nthat is encapsulated into a class.<\/p>\n<p>It is good practice to write transformers that can be used multiple times.<\/p>\n<p>All other transforming methods on <a href=\"dart-async\/Stream-class.html\">Stream<\/a>, such as <a href=\"dart-async\/Stream\/map.html\">Stream.map<\/a>,\n<a href=\"dart-async\/Stream\/where.html\">Stream.where<\/a> or <a href=\"dart-async\/Stream\/expand.html\">Stream.expand<\/a> can be implemented using\n<a href=\"dart-async\/Stream\/transform.html\">Stream.transform<\/a>. A <a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a> is thus very powerful but often\nalso a bit more complicated to use.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "StreamTransformer"
+}

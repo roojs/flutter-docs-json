@@ -1,0 +1,230 @@
+{
+    "name": "widgets.StatefulElement",
+    "extends": [
+        "widgets.ComponentElement",
+        "widgets.Element",
+        "foundation.DiagnosticableTree",
+        "foundation.Diagnosticable",
+        "dart:core.Object"
+    ],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "StatefulElement",
+            "type": "",
+            "desc": "<p>Creates an element that uses the given widget as its configuration.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.StatefulElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "widget",
+                    "type": "widgets.StatefulWidget",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "widgets\/StatefulElement\/StatefulElement.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StatefulElement(StatefulWidget widget)\n    : _state = widget.createState(),\n      super(widget) {\n  assert(() {\n    if (!_state._debugTypesAreRight(widget)) {\n      throw FlutterError(\n        'StatefulWidget.createState must return a subtype of State&lt;${widget.runtimeType}&gt;\\n'\n        'The createState function for ${widget.runtimeType} returned a state '\n        'of type ${_state.runtimeType}, which is not a subtype of '\n        'State&lt;${widget.runtimeType}&gt;, violating the contract for createState.'\n      );\n    }\n    return true;\n  }());\n  assert(_state._element == null);\n  _state._element = this;\n  assert(_state._widget == null);\n  _state._widget = widget;\n  assert(_state._debugLifecycleState == _StateLifecycle.created);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "activate",
+            "type": "",
+            "desc": "<p>Transition from the \"inactive\" to the \"active\" lifecycle state.<\/p>\n<p>The framework calls this method when a previously deactivated element has\nbeen reincorporated into the tree. The framework does not call this method\nthe first time an element becomes active (i.e., from the \"initial\"\nlifecycle state). Instead, the framework calls <a href=\"widgets\/ComponentElement\/mount.html\">mount<\/a> in that situation.<\/p>\n<p>See the lifecycle documentation for <a href=\"widgets\/Element-class.html\">Element<\/a> for additional information.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.StatefulElement",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/StatefulElement\/activate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid activate() {\n  super.activate();\n  \/\/ Since the State could have observed the deactivate() and thus disposed of\n  \/\/ resources allocated in the build method, we have to rebuild the widget\n  \/\/ so that its State can reallocate its resources.\n  assert(_active); \/\/ otherwise markNeedsBuild is a no-op\n  markNeedsBuild();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "build",
+            "type": "widgets.Widget",
+            "desc": "<p>Subclasses should override this function to actually call the appropriate\n<code>build<\/code> function (e.g., <a href=\"widgets\/StatefulElement\/build.html\">StatelessWidget.build<\/a> or <a href=\"widgets\/StatefulElement\/build.html\">State.build<\/a>) for\ntheir widget.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.StatefulElement",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/StatefulElement\/build.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nWidget build() =&gt; state.build(this);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "deactivate",
+            "type": "",
+            "desc": "<p>Transition from the \"active\" to the \"inactive\" lifecycle state.<\/p>\n<p>The framework calls this method when a previously active element is moved\nto the list of inactive elements. While in the inactive state, the element\nwill not appear on screen. The element can remain in the inactive state\nonly until the end of the current animation frame. At the end of the\nanimation frame, if the element has not be reactivated, the framework will\nunmount the element.<\/p>\n<p>This is (indirectly) called by <a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a>.<\/p>\n<p>See the lifecycle documentation for <a href=\"widgets\/Element-class.html\">Element<\/a> for additional information.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.StatefulElement",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/StatefulElement\/deactivate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid deactivate() {\n  _state.deactivate();\n  super.deactivate();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "debugFillProperties",
+            "type": "",
+            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"widgets\/StatefulElement\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTree\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/Diagnosticable\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.StatefulElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "properties",
+                    "type": "foundation.DiagnosticPropertiesBuilder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/StatefulElement\/debugFillProperties.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(DiagnosticsProperty&lt;State&lt;StatefulWidget&gt;&gt;('state', state, defaultValue: null));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "didChangeDependencies",
+            "type": "",
+            "desc": "<p>Called when a dependency of this element changes.<\/p>\n<p>The <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> registers this element as depending on\ninherited information of the given type. When the information of that type\nchanges at this location in the tree (e.g., because the <a href=\"widgets\/InheritedElement-class.html\">InheritedElement<\/a>\nupdated to a new <a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> and\n<a href=\"widgets\/InheritedWidget\/updateShouldNotify.html\">InheritedWidget.updateShouldNotify<\/a> returned true), the framework calls\nthis function to notify this element of the change.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.StatefulElement",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/StatefulElement\/didChangeDependencies.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid didChangeDependencies() {\n  super.didChangeDependencies();\n  _state.didChangeDependencies();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "inheritFromElement",
+            "type": "widgets.InheritedWidget",
+            "desc": "<p>Registers this build context with <code>ancestor<\/code> such that when\n<code>ancestor<\/code>'s widget changes this build context is rebuilt.<\/p>\n<p>Returns <code>ancestor.widget<\/code>.<\/p>\n<p>This method is rarely called directly. Most applications should use\n<a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a>, which calls this method after finding\nthe appropriate <a href=\"widgets\/InheritedElement-class.html\">InheritedElement<\/a> ancestor.<\/p>\n<p>All of the qualifications about when <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> can\nbe called apply to this method as well.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.StatefulElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "ancestor",
+                    "type": "widgets.Element",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "aspect",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/StatefulElement\/inheritFromElement.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nInheritedWidget inheritFromElement(Element ancestor, { Object aspect }) {\n  assert(ancestor != null);\n  assert(() {\n    final Type targetType = ancestor.widget.runtimeType;\n    if (state._debugLifecycleState == _StateLifecycle.created) {\n      throw FlutterError(\n        'inheritFromWidgetOfExactType($targetType) or inheritFromElement() was called before ${_state.runtimeType}.initState() completed.\\n'\n        'When an inherited widget changes, for example if the value of Theme.of() changes, '\n        'its dependent widgets are rebuilt. If the dependent widget\\'s reference to '\n        'the inherited widget is in a constructor or an initState() method, '\n        'then the rebuilt dependent widget will not reflect the changes in the '\n        'inherited widget.\\n'\n        'Typically references to inherited widgets should occur in widget build() methods. Alternatively, '\n        'initialization based on inherited widgets can be placed in the didChangeDependencies method, which '\n        'is called after initState and whenever the dependencies change thereafter.'\n      );\n    }\n    if (state._debugLifecycleState == _StateLifecycle.defunct) {\n      throw FlutterError(\n        'inheritFromWidgetOfExactType($targetType) or inheritFromElement() was called after dispose(): $this\\n'\n        'This error happens if you call inheritFromWidgetOfExactType() on the '\n        'BuildContext for a widget that no longer appears in the widget tree '\n        '(e.g., whose parent widget no longer includes the widget in its '\n        'build). This error can occur when code calls '\n        'inheritFromWidgetOfExactType() from a timer or an animation callback. '\n        'The preferred solution is to cancel the timer or stop listening to the '\n        'animation in the dispose() callback. Another solution is to check the '\n        '\"mounted\" property of this object before calling '\n        'inheritFromWidgetOfExactType() to ensure the object is still in the '\n        'tree.\\n'\n        'This error might indicate a memory leak if '\n        'inheritFromWidgetOfExactType() is being called because another object '\n        'is retaining a reference to this State object after it has been '\n        'removed from the tree. To avoid memory leaks, consider breaking the '\n        'reference to this object during dispose().'\n      );\n    }\n    return true;\n  }());\n  return super.inheritFromElement(ancestor, aspect: aspect);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "reassemble",
+            "type": "",
+            "desc": "<p>Called whenever the application is reassembled during debugging, for\nexample during hot reload.<\/p>\n<p>This method should rerun any initialization logic that depends on global\nstate, for example, image loading from asset bundles (since the asset\nbundle may have changed).<\/p>\n<p>This function will only be called during development. In release builds,\nthe <code>ext.flutter.reassemble<\/code> hook is not available, and so this code will\nnever execute.\nSee also:<\/p>\n<ul>\n<li><a href=\"widgets\/StatefulElement\/reassemble.html\">State.reassemble<\/a><\/li>\n<li><a href=\"foundation\/BindingBase\/reassembleApplication.html\">BindingBase.reassembleApplication<\/a><\/li>\n<li>\n<a href=\"widgets\/Image-class.html\">Image<\/a>, which uses this to reload images.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "widgets.StatefulElement",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/StatefulElement\/reassemble.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid reassemble() {\n  state.reassemble();\n  super.reassemble();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "unmount",
+            "type": "",
+            "desc": "<p>Transition from the \"inactive\" to the \"defunct\" lifecycle state.<\/p>\n<p>Called when the framework determines that an inactive element will never\nbe reactivated. At the end of each animation frame, the framework calls\n<a href=\"widgets\/StatefulElement\/unmount.html\">unmount<\/a> on any remaining inactive elements, preventing inactive elements\nfrom remaining inactive for longer than a single animation frame.<\/p>\n<p>After this function is called, the element will not be incorporated into\nthe tree again.<\/p>\n<p>See the lifecycle documentation for <a href=\"widgets\/Element-class.html\">Element<\/a> for additional information.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.StatefulElement",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/StatefulElement\/unmount.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid unmount() {\n  super.unmount();\n  _state.dispose();\n  assert(() {\n    if (_state._debugLifecycleState == _StateLifecycle.defunct)\n      return true;\n    throw FlutterError(\n      '${_state.runtimeType}.dispose failed to call super.dispose.\\n'\n      'dispose() implementations must always call their superclass dispose() method, to ensure '\n      'that all the resources used by the widget are fully released.'\n    );\n  }());\n  _state._element = null;\n  _state = null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "update",
+            "type": "",
+            "desc": "<p>Change the widget used to configure this element.<\/p>\n<p>The framework calls this function when the parent wishes to use a\ndifferent widget to configure this element. The new widget is guaranteed\nto have the same <a href=\"dart-core\/Object\/runtimeType.html\">runtimeType<\/a> as the old widget.<\/p>\n<p>This function is called only during the \"active\" lifecycle state.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.StatefulElement",
+            "sig": "",
+            "params": [
+                {
+                    "name": "newWidget",
+                    "type": "widgets.StatefulWidget",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/StatefulElement\/update.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid update(StatefulWidget newWidget) {\n  super.update(newWidget);\n  assert(widget == newWidget);\n  final StatefulWidget oldWidget = _state._widget;\n  \/\/ Notice that we mark ourselves as dirty before calling didUpdateWidget to\n  \/\/ let authors call setState from within didUpdateWidget without triggering\n  \/\/ asserts.\n  _dirty = true;\n  _state._widget = widget;\n  try {\n    _debugSetAllowIgnoredCallsToMarkNeedsBuild(true);\n    final dynamic debugCheckForReturnedFuture = _state.didUpdateWidget(oldWidget) as dynamic;\n    assert(() {\n      if (debugCheckForReturnedFuture is Future) {\n        throw FlutterError(\n          '${_state.runtimeType}.didUpdateWidget() returned a Future.\\n'\n          'State.didUpdateWidget() must be a void method without an `async` keyword.\\n'\n          'Rather than awaiting on asynchronous work directly inside of didUpdateWidget,\\n'\n          'call a separate method to do this work without awaiting it.'\n        );\n      }\n      return true;\n    }());\n  } finally {\n    _debugSetAllowIgnoredCallsToMarkNeedsBuild(false);\n  }\n  rebuild();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "state",
+            "type": "widgets.State<widgets.StatefulWidget>",
+            "types": [
+                "widgets.State",
+                "widgets.StatefulWidget"
+            ],
+            "desc": "<p>The <a href=\"widgets\/State-class.html\">State<\/a> instance associated with this location in the tree.<\/p>\n<p>There is a one-to-one relationship between <a href=\"widgets\/State-class.html\">State<\/a> objects and the\n<a href=\"widgets\/StatefulElement-class.html\">StatefulElement<\/a> objects that hold them. The <a href=\"widgets\/State-class.html\">State<\/a> objects are created\nby <a href=\"widgets\/StatefulElement-class.html\">StatefulElement<\/a> in <a href=\"widgets\/ComponentElement\/mount.html\">mount<\/a>.<\/p>\n        ",
+            "memberOf": "widgets.StatefulElement",
+            "isConstant": false,
+            "href": "widgets\/StatefulElement\/state.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">State&lt;StatefulWidget&gt; get state =&gt; _state;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "widgets\/StatefulElement-class.html",
+    "desc": "<p>An <a href=\"widgets\/Element-class.html\">Element<\/a> that uses a <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> as its configuration.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "StatefulElement"
+}

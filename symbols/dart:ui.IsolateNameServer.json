@@ -1,0 +1,101 @@
+{
+    "name": "dart:ui.IsolateNameServer",
+    "extends": [],
+    "memberOf": "dart:ui",
+    "events": [],
+    "methods": [
+        {
+            "name": "lookupPortByName",
+            "type": "dart:isolate.SendPort",
+            "desc": "<p>Looks up the <a href=\"dart-isolate\/SendPort-class.html\">SendPort<\/a> associated with a given name.<\/p>\n<p>Returns null if the name does not exist. To register the name in the first\nplace, consider <a href=\"dart-ui\/IsolateNameServer\/registerPortWithName.html\">registerPortWithName<\/a>.<\/p>\n<p>The <code>name<\/code> argument must not be null.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.IsolateNameServer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "name",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/IsolateNameServer\/lookupPortByName.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static SendPort lookupPortByName(String name) {\n  assert(name != null, \"'name' cannot be null.\");\n  return _lookupPortByName(name);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "registerPortWithName",
+            "type": "dart:core.bool",
+            "desc": "<p>Registers a <a href=\"dart-isolate\/SendPort-class.html\">SendPort<\/a> with a given name.<\/p>\n<p>Returns true if registration is successful, and false if the name entry\nalready existed (in which case the earlier registration is left\nunchanged). To remove a registration, consider <a href=\"dart-ui\/IsolateNameServer\/removePortNameMapping.html\">removePortNameMapping<\/a>.<\/p>\n<p>Once a port has been registered with a name, it can be obtained from any\n<a href=\"dart-isolate\/Isolate-class.html\">Isolate<\/a> using <a href=\"dart-ui\/IsolateNameServer\/lookupPortByName.html\">lookupPortByName<\/a>.<\/p>\n<p>Multiple isolates should avoid attempting to register ports with the same\nname, as there is an inherent race condition in doing so.<\/p>\n<p>The <code>port<\/code> and <code>name<\/code> arguments must not be null.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.IsolateNameServer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "port",
+                    "type": "dart:isolate.SendPort",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "name",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/IsolateNameServer\/registerPortWithName.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static bool registerPortWithName(SendPort port, String name) {\n  assert(port != null, \"'port' cannot be null.\");\n  assert(name != null, \"'name' cannot be null.\");\n  return _registerPortWithName(port, name);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "removePortNameMapping",
+            "type": "dart:core.bool",
+            "desc": "<p>Removes a name-to-<a href=\"dart-isolate\/SendPort-class.html\">SendPort<\/a> mapping given its name.<\/p>\n<p>Returns true if the mapping was successfully removed, false if the mapping\ndid not exist. To add a registration, consider <a href=\"dart-ui\/IsolateNameServer\/registerPortWithName.html\">registerPortWithName<\/a>.<\/p>\n<p>Generally, removing a port name mapping is an inherently racy operation\n(another isolate could have obtained the name just prior to the name being\nremoved, and thus would still be able to communicate over the port even\nafter it has been removed).<\/p>\n<p>The <code>name<\/code> argument must not be null.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.IsolateNameServer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "name",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/IsolateNameServer\/removePortNameMapping.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static bool removePortNameMapping(String name) {\n  assert(name != null, \"'name' cannot be null.\");\n  return _removePortNameMapping(name);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "dart-ui\/IsolateNameServer-class.html",
+    "desc": "<p>Static methods to allow for simple sharing of <a href=\"dart-isolate\/SendPort-class.html\">SendPort<\/a>s across <a href=\"dart-isolate\/Isolate-class.html\">Isolate<\/a>s.<\/p>\n<p>All isolates share a global mapping of names to ports. An isolate can\nregister a <a href=\"dart-isolate\/SendPort-class.html\">SendPort<\/a> with a given name using <a href=\"dart-ui\/IsolateNameServer\/registerPortWithName.html\">registerPortWithName<\/a>;\nanother isolate can then look up that port using <a href=\"dart-ui\/IsolateNameServer\/lookupPortByName.html\">lookupPortByName<\/a>.<\/p>\n<p>To create a <a href=\"dart-isolate\/SendPort-class.html\">SendPort<\/a>, first create a <a href=\"dart-isolate\/ReceivePort-class.html\">ReceivePort<\/a>, then use\n<a href=\"dart-isolate\/ReceivePort\/sendPort.html\">ReceivePort.sendPort<\/a>.<\/p>\n<p>Since multiple isolates can each obtain the same <a href=\"dart-isolate\/SendPort-class.html\">SendPort<\/a> associated with\na particular <a href=\"dart-isolate\/ReceivePort-class.html\">ReceivePort<\/a>, the protocol built on top of this mechanism\nshould typically consist of a single message. If more elaborate two-way\ncommunication or multiple-message communication is necessary, it is\nrecommended to establish a separate communication channel in that first\nmessage (e.g. by passing a dedicated <a href=\"dart-isolate\/SendPort-class.html\">SendPort<\/a>).<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "IsolateNameServer"
+}

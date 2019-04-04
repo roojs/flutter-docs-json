@@ -1,0 +1,233 @@
+{
+    "name": "vector_math_geometry.CircleGenerator",
+    "extends": [
+        "vector_math_geometry.GeometryGenerator",
+        "dart:core.Object"
+    ],
+    "memberOf": "vector_math_geometry",
+    "events": [],
+    "methods": [
+        {
+            "name": "CircleGenerator",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "vector_math_geometry.CircleGenerator",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "vector_math_geometry\/CircleGenerator\/CircleGenerator.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "createCircle",
+            "type": "vector_math_geometry.MeshGeometry",
+            "desc": "",
+            "static": false,
+            "memberOf": "vector_math_geometry.CircleGenerator",
+            "sig": "",
+            "params": [
+                {
+                    "name": "radius",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "flags",
+                    "type": "vector_math_geometry.GeometryGeneratorFlags",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "filters",
+                    "type": "dart:core.List<vector_math_geometry.GeometryFilter>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "vector_math_geometry.GeometryFilter"
+                    ]
+                },
+                {
+                    "name": "segments",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "thetaStart",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "thetaLength",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "vector_math_geometry\/CircleGenerator\/createCircle.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">MeshGeometry createCircle(double radius,\n    {GeometryGeneratorFlags flags,\n    List&lt;GeometryFilter&gt; filters,\n    int segments: 64,\n    double thetaStart: 0.0,\n    double thetaLength: math.pi * 2.0}) {\n  _radius = radius;\n  _segments = segments;\n  _thetaStart = thetaStart;\n  _thetaLength = thetaLength;\n  return createGeometry(flags: flags, filters: filters);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "generateIndices",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "vector_math_geometry.CircleGenerator",
+            "sig": "",
+            "params": [
+                {
+                    "name": "indices",
+                    "type": "dart:typed_data.Uint16List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "vector_math_geometry\/CircleGenerator\/generateIndices.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid generateIndices(Uint16List indices) {\n  int index = 0;\n  for (int i = 1; i &lt;= _segments; i++) {\n    indices[index] = i;\n    indices[index + 1] = i + 1;\n    indices[index + 2] = 0;\n    index += 3;\n  }\n  assert(index == indexCount);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "generateVertexPositions",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "vector_math_geometry.CircleGenerator",
+            "sig": "",
+            "params": [
+                {
+                    "name": "positions",
+                    "type": "vector_math_lists.Vector3List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "indices",
+                    "type": "dart:typed_data.Uint16List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "vector_math_geometry\/CircleGenerator\/generateVertexPositions.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid generateVertexPositions(Vector3List positions, Uint16List indices) {\n  final Vector3 v = new Vector3.zero();\n  positions[0] = v;\n  int index = 1;\n  for (int i = 0; i &lt;= _segments; i++) {\n    final double percent = i \/ _segments;\n    v\n      ..x = _radius * math.cos(_thetaStart + percent * _thetaLength)\n      ..z = _radius * math.sin(_thetaStart + percent * _thetaLength);\n    positions[index] = v;\n    index++;\n  }\n  assert(index == vertexCount);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "generateVertexTexCoords",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "vector_math_geometry.CircleGenerator",
+            "sig": "",
+            "params": [
+                {
+                    "name": "texCoords",
+                    "type": "vector_math_lists.Vector2List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "positions",
+                    "type": "vector_math_lists.Vector3List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "indices",
+                    "type": "dart:typed_data.Uint16List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "vector_math_geometry\/CircleGenerator\/generateVertexTexCoords.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid generateVertexTexCoords(\n    Vector2List texCoords, Vector3List positions, Uint16List indices) {\n  final Vector2 v = new Vector2(0.5, 0.5);\n  texCoords[0] = v;\n  int index = 1;\n  for (int i = 0; i &lt;= _segments; i++) {\n    final Vector3 position = positions[index];\n    final double x = (position.x \/ (_radius + 1.0)) * 0.5;\n    final double y = (position.z \/ (_radius + 1.0)) * 0.5;\n    v\n      ..x = x + 0.5\n      ..y = y + 0.5;\n    texCoords[index] = v;\n    index++;\n  }\n  assert(index == vertexCount);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "indexCount",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "",
+            "memberOf": "vector_math_geometry.CircleGenerator",
+            "isConstant": false,
+            "href": "vector_math_geometry\/CircleGenerator\/indexCount.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get indexCount =&gt; (_segments) * 3;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "vertexCount",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "",
+            "memberOf": "vector_math_geometry.CircleGenerator",
+            "isConstant": false,
+            "href": "vector_math_geometry\/CircleGenerator\/vertexCount.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get vertexCount =&gt; _segments + 2;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "vector_math_geometry\/CircleGenerator-class.html",
+    "desc": "",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "CircleGenerator"
+}

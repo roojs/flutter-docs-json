@@ -1,0 +1,162 @@
+{
+    "name": "dart:convert.Codec",
+    "extends": [],
+    "memberOf": "dart:convert",
+    "events": [],
+    "methods": [
+        {
+            "name": "Codec",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "dart:convert.Codec",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "dart-convert\/Codec\/Codec.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Codec();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "decode",
+            "type": "",
+            "desc": "<p>Decodes <code>encoded<\/code> data.<\/p>\n<p>The input is decoded as if by <code>decoder.convert<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:convert.Codec",
+            "sig": "",
+            "params": [
+                {
+                    "name": "encoded",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-convert\/Codec\/decode.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">S decode(T encoded) =&gt; decoder.convert(encoded);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "encode",
+            "type": "",
+            "desc": "<p>Encodes <code>input<\/code>.<\/p>\n<p>The input is encoded as if by <code>encoder.convert<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:convert.Codec",
+            "sig": "",
+            "params": [
+                {
+                    "name": "input",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-convert\/Codec\/encode.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">T encode(S input) =&gt; encoder.convert(input);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "fuse",
+            "type": "dart:convert.Codec",
+            "desc": "<p>Fuses <code>this<\/code> with <code>other<\/code>.<\/p>\n<p>When encoding, the resulting codec encodes with <code>this<\/code> before\nencoding with <code>other<\/code>.<\/p>\n<p>When decoding, the resulting codec decodes with <code>other<\/code> before decoding\nwith <code>this<\/code>.<\/p>\n<p>In some cases one needs to use the <a href=\"dart-convert\/Codec\/inverted.html\">inverted<\/a> codecs to be able to fuse\nthem correctly. That is, the output type of <code>this<\/code> (<code>T<\/code>) must match the\ninput type of the second codec <code>other<\/code>.<\/p>\n<p>Examples:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">final jsonToBytes = json.fuse(utf8);\nList&lt;int&gt; bytes = jsonToBytes.encode([\"json-object\"]);\nvar decoded = jsonToBytes.decode(bytes);\nassert(decoded is List &amp;&amp; decoded[0] == \"json-object\");\n\nvar inverted = json.inverted;\nvar jsonIdentity = json.fuse(inverted);\nvar jsonObject = jsonIdentity.encode([\"1\", 2]);\nassert(jsonObject is List &amp;&amp; jsonObject[0] == \"1\" &amp;&amp; jsonObject[1] == 2);\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "dart:convert.Codec",
+            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "type": "dart:convert.Codec",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-convert\/Codec\/fuse.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/ TODO(floitsch): use better example with line-splitter once that one is\n\/\/ in this library.\nCodec&lt;S, R&gt; fuse&lt;R&gt;(Codec&lt;T, R&gt; other) {\n  return _FusedCodec&lt;S, T, R&gt;(this, other);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "decoder",
+            "type": "dart:convert.Converter",
+            "types": [],
+            "desc": "<p>Returns the decoder of <code>this<\/code>, converting from <code>T<\/code> to <code>S<\/code>.<\/p>\n<p>It may be stateful and should not be reused.<\/p>\n        ",
+            "memberOf": "dart:convert.Codec",
+            "isConstant": false,
+            "href": "dart-convert\/Codec\/decoder.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Converter&lt;T, S&gt; get decoder;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "encoder",
+            "type": "dart:convert.Converter",
+            "types": [],
+            "desc": "<p>Returns the encoder from <code>S<\/code> to <code>T<\/code>.<\/p>\n<p>It may be stateful and should not be reused.<\/p>\n        ",
+            "memberOf": "dart:convert.Codec",
+            "isConstant": false,
+            "href": "dart-convert\/Codec\/encoder.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Converter&lt;S, T&gt; get encoder;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "inverted",
+            "type": "dart:convert.Codec",
+            "types": [],
+            "desc": "<p>Inverts <code>this<\/code>.<\/p>\n<p>The <a href=\"dart-convert\/Codec\/encoder.html\">encoder<\/a> and <a href=\"dart-convert\/Codec\/decoder.html\">decoder<\/a> of the resulting codec are swapped.<\/p>\n        ",
+            "memberOf": "dart:convert.Codec",
+            "isConstant": false,
+            "href": "dart-convert\/Codec\/inverted.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Codec&lt;T, S&gt; get inverted =&gt; _InvertedCodec&lt;T, S&gt;(this);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [
+        "convert.HexCodec",
+        "convert.IdentityCodec",
+        "convert.PercentCodec",
+        "dart:convert.AsciiCodec",
+        "dart:convert.Base64Codec",
+        "dart:convert.Encoding",
+        "dart:convert.JsonCodec",
+        "dart:convert.Latin1Codec",
+        "dart:convert.Utf8Codec",
+        "dart:io.GZipCodec",
+        "dart:io.SystemEncoding",
+        "dart:io.ZLibCodec"
+    ],
+    "realImplementors": [
+        "convert.HexCodec",
+        "convert.IdentityCodec",
+        "convert.PercentCodec",
+        "dart:convert.AsciiCodec",
+        "dart:convert.Base64Codec"
+    ],
+    "cn": [],
+    "href": "dart-convert\/Codec-class.html",
+    "desc": "<p>A <a href=\"dart-convert\/Codec-class.html\">Codec<\/a> encodes and (if supported) decodes data.<\/p>\n<p>Codecs can be fused. For example fusing <a href=\"dart-convert\/json-constant.html\">json<\/a> and <a href=\"dart-convert\/utf8-constant.html\">utf8<\/a> produces\nan encoder that can convert Json objects directly to bytes, or can decode\nbytes directly to json objects.<\/p>\n<p>Fused codecs generally attempt to optimize the operations and can be faster\nthan executing each step of an encoding separately.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Codec"
+}

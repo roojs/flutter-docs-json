@@ -1,0 +1,1147 @@
+{
+    "name": "dart:ui.Path",
+    "extends": [],
+    "memberOf": "dart:ui",
+    "events": [],
+    "methods": [
+        {
+            "name": "Path",
+            "type": "",
+            "desc": "<p>Create a new empty <a href=\"dart-ui\/Path-class.html\">Path<\/a> object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "dart-ui\/Path\/Path.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@pragma('vm:entry-point')\nPath() { _constructor(); }<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "addArc",
+            "type": "",
+            "desc": "<p>Adds a new sub-path with one arc segment that consists of the arc\nthat follows the edge of the oval bounded by the given\nrectangle, from startAngle radians around the oval up to\nstartAngle + sweepAngle radians around the oval, with zero\nradians being the point on the right hand side of the oval that\ncrosses the horizontal line that intersects the center of the\nrectangle and with positive angles going clockwise around the\noval.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "oval",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "startAngle",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "sweepAngle",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/addArc.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addArc(Rect oval, double startAngle, double sweepAngle) {\n  assert(_rectIsValid(oval));\n  _addArc(oval.left, oval.top, oval.right, oval.bottom, startAngle, sweepAngle);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addOval",
+            "type": "",
+            "desc": "<p>Adds a new sub-path that consists of a curve that forms the\nellipse that fills the given rectangle.<\/p>\n<p>To add a circle, pass an appropriate rectangle as <code>oval<\/code>. <a href=\"dart-ui\/Rect\/Rect.fromCircle.html\">Rect.fromCircle<\/a>\ncan be used to easily describe the circle's center <a href=\"dart-ui\/Offset-class.html\">Offset<\/a> and radius.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "oval",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/addOval.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addOval(Rect oval) {\n  assert(_rectIsValid(oval));\n  _addOval(oval.left, oval.top, oval.right, oval.bottom);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addPath",
+            "type": "",
+            "desc": "<p>Adds a new sub-path that consists of the given <code>path<\/code> offset by the given\n<code>offset<\/code>.<\/p>\n<p>If <code>matrix4<\/code> is specified, the path will be transformed by this matrix\nafter the matrix is translated by the given offset. The matrix is a 4x4\nmatrix stored in column major order.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:ui.Path",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "matrix4",
+                    "type": "dart:typed_data.Float64List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/addPath.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addPath(Path path, Offset offset, {Float64List matrix4}) {\n  assert(path != null); \/\/ path is checked on the engine side\n  assert(_offsetIsValid(offset));\n  if (matrix4 != null) {\n    assert(_matrix4IsValid(matrix4));\n    _addPathWithMatrix(path, offset.dx, offset.dy, matrix4);\n  } else {\n    _addPath(path, offset.dx, offset.dy);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addPolygon",
+            "type": "",
+            "desc": "<p>Adds a new sub-path with a sequence of line segments that connect the given\npoints.<\/p>\n<p>If <code>close<\/code> is true, a final line segment will be added that connects the\nlast point to the first point.<\/p>\n<p>The <code>points<\/code> argument is interpreted as offsets from the origin.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "points",
+                    "type": "dart:core.List<dart:ui.Offset>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "dart:ui.Offset"
+                    ]
+                },
+                {
+                    "name": "close",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/addPolygon.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addPolygon(List&lt;Offset&gt; points, bool close) {\n  assert(points != null);\n  _addPolygon(_encodePointList(points), close);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addRRect",
+            "type": "",
+            "desc": "<p>Adds a new sub-path that consists of the straight lines and\ncurves needed to form the rounded rectangle described by the\nargument.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rrect",
+                    "type": "dart:ui.RRect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/addRRect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addRRect(RRect rrect) {\n  assert(_rrectIsValid(rrect));\n  _addRRect(rrect._value);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addRect",
+            "type": "",
+            "desc": "<p>Adds a new sub-path that consists of four lines that outline the\ngiven rectangle.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rect",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/addRect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addRect(Rect rect) {\n  assert(_rectIsValid(rect));\n  _addRect(rect.left, rect.top, rect.right, rect.bottom);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "arcTo",
+            "type": "",
+            "desc": "<p>If the <code>forceMoveTo<\/code> argument is false, adds a straight line\nsegment and an arc segment.<\/p>\n<p>If the <code>forceMoveTo<\/code> argument is true, starts a new sub-path\nconsisting of an arc segment.<\/p>\n<p>In either case, the arc segment consists of the arc that follows\nthe edge of the oval bounded by the given rectangle, from\nstartAngle radians around the oval up to startAngle + sweepAngle\nradians around the oval, with zero radians being the point on\nthe right hand side of the oval that crosses the horizontal line\nthat intersects the center of the rectangle and with positive\nangles going clockwise around the oval.<\/p>\n<p>The line segment added if <code>forceMoveTo<\/code> is false starts at the\ncurrent point and ends at the start of the arc.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rect",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "startAngle",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "sweepAngle",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "forceMoveTo",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/arcTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void arcTo(Rect rect, double startAngle, double sweepAngle, bool forceMoveTo) {\n  assert(_rectIsValid(rect));\n  _arcTo(rect.left, rect.top, rect.right, rect.bottom, startAngle, sweepAngle, forceMoveTo);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "arcToPoint",
+            "type": "",
+            "desc": "<p>Appends up to four conic curves weighted to describe an oval of <code>radius<\/code>\nand rotated by <code>rotation<\/code>.<\/p>\n<p>The first curve begins from the last point in the path and the last ends\nat <code>arcEnd<\/code>. The curves follow a path in a direction determined by\n<code>clockwise<\/code> and <code>largeArc<\/code> in such a way that the sweep angle\nis always less than 360 degrees.<\/p>\n<p>A simple line is appended if either either radii are zero or the last\npoint in the path is <code>arcEnd<\/code>. The radii are scaled to fit the last path\npoint if both are greater than zero but too small to describe an arc.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "arcEnd",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "radius",
+                    "type": "dart:ui.Radius",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "rotation",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "largeArc",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "clockwise",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/arcToPoint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void arcToPoint(Offset arcEnd, {\n  Radius radius: Radius.zero,\n  double rotation: 0.0,\n  bool largeArc: false,\n  bool clockwise: true,\n  }) {\n  assert(_offsetIsValid(arcEnd));\n  assert(_radiusIsValid(radius));\n  _arcToPoint(arcEnd.dx, arcEnd.dy, radius.x, radius.y, rotation,\n              largeArc, clockwise);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "close",
+            "type": "",
+            "desc": "<p>Closes the last sub-path, as if a straight line had been drawn\nfrom the current point to the first point of the sub-path.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/close.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void close() native 'Path_close';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "combine",
+            "type": "dart:ui.Path",
+            "desc": "<p>Combines the two paths according to the manner specified by the given\n<code>operation<\/code>.<\/p>\n<p>The resulting path will be constructed from non-overlapping contours. The\ncurve order is reduced where possible so that cubics may be turned into\nquadratics, and quadratics maybe turned into lines.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "operation",
+                    "type": "dart:ui.PathOperation",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "path1",
+                    "type": "dart:ui.Path",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "path2",
+                    "type": "dart:ui.Path",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/combine.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Path combine(PathOperation operation, Path path1, Path path2) {\n  assert(path1 != null);\n  assert(path2 != null);\n  final Path path = new Path();\n  if (path._op(path1, path2, operation.index)) {\n    return path;\n  }\n  throw new StateError('Path.combine() failed.  This may be due an invalid path; in particular, check for NaN values.');\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeMetrics",
+            "type": "dart:ui.PathMetrics",
+            "desc": "<p>Creates a <a href=\"dart-ui\/PathMetrics-class.html\">PathMetrics<\/a> object for this path.<\/p>\n<p>If <code>forceClosed<\/code> is set to true, the contours of the path will be measured\nas if they had been closed, even if they were not explicitly closed.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "forceClosed",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/computeMetrics.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">PathMetrics computeMetrics({bool forceClosed: false}) {\n  return new PathMetrics._(this, forceClosed);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "conicTo",
+            "type": "",
+            "desc": "<p>Adds a bezier segment that curves from the current point to the\ngiven point (x2,y2), using the control points (x1,y1) and the\nweight w. If the weight is greater than 1, then the curve is a\nhyperbola; if the weight equals 1, it's a parabola; and if it is\nless than 1, it is an ellipse.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "x1",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y1",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "x2",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y2",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "w",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/conicTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void conicTo(double x1, double y1, double x2, double y2, double w) native 'Path_conicTo';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "contains",
+            "type": "dart:core.bool",
+            "desc": "<p>Tests to see if the given point is within the path. (That is, whether the\npoint would be in the visible portion of the path if the path was used\nwith <a href=\"dart-ui\/Canvas\/clipPath.html\">Canvas.clipPath<\/a>.)<\/p>\n<p>The <code>point<\/code> argument is interpreted as an offset from the origin.<\/p>\n<p>Returns true if the point is in the path, and false otherwise.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "point",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/contains.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool contains(Offset point) {\n  assert(_offsetIsValid(point));\n  return _contains(point.dx, point.dy);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "cubicTo",
+            "type": "",
+            "desc": "<p>Adds a cubic bezier segment that curves from the current point\nto the given point (x3,y3), using the control points (x1,y1) and\n(x2,y2).<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "x1",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y1",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "x2",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y2",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "x3",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y3",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/cubicTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void cubicTo(double x1, double y1, double x2, double y2, double x3, double y3) native 'Path_cubicTo';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "extendWithPath",
+            "type": "",
+            "desc": "<p>Adds the given path to this path by extending the current segment of this\npath with the the first segment of the given path.<\/p>\n<p>If <code>matrix4<\/code> is specified, the path will be transformed by this matrix\nafter the matrix is translated by the given <code>offset<\/code>.  The matrix is a 4x4\nmatrix stored in column major order.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:ui.Path",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "matrix4",
+                    "type": "dart:typed_data.Float64List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/extendWithPath.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void extendWithPath(Path path, Offset offset, {Float64List matrix4}) {\n  assert(path != null); \/\/ path is checked on the engine side\n  assert(_offsetIsValid(offset));\n  if (matrix4 != null) {\n    assert(_matrix4IsValid(matrix4));\n    _extendWithPathAndMatrix(path, offset.dx, offset.dy, matrix4);\n  } else {\n    _extendWithPath(path, offset.dx, offset.dy);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "Path.from",
+            "type": "",
+            "desc": "<p>Creates a copy of another <a href=\"dart-ui\/Path-class.html\">Path<\/a>.<\/p>\n<p>This copy is fast and does not require additional memory unless either\nthe <code>source<\/code> path or the path returned by this constructor are modified.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "source",
+                    "type": "dart:ui.Path",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-ui\/Path\/Path.from.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Path.from(Path source) {\n  return source._clone();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "getBounds",
+            "type": "dart:ui.Rect",
+            "desc": "<p>Computes the bounding rectangle for this path.<\/p>\n<p>A path containing only axis-aligned points on the same straight line will\nhave no area, and therefore <code>Rect.isEmpty<\/code> will return true for such a\npath. Consider checking <code>rect.width + rect.height &gt; 0.0<\/code> instead, or\nusing the <a href=\"dart-ui\/Path\/computeMetrics.html\">computeMetrics<\/a> API to check the path length.<\/p>\n<p>For many more elaborate paths, the bounds may be inaccurate.  For example,\nwhen a path contains a circle, the points used to compute the bounds are\nthe circle's implied control points, which form a square around the circle;\nif the circle has a transformation applied using <a href=\"dart-ui\/Path\/transform.html\">transform<\/a> then that\nsquare is rotated, and the (axis-aligned, non-rotated) bounding box\ntherefore ends up grossly overestimating the actual area covered by the\ncircle.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/getBounds.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/ see https:\/\/skia.org\/user\/api\/SkPath_Reference#SkPath_getBounds\nRect getBounds() {\n  final Float32List rect = _getBounds();\n  return new Rect.fromLTRB(rect[0], rect[1], rect[2], rect[3]);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "lineTo",
+            "type": "",
+            "desc": "<p>Adds a straight line segment from the current point to the given\npoint.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "x",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/lineTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void lineTo(double x, double y) native 'Path_lineTo';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "moveTo",
+            "type": "",
+            "desc": "<p>Starts a new sub-path at the given coordinate.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "x",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/moveTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void moveTo(double x, double y) native 'Path_moveTo';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "quadraticBezierTo",
+            "type": "",
+            "desc": "<p>Adds a quadratic bezier segment that curves from the current\npoint to the given point (x2,y2), using the control point\n(x1,y1).<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "x1",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y1",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "x2",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y2",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/quadraticBezierTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void quadraticBezierTo(double x1, double y1, double x2, double y2) native 'Path_quadraticBezierTo';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "relativeArcToPoint",
+            "type": "",
+            "desc": "<p>Appends up to four conic curves weighted to describe an oval of <code>radius<\/code>\nand rotated by <code>rotation<\/code>.<\/p>\n<p>The last path point is described by (px, py).<\/p>\n<p>The first curve begins from the last point in the path and the last ends\nat <code>arcEndDelta.dx + px<\/code> and <code>arcEndDelta.dy + py<\/code>. The curves follow a\npath in a direction determined by <code>clockwise<\/code> and <code>largeArc<\/code>\nin such a way that the sweep angle is always less than 360 degrees.<\/p>\n<p>A simple line is appended if either either radii are zero, or, both\n<code>arcEndDelta.dx<\/code> and <code>arcEndDelta.dy<\/code> are zero. The radii are scaled to\nfit the last path point if both are greater than zero but too small to\ndescribe an arc.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "arcEndDelta",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "radius",
+                    "type": "dart:ui.Radius",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "rotation",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "largeArc",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "clockwise",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/relativeArcToPoint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void relativeArcToPoint(Offset arcEndDelta, {\n  Radius radius: Radius.zero,\n  double rotation: 0.0,\n  bool largeArc: false,\n  bool clockwise: true,\n  }) {\n  assert(_offsetIsValid(arcEndDelta));\n  assert(_radiusIsValid(radius));\n  _relativeArcToPoint(arcEndDelta.dx, arcEndDelta.dy, radius.x, radius.y,\n                      rotation, largeArc, clockwise);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "relativeConicTo",
+            "type": "",
+            "desc": "<p>Adds a bezier segment that curves from the current point to the\npoint at the offset (x2,y2) from the current point, using the\ncontrol point at the offset (x1,y1) from the current point and\nthe weight w. If the weight is greater than 1, then the curve is\na hyperbola; if the weight equals 1, it's a parabola; and if it\nis less than 1, it is an ellipse.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "x1",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y1",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "x2",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y2",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "w",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/relativeConicTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void relativeConicTo(double x1, double y1, double x2, double y2, double w) native 'Path_relativeConicTo';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "relativeCubicTo",
+            "type": "",
+            "desc": "<p>Adds a cubic bezier segment that curves from the current point\nto the point at the offset (x3,y3) from the current point, using\nthe control points at the offsets (x1,y1) and (x2,y2) from the\ncurrent point.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "x1",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y1",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "x2",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y2",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "x3",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y3",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/relativeCubicTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void relativeCubicTo(double x1, double y1, double x2, double y2, double x3, double y3) native 'Path_relativeCubicTo';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "relativeLineTo",
+            "type": "",
+            "desc": "<p>Adds a straight line segment from the current point to the point\nat the given offset from the current point.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "dx",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "dy",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/relativeLineTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void relativeLineTo(double dx, double dy) native 'Path_relativeLineTo';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "relativeMoveTo",
+            "type": "",
+            "desc": "<p>Starts a new sub-path at the given offset from the current point.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "dx",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "dy",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/relativeMoveTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void relativeMoveTo(double dx, double dy) native 'Path_relativeMoveTo';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "relativeQuadraticBezierTo",
+            "type": "",
+            "desc": "<p>Adds a quadratic bezier segment that curves from the current\npoint to the point at the offset (x2,y2) from the current point,\nusing the control point at the offset (x1,y1) from the current\npoint.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "x1",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y1",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "x2",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "y2",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/relativeQuadraticBezierTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void relativeQuadraticBezierTo(double x1, double y1, double x2, double y2) native 'Path_relativeQuadraticBezierTo';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "reset",
+            "type": "",
+            "desc": "<p>Clears the <a href=\"dart-ui\/Path-class.html\">Path<\/a> object of all sub-paths, returning it to the\nsame state it had when it was created. The <em>current point<\/em> is\nreset to the origin.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/reset.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void reset() native 'Path_reset';<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "shift",
+            "type": "dart:ui.Path",
+            "desc": "<p>Returns a copy of the path with all the segments of every\nsub-path translated by the given offset.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/shift.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Path shift(Offset offset) {\n  assert(_offsetIsValid(offset));\n  return _shift(offset.dx, offset.dy);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "transform",
+            "type": "dart:ui.Path",
+            "desc": "<p>Returns a copy of the path with all the segments of every\nsub-path transformed by the given matrix.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.Path",
+            "sig": "",
+            "params": [
+                {
+                    "name": "matrix4",
+                    "type": "dart:typed_data.Float64List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/Path\/transform.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Path transform(Float64List matrix4) {\n  assert(_matrix4IsValid(matrix4));\n  return _transform(matrix4);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "fillType",
+            "type": "dart:ui.PathFillType",
+            "types": [],
+            "desc": "<p>Determines how the interior of this path is calculated.<\/p>\n<p>Defaults to the non-zero winding rule, <a href=\"dart-ui\/PathFillType-class.html\">PathFillType.nonZero<\/a>.<\/p>\n        ",
+            "memberOf": "dart:ui.Path",
+            "isConstant": false,
+            "href": "dart-ui\/Path\/fillType.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">PathFillType get fillType =&gt; PathFillType.values[_getFillType()];<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [
+        "rendering.ShapeBorderClipper"
+    ],
+    "realImplementors": [
+        "rendering.ShapeBorderClipper"
+    ],
+    "cn": [],
+    "href": "dart-ui\/Path-class.html",
+    "desc": "<p>A complex, one-dimensional subset of a plane.<\/p>\n<p>A path consists of a number of sub-paths, and a <em>current point<\/em>.<\/p>\n<p>Sub-paths consist of segments of various types, such as lines,\narcs, or beziers. Sub-paths can be open or closed, and can\nself-intersect.<\/p>\n<p>Closed sub-paths enclose a (possibly discontiguous) region of the\nplane based on the current <a href=\"dart-ui\/Path\/fillType.html\">fillType<\/a>.<\/p>\n<p>The <em>current point<\/em> is initially at the origin. After each\noperation adding a segment to a sub-path, the current point is\nupdated to the end of that segment.<\/p>\n<p>Paths can be drawn on canvases using <a href=\"dart-ui\/Canvas\/drawPath.html\">Canvas.drawPath<\/a>, and can\nused to create clip regions using <a href=\"dart-ui\/Canvas\/clipPath.html\">Canvas.clipPath<\/a>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Path"
+}

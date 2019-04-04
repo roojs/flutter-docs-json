@@ -1,0 +1,443 @@
+{
+    "name": "widgets.WidgetsBinding",
+    "extends": [],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "WidgetsBinding",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "widgets\/WidgetsBinding\/WidgetsBinding.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "addObserver",
+            "type": "",
+            "desc": "<p>Registers the given object as a binding observer. Binding\nobservers are notified when various application events occur,\nfor example when the system locale changes. Generally, one\nwidget in the widget tree registers itself as a binding\nobserver, and converts the system state into inherited widgets.<\/p>\n<p>For example, the <a href=\"widgets\/WidgetsApp-class.html\">WidgetsApp<\/a> widget registers as a binding\nobserver and passes the screen size to a <a href=\"widgets\/MediaQuery-class.html\">MediaQuery<\/a> widget\neach time it is built, which enables other widgets to use the\n<a href=\"widgets\/MediaQuery\/of.html\">MediaQuery.of<\/a> static method and (implicitly) the\n<a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> mechanism to be notified whenever the screen\nsize changes (e.g. whenever the screen rotates).<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/WidgetsBinding\/removeObserver.html\">removeObserver<\/a>, to release the resources reserved by this method.<\/li>\n<li>\n<a href=\"widgets\/WidgetsBindingObserver-class.html\">WidgetsBindingObserver<\/a>, which has an example of using this method.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [
+                {
+                    "name": "observer",
+                    "type": "widgets.WidgetsBindingObserver",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/addObserver.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addObserver(WidgetsBindingObserver observer) =&gt; _observers.add(observer);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "allowFirstFrameReport",
+            "type": "",
+            "desc": "<p>When called after <a href=\"widgets\/WidgetsBinding\/deferFirstFrameReport.html\">deferFirstFrameReport<\/a>: tell the framework to report\nthe frame it is building as a \"useful\" first frame.<\/p>\n<p>This method may only be called once for each corresponding call\nto <a href=\"widgets\/WidgetsBinding\/deferFirstFrameReport.html\">deferFirstFrameReport<\/a>.<\/p>\n<p>This is used by <a href=\"widgets\/WidgetsApp-class.html\">WidgetsApp<\/a> to report when the first useful frame is\npainted.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/allowFirstFrameReport.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void allowFirstFrameReport() {\n  if (!kReleaseMode) {\n    assert(_deferFirstFrameReportCount &gt;= 1);\n    _deferFirstFrameReportCount -= 1;\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "attachRootWidget",
+            "type": "",
+            "desc": "<p>Takes a widget and attaches it to the <a href=\"widgets\/WidgetsBinding\/renderViewElement.html\">renderViewElement<\/a>, creating it if\nnecessary.<\/p>\n<p>This is called by <a href=\"widgets\/runApp.html\">runApp<\/a> to configure the widget tree.<\/p>\n<p>See also <a href=\"widgets\/RenderObjectToWidgetAdapter\/attachToRenderTree.html\">RenderObjectToWidgetAdapter.attachToRenderTree<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rootWidget",
+                    "type": "widgets.Widget",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/attachRootWidget.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void attachRootWidget(Widget rootWidget) {\n  _renderViewElement = RenderObjectToWidgetAdapter&lt;RenderBox&gt;(\n    container: renderView,\n    debugShortDescription: '[root]',\n    child: rootWidget,\n  ).attachToRenderTree(buildOwner, renderViewElement);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "deferFirstFrameReport",
+            "type": "",
+            "desc": "<p>Tell the framework not to report the frame it is building as a \"useful\"\nfirst frame until there is a corresponding call to <a href=\"widgets\/WidgetsBinding\/allowFirstFrameReport.html\">allowFirstFrameReport<\/a>.<\/p>\n<p>This is used by <a href=\"widgets\/WidgetsApp-class.html\">WidgetsApp<\/a> to avoid reporting frames that aren't useful\nduring startup as the \"first frame\".<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/deferFirstFrameReport.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void deferFirstFrameReport() {\n  if (!kReleaseMode) {\n    assert(_deferFirstFrameReportCount &gt;= 0);\n    _deferFirstFrameReportCount += 1;\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "dispatchAccessibilityFeaturesChanged",
+            "type": "",
+            "desc": "<p>Notify all the observers that the active set of <a href=\"dart-ui\/AccessibilityFeatures-class.html\">AccessibilityFeatures<\/a>\nhas changed (using <a href=\"widgets\/WidgetsBindingObserver\/didChangeAccessibilityFeatures.html\">WidgetsBindingObserver.didChangeAccessibilityFeatures<\/a>),\ngiving them the <code>features<\/code> argument.<\/p>\n<p>This is called by <a href=\"widgets\/WidgetsBinding\/handleAccessibilityFeaturesChanged.html\">handleAccessibilityFeaturesChanged<\/a> when the\n<a href=\"dart-ui\/Window\/onAccessibilityFeaturesChanged.html\">Window.onAccessibilityFeaturesChanged<\/a> notification is received.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/dispatchAccessibilityFeaturesChanged.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\nvoid dispatchAccessibilityFeaturesChanged() {\n  for (WidgetsBindingObserver observer in _observers)\n    observer.didChangeAccessibilityFeatures();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "dispatchLocalesChanged",
+            "type": "",
+            "desc": "<p>Notify all the observers that the locale has changed (using\n<a href=\"widgets\/WidgetsBindingObserver\/didChangeLocales.html\">WidgetsBindingObserver.didChangeLocales<\/a>), giving them the\n<code>locales<\/code> argument.<\/p>\n<p>This is called by <a href=\"widgets\/WidgetsBinding\/handleLocaleChanged.html\">handleLocaleChanged<\/a> when the <a href=\"dart-ui\/Window\/onLocaleChanged.html\">Window.onLocaleChanged<\/a>\nnotification is received.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [
+                {
+                    "name": "locales",
+                    "type": "dart:core.List<dart:ui.Locale>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "dart:ui.Locale"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/dispatchLocalesChanged.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\nvoid dispatchLocalesChanged(List&lt;Locale&gt; locales) {\n  for (WidgetsBindingObserver observer in _observers)\n    observer.didChangeLocales(locales);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawFrame",
+            "type": "",
+            "desc": "<p>Pump the build and rendering pipeline to generate a frame.<\/p>\n<p>This method is called by <a href=\"scheduler\/SchedulerBinding\/handleDrawFrame.html\">handleDrawFrame<\/a>, which itself is called\nautomatically by the engine when when it is time to lay out and paint a\nframe.<\/p>\n<p>Each frame consists of the following phases:<\/p>\n<ol>\n<li>\n<p>The animation phase: The <a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">handleBeginFrame<\/a> method, which is registered\nwith <a href=\"dart-ui\/Window\/onBeginFrame.html\">Window.onBeginFrame<\/a>, invokes all the transient frame callbacks\nregistered with <a href=\"scheduler\/SchedulerBinding\/scheduleFrameCallback.html\">scheduleFrameCallback<\/a>, in\nregistration order. This includes all the <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> instances that are\ndriving <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> objects, which means all of the active\n<a href=\"animation\/Animation-class.html\">Animation<\/a> objects tick at this point.<\/p>\n<\/li>\n<li>\n<p>Microtasks: After <a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">handleBeginFrame<\/a> returns, any microtasks that got\nscheduled by transient frame callbacks get to run. This typically includes\ncallbacks for futures from <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a>s and <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>s that\ncompleted this frame.<\/p>\n<\/li>\n<\/ol>\n<p>After <a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">handleBeginFrame<\/a>, <a href=\"scheduler\/SchedulerBinding\/handleDrawFrame.html\">handleDrawFrame<\/a>, which is registered with\n<a href=\"dart-ui\/Window\/onDrawFrame.html\">Window.onDrawFrame<\/a>, is called, which invokes all the persistent frame\ncallbacks, of which the most notable is this method, <a href=\"widgets\/WidgetsBinding\/drawFrame.html\">drawFrame<\/a>, which\nproceeds as follows:<\/p>\n<ol start=\"3\">\n<li>\n<p>The build phase: All the dirty <a href=\"widgets\/Element-class.html\">Element<\/a>s in the widget tree are\nrebuilt (see <a href=\"widgets\/State\/build.html\">State.build<\/a>). See <a href=\"widgets\/State\/setState.html\">State.setState<\/a> for further details on\nmarking a widget dirty for building. See <a href=\"widgets\/BuildOwner-class.html\">BuildOwner<\/a> for more information\non this step.<\/p>\n<\/li>\n<li>\n<p>The layout phase: All the dirty <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s in the system are laid\nout (see <a href=\"rendering\/RenderObject\/performLayout.html\">RenderObject.performLayout<\/a>). See <a href=\"rendering\/RenderObject\/markNeedsLayout.html\">RenderObject.markNeedsLayout<\/a>\nfor further details on marking an object dirty for layout.<\/p>\n<\/li>\n<li>\n<p>The compositing bits phase: The compositing bits on any dirty\n<a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> objects are updated. See\n<a href=\"rendering\/RenderObject\/markNeedsCompositingBitsUpdate.html\">RenderObject.markNeedsCompositingBitsUpdate<\/a>.<\/p>\n<\/li>\n<li>\n<p>The paint phase: All the dirty <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s in the system are\nrepainted (see <a href=\"rendering\/RenderObject\/paint.html\">RenderObject.paint<\/a>). This generates the <a href=\"rendering\/Layer-class.html\">Layer<\/a> tree. See\n<a href=\"rendering\/RenderObject\/markNeedsPaint.html\">RenderObject.markNeedsPaint<\/a> for further details on marking an object\ndirty for paint.<\/p>\n<\/li>\n<li>\n<p>The compositing phase: The layer tree is turned into a <a href=\"dart-ui\/Scene-class.html\">Scene<\/a> and\nsent to the GPU.<\/p>\n<\/li>\n<li>\n<p>The semantics phase: All the dirty <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s in the system have\ntheir semantics updated (see <code>RenderObject.semanticsAnnotator<\/code>). This\ngenerates the <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> tree. See\n<a href=\"rendering\/RenderObject\/markNeedsSemanticsUpdate.html\">RenderObject.markNeedsSemanticsUpdate<\/a> for further details on marking an\nobject dirty for semantics.<\/p>\n<\/li>\n<\/ol>\n<p>For more details on steps 4-8, see <a href=\"rendering\/PipelineOwner-class.html\">PipelineOwner<\/a>.<\/p>\n<ol start=\"9\">\n<li>\n<p>The finalization phase in the widgets layer: The widgets tree is\nfinalized. This causes <a href=\"widgets\/State\/dispose.html\">State.dispose<\/a> to be invoked on any objects that\nwere removed from the widgets tree this frame. See\n<a href=\"widgets\/BuildOwner\/finalizeTree.html\">BuildOwner.finalizeTree<\/a> for more details.<\/p>\n<\/li>\n<li>\n<p>The finalization phase in the scheduler layer: After <a href=\"widgets\/WidgetsBinding\/drawFrame.html\">drawFrame<\/a>\nreturns, <a href=\"scheduler\/SchedulerBinding\/handleDrawFrame.html\">handleDrawFrame<\/a> then invokes post-frame callbacks (registered\nwith <a href=\"scheduler\/SchedulerBinding\/addPostFrameCallback.html\">addPostFrameCallback<\/a>).<\/p>\n<\/li>\n<\/ol>",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/drawFrame.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/\n\/\/ When editing the above, also update rendering\/binding.dart's copy.\n@override\nvoid drawFrame() {\n  assert(!debugBuildingDirtyElements);\n  assert(() {\n    debugBuildingDirtyElements = true;\n    return true;\n  }());\n  try {\n    if (renderViewElement != null)\n      buildOwner.buildScope(renderViewElement);\n    super.drawFrame();\n    buildOwner.finalizeTree();\n  } finally {\n    assert(() {\n      debugBuildingDirtyElements = false;\n      return true;\n    }());\n  }\n  if (!kReleaseMode) {\n    if (_needToReportFirstFrame &amp;&amp; _reportFirstFrame) {\n      developer.Timeline.instantSync('Widgets completed first useful frame');\n      developer.postEvent('Flutter.FirstFrame', &lt;String, dynamic&gt;{});\n      _needToReportFirstFrame = false;\n    }\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "handleAccessibilityFeaturesChanged",
+            "type": "",
+            "desc": "<p>Called when the platform accessibility features change.<\/p>\n<p>See <a href=\"dart-ui\/Window\/onAccessibilityFeaturesChanged.html\">Window.onAccessibilityFeaturesChanged<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/handleAccessibilityFeaturesChanged.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid handleAccessibilityFeaturesChanged() {\n  super.handleAccessibilityFeaturesChanged();\n  for (WidgetsBindingObserver observer in _observers)\n    observer.didChangeAccessibilityFeatures();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "handleAppLifecycleStateChanged",
+            "type": "",
+            "desc": "<p>Called when the application lifecycle state changes.<\/p>\n<p>Notifies all the observers using\n<a href=\"widgets\/WidgetsBindingObserver\/didChangeAppLifecycleState.html\">WidgetsBindingObserver.didChangeAppLifecycleState<\/a>.<\/p>\n<p>This method exposes notifications from <a href=\"services\/SystemChannels\/lifecycle-constant.html\">SystemChannels.lifecycle<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [
+                {
+                    "name": "state",
+                    "type": "dart:ui.AppLifecycleState",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/handleAppLifecycleStateChanged.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid handleAppLifecycleStateChanged(AppLifecycleState state) {\n  super.handleAppLifecycleStateChanged(state);\n  for (WidgetsBindingObserver observer in _observers)\n    observer.didChangeAppLifecycleState(state);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "handleLocaleChanged",
+            "type": "",
+            "desc": "<p>Called when the system locale changes.<\/p>\n<p>Calls <code>dispatchLocaleChanged<\/code> to notify the binding observers.<\/p>\n<p>See <a href=\"dart-ui\/Window\/onLocaleChanged.html\">Window.onLocaleChanged<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/handleLocaleChanged.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\nvoid handleLocaleChanged() {\n  dispatchLocalesChanged(window.locales);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "handleMemoryPressure",
+            "type": "",
+            "desc": "<p>Called when the operating system notifies the application of a memory\npressure situation.<\/p>\n<p>Notifies all the observers using\n<a href=\"widgets\/WidgetsBindingObserver\/didHaveMemoryPressure.html\">WidgetsBindingObserver.didHaveMemoryPressure<\/a>.<\/p>\n<p>This method exposes the <code>memoryPressure<\/code> notification from\n<a href=\"services\/SystemChannels\/system-constant.html\">SystemChannels.system<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/handleMemoryPressure.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void handleMemoryPressure() {\n  for (WidgetsBindingObserver observer in _observers)\n    observer.didHaveMemoryPressure();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "handleMetricsChanged",
+            "type": "",
+            "desc": "<p>Called when the system metrics change.<\/p>\n<p>See <a href=\"dart-ui\/Window\/onMetricsChanged.html\">Window.onMetricsChanged<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/handleMetricsChanged.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid handleMetricsChanged() {\n  super.handleMetricsChanged();\n  for (WidgetsBindingObserver observer in _observers)\n    observer.didChangeMetrics();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "handlePlatformBrightnessChanged",
+            "type": "",
+            "desc": "<p>Called when the platform brightness changes.<\/p>\n<p>The current platform brightness can be queried either from a Flutter\nbinding, or from a <a href=\"widgets\/MediaQuery-class.html\">MediaQuery<\/a> widget.<\/p>\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}Querying [Window.platformBrightness].{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">final Brightness brightness = WidgetsBinding.instance.window.platformBrightness;<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}Querying [MediaQuery] directly.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">final Brightness brightness = MediaQuery.platformBrightnessOf(context);<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}Querying [MediaQueryData].{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">final MediaQueryData mediaQueryData = MediaQuery.of(context);\nfinal Brightness brightness = mediaQueryData.platformBrightness;<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>See <a href=\"dart-ui\/Window\/onPlatformBrightnessChanged.html\">Window.onPlatformBrightnessChanged<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/handlePlatformBrightnessChanged.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid handlePlatformBrightnessChanged() {\n  super.handlePlatformBrightnessChanged();\n  for (WidgetsBindingObserver observer in _observers)\n    observer.didChangePlatformBrightness();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "handlePopRoute",
+            "type": "dart:async.Future",
+            "desc": "<p>Called when the system pops the current route.<\/p>\n<p>This first notifies the binding observers (using\n<a href=\"widgets\/WidgetsBindingObserver\/didPopRoute.html\">WidgetsBindingObserver.didPopRoute<\/a>), in registration order, until one\nreturns true, meaning that it was able to handle the request (e.g. by\nclosing a dialog box). If none return true, then the application is shut\ndown by calling <a href=\"services\/SystemNavigator\/pop.html\">SystemNavigator.pop<\/a>.<\/p>\n<p><a href=\"widgets\/WidgetsApp-class.html\">WidgetsApp<\/a> uses this in conjunction with a <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> to\ncause the back button to close dialog boxes, return from modal\npages, and so forth.<\/p>\n<p>This method exposes the <code>popRoute<\/code> notification from\n<a href=\"services\/SystemChannels\/navigation-constant.html\">SystemChannels.navigation<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/handlePopRoute.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nFuture&lt;void&gt; handlePopRoute() async {\n  for (WidgetsBindingObserver observer in List&lt;WidgetsBindingObserver&gt;.from(_observers)) {\n    if (await observer.didPopRoute())\n      return;\n  }\n  SystemNavigator.pop();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "handlePushRoute",
+            "type": "dart:async.Future",
+            "desc": "<p>Called when the host tells the app to push a new route onto the\nnavigator.<\/p>\n<p>This notifies the binding observers (using\n<a href=\"widgets\/WidgetsBindingObserver\/didPushRoute.html\">WidgetsBindingObserver.didPushRoute<\/a>), in registration order, until one\nreturns true, meaning that it was able to handle the request (e.g. by\nopening a dialog box). If none return true, then nothing happens.<\/p>\n<p>This method exposes the <code>pushRoute<\/code> notification from\n<a href=\"services\/SystemChannels\/navigation-constant.html\">SystemChannels.navigation<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [
+                {
+                    "name": "route",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/handlePushRoute.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\nFuture&lt;void&gt; handlePushRoute(String route) async {\n  for (WidgetsBindingObserver observer in List&lt;WidgetsBindingObserver&gt;.from(_observers)) {\n    if (await observer.didPushRoute(route))\n      return;\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "handleTextScaleFactorChanged",
+            "type": "",
+            "desc": "<p>Called when the platform text scale factor changes.<\/p>\n<p>See <a href=\"dart-ui\/Window\/onTextScaleFactorChanged.html\">Window.onTextScaleFactorChanged<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/handleTextScaleFactorChanged.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid handleTextScaleFactorChanged() {\n  super.handleTextScaleFactorChanged();\n  for (WidgetsBindingObserver observer in _observers)\n    observer.didChangeTextScaleFactor();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "initInstances",
+            "type": "",
+            "desc": "<p>The initialization method. Subclasses override this method to hook into\nthe platform and otherwise configure their services. Subclasses must call\n\"super.initInstances()\".<\/p>\n<p>By convention, if the service is to be provided as a singleton, it should\nbe exposed as <code>MixinClassName.instance<\/code>, a static getter that returns\n<code>MixinClassName._instance<\/code>, a static field that is set by\n<code>initInstances()<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/initInstances.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid initInstances() {\n  super.initInstances();\n  _instance = this;\n  buildOwner.onBuildScheduled = _handleBuildScheduled;\n  window.onLocaleChanged = handleLocaleChanged;\n  window.onAccessibilityFeaturesChanged = handleAccessibilityFeaturesChanged;\n  SystemChannels.navigation.setMethodCallHandler(_handleNavigationInvocation);\n  SystemChannels.system.setMessageHandler(_handleSystemMessage);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "initServiceExtensions",
+            "type": "",
+            "desc": "<p>Called when the binding is initialized, to register service\nextensions.<\/p>\n<p>Bindings that want to expose service extensions should overload\nthis method to register them using calls to\n<a href=\"foundation\/BindingBase\/registerSignalServiceExtension.html\">registerSignalServiceExtension<\/a>,\n<a href=\"foundation\/BindingBase\/registerBoolServiceExtension.html\">registerBoolServiceExtension<\/a>,\n<a href=\"foundation\/BindingBase\/registerNumericServiceExtension.html\">registerNumericServiceExtension<\/a>, and\n<a href=\"foundation\/BindingBase\/registerServiceExtension.html\">registerServiceExtension<\/a> (in increasing order of complexity).<\/p>\n<p>Implementations of this method must call their superclass\nimplementation.<\/p>\n<p>A registered service extension can only be activated if the vm-service\nis included in the build, which only happens in debug and profile mode.\nAlthough a service extension cannot be used in release mode its code may\nstill be included in the Dart snapshot and blow up binary size if it is\nnot wrapped in a guard that allows the tree shaker to remove it (see\nsample code below).<\/p>\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}The following code registers a service extension that is only included in\ndebug builds.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  assert(() {\n    \/\/ Register your service extension here.\n    return true;\n  }());\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}A service extension registered with the following code snippet is\navailable in debug and profile mode.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  \/\/ kReleaseMode is defined in the 'flutter\/foundation.dart' package.\n  if (!kReleaseMode) {\n    \/\/ Register your service extension here.\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>Both guards ensure that Dart's tree shaker can remove the code for the\nservice extension in release builds.<\/p>\n<p>See also:<\/p>\n<ul><li><a href=\"https:\/\/github.com\/dart-lang\/sdk\/blob\/master\/runtime\/vm\/service\/service.md#rpcs-requests-and-responses\">github.com\/dart-lang\/sdk\/blob\/master\/runtime\/vm\/service\/service.md#rpcs-requests-and-responses<\/a><\/li><\/ul>",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/initServiceExtensions.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid initServiceExtensions() {\n  super.initServiceExtensions();\n\n  if (!kReleaseMode) {\n    registerSignalServiceExtension(\n      name: 'debugDumpApp',\n      callback: () {\n        debugDumpApp();\n        return debugPrintDone;\n      },\n    );\n\n    registerBoolServiceExtension(\n      name: 'showPerformanceOverlay',\n      getter: () =&gt;\n      Future&lt;bool&gt;.value(WidgetsApp.showPerformanceOverlayOverride),\n      setter: (bool value) {\n        if (WidgetsApp.showPerformanceOverlayOverride == value)\n          return Future&lt;void&gt;.value();\n        WidgetsApp.showPerformanceOverlayOverride = value;\n        return _forceRebuild();\n      },\n    );\n\n    registerServiceExtension(\n      name: 'didSendFirstFrameEvent',\n      callback: (_) async {\n        return &lt;String, dynamic&gt;{\n          \/\/ This is defined to return a STRING, not a boolean.\n          \/\/ Devtools, the Intellij plugin, and the flutter tool all depend\n          \/\/ on it returning a string and not a boolean.\n          'enabled': _needToReportFirstFrame ? 'false' : 'true',\n        };\n      },\n    );\n  }\n\n  assert(() {\n    registerBoolServiceExtension(\n      name: 'debugAllowBanner',\n      getter: () =&gt; Future&lt;bool&gt;.value(WidgetsApp.debugAllowBannerOverride),\n      setter: (bool value) {\n        if (WidgetsApp.debugAllowBannerOverride == value)\n          return Future&lt;void&gt;.value();\n        WidgetsApp.debugAllowBannerOverride = value;\n        return _forceRebuild();\n      },\n    );\n\n    \/\/ Expose the ability to send Widget rebuilds as [Timeline] events.\n    registerBoolServiceExtension(\n      name: 'profileWidgetBuilds',\n      getter: () async =&gt; debugProfileBuildsEnabled,\n      setter: (bool value) async {\n        if (debugProfileBuildsEnabled != value)\n          debugProfileBuildsEnabled = value;\n      },\n    );\n\n    \/\/ This service extension is deprecated and will be removed by 12\/1\/2018.\n    \/\/ Use ext.flutter.inspector.show instead.\n    registerBoolServiceExtension(\n        name: 'debugWidgetInspector',\n        getter: () async =&gt; WidgetsApp.debugShowWidgetInspectorOverride,\n        setter: (bool value) {\n          if (WidgetsApp.debugShowWidgetInspectorOverride == value)\n            return Future&lt;void&gt;.value();\n          WidgetsApp.debugShowWidgetInspectorOverride = value;\n          return _forceRebuild();\n        },\n    );\n\n    WidgetInspectorService.instance.initServiceExtensions(registerServiceExtension);\n\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "performReassemble",
+            "type": "dart:async.Future",
+            "desc": "<p>This method is called by <a href=\"foundation\/BindingBase\/reassembleApplication.html\">reassembleApplication<\/a> to actually cause the\napplication to reassemble, e.g. after a hot reload.<\/p>\n<p>Bindings are expected to use this method to re-register anything that uses\nclosures, so that they do not keep pointing to old code, and to flush any\ncaches of previously computed values, in case the new code would compute\nthem differently. For example, the rendering layer triggers the entire\napplication to repaint when this is called.<\/p>\n<p>Do not call this method directly. Instead, use <a href=\"foundation\/BindingBase\/reassembleApplication.html\">reassembleApplication<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/performReassemble.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;void&gt; performReassemble() {\n  assert(() {\n    WidgetInspectorService.instance.performReassemble();\n    return true;\n  }());\n\n  deferFirstFrameReport();\n  if (renderViewElement != null)\n    buildOwner.reassemble(renderViewElement);\n  return super.performReassemble().then((void value) {\n    allowFirstFrameReport();\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "removeObserver",
+            "type": "dart:core.bool",
+            "desc": "<p>Unregisters the given observer. This should be used sparingly as\nit is relatively expensive (O(N) in the number of registered\nobservers).<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/WidgetsBinding\/addObserver.html\">addObserver<\/a>, for the method that adds observers in the first place.<\/li>\n<li>\n<a href=\"widgets\/WidgetsBindingObserver-class.html\">WidgetsBindingObserver<\/a>, which has an example of using this method.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "widgets.WidgetsBinding",
+            "sig": "",
+            "params": [
+                {
+                    "name": "observer",
+                    "type": "widgets.WidgetsBindingObserver",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/WidgetsBinding\/removeObserver.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool removeObserver(WidgetsBindingObserver observer) =&gt; _observers.remove(observer);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "buildOwner",
+            "type": "widgets.BuildOwner",
+            "types": [],
+            "desc": "<p>The <a href=\"widgets\/BuildOwner-class.html\">BuildOwner<\/a> in charge of executing the build pipeline for the\nwidget tree rooted at this binding.<\/p>\n        ",
+            "memberOf": "widgets.WidgetsBinding",
+            "isConstant": false,
+            "href": "widgets\/WidgetsBinding\/buildOwner.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">BuildOwner get buildOwner =&gt; _buildOwner;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugBuildingDirtyElements",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether we are currently in a frame. This is used to verify\nthat frames are not scheduled redundantly.<\/p>\n<p>This is public so that test frameworks can change it.<\/p>\n<p>This flag is not used in release builds.<\/p>\n        ",
+            "memberOf": "widgets.WidgetsBinding",
+            "isConstant": false,
+            "href": "widgets\/WidgetsBinding\/debugBuildingDirtyElements.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool debugBuildingDirtyElements = false\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugDidSendFirstFrameEvent",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether the first frame has finished rendering.<\/p>\n<p>Only useful in profile and debug builds; in release builds, this always\nreturn false. This can be deferred using <a href=\"widgets\/WidgetsBinding\/deferFirstFrameReport.html\">deferFirstFrameReport<\/a> and\n<a href=\"widgets\/WidgetsBinding\/allowFirstFrameReport.html\">allowFirstFrameReport<\/a>. The value is set at the end of the call to\n<a href=\"widgets\/WidgetsBinding\/drawFrame.html\">drawFrame<\/a>.<\/p>\n<p>This value can also be obtained over the VM service protocol as\n<code>ext.flutter.didSendFirstFrameEvent<\/code>.<\/p>\n        ",
+            "memberOf": "widgets.WidgetsBinding",
+            "isConstant": false,
+            "href": "widgets\/WidgetsBinding\/debugDidSendFirstFrameEvent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get debugDidSendFirstFrameEvent =&gt; !_needToReportFirstFrame;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "focusManager",
+            "type": "widgets.FocusManager",
+            "types": [],
+            "desc": "<p>The object in charge of the focus tree.<\/p>\n<p>Rarely used directly. Instead, consider using <a href=\"widgets\/FocusScope\/of.html\">FocusScope.of<\/a> to obtain\nthe <a href=\"widgets\/FocusScopeNode-class.html\">FocusScopeNode<\/a> for a given <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a>.<\/p>\n<p>See <a href=\"widgets\/FocusManager-class.html\">FocusManager<\/a> for more details.<\/p>\n        ",
+            "memberOf": "widgets.WidgetsBinding",
+            "isConstant": false,
+            "href": "widgets\/WidgetsBinding\/focusManager.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">FocusManager get focusManager =&gt; _buildOwner.focusManager;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "instance",
+            "type": "widgets.WidgetsBinding",
+            "types": [],
+            "desc": "<p>The current <a href=\"widgets\/WidgetsBinding-mixin.html\">WidgetsBinding<\/a>, if one has been created.<\/p>\n<p>If you need the binding to be constructed before calling <a href=\"widgets\/runApp.html\">runApp<\/a>,\nyou can ensure a Widget binding has been constructed by calling the\n<code>WidgetsFlutterBinding.ensureInitialized()<\/code> function.<\/p>\n        ",
+            "memberOf": "widgets.WidgetsBinding",
+            "isConstant": false,
+            "href": "widgets\/WidgetsBinding\/instance.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">static WidgetsBinding get instance =&gt; _instance;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "renderViewElement",
+            "type": "widgets.Element",
+            "types": [],
+            "desc": "<p>The <a href=\"widgets\/Element-class.html\">Element<\/a> that is at the root of the hierarchy (and which wraps the\n<a href=\"rendering\/RenderView-class.html\">RenderView<\/a> object at the root of the rendering hierarchy).<\/p>\n<p>This is initialized the first time <a href=\"widgets\/runApp.html\">runApp<\/a> is called.<\/p>\n        ",
+            "memberOf": "widgets.WidgetsBinding",
+            "isConstant": false,
+            "href": "widgets\/WidgetsBinding\/renderViewElement.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Element get renderViewElement =&gt; _renderViewElement;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": true,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "widgets\/WidgetsBinding-mixin.html",
+    "desc": "<p>The glue between the widgets layer and the Flutter engine.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "mixin",
+    "shortname": "WidgetsBinding"
+}

@@ -1,0 +1,101 @@
+{
+    "name": "flutter_test.MinimumTextContrastGuideline",
+    "extends": [
+        "flutter_test.AccessibilityGuideline",
+        "dart:core.Object"
+    ],
+    "memberOf": "flutter_test",
+    "events": [],
+    "methods": [
+        {
+            "name": "evaluate",
+            "type": "dart:async.Future<flutter_test.Evaluation>",
+            "desc": "<p>Evaluate whether the current state of the <code>tester<\/code> conforms to the rule.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.MinimumTextContrastGuideline",
+            "sig": "",
+            "params": [
+                {
+                    "name": "tester",
+                    "type": "flutter_test.WidgetTester",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_test\/MinimumTextContrastGuideline\/evaluate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;Evaluation&gt; evaluate(WidgetTester tester) async {\n  final SemanticsNode root = tester.binding.pipelineOwner.semanticsOwner.rootSemanticsNode;\n  final RenderView renderView = tester.binding.renderView;\n  final OffsetLayer layer = renderView.layer;\n  ui.Image image;\n  final ByteData byteData = await tester.binding.runAsync&lt;ByteData&gt;(() async {\n    \/\/ Needs to be the same pixel ratio otherwise our dimensions won't match the\n    \/\/ last transform layer.\n    image = await layer.toImage(renderView.paintBounds, pixelRatio: 1.0);\n    return image.toByteData();\n  });\n\n  Future&lt;Evaluation&gt; evaluateNode(SemanticsNode node) async {\n    Evaluation result = const Evaluation.pass();\n    if (node.isInvisible || node.isMergedIntoParent || node.hasFlag(ui.SemanticsFlag.isHidden))\n      return result;\n    final SemanticsData data = node.getSemanticsData();\n    final List&lt;SemanticsNode&gt; children = &lt;SemanticsNode&gt;[];\n    node.visitChildren((SemanticsNode child) {\n      children.add(child);\n      return true;\n    });\n    for (SemanticsNode child in children)\n      result += await evaluateNode(child);\n    if (_shouldSkipNode(data))\n      return result;\n\n    \/\/ We need to look up the inherited text properties to determine the\n    \/\/ contrast ratio based on text size\/weight.\n    double fontSize;\n    bool isBold;\n    final String text = (data.label?.isEmpty == true) ? data.value : data.label;\n    final List&lt;Element&gt; elements = find.text(text).hitTestable().evaluate().toList();\n    if (elements.length == 1) {\n      final Element element = elements.single;\n      final Widget widget = element.widget;\n      final DefaultTextStyle defaultTextStyle = DefaultTextStyle.of(element);\n      if (widget is Text) {\n        TextStyle effectiveTextStyle = widget.style;\n        if (widget.style == null || widget.style.inherit)\n          effectiveTextStyle = defaultTextStyle.style.merge(widget.style);\n        fontSize = effectiveTextStyle.fontSize;\n        isBold = effectiveTextStyle.fontWeight == FontWeight.bold;\n      } else if (widget is EditableText) {\n        isBold = widget.style.fontWeight == FontWeight.bold;\n        fontSize = widget.style.fontSize;\n      } else {\n        assert(false);\n      }\n    } else if (elements.length &gt; 1) {\n      return Evaluation.fail('Multiple nodes with the same label: ${data.label}\\n');\n    } else {\n      \/\/ If we can't find the text node then assume the label does not\n      \/\/ correspond to actual text.\n      return result;\n    }\n\n    \/\/ Transform local coordinate to screen coordinates.\n    Rect paintBounds = node.rect;\n    SemanticsNode current = node;\n    while (current != null &amp;&amp; current.parent != null) {\n      if (current.transform != null)\n        paintBounds = MatrixUtils.transformRect(current.transform, paintBounds);\n      paintBounds = paintBounds.shift(current.parent?.rect?.topLeft ?? Offset.zero);\n      current = current.parent;\n    }\n    if (_isNodeOffScreen(paintBounds))\n      return result;\n    final List&lt;int&gt; subset = _subsetToRect(byteData, paintBounds, image.width, image.height);\n    \/\/ Node was too far off screen.\n    if (subset.isEmpty)\n      return result;\n    final _ContrastReport report = _ContrastReport(subset);\n    final double contrastRatio = report.contrastRatio();\n    const double delta = -0.01;\n    double targetContrastRatio;\n    if ((isBold &amp;&amp; fontSize &gt; kBoldTextMinimumSize) || (fontSize ?? 12.0) &gt; kLargeTextMinimumSize) {\n      targetContrastRatio = kMinimumRatioLargeText;\n    } else {\n      targetContrastRatio = kMinimumRatioNormalText;\n    }\n    if (contrastRatio - targetContrastRatio &gt;= delta)\n      return result + const Evaluation.pass();\n    return result + Evaluation.fail(\n      '$node:\\nExpected contrast ratio of at least '\n      '$targetContrastRatio but found ${contrastRatio.toStringAsFixed(2)} for a font size of $fontSize. '\n      'The computed foreground color was: ${report.lightColor}, '\n      'The computed background color was: ${report.darkColor}\\n'\n      'See also: https:\/\/www.w3.org\/TR\/UNDERSTANDING-WCAG20\/visual-audio-contrast-contrast.html'\n    );\n  }\n  return evaluateNode(root);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "flutter_test.Evaluation"
+            ]
+        }
+    ],
+    "props": [
+        {
+            "name": "description",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>A description of the policy restrictions and criteria.<\/p>\n        ",
+            "memberOf": "flutter_test.MinimumTextContrastGuideline",
+            "isConstant": false,
+            "href": "flutter_test\/MinimumTextContrastGuideline\/description.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString get description =&gt; 'Text contrast should follow WCAG guidelines';<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "type": "",
+            "href": "flutter_test\/MinimumTextContrastGuideline\/kBoldTextMinimumSize-constant.html",
+            "desc": "<p>The minimum text size for bold text to be considered large for contrast\nchecking.<\/p>\n<p>Defined by <a href=\"http:\/\/www.w3.org\/TR\/UNDERSTANDING-WCAG20\/visual-audio-contrast-contrast.html\">http:\/\/www.w3.org\/TR\/UNDERSTANDING-WCAG20\/visual-audio-contrast-contrast.html<\/a><\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const int kBoldTextMinimumSize = 14\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "kBoldTextMinimumSize",
+            "memberOf": "flutter_test.MinimumTextContrastGuideline"
+        },
+        {
+            "type": "",
+            "href": "flutter_test\/MinimumTextContrastGuideline\/kLargeTextMinimumSize-constant.html",
+            "desc": "<p>The minimum text size considered large for contrast checking.<\/p>\n<p>Defined by <a href=\"http:\/\/www.w3.org\/TR\/UNDERSTANDING-WCAG20\/visual-audio-contrast-contrast.html\">http:\/\/www.w3.org\/TR\/UNDERSTANDING-WCAG20\/visual-audio-contrast-contrast.html<\/a><\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const int kLargeTextMinimumSize = 18\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "kLargeTextMinimumSize",
+            "memberOf": "flutter_test.MinimumTextContrastGuideline"
+        },
+        {
+            "type": "",
+            "href": "flutter_test\/MinimumTextContrastGuideline\/kMinimumRatioLargeText-constant.html",
+            "desc": "<p>The minimum contrast ratio for large text.<\/p>\n<p>Defined by <a href=\"http:\/\/www.w3.org\/TR\/UNDERSTANDING-WCAG20\/visual-audio-contrast-contrast.html\">http:\/\/www.w3.org\/TR\/UNDERSTANDING-WCAG20\/visual-audio-contrast-contrast.html<\/a><\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const double kMinimumRatioLargeText = 3.0\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "kMinimumRatioLargeText",
+            "memberOf": "flutter_test.MinimumTextContrastGuideline"
+        },
+        {
+            "type": "",
+            "href": "flutter_test\/MinimumTextContrastGuideline\/kMinimumRatioNormalText-constant.html",
+            "desc": "<p>The minimum contrast ratio for normal text.<\/p>\n<p>Defined by <a href=\"http:\/\/www.w3.org\/TR\/UNDERSTANDING-WCAG20\/visual-audio-contrast-contrast.html\">http:\/\/www.w3.org\/TR\/UNDERSTANDING-WCAG20\/visual-audio-contrast-contrast.html<\/a><\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const double kMinimumRatioNormalText = 4.5\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "kMinimumRatioNormalText",
+            "memberOf": "flutter_test.MinimumTextContrastGuideline"
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "flutter_test\/MinimumTextContrastGuideline-class.html",
+    "desc": "<p>A guideline which verifies that all nodes that contribute semantics via text\nmeet minimum contrast levels.<\/p>\n<p>The guidelines are defined by the Web Content Accessibility Guidelines,\n<a href=\"http:\/\/www.w3.org\/TR\/UNDERSTANDING-WCAG20\/visual-audio-contrast-contrast.html\">http:\/\/www.w3.org\/TR\/UNDERSTANDING-WCAG20\/visual-audio-contrast-contrast.html<\/a>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "MinimumTextContrastGuideline"
+}

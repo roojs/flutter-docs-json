@@ -1,0 +1,114 @@
+{
+    "name": "services.ServicesBinding",
+    "extends": [],
+    "memberOf": "services",
+    "events": [],
+    "methods": [
+        {
+            "name": "ServicesBinding",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "services.ServicesBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "services\/ServicesBinding\/ServicesBinding.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "evict",
+            "type": "",
+            "desc": "<p>Called in response to the <code>ext.flutter.evict<\/code> service extension.<\/p>\n<p>This is used by the <code>flutter<\/code> tool during hot reload so that any images\nthat have changed on disk get cleared from caches.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.ServicesBinding",
+            "sig": "",
+            "params": [
+                {
+                    "name": "asset",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/ServicesBinding\/evict.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\nvoid evict(String asset) {\n  rootBundle.evict(asset);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "initInstances",
+            "type": "",
+            "desc": "<p>The initialization method. Subclasses override this method to hook into\nthe platform and otherwise configure their services. Subclasses must call\n\"super.initInstances()\".<\/p>\n<p>By convention, if the service is to be provided as a singleton, it should\nbe exposed as <code>MixinClassName.instance<\/code>, a static getter that returns\n<code>MixinClassName._instance<\/code>, a static field that is set by\n<code>initInstances()<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.ServicesBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "services\/ServicesBinding\/initInstances.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid initInstances() {\n  super.initInstances();\n  _instance = this;\n  window\n    ..onPlatformMessage = BinaryMessages.handlePlatformMessage;\n  initLicenses();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "initLicenses",
+            "type": "",
+            "desc": "<p>Adds relevant licenses to the <a href=\"foundation\/LicenseRegistry-class.html\">LicenseRegistry<\/a>.<\/p>\n<p>By default, the <a href=\"services\/ServicesBinding-mixin.html\">ServicesBinding<\/a>'s implementation of <a href=\"services\/ServicesBinding\/initLicenses.html\">initLicenses<\/a> adds\nall the licenses collected by the <code>flutter<\/code> tool during compilation.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.ServicesBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "services\/ServicesBinding\/initLicenses.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\nvoid initLicenses() {\n  LicenseRegistry.addLicense(_addLicenses);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "initServiceExtensions",
+            "type": "",
+            "desc": "<p>Called when the binding is initialized, to register service\nextensions.<\/p>\n<p>Bindings that want to expose service extensions should overload\nthis method to register them using calls to\n<a href=\"foundation\/BindingBase\/registerSignalServiceExtension.html\">registerSignalServiceExtension<\/a>,\n<a href=\"foundation\/BindingBase\/registerBoolServiceExtension.html\">registerBoolServiceExtension<\/a>,\n<a href=\"foundation\/BindingBase\/registerNumericServiceExtension.html\">registerNumericServiceExtension<\/a>, and\n<a href=\"foundation\/BindingBase\/registerServiceExtension.html\">registerServiceExtension<\/a> (in increasing order of complexity).<\/p>\n<p>Implementations of this method must call their superclass\nimplementation.<\/p>\n<p>A registered service extension can only be activated if the vm-service\nis included in the build, which only happens in debug and profile mode.\nAlthough a service extension cannot be used in release mode its code may\nstill be included in the Dart snapshot and blow up binary size if it is\nnot wrapped in a guard that allows the tree shaker to remove it (see\nsample code below).<\/p>\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}The following code registers a service extension that is only included in\ndebug builds.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  assert(() {\n    \/\/ Register your service extension here.\n    return true;\n  }());\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}A service extension registered with the following code snippet is\navailable in debug and profile mode.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  \/\/ kReleaseMode is defined in the 'flutter\/foundation.dart' package.\n  if (!kReleaseMode) {\n    \/\/ Register your service extension here.\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>Both guards ensure that Dart's tree shaker can remove the code for the\nservice extension in release builds.<\/p>\n<p>See also:<\/p>\n<ul><li><a href=\"https:\/\/github.com\/dart-lang\/sdk\/blob\/master\/runtime\/vm\/service\/service.md#rpcs-requests-and-responses\">github.com\/dart-lang\/sdk\/blob\/master\/runtime\/vm\/service\/service.md#rpcs-requests-and-responses<\/a><\/li><\/ul>",
+            "static": false,
+            "memberOf": "services.ServicesBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "services\/ServicesBinding\/initServiceExtensions.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid initServiceExtensions() {\n  super.initServiceExtensions();\n\n  assert(() {\n    registerStringServiceExtension(\n      \/\/ ext.flutter.evict value=foo.png will cause foo.png to be evicted from\n      \/\/ the rootBundle cache and cause the entire image cache to be cleared.\n      \/\/ This is used by hot reload mode to clear out the cache of resources\n      \/\/ that have changed.\n      name: 'evict',\n      getter: () async =&gt; '',\n      setter: (String value) async {\n        evict(value);\n      },\n    );\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "instance",
+            "type": "services.ServicesBinding",
+            "types": [],
+            "desc": "<p>The current <a href=\"services\/ServicesBinding-mixin.html\">ServicesBinding<\/a>, if one has been created.<\/p>\n        ",
+            "memberOf": "services.ServicesBinding",
+            "isConstant": false,
+            "href": "services\/ServicesBinding\/instance.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">static ServicesBinding get instance =&gt; _instance;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": true,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "services\/ServicesBinding-mixin.html",
+    "desc": "<p>Listens for platform messages and directs them to <a href=\"services\/BinaryMessages-class.html\">BinaryMessages<\/a>.<\/p>\n<p>The <a href=\"services\/ServicesBinding-mixin.html\">ServicesBinding<\/a> also registers a <a href=\"foundation\/LicenseEntryCollector.html\">LicenseEntryCollector<\/a> that exposes\nthe licenses found in the <code>LICENSE<\/code> file stored at the root of the asset\nbundle, and implements the <code>ext.flutter.evict<\/code> service extension (see\n<a href=\"services\/ServicesBinding\/evict.html\">evict<\/a>).<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "mixin",
+    "shortname": "ServicesBinding"
+}

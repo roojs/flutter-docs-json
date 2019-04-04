@@ -1,0 +1,247 @@
+{
+    "name": "widgets.SliverChildBuilderDelegate",
+    "extends": [
+        "widgets.SliverChildDelegate",
+        "dart:core.Object"
+    ],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "SliverChildBuilderDelegate",
+            "type": "",
+            "desc": "<p>Creates a delegate that supplies children for slivers using the given\nbuilder callback.<\/p>\n<p>The <code>builder<\/code>, <code>addAutomaticKeepAlives<\/code>, <code>addRepaintBoundaries<\/code>,\n<code>addSemanticIndexes<\/code>, and <code>semanticIndexCallback<\/code> arguments must not be\nnull.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.SliverChildBuilderDelegate",
+            "sig": "",
+            "params": [
+                {
+                    "name": "builder",
+                    "type": "widgets.IndexedWidgetBuilder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "childCount",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "addAutomaticKeepAlives",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "addRepaintBoundaries",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "addSemanticIndexes",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "semanticIndexCallback",
+                    "type": "widgets.SemanticIndexCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "semanticIndexOffset",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "widgets\/SliverChildBuilderDelegate\/SliverChildBuilderDelegate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const SliverChildBuilderDelegate(\n  this.builder, {\n  this.childCount,\n  this.addAutomaticKeepAlives = true,\n  this.addRepaintBoundaries = true,\n  this.addSemanticIndexes = true,\n  this.semanticIndexCallback = _kDefaultSemanticIndexCallback,\n  this.semanticIndexOffset = 0,\n}) : assert(builder != null),\n     assert(addAutomaticKeepAlives != null),\n     assert(addRepaintBoundaries != null),\n     assert(addSemanticIndexes != null),\n     assert(semanticIndexCallback != null);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "build",
+            "type": "widgets.Widget",
+            "desc": "<p>Returns the child with the given index.<\/p>\n<p>Should return null if asked to build a widget with a greater index than\nexists. If this returns null, <a href=\"widgets\/SliverChildBuilderDelegate\/estimatedChildCount.html\">estimatedChildCount<\/a> must subsequently\nreturn a precise non-null value.<\/p>\n<p>Subclasses typically override this function and wrap their children in\n<a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> and <a href=\"widgets\/RepaintBoundary-class.html\">RepaintBoundary<\/a> widgets.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.SliverChildBuilderDelegate",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "widgets.BuildContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "index",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/SliverChildBuilderDelegate\/build.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nWidget build(BuildContext context, int index) {\n  assert(builder != null);\n  if (index &lt; 0 || (childCount != null &amp;&amp; index &gt;= childCount))\n    return null;\n  Widget child;\n  try {\n    child = builder(context, index);\n  } catch (exception, stackTrace) {\n    child = _createErrorWidget(exception, stackTrace);\n  }\n  if (child == null)\n    return null;\n  if (addRepaintBoundaries)\n    child = RepaintBoundary.wrap(child, index);\n  if (addSemanticIndexes) {\n    final int semanticIndex = semanticIndexCallback(child, index);\n    if (semanticIndex != null)\n      child = IndexedSemantics(index: semanticIndex + semanticIndexOffset, child: child);\n  }\n  if (addAutomaticKeepAlives)\n    child = AutomaticKeepAlive(child: child);\n  return child;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "shouldRebuild",
+            "type": "dart:core.bool",
+            "desc": "<p>Called whenever a new instance of the child delegate class is\nprovided to the sliver.<\/p>\n<p>If the new instance represents different information than the old\ninstance, then the method should return true, otherwise it should return\nfalse.<\/p>\n<p>If the method returns false, then the <a href=\"widgets\/SliverChildBuilderDelegate\/build.html\">build<\/a> call might be optimized\naway.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.SliverChildBuilderDelegate",
+            "sig": "",
+            "params": [
+                {
+                    "name": "oldDelegate",
+                    "type": "widgets.SliverChildBuilderDelegate",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/SliverChildBuilderDelegate\/shouldRebuild.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool shouldRebuild(covariant SliverChildBuilderDelegate oldDelegate) =&gt; true;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "addAutomaticKeepAlives",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether to wrap each child in an <a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a>.<\/p>\n<p>Typically, children in lazy list are wrapped in <a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a>\nwidgets so that children can use <a href=\"widgets\/KeepAliveNotification-class.html\">KeepAliveNotification<\/a>s to preserve\ntheir state when they would otherwise be garbage collected off-screen.<\/p>\n<p>This feature (and <a href=\"widgets\/SliverChildBuilderDelegate\/addRepaintBoundaries.html\">addRepaintBoundaries<\/a>) must be disabled if the children\nare going to manually maintain their <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a> state. It may also be\nmore efficient to disable this feature if it is known ahead of time that\nnone of the children will ever try to keep themselves alive.<\/p>\n<p>Defaults to true.<\/p>\n        ",
+            "memberOf": "widgets.SliverChildBuilderDelegate",
+            "isConstant": false,
+            "href": "widgets\/SliverChildBuilderDelegate\/addAutomaticKeepAlives.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool addAutomaticKeepAlives\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "addRepaintBoundaries",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether to wrap each child in a <a href=\"widgets\/RepaintBoundary-class.html\">RepaintBoundary<\/a>.<\/p>\n<p>Typically, children in a scrolling container are wrapped in repaint\nboundaries so that they do not need to be repainted as the list scrolls.\nIf the children are easy to repaint (e.g., solid color blocks or a short\nsnippet of text), it might be more efficient to not add a repaint boundary\nand simply repaint the children during scrolling.<\/p>\n<p>Defaults to true.<\/p>\n        ",
+            "memberOf": "widgets.SliverChildBuilderDelegate",
+            "isConstant": false,
+            "href": "widgets\/SliverChildBuilderDelegate\/addRepaintBoundaries.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool addRepaintBoundaries\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "addSemanticIndexes",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether to wrap each child in an <a href=\"widgets\/IndexedSemantics-class.html\">IndexedSemantics<\/a>.<\/p>\n<p>Typically, children in a scrolling container must be annotated with a\nsemantic index in order to generate the correct accessibility\nannouncements. This should only be set to false if the indexes have\nalready been provided by an <code>IndexedChildSemantics<\/code> widget.<\/p>\n<p>Defaults to true.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<code>IndexedChildSemantics<\/code>, for an explanation of how to manually\nprovide semantic indexes.<\/li><\/ul>",
+            "memberOf": "widgets.SliverChildBuilderDelegate",
+            "isConstant": false,
+            "href": "widgets\/SliverChildBuilderDelegate\/addSemanticIndexes.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool addSemanticIndexes\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "builder",
+            "type": "widgets.IndexedWidgetBuilder",
+            "types": [],
+            "desc": "<p>Called to build children for the sliver.<\/p>\n<p>Will be called only for indices greater than or equal to zero and less\nthan <a href=\"widgets\/SliverChildBuilderDelegate\/childCount.html\">childCount<\/a> (if <a href=\"widgets\/SliverChildBuilderDelegate\/childCount.html\">childCount<\/a> is non-null).<\/p>\n<p>Should return null if asked to build a widget with a greater index than\nexists.<\/p>\n<p>The delegate wraps the children returned by this builder in\n<a href=\"widgets\/RepaintBoundary-class.html\">RepaintBoundary<\/a> widgets.<\/p>\n        ",
+            "memberOf": "widgets.SliverChildBuilderDelegate",
+            "isConstant": false,
+            "href": "widgets\/SliverChildBuilderDelegate\/builder.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final IndexedWidgetBuilder builder\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "childCount",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The total number of children this delegate can provide.<\/p>\n<p>If null, the number of children is determined by the least index for which\n<a href=\"widgets\/SliverChildBuilderDelegate\/builder.html\">builder<\/a> returns null.<\/p>\n        ",
+            "memberOf": "widgets.SliverChildBuilderDelegate",
+            "isConstant": false,
+            "href": "widgets\/SliverChildBuilderDelegate\/childCount.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int childCount\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "estimatedChildCount",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>Returns an estimate of the number of children this delegate will build.<\/p>\n<p>Used to estimate the maximum scroll offset if <a href=\"widgets\/SliverChildDelegate\/estimateMaxScrollOffset.html\">estimateMaxScrollOffset<\/a>\nreturns null.<\/p>\n<p>Return null if there are an unbounded number of children or if it would\nbe too difficult to estimate the number of children.<\/p>\n<p>This must return a precise number once <a href=\"widgets\/SliverChildBuilderDelegate\/build.html\">build<\/a> has returned null.<\/p>\n        ",
+            "memberOf": "widgets.SliverChildBuilderDelegate",
+            "isConstant": false,
+            "href": "widgets\/SliverChildBuilderDelegate\/estimatedChildCount.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get estimatedChildCount =&gt; childCount;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "semanticIndexCallback",
+            "type": "widgets.SemanticIndexCallback",
+            "types": [],
+            "desc": "<p>A <a href=\"widgets\/SemanticIndexCallback.html\">SemanticIndexCallback<\/a> which is used when <a href=\"widgets\/SliverChildBuilderDelegate\/addSemanticIndexes.html\">addSemanticIndexes<\/a> is true.<\/p>\n<p>Defaults to providing an index for each widget.<\/p>\n        ",
+            "memberOf": "widgets.SliverChildBuilderDelegate",
+            "isConstant": false,
+            "href": "widgets\/SliverChildBuilderDelegate\/semanticIndexCallback.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final SemanticIndexCallback semanticIndexCallback\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "semanticIndexOffset",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>An initial offset to add to the semantic indexes generated by this widget.<\/p>\n<p>Defaults to zero.<\/p>\n        ",
+            "memberOf": "widgets.SliverChildBuilderDelegate",
+            "isConstant": false,
+            "href": "widgets\/SliverChildBuilderDelegate\/semanticIndexOffset.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int semanticIndexOffset\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "widgets\/SliverChildBuilderDelegate-class.html",
+    "desc": "<p>A delegate that supplies children for slivers using a builder callback.<\/p>\n<p>Many slivers lazily construct their box children to avoid creating more\nchildren than are visible through the <a href=\"widgets\/Viewport-class.html\">Viewport<\/a>. This delegate provides\nchildren using an <a href=\"widgets\/IndexedWidgetBuilder.html\">IndexedWidgetBuilder<\/a> callback, so that the children do\nnot even have to be built until they are displayed.<\/p>\n<p>The widgets returned from the builder callback are automatically wrapped in\n<a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> widgets if <a href=\"widgets\/SliverChildBuilderDelegate\/addAutomaticKeepAlives.html\">addAutomaticKeepAlives<\/a> is true (the\ndefault) and in <a href=\"widgets\/RepaintBoundary-class.html\">RepaintBoundary<\/a> widgets if <a href=\"widgets\/SliverChildBuilderDelegate\/addRepaintBoundaries.html\">addRepaintBoundaries<\/a> is true\n(also the default).<\/p>\n<h2 id=\"accessibility\">Accessibility<\/h2>\n<p>The <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a> requires that its semantic children are annotated\nusing <a href=\"widgets\/IndexedSemantics-class.html\">IndexedSemantics<\/a>. This is done by default in the delegate with\nthe <code>addSemanticIndexes<\/code> parameter set to true.<\/p>\n<p>If multiple delegates are used in a single scroll view, then the indexes\nwill not be correct by default. The <code>semanticIndexOffset<\/code> can be used to\noffset the semantic indexes of each delegate so that the indexes are\nmonotonically increasing. For example, if a scroll view contains two\ndelegates where the first has 10 children contributing semantics, then the\nsecond delegate should offset its children by 10.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis sample code shows how to use <code>semanticIndexOffset<\/code> to handle multiple\ndelegates in a single scroll view.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">CustomScrollView(\n  semanticChildCount: 4,\n  slivers: &lt;Widget&gt;[\n    SliverGrid(\n      gridDelegate: _gridDelegate,\n      delegate: SliverChildBuilderDelegate(\n        (BuildContext context, int index) {\n           return Text('...');\n         },\n         childCount: 2,\n       ),\n     ),\n    SliverGrid(\n      gridDelegate: _gridDelegate,\n      delegate: SliverChildBuilderDelegate(\n        (BuildContext context, int index) {\n           return Text('...');\n         },\n         childCount: 2,\n         semanticIndexOffset: 2,\n       ),\n     ),\n  ],\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>In certain cases, only a subset of child widgets should be annotated\nwith a semantic index. For example, in <a href=\"widgets\/ListView\/ListView.separated.html\">new ListView.separated()<\/a> the\nseparators do not have an index associated with them. This is done by\nproviding a <code>semanticIndexCallback<\/code> which returns null for separators\nindexes and rounds the non-separator indexes down by half.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis sample code shows how to use <code>semanticIndexCallback<\/code> to handle\nannotating a subset of child nodes with a semantic index. There is\na <a href=\"widgets\/Spacer-class.html\">Spacer<\/a> widget at odd indexes which should not have a semantic\nindex.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">CustomScrollView(\n  semanticChildCount: 5,\n  slivers: &lt;Widget&gt;[\n    SliverGrid(\n      gridDelegate: _gridDelegate,\n      delegate: SliverChildBuilderDelegate(\n        (BuildContext context, int index) {\n           if (index.isEven) {\n             return Text('...');\n           }\n           return Spacer();\n         },\n         semanticIndexCallback: (Widget widget, int localIndex) {\n           if (localIndex.isEven) {\n             return localIndex ~\/ 2;\n           }\n           return null;\n         },\n         childCount: 10,\n       ),\n     ),\n  ],\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/SliverChildListDelegate-class.html\">SliverChildListDelegate<\/a>, which is a delegate that has an explicit list\nof children.<\/li>\n<li>\n<a href=\"widgets\/IndexedSemantics-class.html\">IndexedSemantics<\/a>, for an example of manually annotating child nodes\nwith semantic indexes.<\/li>\n<\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "SliverChildBuilderDelegate"
+}

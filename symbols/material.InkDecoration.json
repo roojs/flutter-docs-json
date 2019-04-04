@@ -1,0 +1,155 @@
+{
+    "name": "material.InkDecoration",
+    "extends": [
+        "material.InkFeature",
+        "dart:core.Object"
+    ],
+    "memberOf": "material",
+    "events": [],
+    "methods": [
+        {
+            "name": "InkDecoration",
+            "type": "",
+            "desc": "<p>Draws a decoration on a <a href=\"material\/Material-class.html\">Material<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "material.InkDecoration",
+            "sig": "",
+            "params": [
+                {
+                    "name": "decoration",
+                    "type": "painting.Decoration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "configuration",
+                    "type": "painting.ImageConfiguration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "controller",
+                    "type": "material.MaterialInkController",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "referenceBox",
+                    "type": "rendering.RenderBox",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "onRemoved",
+                    "type": "dart:ui.VoidCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "material\/InkDecoration\/InkDecoration.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">InkDecoration({\n  @required Decoration decoration,\n  @required ImageConfiguration configuration,\n  @required MaterialInkController controller,\n  @required RenderBox referenceBox,\n  VoidCallback onRemoved,\n}) : assert(configuration != null),\n     _configuration = configuration,\n     super(controller: controller, referenceBox: referenceBox, onRemoved: onRemoved) {\n  this.decoration = decoration;\n  controller.addInkFeature(this);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "dispose",
+            "type": "",
+            "desc": "<p>Free up the resources associated with this ink feature.<\/p>\n    ",
+            "static": false,
+            "memberOf": "material.InkDecoration",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "material\/InkDecoration\/dispose.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  _painter?.dispose();\n  super.dispose();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "paintFeature",
+            "type": "",
+            "desc": "<p>Override this method to paint the ink feature.<\/p>\n<p>The transform argument gives the coordinate conversion from the coordinate\nsystem of the canvas to the coordinate system of the <a href=\"material\/InkFeature\/referenceBox.html\">referenceBox<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "material.InkDecoration",
+            "sig": "",
+            "params": [
+                {
+                    "name": "canvas",
+                    "type": "dart:ui.Canvas",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "transform",
+                    "type": "vector_math_64.Matrix4",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "material\/InkDecoration\/paintFeature.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid paintFeature(Canvas canvas, Matrix4 transform) {\n  if (_painter == null)\n    return;\n  final Offset originOffset = MatrixUtils.getAsTranslation(transform);\n  final ImageConfiguration sizedConfiguration = configuration.copyWith(\n    size: referenceBox.size,\n  );\n  if (originOffset == null) {\n    canvas.save();\n    canvas.transform(transform.storage);\n    _painter.paint(canvas, Offset.zero, sizedConfiguration);\n    canvas.restore();\n  } else {\n    _painter.paint(canvas, originOffset, sizedConfiguration);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "configuration",
+            "type": "painting.ImageConfiguration",
+            "types": [],
+            "desc": "<p>The configuration to pass to the <a href=\"painting\/BoxPainter-class.html\">BoxPainter<\/a> obtained from the\n<a href=\"material\/InkDecoration\/decoration.html\">decoration<\/a>, when painting.<\/p>\n<p>The <a href=\"painting\/ImageConfiguration\/size.html\">ImageConfiguration.size<\/a> field is ignored (and replaced by the size\nof the <a href=\"material\/InkFeature\/referenceBox.html\">referenceBox<\/a>, at paint time).<\/p>\n        ",
+            "memberOf": "material.InkDecoration",
+            "isConstant": false,
+            "href": "material\/InkDecoration\/configuration.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">ImageConfiguration get configuration =&gt; _configuration;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "decoration",
+            "type": "painting.Decoration",
+            "types": [],
+            "desc": "<p>What to paint on the <a href=\"material\/Material-class.html\">Material<\/a>.<\/p>\n<p>The decoration is painted at the position and size of the <a href=\"material\/InkFeature\/referenceBox.html\">referenceBox<\/a>,\non the <a href=\"material\/Material-class.html\">Material<\/a> that owns the <a href=\"material\/InkFeature\/controller.html\">controller<\/a>.<\/p>\n        ",
+            "memberOf": "material.InkDecoration",
+            "isConstant": false,
+            "href": "material\/InkDecoration\/decoration.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Decoration get decoration =&gt; _decoration;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "material\/InkDecoration-class.html",
+    "desc": "<p>A decoration on a part of a <a href=\"material\/Material-class.html\">Material<\/a>.<\/p>\n<p>This object is rarely created directly. Instead of creating an ink\ndecoration directly, consider using an <a href=\"material\/Ink-class.html\">Ink<\/a> widget, which uses this class\nin combination with <a href=\"widgets\/Padding-class.html\">Padding<\/a> and <a href=\"widgets\/ConstrainedBox-class.html\">ConstrainedBox<\/a> to draw a decoration on a\n<a href=\"material\/Material-class.html\">Material<\/a>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"material\/Ink-class.html\">Ink<\/a>, the corresponding widget.<\/li>\n<li>\n<a href=\"material\/InkResponse-class.html\">InkResponse<\/a>, which uses gestures to trigger ink highlights and ink\nsplashes in the parent <a href=\"material\/Material-class.html\">Material<\/a>.<\/li>\n<li>\n<a href=\"material\/InkWell-class.html\">InkWell<\/a>, which is a rectangular <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> (the most common type of\nink response).<\/li>\n<li>\n<a href=\"material\/Material-class.html\">Material<\/a>, which is the widget on which the ink is painted.<\/li>\n<\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "InkDecoration"
+}

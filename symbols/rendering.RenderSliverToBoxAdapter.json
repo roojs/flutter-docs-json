@@ -1,0 +1,66 @@
+{
+    "name": "rendering.RenderSliverToBoxAdapter",
+    "extends": [
+        "rendering.RenderSliverSingleBoxAdapter",
+        "rendering.RenderSliver",
+        "rendering.RenderObject",
+        "foundation.AbstractNode",
+        "dart:core.Object"
+    ],
+    "memberOf": "rendering",
+    "events": [],
+    "methods": [
+        {
+            "name": "RenderSliverToBoxAdapter",
+            "type": "",
+            "desc": "<p>Creates a <a href=\"rendering\/RenderSliver-class.html\">RenderSliver<\/a> that wraps a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderSliverToBoxAdapter",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderBox",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "rendering\/RenderSliverToBoxAdapter\/RenderSliverToBoxAdapter.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RenderSliverToBoxAdapter({\n  RenderBox child,\n}) : super(child: child);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "performLayout",
+            "type": "",
+            "desc": "<p>Do the work of computing the layout for this render object.<\/p>\n<p>Do not call this function directly: call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> instead. This function\nis called by <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> when there is actually work to be done by this\nrender object during layout. The layout constraints provided by your\nparent are available via the <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> getter.<\/p>\n<p>If <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is true, then this function should not actually change\nthe dimensions of this render object. Instead, that work should be done by\n<a href=\"rendering\/RenderSliver\/performResize.html\">performResize<\/a>. If <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is false, then this function should\nboth change the dimensions of this render object and instruct its children\nto layout.<\/p>\n<p>In implementing this function, you must call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> on each of your\nchildren, passing true for parentUsesSize if your layout information is\ndependent on your child's layout information. Passing true for\nparentUsesSize ensures that this render object will undergo layout if the\nchild undergoes layout. Otherwise, the child can change its layout\ninformation without informing this render object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderSliverToBoxAdapter",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/RenderSliverToBoxAdapter\/performLayout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid performLayout() {\n  if (child == null) {\n    geometry = SliverGeometry.zero;\n    return;\n  }\n  child.layout(constraints.asBoxConstraints(), parentUsesSize: true);\n  double childExtent;\n  switch (constraints.axis) {\n    case Axis.horizontal:\n      childExtent = child.size.width;\n      break;\n    case Axis.vertical:\n      childExtent = child.size.height;\n      break;\n  }\n  assert(childExtent != null);\n  final double paintedChildSize = calculatePaintOffset(constraints, from: 0.0, to: childExtent);\n  final double cacheExtent = calculateCacheOffset(constraints, from: 0.0, to: childExtent);\n\n  assert(paintedChildSize.isFinite);\n  assert(paintedChildSize &gt;= 0.0);\n  geometry = SliverGeometry(\n    scrollExtent: childExtent,\n    paintExtent: paintedChildSize,\n    cacheExtent: cacheExtent,\n    maxPaintExtent: childExtent,\n    hitTestExtent: paintedChildSize,\n    hasVisualOverflow: childExtent &gt; constraints.remainingPaintExtent || constraints.scrollOffset &gt; 0.0,\n  );\n  setChildParentData(child, constraints, geometry);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "rendering\/RenderSliverToBoxAdapter-class.html",
+    "desc": "<p>A <a href=\"rendering\/RenderSliver-class.html\">RenderSliver<\/a> that contains a single <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>.<\/p>\n<p>The child will not be laid out if it is not visible. It is sized according\nto the child's preferences in the main axis, and with a tight constraint\nforcing it to the dimensions of the viewport in the cross axis.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"rendering\/RenderSliver-class.html\">RenderSliver<\/a>, which explains more about the Sliver protocol.<\/li>\n<li>\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, which explains more about the Box protocol.<\/li>\n<li>\n<a href=\"rendering\/RenderViewport-class.html\">RenderViewport<\/a>, which allows <a href=\"rendering\/RenderSliver-class.html\">RenderSliver<\/a> objects to be placed inside\na <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> (the opposite of this class).<\/li>\n<\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "RenderSliverToBoxAdapter"
+}

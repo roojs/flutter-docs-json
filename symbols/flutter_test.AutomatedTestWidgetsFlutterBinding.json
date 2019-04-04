@@ -1,0 +1,339 @@
+{
+    "name": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+    "extends": [
+        "flutter_test.TestWidgetsFlutterBinding",
+        "foundation.BindingBase",
+        "dart:core.Object"
+    ],
+    "memberOf": "flutter_test",
+    "events": [],
+    "methods": [
+        {
+            "name": "AutomatedTestWidgetsFlutterBinding",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/AutomatedTestWidgetsFlutterBinding.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "addTime",
+            "type": "",
+            "desc": "<p>Increase the timeout for the current test by the given duration.<\/p>\n<p>Tests by default time out after two seconds, but the timeout can be\nincreased before an expensive operation to allow it to complete without\nhitting the test timeout.<\/p>\n<p>By default, each <a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding\/pump.html\">pump<\/a> and <code>pumpWidget<\/code> call increases the timeout by a\nhundred milliseconds, and each <a href=\"flutter_test\/matchesGoldenFile.html\">matchesGoldenFile<\/a> expectation increases\nit by several seconds.<\/p>\n<p>In general, unit tests are expected to run very fast, and this method is\nusually not necessary.<\/p>\n<p>The granularity of timeouts is coarse: the time is checked once per\nsecond, and only when the test is not executing. It is therefore possible\nfor a timeout to be exceeded by hundreds of milliseconds and for the test\nto still succeed. If precise timing is required, it should be implemented\nas a part of the test rather than relying on this mechanism.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding\/defaultTestTimeout.html\">defaultTestTimeout<\/a>, the maximum that the timeout can reach.\n(That timeout is implemented by the test package.)<\/li><\/ul>",
+            "static": false,
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "sig": "",
+            "params": [
+                {
+                    "name": "duration",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/addTime.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid addTime(Duration duration) {\n  assert(_timeout != null, 'addTime can only be called during a test.');\n  _timeout += duration;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "asyncBarrier",
+            "type": "",
+            "desc": "<p>This is called during test execution before and after the body has been\nexecuted.<\/p>\n<p>It's used by <a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding-class.html\">AutomatedTestWidgetsFlutterBinding<\/a> to drain the microtasks\nbefore the final <a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding\/pump.html\">pump<\/a> that happens during test cleanup.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/asyncBarrier.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid asyncBarrier() {\n  assert(_currentFakeAsync != null);\n  _currentFakeAsync.flushMicrotasks();\n  super.asyncBarrier();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "drawFrame",
+            "type": "",
+            "desc": "<p>Pump the rendering pipeline to generate a frame.<\/p>\n<p>This method is called by <a href=\"scheduler\/SchedulerBinding\/handleDrawFrame.html\">handleDrawFrame<\/a>, which itself is called\nautomatically by the engine when it is time to lay out and paint a frame.<\/p>\n<p>Each frame consists of the following phases:<\/p>\n<ol>\n<li>\n<p>The animation phase: The <a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">handleBeginFrame<\/a> method, which is registered\nwith <a href=\"dart-ui\/Window\/onBeginFrame.html\">Window.onBeginFrame<\/a>, invokes all the transient frame callbacks\nregistered with <a href=\"scheduler\/SchedulerBinding\/scheduleFrameCallback.html\">scheduleFrameCallback<\/a>, in registration order. This\nincludes all the <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> instances that are driving <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>\nobjects, which means all of the active <a href=\"animation\/Animation-class.html\">Animation<\/a> objects tick at this\npoint.<\/p>\n<\/li>\n<li>\n<p>Microtasks: After <a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">handleBeginFrame<\/a> returns, any microtasks that got\nscheduled by transient frame callbacks get to run. This typically includes\ncallbacks for futures from <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a>s and <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>s that\ncompleted this frame.<\/p>\n<\/li>\n<\/ol>\n<p>After <a href=\"scheduler\/SchedulerBinding\/handleBeginFrame.html\">handleBeginFrame<\/a>, <a href=\"scheduler\/SchedulerBinding\/handleDrawFrame.html\">handleDrawFrame<\/a>, which is registered with\n<a href=\"dart-ui\/Window\/onDrawFrame.html\">Window.onDrawFrame<\/a>, is called, which invokes all the persistent frame\ncallbacks, of which the most notable is this method, <a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding\/drawFrame.html\">drawFrame<\/a>, which\nproceeds as follows:<\/p>\n<ol start=\"3\">\n<li>\n<p>The layout phase: All the dirty <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s in the system are laid\nout (see <a href=\"rendering\/RenderObject\/performLayout.html\">RenderObject.performLayout<\/a>). See <a href=\"rendering\/RenderObject\/markNeedsLayout.html\">RenderObject.markNeedsLayout<\/a>\nfor further details on marking an object dirty for layout.<\/p>\n<\/li>\n<li>\n<p>The compositing bits phase: The compositing bits on any dirty\n<a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> objects are updated. See\n<a href=\"rendering\/RenderObject\/markNeedsCompositingBitsUpdate.html\">RenderObject.markNeedsCompositingBitsUpdate<\/a>.<\/p>\n<\/li>\n<li>\n<p>The paint phase: All the dirty <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s in the system are\nrepainted (see <a href=\"rendering\/RenderObject\/paint.html\">RenderObject.paint<\/a>). This generates the <a href=\"rendering\/Layer-class.html\">Layer<\/a> tree. See\n<a href=\"rendering\/RenderObject\/markNeedsPaint.html\">RenderObject.markNeedsPaint<\/a> for further details on marking an object\ndirty for paint.<\/p>\n<\/li>\n<li>\n<p>The compositing phase: The layer tree is turned into a <a href=\"dart-ui\/Scene-class.html\">Scene<\/a> and\nsent to the GPU.<\/p>\n<\/li>\n<li>\n<p>The semantics phase: All the dirty <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s in the system have\ntheir semantics updated (see <code>RenderObject.semanticsAnnotator<\/code>). This\ngenerates the <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> tree. See\n<a href=\"rendering\/RenderObject\/markNeedsSemanticsUpdate.html\">RenderObject.markNeedsSemanticsUpdate<\/a> for further details on marking an\nobject dirty for semantics.<\/p>\n<\/li>\n<\/ol>\n<p>For more details on steps 3-7, see <a href=\"rendering\/PipelineOwner-class.html\">PipelineOwner<\/a>.<\/p>\n<ol start=\"8\"><li>The finalization phase: After <a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding\/drawFrame.html\">drawFrame<\/a> returns, <a href=\"scheduler\/SchedulerBinding\/handleDrawFrame.html\">handleDrawFrame<\/a>\nthen invokes post-frame callbacks (registered with <a href=\"scheduler\/SchedulerBinding\/addPostFrameCallback.html\">addPostFrameCallback<\/a>).<\/li><\/ol>\n<p>Some bindings (for example, the <a href=\"widgets\/WidgetsBinding-mixin.html\">WidgetsBinding<\/a>) add extra steps to this\nlist (for example, see <a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding\/drawFrame.html\">WidgetsBinding.drawFrame<\/a>).<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/drawFrame.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid drawFrame() {\n  assert(inTest);\n  try {\n    debugBuildingDirtyElements = true;\n    buildOwner.buildScope(renderViewElement);\n    if (_phase != EnginePhase.build) {\n      assert(renderView != null);\n      pipelineOwner.flushLayout();\n      if (_phase != EnginePhase.layout) {\n        pipelineOwner.flushCompositingBits();\n        if (_phase != EnginePhase.compositingBits) {\n          pipelineOwner.flushPaint();\n          if (_phase != EnginePhase.paint) {\n            renderView.compositeFrame(); \/\/ this sends the bits to the GPU\n            if (_phase != EnginePhase.composite) {\n              pipelineOwner.flushSemantics();\n              assert(_phase == EnginePhase.flushSemantics ||\n                     _phase == EnginePhase.sendSemanticsUpdate);\n            }\n          }\n        }\n      }\n    }\n    buildOwner.finalizeTree();\n  } finally {\n    debugBuildingDirtyElements = false;\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "idle",
+            "type": "dart:async.Future",
+            "desc": "<p>Acts as if the application went idle.<\/p>\n<p>Runs all remaining microtasks, including those scheduled as a result of\nrunning them, until there are no more microtasks scheduled. Then, runs any\npreviously scheduled timers with zero time, and completes the returned future.<\/p>\n<p>May result in an infinite loop or run out of memory if microtasks continue\nto recursively schedule new microtasks. Will not run any timers scheduled\nafter this method was invoked, even if they are zero-time timers.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/idle.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;void&gt; idle() {\n  final Future&lt;void&gt; result = super.idle();\n  _currentFakeAsync.elapse(Duration.zero);\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "initInstances",
+            "type": "",
+            "desc": "<p>The initialization method. Subclasses override this method to hook into\nthe platform and otherwise configure their services. Subclasses must call\n\"super.initInstances()\".<\/p>\n<p>By convention, if the service is to be provided as a singleton, it should\nbe exposed as <code>MixinClassName.instance<\/code>, a static getter that returns\n<code>MixinClassName._instance<\/code>, a static field that is set by\n<code>initInstances()<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/initInstances.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid initInstances() {\n  super.initInstances();\n  window.onBeginFrame = null;\n  window.onDrawFrame = null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "postTest",
+            "type": "",
+            "desc": "<p>Called by the <a href=\"flutter_test\/testWidgets.html\">testWidgets<\/a> function after a test is executed.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/postTest.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid postTest() {\n  super.postTest();\n  assert(_currentFakeAsync != null);\n  assert(_clock != null);\n  _clock = null;\n  _currentFakeAsync = null;\n  _timeoutCompleter = null;\n  _timeoutTimer.cancel();\n  _timeoutTimer = null;\n  _timeoutStopwatch = null;\n  _timeout = null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "pump",
+            "type": "dart:async.Future",
+            "desc": "<p>Triggers a frame sequence (build\/layout\/paint\/etc),\nthen flushes microtasks.<\/p>\n<p>If duration is set, then advances the clock by that much first.\nDoing this flushes microtasks.<\/p>\n<p>The supplied EnginePhase is the final phase reached during the pump pass;\nif not supplied, the whole pass is executed.<\/p>\n<p>See also <a href=\"flutter_test\/LiveTestWidgetsFlutterBindingFramePolicy-class.html\">LiveTestWidgetsFlutterBindingFramePolicy<\/a>, which affects how\nthis method works when the test is run with <code>flutter run<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "sig": "",
+            "params": [
+                {
+                    "name": "duration",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "newPhase",
+                    "type": "flutter_test.EnginePhase",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/pump.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;void&gt; pump([ Duration duration, EnginePhase newPhase = EnginePhase.sendSemanticsUpdate ]) {\n  return TestAsyncUtils.guard&lt;void&gt;(() {\n    assert(inTest);\n    assert(_clock != null);\n    if (duration != null)\n      _currentFakeAsync.elapse(duration);\n    _phase = newPhase;\n    if (hasScheduledFrame) {\n      addTime(const Duration(milliseconds: 500));\n      _currentFakeAsync.flushMicrotasks();\n      handleBeginFrame(Duration(\n        milliseconds: _clock.now().millisecondsSinceEpoch,\n      ));\n      _currentFakeAsync.flushMicrotasks();\n      handleDrawFrame();\n    }\n    _currentFakeAsync.flushMicrotasks();\n    return Future&lt;void&gt;.value();\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "runAsync",
+            "type": "dart:async.Future",
+            "desc": "<p>Runs a <code>callback<\/code> that performs real asynchronous work.<\/p>\n<p>This is intended for callers who need to call asynchronous methods where\nthe methods spawn isolates or OS threads and thus cannot be executed\nsynchronously by calling <a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding\/pump.html\">pump<\/a>.<\/p>\n<p>If <code>callback<\/code> completes successfully, this will return the future\nreturned by <code>callback<\/code>.<\/p>\n<p>If <code>callback<\/code> completes with an error, the error will be caught by the\nFlutter framework and made available via <a href=\"flutter_test\/TestWidgetsFlutterBinding\/takeException.html\">takeException<\/a>, and this method\nwill return a future that completes will <code>null<\/code>.<\/p>\n<p>Re-entrant calls to this method are not allowed; callers of this method\nare required to wait for the returned future to complete before calling\nthis method again. Attempts to do otherwise will result in a\n<a href=\"package-test_api_test_api\/TestFailure-class.html\">TestFailure<\/a> error being thrown.<\/p>\n<p>The <code>additionalTime<\/code> argument is used by the\n<a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding-class.html\">AutomatedTestWidgetsFlutterBinding<\/a> implementation to increase the\ncurrent timeout. See <a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding\/addTime.html\">AutomatedTestWidgetsFlutterBinding.addTime<\/a> for\ndetails. The value is ignored by the <a href=\"flutter_test\/LiveTestWidgetsFlutterBinding-class.html\">LiveTestWidgetsFlutterBinding<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "sig": "",
+            "params": [
+                {
+                    "name": "callback",
+                    "type": "dart:async.Future",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "additionalTime",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/runAsync.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;T&gt; runAsync&lt;T&gt;(\n  Future&lt;T&gt; callback(), {\n  Duration additionalTime = const Duration(milliseconds: 1000),\n}) {\n  assert(additionalTime != null);\n  assert(() {\n    if (_pendingAsyncTasks == null)\n      return true;\n    throw test_package.TestFailure(\n        'Reentrant call to runAsync() denied.\\n'\n        'runAsync() was called, then before its future completed, it '\n        'was called again. You must wait for the first returned future '\n        'to complete before calling runAsync() again.'\n    );\n  }());\n\n  final Zone realAsyncZone = Zone.current.fork(\n    specification: ZoneSpecification(\n      scheduleMicrotask: (Zone self, ZoneDelegate parent, Zone zone, void f()) {\n        Zone.root.scheduleMicrotask(f);\n      },\n      createTimer: (Zone self, ZoneDelegate parent, Zone zone, Duration duration, void f()) {\n        return Zone.root.createTimer(duration, f);\n      },\n      createPeriodicTimer: (Zone self, ZoneDelegate parent, Zone zone, Duration period, void f(Timer timer)) {\n        return Zone.root.createPeriodicTimer(period, f);\n      },\n    ),\n  );\n\n  addTime(additionalTime);\n\n  return realAsyncZone.run&lt;Future&lt;T&gt;&gt;(() {\n    _pendingAsyncTasks = Completer&lt;void&gt;();\n    return callback().catchError((dynamic exception, StackTrace stack) {\n      FlutterError.reportError(FlutterErrorDetails(\n        exception: exception,\n        stack: stack,\n        library: 'Flutter test framework',\n        context: 'while running async test code',\n      ));\n      return null;\n    }).whenComplete(() {\n      \/\/ We complete the _pendingAsyncTasks future successfully regardless of\n      \/\/ whether an exception occurred because in the case of an exception,\n      \/\/ we already reported the exception to FlutterError. Moreover,\n      \/\/ completing the future with an error would trigger an unhandled\n      \/\/ exception due to zone error boundaries.\n      _pendingAsyncTasks.complete();\n      _pendingAsyncTasks = null;\n    });\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "runTest",
+            "type": "dart:async.Future",
+            "desc": "<p>Call the testBody inside a <a href=\"quiver.testing.async\/FakeAsync-class.html\">FakeAsync<\/a> scope on which <a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding\/pump.html\">pump<\/a> can\nadvance time.<\/p>\n<p>Returns a future which completes when the test has run.<\/p>\n<p>Called by the <a href=\"flutter_test\/testWidgets.html\">testWidgets<\/a> and <a href=\"flutter_test\/benchmarkWidgets.html\">benchmarkWidgets<\/a> functions to\nrun a test.<\/p>\n<p>The <code>invariantTester<\/code> argument is called after the <code>testBody<\/code>'s <a href=\"dart-async\/Future-class.html\">Future<\/a>\ncompletes. If it throws, then the test is marked as failed.<\/p>\n<p>The <code>description<\/code> is used by the <a href=\"flutter_test\/LiveTestWidgetsFlutterBinding-class.html\">LiveTestWidgetsFlutterBinding<\/a> to\nshow a label on the screen during the test. The description comes from\nthe value passed to <a href=\"flutter_test\/testWidgets.html\">testWidgets<\/a>. It must not be null.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "sig": "",
+            "params": [
+                {
+                    "name": "testBody",
+                    "type": "dart:async.Future",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "invariantTester",
+                    "type": "dart:ui.VoidCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "description",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/runTest.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;void&gt; runTest(\n  Future&lt;void&gt; testBody(),\n  VoidCallback invariantTester, {\n  String description = '',\n  Duration timeout = const Duration(seconds: 2),\n}) {\n  assert(description != null);\n  assert(!inTest);\n  assert(_currentFakeAsync == null);\n  assert(_clock == null);\n\n  _timeout = timeout;\n  _timeoutStopwatch = Stopwatch()..start();\n  _timeoutTimer = Timer.periodic(const Duration(seconds: 1), _checkTimeout);\n  _timeoutCompleter = Completer&lt;void&gt;();\n\n  final FakeAsync fakeAsync = FakeAsync();\n  _currentFakeAsync = fakeAsync; \/\/ reset in postTest\n  _clock = fakeAsync.getClock(DateTime.utc(2015, 1, 1));\n  Future&lt;void&gt; testBodyResult;\n  fakeAsync.run((FakeAsync localFakeAsync) {\n    assert(fakeAsync == _currentFakeAsync);\n    assert(fakeAsync == localFakeAsync);\n    testBodyResult = _runTest(testBody, invariantTester, description, timeout: _timeoutCompleter.future);\n    assert(inTest);\n  });\n\n  return Future&lt;void&gt;.microtask(() async {\n    \/\/ testBodyResult is a Future that was created in the Zone of the\n    \/\/ fakeAsync. This means that if we await it here, it will register a\n    \/\/ microtask to handle the future _in the fake async zone_. We avoid this\n    \/\/ by calling '.then' in the current zone. While flushing the microtasks\n    \/\/ of the fake-zone below, the new future will be completed and can then\n    \/\/ be used without fakeAsync.\n    final Future&lt;void&gt; resultFuture = testBodyResult.then&lt;void&gt;((_) {\n      \/\/ Do nothing.\n    });\n\n    \/\/ Resolve interplay between fake async and real async calls.\n    fakeAsync.flushMicrotasks();\n    while (_pendingAsyncTasks != null) {\n      await _pendingAsyncTasks.future;\n      fakeAsync.flushMicrotasks();\n    }\n    return resultFuture;\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "scheduleWarmUpFrame",
+            "type": "",
+            "desc": "<p>Schedule a frame to run as soon as possible, rather than waiting for\nthe engine to request a frame in response to a system \"Vsync\" signal.<\/p>\n<p>This is used during application startup so that the first frame (which is\nlikely to be quite expensive) gets a few extra milliseconds to run.<\/p>\n<p>Locks events dispatching until the scheduled frame has completed.<\/p>\n<p>If a frame has already been scheduled with <a href=\"scheduler\/SchedulerBinding\/scheduleFrame.html\">scheduleFrame<\/a> or\n<a href=\"scheduler\/SchedulerBinding\/scheduleForcedFrame.html\">scheduleForcedFrame<\/a>, this call may delay that frame.<\/p>\n<p>If any scheduled frame has already begun or if another\n<a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding\/scheduleWarmUpFrame.html\">scheduleWarmUpFrame<\/a> was already called, this call will be ignored.<\/p>\n<p>Prefer <a href=\"scheduler\/SchedulerBinding\/scheduleFrame.html\">scheduleFrame<\/a> to update the display in normal operation.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/scheduleWarmUpFrame.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid scheduleWarmUpFrame() {\n  \/\/ We override the default version of this so that the application-startup warm-up frame\n  \/\/ does not schedule timers which we might never get around to running.\n  handleBeginFrame(null);\n  _currentFakeAsync.flushMicrotasks();\n  handleDrawFrame();\n  _currentFakeAsync.flushMicrotasks();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "checkIntrinsicSizes",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>The value to set <a href=\"rendering\/debugCheckIntrinsicSizes.html\">debugCheckIntrinsicSizes<\/a> to while tests are running.<\/p>\n<p>This can be used to enable additional checks. For example,\n<a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding-class.html\">AutomatedTestWidgetsFlutterBinding<\/a> sets this to true, so that all tests\nalways run with aggressive intrinsic sizing tests enabled.<\/p>\n        ",
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "isConstant": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/checkIntrinsicSizes.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get checkIntrinsicSizes =&gt; true;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "clock",
+            "type": "quiver.time.Clock",
+            "types": [],
+            "desc": "<p>The current time.<\/p>\n<p>In the automated test environment (<code>flutter test<\/code>), this is a fake clock\nthat begins in January 2015 at the start of the test and advances each\ntime <a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding\/pump.html\">pump<\/a> is called with a non-zero duration.<\/p>\n<p>In the live testing environment (<code>flutter run<\/code>), this object shows the\nactual current wall-clock time.<\/p>\n        ",
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "isConstant": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/clock.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nClock get clock =&gt; _clock;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugPrintOverride",
+            "type": "foundation.DebugPrintCallback",
+            "types": [],
+            "desc": "<p>The value to set <a href=\"foundation\/debugPrint.html\">debugPrint<\/a> to while tests are running.<\/p>\n<p>This can be used to redirect console output from the framework, or to\nchange the behavior of <a href=\"foundation\/debugPrint.html\">debugPrint<\/a>. For example,\n<a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding-class.html\">AutomatedTestWidgetsFlutterBinding<\/a> uses it to make <a href=\"foundation\/debugPrint.html\">debugPrint<\/a>\nsynchronous, disabling its normal throttling behavior.<\/p>\n        ",
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "isConstant": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/debugPrintOverride.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nDebugPrintCallback get debugPrintOverride =&gt; debugPrintSynchronously;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "defaultTestTimeout",
+            "type": "test_api.Timeout",
+            "types": [],
+            "desc": "<p>The default test timeout for tests when using this binding.<\/p>\n<p>The <a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding-class.html\">AutomatedTestWidgetsFlutterBinding<\/a> layers in an additional timeout\nmechanism beyond this, with much more aggressive timeouts. See\n<a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding\/addTime.html\">AutomatedTestWidgetsFlutterBinding.addTime<\/a>.<\/p>\n        ",
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "isConstant": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/defaultTestTimeout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\ntest_package.Timeout get defaultTestTimeout =&gt; const test_package.Timeout(Duration(minutes: 5));<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "disableShadows",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>The value to set <a href=\"painting\/debugDisableShadows.html\">debugDisableShadows<\/a> to while tests are running.<\/p>\n<p>This can be used to reduce the likelihood of golden file tests being\nflaky, because shadow rendering is not always deterministic. The\n<a href=\"flutter_test\/AutomatedTestWidgetsFlutterBinding-class.html\">AutomatedTestWidgetsFlutterBinding<\/a> sets this to true, so that all tests\nalways run with shadows disabled.<\/p>\n        ",
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "isConstant": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/disableShadows.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get disableShadows =&gt; true;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "inTest",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether there is currently a test executing.<\/p>\n        ",
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "isConstant": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/inTest.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get inTest =&gt; _currentFakeAsync != null;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "microtaskCount",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The number of outstanding microtasks in the queue.<\/p>\n        ",
+            "memberOf": "flutter_test.AutomatedTestWidgetsFlutterBinding",
+            "isConstant": false,
+            "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding\/microtaskCount.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get microtaskCount =&gt; _currentFakeAsync.microtaskCount;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "flutter_test\/AutomatedTestWidgetsFlutterBinding-class.html",
+    "desc": "<p>A variant of <a href=\"flutter_test\/TestWidgetsFlutterBinding-class.html\">TestWidgetsFlutterBinding<\/a> for executing tests in\nthe <code>flutter test<\/code> environment.<\/p>\n<p>This binding controls time, allowing tests to verify long\nanimation sequences without having to execute them in real time.<\/p>\n<p>This class assumes it is always run in checked mode (since tests are always\nrun in checked mode).<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "AutomatedTestWidgetsFlutterBinding"
+}

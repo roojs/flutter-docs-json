@@ -1,0 +1,152 @@
+{
+    "name": "dart:developer.TimelineTask",
+    "extends": [],
+    "memberOf": "dart:developer",
+    "events": [],
+    "methods": [
+        {
+            "name": "TimelineTask",
+            "type": "",
+            "desc": "<p>Create a task. The task ID will be set by the system.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:developer.TimelineTask",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "dart-developer\/TimelineTask\/TimelineTask.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TimelineTask() : _taskId = _getNextAsyncId() {}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "finish",
+            "type": "",
+            "desc": "<p>Finish the last synchronous operation that was started.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:developer.TimelineTask",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-developer\/TimelineTask\/finish.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void finish() {\n  if (!_hasTimeline) {\n    return;\n  }\n  if (_stack.length == 0) {\n    throw new StateError('Uneven calls to start and finish');\n  }\n  \/\/ Pop top item off of stack.\n  var block = _stack.removeLast();\n  block._finish();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "instant",
+            "type": "",
+            "desc": "<p>Emit an instant event for this task.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:developer.TimelineTask",
+            "sig": "",
+            "params": [
+                {
+                    "name": "name",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "arguments",
+                    "type": "dart:core.Map",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-developer\/TimelineTask\/instant.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void instant(String name, {Map arguments}) {\n  if (!_hasTimeline) return;\n  ArgumentError.checkNotNull(name, 'name');\n  Map instantArguments;\n  if (arguments != null) {\n    instantArguments = new Map.from(arguments);\n  }\n  _reportTaskEvent(_getTraceClock(), _taskId, 'n', 'Dart', name,\n      _argumentsAsJson(instantArguments));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "pass",
+            "type": "dart:core.int",
+            "desc": "<p>Retrieve the <a href=\"dart-developer\/TimelineTask-class.html\">TimelineTask<\/a>'s task id. Will throw an exception if the\nstack is not empty.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:developer.TimelineTask",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-developer\/TimelineTask\/pass.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int pass() {\n  if (_stack.length &gt; 0) {\n    throw new StateError(\n        'You cannot pass a TimelineTask without finishing all started '\n        'operations');\n  }\n  int r = _taskId;\n  return r;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "start",
+            "type": "",
+            "desc": "<p>Start a synchronous operation within this task named <code>name<\/code>.\nOptionally takes a <a href=\"dart-core\/Map-class.html\">Map<\/a> of <code>arguments<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:developer.TimelineTask",
+            "sig": "",
+            "params": [
+                {
+                    "name": "name",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "arguments",
+                    "type": "dart:core.Map",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-developer\/TimelineTask\/start.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void start(String name, {Map arguments}) {\n  if (!_hasTimeline) return;\n  ArgumentError.checkNotNull(name, 'name');\n  var block = new _AsyncBlock._(name, _taskId);\n  if (arguments != null) {\n    block._arguments = arguments;\n  }\n  _stack.add(block);\n  block._start();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "TimelineTask.withTaskId",
+            "type": "",
+            "desc": "<p>Create a task with an explicit <code>taskId<\/code>. This is useful if you are\npassing a task from one isolate to another.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:developer.TimelineTask",
+            "sig": "",
+            "params": [
+                {
+                    "name": "taskId",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-developer\/TimelineTask\/TimelineTask.withTaskId.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TimelineTask.withTaskId(int taskId) : _taskId = taskId {\n  ArgumentError.checkNotNull(taskId, 'taskId');\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "dart-developer\/TimelineTask-class.html",
+    "desc": "<p>An asynchronous task on the timeline. An asynchronous task can have many\n(nested) synchronous operations. Synchronous operations can live longer than\nthe current isolate event. To pass a <a href=\"dart-developer\/TimelineTask-class.html\">TimelineTask<\/a> to another isolate,\nyou must first call <a href=\"dart-developer\/TimelineTask\/pass.html\">pass<\/a> to get the task id and then construct a new\n<a href=\"dart-developer\/TimelineTask-class.html\">TimelineTask<\/a> in the other isolate.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "TimelineTask"
+}

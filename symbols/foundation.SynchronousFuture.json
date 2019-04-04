@@ -1,0 +1,203 @@
+{
+    "name": "foundation.SynchronousFuture",
+    "extends": [],
+    "memberOf": "foundation",
+    "events": [],
+    "methods": [
+        {
+            "name": "SynchronousFuture",
+            "type": "",
+            "desc": "<p>Creates a synchronous future.<\/p>\n<p>See also <a href=\"dart-async\/Future\/Future.value.html\">new Future.value<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.SynchronousFuture",
+            "sig": "",
+            "params": [
+                {
+                    "name": "_value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": true,
+            "href": "foundation\/SynchronousFuture\/SynchronousFuture.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">SynchronousFuture(this._value);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "asStream",
+            "type": "dart:async.Stream",
+            "desc": "<p>Creates a <a href=\"dart-async\/Stream-class.html\">Stream<\/a> containing the result of this future.<\/p>\n<p>The stream will produce single data or error event containing the\ncompletion result of this future, and then it will close with a\ndone event.<\/p>\n<p>If the future never completes, the stream will not produce any events.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.SynchronousFuture",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "foundation\/SynchronousFuture\/asStream.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nStream&lt;T&gt; asStream() {\n  final StreamController&lt;T&gt; controller = StreamController&lt;T&gt;();\n  controller.add(_value);\n  controller.close();\n  return controller.stream;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "catchError",
+            "type": "dart:async.Future",
+            "desc": "<p>Handles errors emitted by this <a href=\"dart-async\/Future-class.html\">Future<\/a>.<\/p>\n<p>This is the asynchronous equivalent of a \"catch\" block.<\/p>\n<p>Returns a new <a href=\"dart-async\/Future-class.html\">Future<\/a> that will be completed with either the result of\nthis future or the result of calling the <code>onError<\/code> callback.<\/p>\n<p>If this future completes with a value,\nthe returned future completes with the same value.<\/p>\n<p>If this future completes with an error,\nthen <code>test<\/code> is first called with the error value.<\/p>\n<p>If <code>test<\/code> returns false, the exception is not handled by this <code>catchError<\/code>,\nand the returned future completes with the same error and stack trace\nas this future.<\/p>\n<p>If <code>test<\/code> returns <code>true<\/code>,\n<code>onError<\/code> is called with the error and possibly stack trace,\nand the returned future is completed with the result of this call\nin exactly the same way as for <a href=\"foundation\/SynchronousFuture\/then.html\">then<\/a>'s <code>onError<\/code>.<\/p>\n<p>If <code>test<\/code> is omitted, it defaults to a function that always returns true.\nThe <code>test<\/code> function should not throw, but if it does, it is handled as\nif the <code>onError<\/code> function had thrown.<\/p>\n<p>Note that futures don't delay reporting of errors until listeners are\nadded. If the first <code>catchError<\/code> (or <code>then<\/code>) call happens after this future\nhas completed with an error then the error is reported as unhandled error.\nSee the description on <a href=\"dart-async\/Future-class.html\">Future<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.SynchronousFuture",
+            "sig": "",
+            "params": [
+                {
+                    "name": "onError",
+                    "type": "dart:core.Function",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "error",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "error",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/SynchronousFuture\/catchError.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;T&gt; catchError(Function onError, { bool test(dynamic error) }) =&gt; Completer&lt;T&gt;().future;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "then",
+            "type": "dart:async.Future",
+            "desc": "<p>Register callbacks to be called when this future completes.<\/p>\n<p>When this future completes with a value,\nthe <code>onValue<\/code> callback will be called with that value.\nIf this future is already completed, the callback will not be called\nimmediately, but will be scheduled in a later microtask.<\/p>\n<p>If <code>onError<\/code> is provided, and this future completes with an error,\nthe <code>onError<\/code> callback is called with that error and its stack trace.\nThe <code>onError<\/code> callback must accept either one argument or two arguments\nwhere the latter is a <a href=\"dart-core\/StackTrace-class.html\">StackTrace<\/a>.\nIf <code>onError<\/code> accepts two arguments,\nit is called with both the error and the stack trace,\notherwise it is called with just the error object.\nThe <code>onError<\/code> callback must return a value or future that can be used\nto complete the returned future, so it must be something assignable to\n<code>FutureOr&lt;R&gt;<\/code>.<\/p>\n<p>Returns a new <a href=\"dart-async\/Future-class.html\">Future<\/a>\nwhich is completed with the result of the call to <code>onValue<\/code>\n(if this future completes with a value)\nor to <code>onError<\/code> (if this future completes with an error).<\/p>\n<p>If the invoked callback throws,\nthe returned future is completed with the thrown error\nand a stack trace for the error.\nIn the case of <code>onError<\/code>,\nif the exception thrown is <code>identical<\/code> to the error argument to <code>onError<\/code>,\nthe throw is considered a rethrow,\nand the original stack trace is used instead.<\/p>\n<p>If the callback returns a <a href=\"dart-async\/Future-class.html\">Future<\/a>,\nthe future returned by <code>then<\/code> will be completed with\nthe same result as the future returned by the callback.<\/p>\n<p>If <code>onError<\/code> is not given, and this future completes with an error,\nthe error is forwarded directly to the returned future.<\/p>\n<p>In most cases, it is more readable to use <a href=\"foundation\/SynchronousFuture\/catchError.html\">catchError<\/a> separately, possibly\nwith a <code>test<\/code> parameter, instead of handling both value and error in a\nsingle <a href=\"foundation\/SynchronousFuture\/then.html\">then<\/a> call.<\/p>\n<p>Note that futures don't delay reporting of errors until listeners are\nadded. If the first <code>then<\/code> or <code>catchError<\/code> call happens after this future\nhas completed with an error then the error is reported as unhandled error.\nSee the description on <a href=\"dart-async\/Future-class.html\">Future<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.SynchronousFuture",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "onError",
+                    "type": "dart:core.Function",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/SynchronousFuture\/then.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;E&gt; then&lt;E&gt;(dynamic f(T value), { Function onError }) {\n  final dynamic result = f(_value);\n  if (result is Future&lt;E&gt;)\n    return result;\n  return SynchronousFuture&lt;E&gt;(result);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "timeout",
+            "type": "dart:async.Future",
+            "desc": "<p>Time-out the future computation after <code>timeLimit<\/code> has passed.<\/p>\n<p>Returns a new future that completes with the same value as this future,\nif this future completes in time.<\/p>\n<p>If this future does not complete before <code>timeLimit<\/code> has passed,\nthe <code>onTimeout<\/code> action is executed instead, and its result (whether it\nreturns or throws) is used as the result of the returned future.\nThe <code>onTimeout<\/code> function must return a <code>T<\/code> or a <code>Future&lt;T&gt;<\/code>.<\/p>\n<p>If <code>onTimeout<\/code> is omitted, a timeout will cause the returned future to\ncomplete with a <a href=\"dart-async\/TimeoutException-class.html\">TimeoutException<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.SynchronousFuture",
+            "sig": "",
+            "params": [
+                {
+                    "name": "timeLimit",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "onTimeout",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/SynchronousFuture\/timeout.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;T&gt; timeout(Duration timeLimit, { dynamic onTimeout() }) {\n  return Future&lt;T&gt;.value(_value).timeout(timeLimit, onTimeout: onTimeout);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "whenComplete",
+            "type": "dart:async.Future",
+            "desc": "<p>Registers a function to be called when this future completes.<\/p>\n<p>The <code>action<\/code> function is called when this future completes, whether it\ndoes so with a value or with an error.<\/p>\n<p>This is the asynchronous equivalent of a \"finally\" block.<\/p>\n<p>The future returned by this call, <code>f<\/code>, will complete the same way\nas this future unless an error occurs in the <code>action<\/code> call, or in\na <a href=\"dart-async\/Future-class.html\">Future<\/a> returned by the <code>action<\/code> call. If the call to <code>action<\/code>\ndoes not return a future, its return value is ignored.<\/p>\n<p>If the call to <code>action<\/code> throws, then <code>f<\/code> is completed with the\nthrown error.<\/p>\n<p>If the call to <code>action<\/code> returns a <a href=\"dart-async\/Future-class.html\">Future<\/a>, <code>f2<\/code>, then completion of\n<code>f<\/code> is delayed until <code>f2<\/code> completes. If <code>f2<\/code> completes with\nan error, that will be the result of <code>f<\/code> too. The value of <code>f2<\/code> is always\nignored.<\/p>\n<p>This method is equivalent to:<\/p>\n<pre class=\"language-dart\"><code>Future&lt;T&gt; whenComplete(action()) {\n  return this.then((v) {\n    var f2 = action();\n    if (f2 is Future) return f2.then((_) =&gt; v);\n    return v\n  }, onError: (e) {\n    var f2 = action();\n    if (f2 is Future) return f2.then((_) { throw e; });\n    throw e;\n  });\n}\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "foundation.SynchronousFuture",
+            "sig": "",
+            "params": [
+                {
+                    "name": "action",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/SynchronousFuture\/whenComplete.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;T&gt; whenComplete(dynamic action()) {\n  try {\n    final dynamic result = action();\n    if (result is Future)\n      return result.then&lt;T&gt;((dynamic value) =&gt; _value);\n    return this;\n  } catch (e, stack) {\n    return Future&lt;T&gt;.error(e, stack);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "foundation\/SynchronousFuture-class.html",
+    "desc": "<p>A <a href=\"dart-async\/Future-class.html\">Future<\/a> whose <a href=\"foundation\/SynchronousFuture\/then.html\">then<\/a> implementation calls the callback immediately.<\/p>\n<p>This is similar to <a href=\"dart-async\/Future\/Future.value.html\">new Future.value<\/a>, except that the value is available in\nthe same event-loop iteration.<\/p>\n<p>\u26a0 This class is useful in cases where you want to expose a single API, where\nyou normally want to have everything execute synchronously, but where on\nrare occasions you want the ability to switch to an asynchronous model. <strong>In\ngeneral use of this class should be avoided as it is very difficult to debug\nsuch bimodal behavior.<\/strong><\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "SynchronousFuture"
+}

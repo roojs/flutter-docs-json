@@ -1,0 +1,159 @@
+{
+    "name": "painting.PaintingBinding",
+    "extends": [],
+    "memberOf": "painting",
+    "events": [],
+    "methods": [
+        {
+            "name": "PaintingBinding",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "painting.PaintingBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "painting\/PaintingBinding\/PaintingBinding.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "createImageCache",
+            "type": "painting.ImageCache",
+            "desc": "<p>Creates the <a href=\"painting\/ImageCache-class.html\">ImageCache<\/a> singleton (accessible via <a href=\"painting\/PaintingBinding\/imageCache.html\">imageCache<\/a>).<\/p>\n<p>This method can be overridden to provide a custom image cache.<\/p>\n    ",
+            "static": false,
+            "memberOf": "painting.PaintingBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "painting\/PaintingBinding\/createImageCache.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nImageCache createImageCache() =&gt; ImageCache();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "evict",
+            "type": "",
+            "desc": "<p>Called in response to the <code>ext.flutter.evict<\/code> service extension.<\/p>\n<p>This is used by the <code>flutter<\/code> tool during hot reload so that any images\nthat have changed on disk get cleared from caches.<\/p>\n    ",
+            "static": false,
+            "memberOf": "painting.PaintingBinding",
+            "sig": "",
+            "params": [
+                {
+                    "name": "asset",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "painting\/PaintingBinding\/evict.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid evict(String asset) {\n  super.evict(asset);\n  imageCache.clear();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "initInstances",
+            "type": "",
+            "desc": "<p>The initialization method. Subclasses override this method to hook into\nthe platform and otherwise configure their services. Subclasses must call\n\"super.initInstances()\".<\/p>\n<p>By convention, if the service is to be provided as a singleton, it should\nbe exposed as <code>MixinClassName.instance<\/code>, a static getter that returns\n<code>MixinClassName._instance<\/code>, a static field that is set by\n<code>initInstances()<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "painting.PaintingBinding",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "painting\/PaintingBinding\/initInstances.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid initInstances() {\n  super.initInstances();\n  _instance = this;\n  _imageCache = createImageCache();\n  if (shaderWarmUp != null) {\n    shaderWarmUp.execute();\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "instantiateImageCodec",
+            "type": "dart:async.Future<dart:ui.Codec>",
+            "desc": "<p>Calls through to <a href=\"dart-ui\/dart-ui-library.html\">dart:ui<\/a> with <a class=\"deprecated\" href=\"painting\/PaintingBinding\/decodedCacheRatioCap.html\">decodedCacheRatioCap<\/a> from <a href=\"painting\/ImageCache-class.html\">ImageCache<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "painting.PaintingBinding",
+            "sig": "",
+            "params": [
+                {
+                    "name": "list",
+                    "type": "dart:typed_data.Uint8List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "painting\/PaintingBinding\/instantiateImageCodec.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;ui.Codec&gt; instantiateImageCodec(Uint8List list) {\n  return ui.instantiateImageCodec(list, decodedCacheRatioCap: decodedCacheRatioCap); \/\/ ignore: deprecated_member_use_from_same_package\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:ui.Codec"
+            ]
+        }
+    ],
+    "props": [
+        {
+            "name": "decodedCacheRatioCap",
+            "type": "dart:core.double",
+            "types": [],
+            "desc": "<p>The maximum multiple of the compressed image size used when caching an\nanimated image.<\/p>\n<p>Individual frames of animated images can be cached into memory to avoid\nusing CPU to re-decode them for every loop in the animation. This behavior\nwill result in out-of-memory crashes when decoding large (or large numbers\nof) animated images so is disabled by default. Set this value to control\nhow much memory each animated image is allowed to use for caching decoded\nframes compared to its compressed size. For example, setting this to <code>2.0<\/code>\nmeans that a 400KB GIF would be allowed at most to use 800KB of memory\ncaching unessential decoded frames. A setting of <code>1.0<\/code> or less disables\nall caching of unessential decoded frames. See\n<code>_kDefaultDecodedCacheRatioCap<\/code> for the default value.<\/p>\n<p>@deprecated The in-memory cache of decoded frames causes issues with\nmemory consumption. Soon this API and the in-memory cache will be removed.\nSee\n<a href=\"https:\/\/github.com\/flutter\/flutter\/issues\/26081\">flutter\/flutter#26081<\/a>\nfor more context.<\/p>\n        ",
+            "memberOf": "painting.PaintingBinding",
+            "isConstant": false,
+            "href": "painting\/PaintingBinding\/decodedCacheRatioCap.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@deprecated\ndouble get decodedCacheRatioCap =&gt; _kDecodedCacheRatioCap;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "imageCache",
+            "type": "painting.ImageCache",
+            "types": [],
+            "desc": "<p>The singleton that implements the Flutter framework's image cache.<\/p>\n<p>The cache is used internally by <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> and should generally not\nbe accessed directly.<\/p>\n<p>The image cache is created during startup by the <a href=\"painting\/PaintingBinding\/createImageCache.html\">createImageCache<\/a>\nmethod.<\/p>\n        ",
+            "memberOf": "painting.PaintingBinding",
+            "isConstant": false,
+            "href": "painting\/PaintingBinding\/imageCache.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">ImageCache get imageCache =&gt; _imageCache;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "instance",
+            "type": "painting.PaintingBinding",
+            "types": [],
+            "desc": "<p>The current <a href=\"painting\/PaintingBinding-mixin.html\">PaintingBinding<\/a>, if one has been created.<\/p>\n        ",
+            "memberOf": "painting.PaintingBinding",
+            "isConstant": false,
+            "href": "painting\/PaintingBinding\/instance.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">static PaintingBinding get instance =&gt; _instance;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "shaderWarmUp",
+            "type": "painting.ShaderWarmUp",
+            "types": [],
+            "desc": "<p><a href=\"painting\/ShaderWarmUp-class.html\">ShaderWarmUp<\/a> to be executed during <a href=\"painting\/PaintingBinding\/initInstances.html\">initInstances<\/a>.<\/p>\n<p>If the application has scenes that require the compilation of complex\nshaders that are not covered by <a href=\"painting\/DefaultShaderWarmUp-class.html\">DefaultShaderWarmUp<\/a>, it may cause jank\nin the middle of an animation or interaction. In that case, set\n<a href=\"painting\/PaintingBinding\/shaderWarmUp.html\">shaderWarmUp<\/a> to a custom <a href=\"painting\/ShaderWarmUp-class.html\">ShaderWarmUp<\/a> before calling <a href=\"painting\/PaintingBinding\/initInstances.html\">initInstances<\/a>\n(usually before <a href=\"widgets\/runApp.html\">runApp<\/a> for normal Flutter apps, and before\n<a href=\"flutter_driver_extension\/enableFlutterDriverExtension.html\">enableFlutterDriverExtension<\/a> for Flutter driver tests). Paint the scene\nin the custom <a href=\"painting\/ShaderWarmUp-class.html\">ShaderWarmUp<\/a> so Flutter can pre-compile and cache the\nshaders during startup. The warm up is only costly (100ms-200ms,\ndepending on the shaders to compile) during the first run after the\ninstallation or a data wipe. The warm up does not block the main thread\nso there should be no \"Application Not Responding\" warning.<\/p>\n<p>Currently the warm-up happens synchronously on the GPU thread which means\nthe rendering of the first frame on the GPU thread will be postponed until\nthe warm-up is finished.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"painting\/ShaderWarmUp-class.html\">ShaderWarmUp<\/a>, the interface of how this warm up works.<\/li><\/ul>",
+            "memberOf": "painting.PaintingBinding",
+            "isConstant": false,
+            "href": "painting\/PaintingBinding\/shaderWarmUp.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">static ShaderWarmUp shaderWarmUp = const DefaultShaderWarmUp()\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": true,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "painting\/PaintingBinding-mixin.html",
+    "desc": "<p>Binding for the painting library.<\/p>\n<p>Hooks into the cache eviction logic to clear the image cache.<\/p>\n<p>Requires the <a href=\"services\/ServicesBinding-mixin.html\">ServicesBinding<\/a> to be mixed in earlier.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "mixin",
+    "shortname": "PaintingBinding"
+}

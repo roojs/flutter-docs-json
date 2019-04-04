@@ -1,0 +1,103 @@
+{
+    "name": "dart:developer.Service",
+    "extends": [],
+    "memberOf": "dart:developer",
+    "events": [],
+    "methods": [
+        {
+            "name": "Service",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "dart:developer.Service",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "dart-developer\/Service\/Service.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "controlWebServer",
+            "type": "dart:async.Future<dart:developer.ServiceProtocolInfo>",
+            "desc": "<p>Control the web server that the service protocol is accessed through.\nThe <code>enable<\/code> argument must be a boolean and is used as a toggle to\nenable (true) or disable (false) the web server servicing requests.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:developer.Service",
+            "sig": "",
+            "params": [
+                {
+                    "name": "enable",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-developer\/Service\/controlWebServer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;ServiceProtocolInfo&gt; controlWebServer(\n    {bool enable: false}) async {\n  ArgumentError.checkNotNull(enable, 'enable');\n  \/\/ Port to receive response from service isolate.\n  final RawReceivePort receivePort = new RawReceivePort();\n  final Completer&lt;Uri&gt; uriCompleter = new Completer&lt;Uri&gt;();\n  receivePort.handler = (Uri uri) =&gt; uriCompleter.complete(uri);\n  \/\/ Request the information from the service isolate.\n  _webServerControl(receivePort.sendPort, enable);\n  \/\/ Await the response from the service isolate.\n  Uri uri = await uriCompleter.future;\n  \/\/ Close the port.\n  receivePort.close();\n  return new ServiceProtocolInfo(uri);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:developer.ServiceProtocolInfo"
+            ]
+        },
+        {
+            "name": "getInfo",
+            "type": "dart:async.Future<dart:developer.ServiceProtocolInfo>",
+            "desc": "<p>Get information about the service protocol (version number and\nUri to access the service).<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:developer.Service",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-developer\/Service\/getInfo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;ServiceProtocolInfo&gt; getInfo() async {\n  \/\/ Port to receive response from service isolate.\n  final RawReceivePort receivePort = new RawReceivePort();\n  final Completer&lt;Uri&gt; uriCompleter = new Completer&lt;Uri&gt;();\n  receivePort.handler = (Uri uri) =&gt; uriCompleter.complete(uri);\n  \/\/ Request the information from the service isolate.\n  _getServerInfo(receivePort.sendPort);\n  \/\/ Await the response from the service isolate.\n  Uri uri = await uriCompleter.future;\n  \/\/ Close the port.\n  receivePort.close();\n  return new ServiceProtocolInfo(uri);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:developer.ServiceProtocolInfo"
+            ]
+        },
+        {
+            "name": "getIsolateID",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a <a href=\"dart-core\/String-class.html\">String<\/a> token representing the ID of <code>isolate<\/code>.<\/p>\n<p>Returns null if the running Dart environment does not support the service\nprotocol.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:developer.Service",
+            "sig": "",
+            "params": [
+                {
+                    "name": "isolate",
+                    "type": "dart:isolate.Isolate",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-developer\/Service\/getIsolateID.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static String getIsolateID(Isolate isolate) {\n  ArgumentError.checkNotNull(isolate, 'isolate');\n  return _getIsolateIDFromSendPort(isolate.controlPort);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "dart-developer\/Service-class.html",
+    "desc": "<p>Access information about the service protocol and control the web server\nthat provides access to the services provided by the Dart VM for\ndebugging and inspecting Dart programs.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Service"
+}

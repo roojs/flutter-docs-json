@@ -1,0 +1,113 @@
+{
+    "name": "widgets.AutomaticKeepAliveClientMixin",
+    "extends": [],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "AutomaticKeepAliveClientMixin",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "widgets.AutomaticKeepAliveClientMixin",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "widgets\/AutomaticKeepAliveClientMixin\/AutomaticKeepAliveClientMixin.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "build",
+            "type": "widgets.Widget",
+            "desc": "<p>Describes the part of the user interface represented by this widget.<\/p>\n<p>The framework calls this method in a number of different situations:<\/p>\n<ul>\n<li>After calling <a href=\"widgets\/AutomaticKeepAliveClientMixin\/initState.html\">initState<\/a>.<\/li>\n<li>After calling <a href=\"widgets\/State\/didUpdateWidget.html\">didUpdateWidget<\/a>.<\/li>\n<li>After receiving a call to <a href=\"widgets\/State\/setState.html\">setState<\/a>.<\/li>\n<li>After a dependency of this <a href=\"widgets\/State-class.html\">State<\/a> object changes (e.g., an\n<a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> referenced by the previous <a href=\"widgets\/AutomaticKeepAliveClientMixin\/build.html\">build<\/a> changes).<\/li>\n<li>After calling <a href=\"widgets\/AutomaticKeepAliveClientMixin\/deactivate.html\">deactivate<\/a> and then reinserting the <a href=\"widgets\/State-class.html\">State<\/a> object into\nthe tree at another location.<\/li>\n<\/ul>\n<p>The framework replaces the subtree below this widget with the widget\nreturned by this method, either by updating the existing subtree or by\nremoving the subtree and inflating a new subtree, depending on whether the\nwidget returned by this method can update the root of the existing\nsubtree, as determined by calling <a href=\"widgets\/Widget\/canUpdate.html\">Widget.canUpdate<\/a>.<\/p>\n<p>Typically implementations return a newly created constellation of widgets\nthat are configured with information from this widget's constructor, the\ngiven <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a>, and the internal state of this <a href=\"widgets\/State-class.html\">State<\/a> object.<\/p>\n<p>The given <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> contains information about the location in the\ntree at which this widget is being built. For example, the context\nprovides the set of inherited widgets for this location in the tree. The\n<a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> argument is always the same as the <code>context<\/code> property of\nthis <a href=\"widgets\/State-class.html\">State<\/a> object and will remain the same for the lifetime of this\nobject. The <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> argument is provided redundantly here so that\nthis method matches the signature for a <a href=\"widgets\/WidgetBuilder.html\">WidgetBuilder<\/a>.<\/p>\n<h2 id=\"design-discussion\">Design discussion<\/h2>\n<h3 id=\"why-is-the-build-method-on-state-and-not-statefulwidget\">Why is the <a href=\"widgets\/AutomaticKeepAliveClientMixin\/build.html\">build<\/a> method on <a href=\"widgets\/State-class.html\">State<\/a>, and not <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>?<\/h3>\n<p>Putting a <code>Widget build(BuildContext context)<\/code> method on <a href=\"widgets\/State-class.html\">State<\/a> rather\nputting a <code>Widget build(BuildContext context, State state)<\/code> method on\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> gives developers more flexibility when subclassing\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>.<\/p>\n<p>For example, <a href=\"widgets\/AnimatedWidget-class.html\">AnimatedWidget<\/a> is a subclass of <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> that\nintroduces an abstract <code>Widget build(BuildContext context)<\/code> method for its\nsubclasses to implement. If <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> already had a <a href=\"widgets\/AutomaticKeepAliveClientMixin\/build.html\">build<\/a> method\nthat took a <a href=\"widgets\/State-class.html\">State<\/a> argument, <a href=\"widgets\/AnimatedWidget-class.html\">AnimatedWidget<\/a> would be forced to provide\nits <a href=\"widgets\/State-class.html\">State<\/a> object to subclasses even though its <a href=\"widgets\/State-class.html\">State<\/a> object is an\ninternal implementation detail of <a href=\"widgets\/AnimatedWidget-class.html\">AnimatedWidget<\/a>.<\/p>\n<p>Conceptually, <a href=\"widgets\/StatelessWidget-class.html\">StatelessWidget<\/a> could also be implemented as a subclass of\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> in a similar manner. If the <a href=\"widgets\/AutomaticKeepAliveClientMixin\/build.html\">build<\/a> method were on\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> rather than <a href=\"widgets\/State-class.html\">State<\/a>, that would not be possible anymore.<\/p>\n<p>Putting the <a href=\"widgets\/AutomaticKeepAliveClientMixin\/build.html\">build<\/a> function on <a href=\"widgets\/State-class.html\">State<\/a> rather than <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> also\nhelps avoid a category of bugs related to closures implicitly capturing\n<code>this<\/code>. If you defined a closure in a <a href=\"widgets\/AutomaticKeepAliveClientMixin\/build.html\">build<\/a> function on a\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>, that closure would implicitly capture <code>this<\/code>, which is\nthe current widget instance, and would have the (immutable) fields of that\ninstance in scope:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class MyButton extends StatefulWidget {\n  ...\n  final Color color;\n\n  @override\n  Widget build(BuildContext context, MyButtonState state) {\n    ... () { print(\"color: $color\"); } ...\n  }\n}\n<\/code><\/pre>\n<p>For example, suppose the parent builds <code>MyButton<\/code> with <code>color<\/code> being blue,\nthe <code>$color<\/code> in the print function refers to blue, as expected. Now,\nsuppose the parent rebuilds <code>MyButton<\/code> with green. The closure created by\nthe first build still implicitly refers to the original widget and the\n<code>$color<\/code> still prints blue even through the widget has been updated to\ngreen.<\/p>\n<p>In contrast, with the <a href=\"widgets\/AutomaticKeepAliveClientMixin\/build.html\">build<\/a> function on the <a href=\"widgets\/State-class.html\">State<\/a> object, closures\ncreated during <a href=\"widgets\/AutomaticKeepAliveClientMixin\/build.html\">build<\/a> implicitly capture the <a href=\"widgets\/State-class.html\">State<\/a> instance instead of\nthe widget instance:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class MyButtonState extends State&lt;MyButton&gt; {\n  ...\n  @override\n  Widget build(BuildContext context) {\n    ... () { print(\"color: ${widget.color}\"); } ...\n  }\n}\n<\/code><\/pre>\n<p>Now when the parent rebuilds <code>MyButton<\/code> with green, the closure created by\nthe first build still refers to <a href=\"widgets\/State-class.html\">State<\/a> object, which is preserved across\nrebuilds, but the framework has updated that <a href=\"widgets\/State-class.html\">State<\/a> object's <a href=\"widgets\/State\/widget.html\">widget<\/a>\nproperty to refer to the new <code>MyButton<\/code> instance and <code>${widget.color}<\/code>\nprints green, as expected.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>, which contains the discussion on performance considerations.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "widgets.AutomaticKeepAliveClientMixin",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "widgets.BuildContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/AutomaticKeepAliveClientMixin\/build.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\n@override\nWidget build(BuildContext context) {\n  if (wantKeepAlive &amp;&amp; _keepAliveHandle == null)\n    _ensureKeepAlive();\n  return null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "deactivate",
+            "type": "",
+            "desc": "<p>Called when this object is removed from the tree.<\/p>\n<p>The framework calls this method whenever it removes this <a href=\"widgets\/State-class.html\">State<\/a> object\nfrom the tree. In some cases, the framework will reinsert the <a href=\"widgets\/State-class.html\">State<\/a>\nobject into another part of the tree (e.g., if the subtree containing this\n<a href=\"widgets\/State-class.html\">State<\/a> object is grafted from one location in the tree to another). If\nthat happens, the framework will ensure that it calls <a href=\"widgets\/AutomaticKeepAliveClientMixin\/build.html\">build<\/a> to give the\n<a href=\"widgets\/State-class.html\">State<\/a> object a chance to adapt to its new location in the tree. If\nthe framework does reinsert this subtree, it will do so before the end of\nthe animation frame in which the subtree was removed from the tree. For\nthis reason, <a href=\"widgets\/State-class.html\">State<\/a> objects can defer releasing most resources until the\nframework calls their <a href=\"widgets\/State\/dispose.html\">dispose<\/a> method.<\/p>\n<p>Subclasses should override this method to clean up any links between\nthis object and other elements in the tree (e.g. if you have provided an\nancestor with a pointer to a descendant's <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>).<\/p>\n<p>If you override this, make sure to end your method with a call to\nsuper.deactivate().<\/p>\n<p>See also <a href=\"widgets\/State\/dispose.html\">dispose<\/a>, which is called after <a href=\"widgets\/AutomaticKeepAliveClientMixin\/deactivate.html\">deactivate<\/a> if the widget is\nremoved from the tree permanently.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.AutomaticKeepAliveClientMixin",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/AutomaticKeepAliveClientMixin\/deactivate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid deactivate() {\n  if (_keepAliveHandle != null)\n    _releaseKeepAlive();\n  super.deactivate();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "initState",
+            "type": "",
+            "desc": "<p>Called when this object is inserted into the tree.<\/p>\n<p>The framework will call this method exactly once for each <a href=\"widgets\/State-class.html\">State<\/a> object\nit creates.<\/p>\n<p>Override this method to perform initialization that depends on the\nlocation at which this object was inserted into the tree (i.e., <a href=\"widgets\/State\/context.html\">context<\/a>)\nor on the widget used to configure this object (i.e., <a href=\"widgets\/State\/widget.html\">widget<\/a>).<\/p>\n<p>If a <a href=\"widgets\/State-class.html\">State<\/a>'s <a href=\"widgets\/AutomaticKeepAliveClientMixin\/build.html\">build<\/a> method depends on an object that can itself\nchange state, for example a <a href=\"foundation\/ChangeNotifier-class.html\">ChangeNotifier<\/a> or <a href=\"dart-async\/Stream-class.html\">Stream<\/a>, or some\nother object to which one can subscribe to receive notifications, then\nbe sure to subscribe and unsubscribe properly in <a href=\"widgets\/AutomaticKeepAliveClientMixin\/initState.html\">initState<\/a>,\n<a href=\"widgets\/State\/didUpdateWidget.html\">didUpdateWidget<\/a>, and <a href=\"widgets\/State\/dispose.html\">dispose<\/a>:<\/p>\n<ul>\n<li>In <a href=\"widgets\/AutomaticKeepAliveClientMixin\/initState.html\">initState<\/a>, subscribe to the object.<\/li>\n<li>In <a href=\"widgets\/State\/didUpdateWidget.html\">didUpdateWidget<\/a> unsubscribe from the old object and subscribe\nto the new one if the updated widget configuration requires\nreplacing the object.<\/li>\n<li>In <a href=\"widgets\/State\/dispose.html\">dispose<\/a>, unsubscribe from the object.\nYou cannot use <a href=\"widgets\/BuildContext\/inheritFromWidgetOfExactType.html\">BuildContext.inheritFromWidgetOfExactType<\/a> from this\nmethod. However, <a href=\"widgets\/State\/didChangeDependencies.html\">didChangeDependencies<\/a> will be called immediately\nfollowing this method, and <a href=\"widgets\/BuildContext\/inheritFromWidgetOfExactType.html\">BuildContext.inheritFromWidgetOfExactType<\/a> can\nbe used there.<\/li>\n<\/ul>\n<p>If you override this, make sure your method starts with a call to\nsuper.initState().<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.AutomaticKeepAliveClientMixin",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/AutomaticKeepAliveClientMixin\/initState.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid initState() {\n  super.initState();\n  if (wantKeepAlive)\n    _ensureKeepAlive();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "updateKeepAlive",
+            "type": "",
+            "desc": "<p>Ensures that any <a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> ancestors are in a good state, by\nfiring a <a href=\"widgets\/KeepAliveNotification-class.html\">KeepAliveNotification<\/a> or triggering the <a href=\"widgets\/KeepAliveHandle-class.html\">KeepAliveHandle<\/a> as\nappropriate.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.AutomaticKeepAliveClientMixin",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/AutomaticKeepAliveClientMixin\/updateKeepAlive.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid updateKeepAlive() {\n  if (wantKeepAlive) {\n    if (_keepAliveHandle == null)\n      _ensureKeepAlive();\n  } else {\n    if (_keepAliveHandle != null)\n      _releaseKeepAlive();\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "wantKeepAlive",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether the current instance should be kept alive.<\/p>\n<p>Call <a href=\"widgets\/AutomaticKeepAliveClientMixin\/updateKeepAlive.html\">updateKeepAlive<\/a> whenever this getter's value changes.<\/p>\n        ",
+            "memberOf": "widgets.AutomaticKeepAliveClientMixin",
+            "isConstant": false,
+            "href": "widgets\/AutomaticKeepAliveClientMixin\/wantKeepAlive.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool get wantKeepAlive;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": true,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "widgets\/AutomaticKeepAliveClientMixin-mixin.html",
+    "desc": "<p>A mixin with convenience methods for clients of <a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a>. Used\nwith <a href=\"widgets\/State-class.html\">State<\/a> subclasses.<\/p>\n<p>Subclasses must implement <a href=\"widgets\/AutomaticKeepAliveClientMixin\/wantKeepAlive.html\">wantKeepAlive<\/a>, and their <a href=\"widgets\/AutomaticKeepAliveClientMixin\/build.html\">build<\/a> methods must\ncall <code>super.build<\/code> (the return value will always return null, and should be\nignored).<\/p>\n<p>Then, whenever <a href=\"widgets\/AutomaticKeepAliveClientMixin\/wantKeepAlive.html\">wantKeepAlive<\/a>'s value changes (or might change), the\nsubclass should call <a href=\"widgets\/AutomaticKeepAliveClientMixin\/updateKeepAlive.html\">updateKeepAlive<\/a>.<\/p>\n<p>The type argument <code>T<\/code> is the type of the <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> subclass of the\n<a href=\"widgets\/State-class.html\">State<\/a> into which this class is being mixed.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a>, which listens to messages from this mixin.<\/li>\n<li>\n<a href=\"widgets\/KeepAliveNotification-class.html\">KeepAliveNotification<\/a>, the notifications sent by this mixin.<\/li>\n<\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "mixin",
+    "shortname": "AutomaticKeepAliveClientMixin"
+}

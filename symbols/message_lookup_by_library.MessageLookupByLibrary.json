@@ -1,0 +1,226 @@
+{
+    "name": "message_lookup_by_library.MessageLookupByLibrary",
+    "extends": [],
+    "memberOf": "message_lookup_by_library",
+    "events": [],
+    "methods": [
+        {
+            "name": "MessageLookupByLibrary",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "message_lookup_by_library.MessageLookupByLibrary",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "message_lookup_by_library\/MessageLookupByLibrary\/MessageLookupByLibrary.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "operator []",
+            "type": "",
+            "desc": "<p>Return our message with the given name<\/p>\n    ",
+            "static": false,
+            "memberOf": "message_lookup_by_library.MessageLookupByLibrary",
+            "sig": "",
+            "params": [
+                {
+                    "name": "messageName",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "message_lookup_by_library\/MessageLookupByLibrary\/operator_get.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">operator [](String messageName) =&gt; messages[messageName];<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "evaluateMessage",
+            "type": "dart:core.String",
+            "desc": "<p>Evaluate the translated message and return the translated string.<\/p>\n    ",
+            "static": false,
+            "memberOf": "message_lookup_by_library.MessageLookupByLibrary",
+            "sig": "",
+            "params": [
+                {
+                    "name": "translation",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "args",
+                    "type": "dart:core.List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "message_lookup_by_library\/MessageLookupByLibrary\/evaluateMessage.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String evaluateMessage(translation, List args) {\n  return Function.apply(translation, args);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "lookupMessage",
+            "type": "dart:core.String",
+            "desc": "<p>Return the localized version of a message. We are passed the original\nversion of the message, which consists of a\n<code>message_str<\/code> that will be translated, and which may be interpolated\nbased on one or more variables, a <code>desc<\/code> providing a description of usage\nfor the <code>message_str<\/code>, and a map of <code>examples<\/code> for each data element to be\nsubstituted into the message.<\/p>\n<p>For example, if message=\"Hello, $name\", then\nexamples = {'name': 'Sparky'}. If not using the user's default locale, or\nif the locale is not easily detectable, explicitly pass <code>locale<\/code>.<\/p>\n<p>The values of <code>desc<\/code> and <code>examples<\/code> are not used at run-time but are only\nmade available to the translators, so they MUST be simple Strings\navailable at compile time: no String interpolation or concatenation.  The\nexpected usage of this is inside a function that takes as parameters the\nvariables used in the interpolated string.<\/p>\n<p>Ultimately, the information about the enclosing function and its arguments\nwill be extracted automatically but for the time being it must be passed\nexplicitly in the <code>name<\/code> and <code>args<\/code> arguments.<\/p>\n    ",
+            "static": false,
+            "memberOf": "message_lookup_by_library.MessageLookupByLibrary",
+            "sig": "",
+            "params": [
+                {
+                    "name": "message_str",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "locale",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "name",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "args",
+                    "type": "dart:core.List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "meaning",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "ifAbsent",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "message_lookup_by_library\/MessageLookupByLibrary\/lookupMessage.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String lookupMessage(\n    String message_str, String locale, String name, List args, String meaning,\n    {MessageIfAbsent ifAbsent}) {\n  var notFound = false;\n  var actualName = computeMessageName(name, message_str, meaning);\n  if (actualName == null) notFound = true;\n  var translation = this[actualName];\n  notFound = notFound || (translation == null);\n  if (notFound) {\n    return ifAbsent == null ? message_str : ifAbsent(message_str, args);\n  } else {\n    args = args ?? const [];\n    return evaluateMessage(translation, args);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "simpleMessage",
+            "type": "",
+            "desc": "<p>Return a function that returns the given string.\nAn optimization for dart2js, used from the generated code.<\/p>\n    ",
+            "static": false,
+            "memberOf": "message_lookup_by_library.MessageLookupByLibrary",
+            "sig": "",
+            "params": [
+                {
+                    "name": "translatedString",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "message_lookup_by_library\/MessageLookupByLibrary\/simpleMessage.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static simpleMessage(translatedString) =&gt; () =&gt; translatedString;<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "message_lookup_by_library.MessageLookupByLibrary",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "message_lookup_by_library\/MessageLookupByLibrary\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">toString() =&gt; localeName;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "localeName",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>Subclasses should override this to return their locale, e.g. 'en_US'<\/p>\n        ",
+            "memberOf": "message_lookup_by_library.MessageLookupByLibrary",
+            "isConstant": false,
+            "href": "message_lookup_by_library\/MessageLookupByLibrary\/localeName.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get localeName;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "messages",
+            "type": "dart:core.Map<dart:core.String>",
+            "types": [
+                "dart:core.Map",
+                "dart:core.String"
+            ],
+            "desc": "<p>Subclasses should override this to return a list of their message\nimplementations. In this class these are functions, but subclasses may\nimplement them differently.<\/p>\n        ",
+            "memberOf": "message_lookup_by_library.MessageLookupByLibrary",
+            "isConstant": false,
+            "href": "message_lookup_by_library\/MessageLookupByLibrary\/messages.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Map&lt;String, dynamic&gt; get messages;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "message_lookup_by_library\/MessageLookupByLibrary-class.html",
+    "desc": "<p>This provides an abstract class for messages looked up in generated code.\nEach locale will have a separate subclass of this class with its set of\nmessages. See generate_localized.dart.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "MessageLookupByLibrary"
+}

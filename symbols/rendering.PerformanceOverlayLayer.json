@@ -1,0 +1,198 @@
+{
+    "name": "rendering.PerformanceOverlayLayer",
+    "extends": [
+        "rendering.Layer",
+        "foundation.AbstractNode",
+        "dart:core.Object"
+    ],
+    "memberOf": "rendering",
+    "events": [],
+    "methods": [
+        {
+            "name": "PerformanceOverlayLayer",
+            "type": "",
+            "desc": "<p>Creates a layer that displays a performance overlay.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.PerformanceOverlayLayer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "overlayRect",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "optionsMask",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "rasterizerThreshold",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "checkerboardRasterCacheImages",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "checkerboardOffscreenLayers",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "rendering\/PerformanceOverlayLayer\/PerformanceOverlayLayer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">PerformanceOverlayLayer({\n  @required Rect overlayRect,\n  @required this.optionsMask,\n  @required this.rasterizerThreshold,\n  @required this.checkerboardRasterCacheImages,\n  @required this.checkerboardOffscreenLayers,\n}) : _overlayRect = overlayRect;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "addToScene",
+            "type": "dart:ui.EngineLayer",
+            "desc": "<p>Override this method to upload this layer to the engine.<\/p>\n<p>Return the engine layer for retained rendering. When there's no\ncorresponding engine layer, null is returned.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.PerformanceOverlayLayer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "builder",
+                    "type": "dart:ui.SceneBuilder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "layerOffset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PerformanceOverlayLayer\/addToScene.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nui.EngineLayer addToScene(ui.SceneBuilder builder, [ Offset layerOffset = Offset.zero ]) {\n  assert(optionsMask != null);\n  builder.addPerformanceOverlay(optionsMask, overlayRect.shift(layerOffset));\n  builder.setRasterizerTracingThreshold(rasterizerThreshold);\n  builder.setCheckerboardRasterCacheImages(checkerboardRasterCacheImages);\n  builder.setCheckerboardOffscreenLayers(checkerboardOffscreenLayers);\n  return null; \/\/ this does not return an engine layer yet.\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "find",
+            "type": "",
+            "desc": "<p>Returns the value of <code>S<\/code> that corresponds to the point described by\n<code>regionOffset<\/code>.<\/p>\n<p>Returns null if no matching region is found.<\/p>\n<p>The main way for a value to be assigned here is by pushing an\n<a href=\"rendering\/AnnotatedRegionLayer-class.html\">AnnotatedRegionLayer<\/a> into the layer tree.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/AnnotatedRegionLayer-class.html\">AnnotatedRegionLayer<\/a>, for placing values in the layer tree.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "rendering.PerformanceOverlayLayer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "regionOffset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PerformanceOverlayLayer\/find.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nS find&lt;S&gt;(Offset regionOffset) =&gt; null;<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "checkerboardOffscreenLayers",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether the compositor should checkerboard layers that are rendered to offscreen\nbitmaps. This can be useful for debugging rendering performance.<\/p>\n<p>Render target switches are caused by using opacity layers (via a <a href=\"widgets\/FadeTransition-class.html\">FadeTransition<\/a> or\n<a href=\"widgets\/Opacity-class.html\">Opacity<\/a> widget), clips, shader mask layers, etc. Selecting a new render target\nand merging it with the rest of the scene has a performance cost. This can sometimes\nbe avoided by using equivalent widgets that do not require these layers (for example,\nreplacing an <a href=\"widgets\/Opacity-class.html\">Opacity<\/a> widget with an <a href=\"widgets\/Image-class.html\">widgets.Image<\/a> using a <a href=\"dart-ui\/BlendMode-class.html\">BlendMode<\/a>).<\/p>\n        ",
+            "memberOf": "rendering.PerformanceOverlayLayer",
+            "isConstant": false,
+            "href": "rendering\/PerformanceOverlayLayer\/checkerboardOffscreenLayers.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool checkerboardOffscreenLayers\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "checkerboardRasterCacheImages",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether the raster cache should checkerboard cached entries.<\/p>\n<p>The compositor can sometimes decide to cache certain portions of the\nwidget hierarchy. Such portions typically don't change often from frame to\nframe and are expensive to render. This can speed up overall rendering. However,\nthere is certain upfront cost to constructing these cache entries. And, if\nthe cache entries are not used very often, this cost may not be worth the\nspeedup in rendering of subsequent frames. If the developer wants to be certain\nthat populating the raster cache is not causing stutters, this option can be\nset. Depending on the observations made, hints can be provided to the compositor\nthat aid it in making better decisions about caching.<\/p>\n        ",
+            "memberOf": "rendering.PerformanceOverlayLayer",
+            "isConstant": false,
+            "href": "rendering\/PerformanceOverlayLayer\/checkerboardRasterCacheImages.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool checkerboardRasterCacheImages\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "optionsMask",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The mask is created by shifting 1 by the index of the specific\n<a href=\"rendering\/PerformanceOverlayOption-class.html\">PerformanceOverlayOption<\/a> to enable.<\/p>\n        ",
+            "memberOf": "rendering.PerformanceOverlayLayer",
+            "isConstant": false,
+            "href": "rendering\/PerformanceOverlayLayer\/optionsMask.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int optionsMask\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "overlayRect",
+            "type": "dart:ui.Rect",
+            "types": [],
+            "desc": "<p>The rectangle in this layer's coordinate system that the overlay should occupy.<\/p>\n<p>The scene must be explicitly recomposited after this property is changed\n(as described at <a href=\"rendering\/Layer-class.html\">Layer<\/a>).<\/p>\n        ",
+            "memberOf": "rendering.PerformanceOverlayLayer",
+            "isConstant": false,
+            "href": "rendering\/PerformanceOverlayLayer\/overlayRect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect get overlayRect =&gt; _overlayRect;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "rasterizerThreshold",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The rasterizer threshold is an integer specifying the number of frame\nintervals that the rasterizer must miss before it decides that the frame\nis suitable for capturing an SkPicture trace for further analysis.<\/p>\n        ",
+            "memberOf": "rendering.PerformanceOverlayLayer",
+            "isConstant": false,
+            "href": "rendering\/PerformanceOverlayLayer\/rasterizerThreshold.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int rasterizerThreshold\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "rendering\/PerformanceOverlayLayer-class.html",
+    "desc": "<p>A layer that indicates to the compositor that it should display\ncertain performance statistics within it.<\/p>\n<p>Performance overlay layers are always leaves in the layer tree.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "PerformanceOverlayLayer"
+}

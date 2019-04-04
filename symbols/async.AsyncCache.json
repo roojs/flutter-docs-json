@@ -1,0 +1,119 @@
+{
+    "name": "async.AsyncCache",
+    "extends": [],
+    "memberOf": "async",
+    "events": [],
+    "methods": [
+        {
+            "name": "AsyncCache",
+            "type": "",
+            "desc": "<p>Creates a cache that invalidates its contents after <code>duration<\/code> has passed.<\/p>\n<p>The <code>duration<\/code> starts counting after the Future returned by <a href=\"package-async_async\/AsyncCache\/fetch.html\">fetch<\/a>\ncompletes, or after the Stream returned by <a href=\"package-async_async\/AsyncCache\/fetchStream.html\">fetchStream<\/a> emits a done\nevent.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.AsyncCache",
+            "sig": "",
+            "params": [
+                {
+                    "name": "_duration",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-async_async\/AsyncCache\/AsyncCache.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">AsyncCache(this._duration);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "AsyncCache.ephemeral",
+            "type": "",
+            "desc": "<p>Creates a cache that invalidates after an in-flight request is complete.<\/p>\n<p>An ephemeral cache guarantees that a callback function will only be\nexecuted at most once concurrently. This is useful for requests for which\ndata is updated frequently but stale data is acceptable.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.AsyncCache",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "package-async_async\/AsyncCache\/AsyncCache.ephemeral.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory AsyncCache.ephemeral() =&gt; new AsyncCache(Duration.zero);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "fetch",
+            "type": "dart:async.Future",
+            "desc": "<p>Returns a cached value from a previous call to <a href=\"package-async_async\/AsyncCache\/fetch.html\">fetch<\/a>, or runs <code>callback<\/code>\nto compute a new one.<\/p>\n<p>If <a href=\"package-async_async\/AsyncCache\/fetch.html\">fetch<\/a> has been called recently enough, returns its previous return\nvalue. Otherwise, runs <code>callback<\/code> and returns its new return value.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.AsyncCache",
+            "sig": "",
+            "params": [
+                {
+                    "name": "callback",
+                    "type": "dart:async.Future",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/AsyncCache\/fetch.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; fetch(Future&lt;T&gt; callback()) async {\n  if (_cachedStreamSplitter != null) {\n    throw new StateError('Previously used to cache via `fetchStream`');\n  }\n  if (_cachedValueFuture == null) {\n    _cachedValueFuture = callback();\n    await _cachedValueFuture;\n    _startStaleTimer();\n  }\n  return _cachedValueFuture;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "fetchStream",
+            "type": "dart:async.Stream",
+            "desc": "<p>Returns a cached stream from a previous call to <a href=\"package-async_async\/AsyncCache\/fetchStream.html\">fetchStream<\/a>, or runs\n<code>callback<\/code> to compute a new stream.<\/p>\n<p>If <a href=\"package-async_async\/AsyncCache\/fetchStream.html\">fetchStream<\/a> has been called recently enough, returns a copy of its\nprevious return value. Otherwise, runs <code>callback<\/code> and returns its new\nreturn value.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.AsyncCache",
+            "sig": "",
+            "params": [
+                {
+                    "name": "callback",
+                    "type": "dart:async.Stream",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/AsyncCache\/fetchStream.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; fetchStream(Stream&lt;T&gt; callback()) {\n  if (_cachedValueFuture != null) {\n    throw new StateError('Previously used to cache via `fetch`');\n  }\n  if (_cachedStreamSplitter == null) {\n    _cachedStreamSplitter = new StreamSplitter(callback()\n        .transform(new StreamTransformer.fromHandlers(handleDone: (sink) {\n      _startStaleTimer();\n      sink.close();\n    })));\n  }\n  return _cachedStreamSplitter.split();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "invalidate",
+            "type": "",
+            "desc": "<p>Removes any cached value.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.AsyncCache",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "package-async_async\/AsyncCache\/invalidate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void invalidate() {\n  \/\/ TODO: This does not return a future, but probably should.\n  _cachedValueFuture = null;\n  \/\/ TODO: This does not await, but probably should.\n  _cachedStreamSplitter?.close();\n  _cachedStreamSplitter = null;\n  _stale?.cancel();\n  _stale = null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-async_async\/AsyncCache-class.html",
+    "desc": "<p>Runs asynchronous functions and caches the result for a period of time.<\/p>\n<p>This class exists to cover the pattern of having potentially expensive code\nsuch as file I\/O, network access, or isolate computation that's unlikely to\nchange quickly run fewer times. For example:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">final _usersCache = new AsyncCache&lt;List&lt;String&gt;&gt;(const Duration(hours: 1));\n\n\/\/\/ Uses the cache if it exists, otherwise calls the closure:\nFuture&lt;List&lt;String&gt;&gt; get onlineUsers =&gt; _usersCache.fetch(() {\n  \/\/ Actually fetch online users here.\n});\n<\/code><\/pre>\n<p>This class's timing can be mocked using <a href=\"https:\/\/pub.dartlang.org\/packages\/fake_async\"><code>fake_async<\/code><\/a>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "AsyncCache"
+}

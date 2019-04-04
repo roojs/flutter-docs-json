@@ -1,0 +1,425 @@
+{
+    "name": "foundation.BindingBase",
+    "extends": [],
+    "memberOf": "foundation",
+    "events": [],
+    "methods": [
+        {
+            "name": "BindingBase",
+            "type": "",
+            "desc": "<p>Default abstract constructor for bindings.<\/p>\n<p>First calls <a href=\"foundation\/BindingBase\/initInstances.html\">initInstances<\/a> to have bindings initialize their\ninstance pointers and other state, then calls\n<a href=\"foundation\/BindingBase\/initServiceExtensions.html\">initServiceExtensions<\/a> to have bindings initialize their\nobservatory service extensions, if any.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "foundation\/BindingBase\/BindingBase.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BindingBase() {\n  developer.Timeline.startSync('Framework initialization');\n\n  assert(!_debugInitialized);\n  initInstances();\n  assert(_debugInitialized);\n\n  assert(!_debugServiceExtensionsRegistered);\n  initServiceExtensions();\n  assert(_debugServiceExtensionsRegistered);\n\n  developer.postEvent('Flutter.FrameworkInitialization', &lt;String, String&gt;{});\n\n  developer.Timeline.finishSync();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "initInstances",
+            "type": "",
+            "desc": "<p>The initialization method. Subclasses override this method to hook into\nthe platform and otherwise configure their services. Subclasses must call\n\"super.initInstances()\".<\/p>\n<p>By convention, if the service is to be provided as a singleton, it should\nbe exposed as <code>MixinClassName.instance<\/code>, a static getter that returns\n<code>MixinClassName._instance<\/code>, a static field that is set by\n<code>initInstances()<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "foundation\/BindingBase\/initInstances.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\nvoid initInstances() {\n  assert(!_debugInitialized);\n  assert(() { _debugInitialized = true; return true; }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "initServiceExtensions",
+            "type": "",
+            "desc": "<p>Called when the binding is initialized, to register service\nextensions.<\/p>\n<p>Bindings that want to expose service extensions should overload\nthis method to register them using calls to\n<a href=\"foundation\/BindingBase\/registerSignalServiceExtension.html\">registerSignalServiceExtension<\/a>,\n<a href=\"foundation\/BindingBase\/registerBoolServiceExtension.html\">registerBoolServiceExtension<\/a>,\n<a href=\"foundation\/BindingBase\/registerNumericServiceExtension.html\">registerNumericServiceExtension<\/a>, and\n<a href=\"foundation\/BindingBase\/registerServiceExtension.html\">registerServiceExtension<\/a> (in increasing order of complexity).<\/p>\n<p>Implementations of this method must call their superclass\nimplementation.<\/p>\n<p>A registered service extension can only be activated if the vm-service\nis included in the build, which only happens in debug and profile mode.\nAlthough a service extension cannot be used in release mode its code may\nstill be included in the Dart snapshot and blow up binary size if it is\nnot wrapped in a guard that allows the tree shaker to remove it (see\nsample code below).<\/p>\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}The following code registers a service extension that is only included in\ndebug builds.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  assert(() {\n    \/\/ Register your service extension here.\n    return true;\n  }());\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}A service extension registered with the following code snippet is\navailable in debug and profile mode.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  \/\/ kReleaseMode is defined in the 'flutter\/foundation.dart' package.\n  if (!kReleaseMode) {\n    \/\/ Register your service extension here.\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>Both guards ensure that Dart's tree shaker can remove the code for the\nservice extension in release builds.<\/p>\n<p>See also:<\/p>\n<ul><li><a href=\"https:\/\/github.com\/dart-lang\/sdk\/blob\/master\/runtime\/vm\/service\/service.md#rpcs-requests-and-responses\">github.com\/dart-lang\/sdk\/blob\/master\/runtime\/vm\/service\/service.md#rpcs-requests-and-responses<\/a><\/li><\/ul>",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "foundation\/BindingBase\/initServiceExtensions.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\nvoid initServiceExtensions() {\n  assert(!_debugServiceExtensionsRegistered);\n\n  assert(() {\n    registerSignalServiceExtension(\n      name: 'reassemble',\n      callback: reassembleApplication,\n    );\n    return true;\n  }());\n\n  if (!kReleaseMode) {\n    registerSignalServiceExtension(\n      name: 'exit',\n      callback: _exitApplication,\n    );\n    registerServiceExtension(\n      name: 'saveCompilationTrace',\n      callback: (Map&lt;String, String&gt; parameters) async {\n        return &lt;String, dynamic&gt;{\n          'value': ui.saveCompilationTrace(),\n        };\n      },\n    );\n  }\n\n  assert(() {\n    const String platformOverrideExtensionName = 'platformOverride';\n    registerServiceExtension(\n      name: platformOverrideExtensionName,\n      callback: (Map&lt;String, String&gt; parameters) async {\n        if (parameters.containsKey('value')) {\n          switch (parameters['value']) {\n            case 'android':\n              debugDefaultTargetPlatformOverride = TargetPlatform.android;\n              break;\n            case 'iOS':\n              debugDefaultTargetPlatformOverride = TargetPlatform.iOS;\n              break;\n            case 'fuchsia':\n              debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;\n              break;\n            case 'default':\n            default:\n              debugDefaultTargetPlatformOverride = null;\n          }\n          _postExtensionStateChangedEvent(\n            platformOverrideExtensionName,\n            defaultTargetPlatform.toString().substring('$TargetPlatform.'.length),\n          );\n          await reassembleApplication();\n        }\n        return &lt;String, dynamic&gt;{\n          'value': defaultTargetPlatform\n                   .toString()\n                   .substring('$TargetPlatform.'.length),\n        };\n      },\n    );\n    return true;\n  }());\n  assert(() { _debugServiceExtensionsRegistered = true; return true; }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "lockEvents",
+            "type": "dart:async.Future",
+            "desc": "<p>Locks the dispatching of asynchronous events and callbacks until the\ncallback's future completes.<\/p>\n<p>This causes input lag and should therefore be avoided when possible. It is\nprimarily intended for use during non-user-interactive time such as to\nallow <a href=\"foundation\/BindingBase\/reassembleApplication.html\">reassembleApplication<\/a> to block input while it walks the tree\n(which it partially does asynchronously).<\/p>\n<p>The <a href=\"dart-async\/Future-class.html\">Future<\/a> returned by the <code>callback<\/code> argument is returned by <a href=\"foundation\/BindingBase\/lockEvents.html\">lockEvents<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [
+                {
+                    "name": "callback",
+                    "type": "dart:async.Future",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/BindingBase\/lockEvents.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nFuture&lt;void&gt; lockEvents(Future&lt;void&gt; callback()) {\n  developer.Timeline.startSync('Lock events');\n\n  assert(callback != null);\n  _lockCount += 1;\n  final Future&lt;void&gt; future = callback();\n  assert(future != null, 'The lockEvents() callback returned null; it should return a Future&lt;void&gt; that completes when the lock is to expire.');\n  future.whenComplete(() {\n    _lockCount -= 1;\n    if (!locked) {\n      developer.Timeline.finishSync();\n      unlocked();\n    }\n  });\n  return future;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "performReassemble",
+            "type": "dart:async.Future",
+            "desc": "<p>This method is called by <a href=\"foundation\/BindingBase\/reassembleApplication.html\">reassembleApplication<\/a> to actually cause the\napplication to reassemble, e.g. after a hot reload.<\/p>\n<p>Bindings are expected to use this method to re-register anything that uses\nclosures, so that they do not keep pointing to old code, and to flush any\ncaches of previously computed values, in case the new code would compute\nthem differently. For example, the rendering layer triggers the entire\napplication to repaint when this is called.<\/p>\n<p>Do not call this method directly. Instead, use <a href=\"foundation\/BindingBase\/reassembleApplication.html\">reassembleApplication<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "foundation\/BindingBase\/performReassemble.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\n@protected\nFuture&lt;void&gt; performReassemble() {\n  FlutterError.resetErrorCount();\n  return Future&lt;void&gt;.value();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "postEvent",
+            "type": "",
+            "desc": "<p>All events dispatched by a <a href=\"foundation\/BindingBase-class.html\">BindingBase<\/a> use this method instead of\ncalling <a href=\"foundation\/BindingBase\/postEvent.html\">developer.postEvent<\/a> directly so that tests for <a href=\"foundation\/BindingBase-class.html\">BindingBase<\/a>\ncan track which events were dispatched by overriding this method.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [
+                {
+                    "name": "eventKind",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "eventData",
+                    "type": "dart:core.Map<dart:core.String>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.Map",
+                        "dart:core.String"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/BindingBase\/postEvent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid postEvent(String eventKind, Map&lt;String, dynamic&gt; eventData) {\n  developer.postEvent(eventKind, eventData);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "reassembleApplication",
+            "type": "dart:async.Future",
+            "desc": "<p>Cause the entire application to redraw, e.g. after a hot reload.<\/p>\n<p>This is used by development tools when the application code has changed,\nto cause the application to pick up any changed code. It can be triggered\nmanually by sending the <code>ext.flutter.reassemble<\/code> service extension signal.<\/p>\n<p>This method is very computationally expensive and should not be used in\nproduction code. There is never a valid reason to cause the entire\napplication to repaint in production. All aspects of the Flutter framework\nknow how to redraw when necessary. It is only necessary in development\nwhen the code is literally changed on the fly (e.g. in hot reload) or when\ndebug flags are being toggled.<\/p>\n<p>While this method runs, events are locked (e.g. pointer events are not\ndispatched).<\/p>\n<p>Subclasses (binding classes) should override <a href=\"foundation\/BindingBase\/performReassemble.html\">performReassemble<\/a> to react\nto this method being called. This method itself should not be overridden.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "foundation\/BindingBase\/reassembleApplication.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; reassembleApplication() {\n  return lockEvents(performReassemble);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "registerBoolServiceExtension",
+            "type": "",
+            "desc": "<p>Registers a service extension method with the given name (full\nname \"ext.flutter.name\"), which takes a single argument\n\"enabled\" which can have the value \"true\" or the value \"false\"\nor can be omitted to read the current value. (Any value other\nthan \"true\" is considered equivalent to \"false\". Other arguments\nare ignored.)<\/p>\n<p>Calls the <code>getter<\/code> callback to obtain the value when\nresponding to the service extension method being called.<\/p>\n<p>Calls the <code>setter<\/code> callback with the new value when the\nservice extension method is called with a new value.<\/p>\n<p>A registered service extension can only be activated if the vm-service\nis included in the build, which only happens in debug and profile mode.\nAlthough a service extension cannot be used in release mode its code may\nstill be included in the Dart snapshot and blow up binary size if it is\nnot wrapped in a guard that allows the tree shaker to remove it (see\nsample code below).<\/p>\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}The following code registers a service extension that is only included in\ndebug builds.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  assert(() {\n    \/\/ Register your service extension here.\n    return true;\n  }());\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}A service extension registered with the following code snippet is\navailable in debug and profile mode.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  \/\/ kReleaseMode is defined in the 'flutter\/foundation.dart' package.\n  if (!kReleaseMode) {\n    \/\/ Register your service extension here.\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>Both guards ensure that Dart's tree shaker can remove the code for the\nservice extension in release builds.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [
+                {
+                    "name": "name",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "getter",
+                    "type": "foundation.AsyncValueGetter<dart:core.bool>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "foundation.AsyncValueGetter",
+                        "dart:core.bool"
+                    ]
+                },
+                {
+                    "name": "setter",
+                    "type": "foundation.AsyncValueSetter<dart:core.bool>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "foundation.AsyncValueSetter",
+                        "dart:core.bool"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/BindingBase\/registerBoolServiceExtension.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid registerBoolServiceExtension({\n  @required String name,\n  @required AsyncValueGetter&lt;bool&gt; getter,\n  @required AsyncValueSetter&lt;bool&gt; setter,\n}) {\n  assert(name != null);\n  assert(getter != null);\n  assert(setter != null);\n  registerServiceExtension(\n    name: name,\n    callback: (Map&lt;String, String&gt; parameters) async {\n      if (parameters.containsKey('enabled')) {\n        await setter(parameters['enabled'] == 'true');\n        _postExtensionStateChangedEvent(name, await getter() ? 'true' : 'false');\n      }\n      return &lt;String, dynamic&gt;{'enabled': await getter() ? 'true' : 'false'};\n    },\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "registerNumericServiceExtension",
+            "type": "",
+            "desc": "<p>Registers a service extension method with the given name (full\nname \"ext.flutter.name\"), which takes a single argument with the\nsame name as the method which, if present, must have a value\nthat can be parsed by <a href=\"dart-core\/double\/parse.html\">double.parse<\/a>, and can be omitted to read\nthe current value. (Other arguments are ignored.)<\/p>\n<p>Calls the <code>getter<\/code> callback to obtain the value when\nresponding to the service extension method being called.<\/p>\n<p>Calls the <code>setter<\/code> callback with the new value when the\nservice extension method is called with a new value.<\/p>\n<p>A registered service extension can only be activated if the vm-service\nis included in the build, which only happens in debug and profile mode.\nAlthough a service extension cannot be used in release mode its code may\nstill be included in the Dart snapshot and blow up binary size if it is\nnot wrapped in a guard that allows the tree shaker to remove it (see\nsample code below).<\/p>\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}The following code registers a service extension that is only included in\ndebug builds.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  assert(() {\n    \/\/ Register your service extension here.\n    return true;\n  }());\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}A service extension registered with the following code snippet is\navailable in debug and profile mode.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  \/\/ kReleaseMode is defined in the 'flutter\/foundation.dart' package.\n  if (!kReleaseMode) {\n    \/\/ Register your service extension here.\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>Both guards ensure that Dart's tree shaker can remove the code for the\nservice extension in release builds.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [
+                {
+                    "name": "name",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "getter",
+                    "type": "foundation.AsyncValueGetter<dart:core.double>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "foundation.AsyncValueGetter",
+                        "dart:core.double"
+                    ]
+                },
+                {
+                    "name": "setter",
+                    "type": "foundation.AsyncValueSetter<dart:core.double>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "foundation.AsyncValueSetter",
+                        "dart:core.double"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/BindingBase\/registerNumericServiceExtension.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid registerNumericServiceExtension({\n  @required String name,\n  @required AsyncValueGetter&lt;double&gt; getter,\n  @required AsyncValueSetter&lt;double&gt; setter,\n}) {\n  assert(name != null);\n  assert(getter != null);\n  assert(setter != null);\n  registerServiceExtension(\n    name: name,\n    callback: (Map&lt;String, String&gt; parameters) async {\n      if (parameters.containsKey(name)) {\n        await setter(double.parse(parameters[name]));\n        _postExtensionStateChangedEvent(name, (await getter()).toString());\n      }\n      return &lt;String, dynamic&gt;{name: (await getter()).toString()};\n    },\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "registerServiceExtension",
+            "type": "",
+            "desc": "<p>Registers a service extension method with the given name (full name\n\"ext.flutter.name\").<\/p>\n<p>The given callback is called when the extension method is called. The\ncallback must return a <a href=\"dart-async\/Future-class.html\">Future<\/a> that either eventually completes to a\nreturn value in the form of a name\/value map where the values can all be\nconverted to JSON using <code>json.encode()<\/code> (see <a href=\"dart-convert\/JsonEncoder-class.html\">JsonEncoder<\/a>), or fails. In\ncase of failure, the failure is reported to the remote caller and is\ndumped to the logs.<\/p>\n<p>The returned map will be mutated.<\/p>\n<p>A registered service extension can only be activated if the vm-service\nis included in the build, which only happens in debug and profile mode.\nAlthough a service extension cannot be used in release mode its code may\nstill be included in the Dart snapshot and blow up binary size if it is\nnot wrapped in a guard that allows the tree shaker to remove it (see\nsample code below).<\/p>\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}The following code registers a service extension that is only included in\ndebug builds.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  assert(() {\n    \/\/ Register your service extension here.\n    return true;\n  }());\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}A service extension registered with the following code snippet is\navailable in debug and profile mode.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  \/\/ kReleaseMode is defined in the 'flutter\/foundation.dart' package.\n  if (!kReleaseMode) {\n    \/\/ Register your service extension here.\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>Both guards ensure that Dart's tree shaker can remove the code for the\nservice extension in release builds.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [
+                {
+                    "name": "name",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "callback",
+                    "type": "foundation.ServiceExtensionCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/BindingBase\/registerServiceExtension.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid registerServiceExtension({\n  @required String name,\n  @required ServiceExtensionCallback callback,\n}) {\n  assert(name != null);\n  assert(callback != null);\n  final String methodName = 'ext.flutter.$name';\n  developer.registerExtension(methodName, (String method, Map&lt;String, String&gt; parameters) async {\n    assert(method == methodName);\n    assert(() {\n      if (debugInstrumentationEnabled)\n        debugPrint('service extension method received: $method($parameters)');\n      return true;\n    }());\n\n    \/\/ VM service extensions are handled as \"out of band\" messages by the VM,\n    \/\/ which means they are handled at various times, generally ASAP.\n    \/\/ Notably, this includes being handled in the middle of microtask loops.\n    \/\/ While this makes sense for some service extensions (e.g. \"dump current\n    \/\/ stack trace\", which explicitly doesn't want to wait for a loop to\n    \/\/ complete), Flutter extensions need not be handled with such high\n    \/\/ priority. Further, handling them with such high priority exposes us to\n    \/\/ the possibility that they're handled in the middle of a frame, which\n    \/\/ breaks many assertions. As such, we ensure they we run the callbacks\n    \/\/ on the outer event loop here.\n    await debugInstrumentAction&lt;void&gt;('Wait for outer event loop', () {\n      return Future&lt;void&gt;.delayed(Duration.zero);\n    });\n\n    dynamic caughtException;\n    StackTrace caughtStack;\n    Map&lt;String, dynamic&gt; result;\n    try {\n      result = await callback(parameters);\n    } catch (exception, stack) {\n      caughtException = exception;\n      caughtStack = stack;\n    }\n    if (caughtException == null) {\n      result['type'] = '_extensionType';\n      result['method'] = method;\n      return developer.ServiceExtensionResponse.result(json.encode(result));\n    } else {\n      FlutterError.reportError(FlutterErrorDetails(\n        exception: caughtException,\n        stack: caughtStack,\n        context: 'during a service extension callback for \"$method\"',\n      ));\n      return developer.ServiceExtensionResponse.error(\n        developer.ServiceExtensionResponse.extensionError,\n        json.encode(&lt;String, String&gt;{\n          'exception': caughtException.toString(),\n          'stack': caughtStack.toString(),\n          'method': method,\n        }),\n      );\n    }\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "registerSignalServiceExtension",
+            "type": "",
+            "desc": "<p>Registers a service extension method with the given name (full\nname \"ext.flutter.name\"), which takes no arguments and returns\nno value.<\/p>\n<p>Calls the <code>callback<\/code> callback when the service extension is called.<\/p>\n<p>A registered service extension can only be activated if the vm-service\nis included in the build, which only happens in debug and profile mode.\nAlthough a service extension cannot be used in release mode its code may\nstill be included in the Dart snapshot and blow up binary size if it is\nnot wrapped in a guard that allows the tree shaker to remove it (see\nsample code below).<\/p>\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}The following code registers a service extension that is only included in\ndebug builds.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  assert(() {\n    \/\/ Register your service extension here.\n    return true;\n  }());\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}A service extension registered with the following code snippet is\navailable in debug and profile mode.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  \/\/ kReleaseMode is defined in the 'flutter\/foundation.dart' package.\n  if (!kReleaseMode) {\n    \/\/ Register your service extension here.\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>Both guards ensure that Dart's tree shaker can remove the code for the\nservice extension in release builds.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [
+                {
+                    "name": "name",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "callback",
+                    "type": "foundation.AsyncCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/BindingBase\/registerSignalServiceExtension.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid registerSignalServiceExtension({\n  @required String name,\n  @required AsyncCallback callback,\n}) {\n  assert(name != null);\n  assert(callback != null);\n  registerServiceExtension(\n    name: name,\n    callback: (Map&lt;String, String&gt; parameters) async {\n      await callback();\n      return &lt;String, dynamic&gt;{};\n    },\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "registerStringServiceExtension",
+            "type": "",
+            "desc": "<p>Registers a service extension method with the given name (full name\n\"ext.flutter.name\"), which optionally takes a single argument with the\nname \"value\". If the argument is omitted, the value is to be read,\notherwise it is to be set. Returns the current value.<\/p>\n<p>Calls the <code>getter<\/code> callback to obtain the value when\nresponding to the service extension method being called.<\/p>\n<p>Calls the <code>setter<\/code> callback with the new value when the\nservice extension method is called with a new value.<\/p>\n<p>A registered service extension can only be activated if the vm-service\nis included in the build, which only happens in debug and profile mode.\nAlthough a service extension cannot be used in release mode its code may\nstill be included in the Dart snapshot and blow up binary size if it is\nnot wrapped in a guard that allows the tree shaker to remove it (see\nsample code below).<\/p>\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}The following code registers a service extension that is only included in\ndebug builds.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  assert(() {\n    \/\/ Register your service extension here.\n    return true;\n  }());\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>{@inject-html}<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">{@end-inject-html}A service extension registered with the following code snippet is\navailable in debug and profile mode.{@inject-html}<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void myRegistrationFunction() {\n  \/\/ kReleaseMode is defined in the 'flutter\/foundation.dart' package.\n  if (!kReleaseMode) {\n    \/\/ Register your service extension here.\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n{@end-inject-html}\n<p>Both guards ensure that Dart's tree shaker can remove the code for the\nservice extension in release builds.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [
+                {
+                    "name": "name",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "getter",
+                    "type": "foundation.AsyncValueGetter<dart:core.String>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "foundation.AsyncValueGetter",
+                        "dart:core.String"
+                    ]
+                },
+                {
+                    "name": "setter",
+                    "type": "foundation.AsyncValueSetter<dart:core.String>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "foundation.AsyncValueSetter",
+                        "dart:core.String"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/BindingBase\/registerStringServiceExtension.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid registerStringServiceExtension({\n  @required String name,\n  @required AsyncValueGetter&lt;String&gt; getter,\n  @required AsyncValueSetter&lt;String&gt; setter,\n}) {\n  assert(name != null);\n  assert(getter != null);\n  assert(setter != null);\n  registerServiceExtension(\n    name: name,\n    callback: (Map&lt;String, String&gt; parameters) async {\n      if (parameters.containsKey('value')) {\n        await setter(parameters['value']);\n        _postExtensionStateChangedEvent(name, await getter());\n      }\n      return &lt;String, dynamic&gt;{'value': await getter()};\n    },\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "foundation\/BindingBase\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; '&lt;$runtimeType&gt;';<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "unlocked",
+            "type": "",
+            "desc": "<p>Called by <a href=\"foundation\/BindingBase\/lockEvents.html\">lockEvents<\/a> when events get unlocked.<\/p>\n<p>This should flush any events that were queued while <a href=\"foundation\/BindingBase\/locked.html\">locked<\/a> was true.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.BindingBase",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "foundation\/BindingBase\/unlocked.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\nvoid unlocked() {\n  assert(!locked);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "locked",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether <a href=\"foundation\/BindingBase\/lockEvents.html\">lockEvents<\/a> is currently locking events.<\/p>\n<p>Binding subclasses that fire events should check this first, and if it is\nset, queue events instead of firing them.<\/p>\n<p>Events should be flushed when <a href=\"foundation\/BindingBase\/unlocked.html\">unlocked<\/a> is called.<\/p>\n        ",
+            "memberOf": "foundation.BindingBase",
+            "isConstant": false,
+            "href": "foundation\/BindingBase\/locked.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool get locked =&gt; _lockCount &gt; 0;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "window",
+            "type": "dart:ui.Window",
+            "types": [],
+            "desc": "<p>The window to which this binding is bound.<\/p>\n<p>A number of additional bindings are defined as extensions of <a href=\"foundation\/BindingBase-class.html\">BindingBase<\/a>,\ne.g., <a href=\"services\/ServicesBinding-mixin.html\">ServicesBinding<\/a>, <a href=\"rendering\/RendererBinding-mixin.html\">RendererBinding<\/a>, and <a href=\"widgets\/WidgetsBinding-mixin.html\">WidgetsBinding<\/a>. Each of\nthese bindings define behaviors that interact with a <a href=\"dart-ui\/Window-class.html\">ui.Window<\/a>, e.g.,\n<a href=\"services\/ServicesBinding-mixin.html\">ServicesBinding<\/a> registers a <a href=\"dart-ui\/Window\/onPlatformMessage.html\">ui.Window.onPlatformMessage<\/a> handler, and\n<a href=\"rendering\/RendererBinding-mixin.html\">RendererBinding<\/a> registers <a href=\"dart-ui\/Window\/onMetricsChanged.html\">ui.Window.onMetricsChanged<\/a>,\n<a href=\"dart-ui\/Window\/onTextScaleFactorChanged.html\">ui.Window.onTextScaleFactorChanged<\/a>, <a href=\"dart-ui\/Window\/onSemanticsEnabledChanged.html\">ui.Window.onSemanticsEnabledChanged<\/a>,\nand <a href=\"dart-ui\/Window\/onSemanticsAction.html\">ui.Window.onSemanticsAction<\/a> handlers.<\/p>\n<p>Each of these other bindings could individually access a <a href=\"dart-ui\/Window-class.html\">Window<\/a> statically,\nbut that would preclude the ability to test these behaviors with a fake\nwindow for verification purposes.  Therefore, <a href=\"foundation\/BindingBase-class.html\">BindingBase<\/a> exposes this\n<a href=\"dart-ui\/Window-class.html\">Window<\/a> for use by other bindings.  A subclass of <a href=\"foundation\/BindingBase-class.html\">BindingBase<\/a>, such as\n<a href=\"flutter_test\/TestWidgetsFlutterBinding-class.html\">TestWidgetsFlutterBinding<\/a>, can override this accessor to return a\ndifferent <a href=\"dart-ui\/Window-class.html\">Window<\/a> implementation, such as a <a href=\"flutter_test\/TestWindow-class.html\">TestWindow<\/a>.<\/p>\n        ",
+            "memberOf": "foundation.BindingBase",
+            "isConstant": false,
+            "href": "foundation\/BindingBase\/window.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">ui.Window get window =&gt; ui.window;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [
+        "flutter_test.AutomatedTestWidgetsFlutterBinding",
+        "flutter_test.LiveTestWidgetsFlutterBinding",
+        "flutter_test.TestWidgetsFlutterBinding",
+        "rendering.RenderingFlutterBinding",
+        "widgets.WidgetsFlutterBinding"
+    ],
+    "realImplementors": [
+        "flutter_test.AutomatedTestWidgetsFlutterBinding",
+        "flutter_test.LiveTestWidgetsFlutterBinding"
+    ],
+    "cn": [],
+    "href": "foundation\/BindingBase-class.html",
+    "desc": "<p>Base class for mixins that provide singleton services (also known as\n\"bindings\").<\/p>\n<p>To use this class in an <code>on<\/code> clause of a mixin, inherit from it and implement\n<a href=\"foundation\/BindingBase\/initInstances.html\">initInstances()<\/a>. The mixin is guaranteed to only be constructed once in\nthe lifetime of the app (more precisely, it will assert if constructed twice\nin checked mode).<\/p>\n<p>The top-most layer used to write the application will have a concrete class\nthat inherits from <a href=\"foundation\/BindingBase-class.html\">BindingBase<\/a> and uses all the various <a href=\"foundation\/BindingBase-class.html\">BindingBase<\/a>\nmixins (such as <a href=\"services\/ServicesBinding-mixin.html\">ServicesBinding<\/a>). For example, the Widgets library in\nFlutter introduces a binding called <a href=\"widgets\/WidgetsFlutterBinding-class.html\">WidgetsFlutterBinding<\/a>. The relevant\nlibrary defines how to create the binding. It could be implied (for example,\n<a href=\"widgets\/WidgetsFlutterBinding-class.html\">WidgetsFlutterBinding<\/a> is automatically started from <a href=\"widgets\/runApp.html\">runApp<\/a>), or the\napplication might be required to explicitly call the constructor.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "BindingBase"
+}

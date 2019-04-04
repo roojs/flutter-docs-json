@@ -1,0 +1,781 @@
+{
+    "name": "path.Context",
+    "extends": [],
+    "memberOf": "path",
+    "events": [],
+    "methods": [
+        {
+            "name": "Context",
+            "type": "",
+            "desc": "<p>Creates a new path context for the given style and current directory.<\/p>\n<p>If <code>style<\/code> is omitted, it uses the host operating system's path style. If\nonly <code>current<\/code> is omitted, it defaults \".\". If <em>both<\/em> <code>style<\/code> and\n<code>current<\/code> are omitted, <code>current<\/code> defaults to the real current working\ndirectory.<\/p>\n<p>On the browser, <code>style<\/code> defaults to <a href=\"package-path_path\/Style\/url.html\">Style.url<\/a> and <code>current<\/code> defaults to\nthe current URL.<\/p>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "style",
+                    "type": "path.Style",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "current",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-path_path\/Context\/Context.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Context({Style style, String current}) {\n  if (current == null) {\n    if (style == null) {\n      current = p.current;\n    } else {\n      current = \".\";\n    }\n  }\n\n  if (style == null) {\n    style = Style.platform;\n  } else if (style is! InternalStyle) {\n    throw new ArgumentError(\"Only styles defined by the path package are \"\n        \"allowed.\");\n  }\n\n  return new Context._(style as InternalStyle, current);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "absolute",
+            "type": "dart:core.String",
+            "desc": "<p>Creates a new path by appending the given path parts to <a href=\"package-path_path\/Context\/current.html\">current<\/a>.\nEquivalent to <a href=\"package-path_path\/Context\/join.html\">join()<\/a> with <a href=\"package-path_path\/Context\/current.html\">current<\/a> as the first argument. Example:<\/p>\n<pre class=\"language-dart\"><code>var context = new Context(current: '\/root');\ncontext.absolute('path', 'to', 'foo'); \/\/ -&gt; '\/root\/path\/to\/foo'\n<\/code><\/pre>\n<p>If <a href=\"package-path_path\/Context\/current.html\">current<\/a> isn't absolute, this won't return an absolute path.<\/p>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "part1",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "part2",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "part3",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "part4",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "part5",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "part6",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "part7",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/absolute.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String absolute(String part1,\n    [String part2,\n    String part3,\n    String part4,\n    String part5,\n    String part6,\n    String part7]) {\n  _validateArgList(\n      \"absolute\", [part1, part2, part3, part4, part5, part6, part7]);\n\n  \/\/ If there's a single absolute path, just return it. This is a lot faster\n  \/\/ for the common case of `p.absolute(path)`.\n  if (part2 == null &amp;&amp; isAbsolute(part1) &amp;&amp; !isRootRelative(part1)) {\n    return part1;\n  }\n\n  return join(current, part1, part2, part3, part4, part5, part6, part7);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "basename",
+            "type": "dart:core.String",
+            "desc": "<p>Gets the part of <code>path<\/code> after the last separator on the context's\nplatform.<\/p>\n<pre class=\"language-dart\"><code>context.basename('path\/to\/foo.dart'); \/\/ -&gt; 'foo.dart'\ncontext.basename('path\/to');          \/\/ -&gt; 'to'\n<\/code><\/pre>\n<p>Trailing separators are ignored.<\/p>\n<pre class=\"language-dart\"><code>context.basename('path\/to\/'); \/\/ -&gt; 'to'\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/basename.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String basename(String path) =&gt; _parse(path).basename;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "basenameWithoutExtension",
+            "type": "dart:core.String",
+            "desc": "<p>Gets the part of <code>path<\/code> after the last separator on the context's\nplatform, and without any trailing file extension.<\/p>\n<pre class=\"language-dart\"><code>context.basenameWithoutExtension('path\/to\/foo.dart'); \/\/ -&gt; 'foo'\n<\/code><\/pre>\n<p>Trailing separators are ignored.<\/p>\n<pre class=\"language-dart\"><code>context.basenameWithoutExtension('path\/to\/foo.dart\/'); \/\/ -&gt; 'foo'\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/basenameWithoutExtension.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String basenameWithoutExtension(String path) =&gt;\n    _parse(path).basenameWithoutExtension;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "canonicalize",
+            "type": "dart:core.String",
+            "desc": "<p>Canonicalizes <code>path<\/code>.<\/p>\n<p>This is guaranteed to return the same path for two different input paths\nif and only if both input paths point to the same location. Unlike\n<a href=\"package-path_path\/Context\/normalize.html\">normalize<\/a>, it returns absolute paths when possible and canonicalizes\nASCII case on Windows.<\/p>\n<p>Note that this does not resolve symlinks.<\/p>\n<p>If you want a map that uses path keys, it's probably more efficient to\npass <a href=\"package-path_path\/Context\/equals.html\">equals<\/a> and <a href=\"package-path_path\/Context\/hash.html\">hash<\/a> to <a href=\"dart-collection\/HashMap\/HashMap.html\">new HashMap<\/a> than it is to canonicalize every\nkey.<\/p>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/canonicalize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String canonicalize(String path) {\n  path = absolute(path);\n  if (style != Style.windows &amp;&amp; !_needsNormalization(path)) return path;\n\n  var parsed = _parse(path);\n  parsed.normalize(canonicalize: true);\n  return parsed.toString();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "dirname",
+            "type": "dart:core.String",
+            "desc": "<p>Gets the part of <code>path<\/code> before the last separator.<\/p>\n<pre class=\"language-dart\"><code>context.dirname('path\/to\/foo.dart'); \/\/ -&gt; 'path\/to'\ncontext.dirname('path\/to');          \/\/ -&gt; 'path'\n<\/code><\/pre>\n<p>Trailing separators are ignored.<\/p>\n<pre class=\"language-dart\"><code>context.dirname('path\/to\/'); \/\/ -&gt; 'path'\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/dirname.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String dirname(String path) {\n  var parsed = _parse(path);\n  parsed.removeTrailingSeparators();\n  if (parsed.parts.isEmpty) return parsed.root == null ? '.' : parsed.root;\n  if (parsed.parts.length == 1) {\n    return parsed.root == null ? '.' : parsed.root;\n  }\n  parsed.parts.removeLast();\n  parsed.separators.removeLast();\n  parsed.removeTrailingSeparators();\n  return parsed.toString();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "equals",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns <code>true<\/code> if <code>path1<\/code> points to the same location as <code>path2<\/code>, and\n<code>false<\/code> otherwise.<\/p>\n<p>The <a href=\"package-path_path\/Context\/hash.html\">hash<\/a> function returns a hash code that matches these equality\nsemantics.<\/p>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path1",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "path2",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/equals.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool equals(String path1, String path2) =&gt;\n    _isWithinOrEquals(path1, path2) == _PathRelation.equal;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "extension",
+            "type": "dart:core.String",
+            "desc": "<p>Gets the file extension of <code>path<\/code>: the portion of <a href=\"package-path_path\/Context\/basename.html\">basename<\/a> from the last\n<code>.<\/code> to the end (including the <code>.<\/code> itself).<\/p>\n<pre class=\"language-dart\"><code>context.extension('path\/to\/foo.dart'); \/\/ -&gt; '.dart'\ncontext.extension('path\/to\/foo'); \/\/ -&gt; ''\ncontext.extension('path.to\/foo'); \/\/ -&gt; ''\ncontext.extension('path\/to\/foo.dart.js'); \/\/ -&gt; '.js'\n<\/code><\/pre>\n<p>If the file name starts with a <code>.<\/code>, then it is not considered an\nextension:<\/p>\n<pre class=\"language-dart\"><code>context.extension('~\/.bashrc');    \/\/ -&gt; ''\ncontext.extension('~\/.notes.txt'); \/\/ -&gt; '.txt'\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/extension.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String extension(String path) =&gt; _parse(path).extension;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "fromUri",
+            "type": "dart:core.String",
+            "desc": "<p>Returns the path represented by <code>uri<\/code>, which may be a <a href=\"dart-core\/String-class.html\">String<\/a> or a <a href=\"dart-core\/Uri-class.html\">Uri<\/a>.<\/p>\n<p>For POSIX and Windows styles, <code>uri<\/code> must be a <code>file:<\/code> URI. For the URL\nstyle, this will just convert <code>uri<\/code> to a string.<\/p>\n<pre class=\"language-dart\"><code>\/\/ POSIX\ncontext.fromUri('file:\/\/\/path\/to\/foo')\n  \/\/ -&gt; '\/path\/to\/foo'\n\n\/\/ Windows\ncontext.fromUri('file:\/\/\/C:\/path\/to\/foo')\n  \/\/ -&gt; r'C:\\path\\to\\foo'\n\n\/\/ URL\ncontext.fromUri('http:\/\/dartlang.org\/path\/to\/foo')\n  \/\/ -&gt; 'http:\/\/dartlang.org\/path\/to\/foo'\n<\/code><\/pre>\n<p>If <code>uri<\/code> is relative, a relative path will be returned.<\/p>\n<pre class=\"language-dart\"><code>path.fromUri('path\/to\/foo'); \/\/ -&gt; 'path\/to\/foo'\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "uri",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/fromUri.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String fromUri(uri) =&gt; style.pathFromUri(_parseUri(uri));<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "hash",
+            "type": "dart:core.int",
+            "desc": "<p>Returns a hash code for <code>path<\/code> that matches the semantics of <a href=\"package-path_path\/Context\/equals.html\">equals<\/a>.<\/p>\n<p>Note that the same path may have different hash codes in different\n<a href=\"package-path_path\/Context-class.html\">Context<\/a>s.<\/p>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/hash.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int hash(String path) {\n  \/\/ Make [path] absolute to ensure that equivalent relative and absolute\n  \/\/ paths have the same hash code.\n  path = absolute(path);\n\n  var result = _hashFast(path);\n  if (result != null) return result;\n\n  var parsed = _parse(path);\n  parsed.normalize();\n  return _hashFast(parsed.toString());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isAbsolute",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns <code>true<\/code> if <code>path<\/code> is an absolute path and <code>false<\/code> if it is a\nrelative path.<\/p>\n<p>On POSIX systems, absolute paths start with a <code>\/<\/code> (forward slash). On\nWindows, an absolute path starts with <code>\\\\<\/code>, or a drive letter followed by\n<code>:\/<\/code> or <code>:\\<\/code>. For URLs, absolute paths either start with a protocol and\noptional hostname (e.g. <code>http:\/\/dartlang.org<\/code>, <code>file:\/\/<\/code>) or with a <code>\/<\/code>.<\/p>\n<p>URLs that start with <code>\/<\/code> are known as \"root-relative\", since they're\nrelative to the root of the current URL. Since root-relative paths are\nstill absolute in every other sense, <a href=\"package-path_path\/Context\/isAbsolute.html\">isAbsolute<\/a> will return true for\nthem. They can be detected using <a href=\"package-path_path\/Context\/isRootRelative.html\">isRootRelative<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/isAbsolute.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool isAbsolute(String path) =&gt; style.rootLength(path) &gt; 0;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isRelative",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns <code>true<\/code> if <code>path<\/code> is a relative path and <code>false<\/code> if it is absolute.\nOn POSIX systems, absolute paths start with a <code>\/<\/code> (forward slash). On\nWindows, an absolute path starts with <code>\\\\<\/code>, or a drive letter followed by\n<code>:\/<\/code> or <code>:\\<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/isRelative.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool isRelative(String path) =&gt; !this.isAbsolute(path);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isRootRelative",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns <code>true<\/code> if <code>path<\/code> is a root-relative path and <code>false<\/code> if it's not.<\/p>\n<p>URLs that start with <code>\/<\/code> are known as \"root-relative\", since they're\nrelative to the root of the current URL. Since root-relative paths are\nstill absolute in every other sense, <a href=\"package-path_path\/Context\/isAbsolute.html\">isAbsolute<\/a> will return true for\nthem. They can be detected using <a href=\"package-path_path\/Context\/isRootRelative.html\">isRootRelative<\/a>.<\/p>\n<p>No POSIX and Windows paths are root-relative.<\/p>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/isRootRelative.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool isRootRelative(String path) =&gt; style.isRootRelative(path);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isWithin",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns <code>true<\/code> if <code>child<\/code> is a path beneath <code>parent<\/code>, and <code>false<\/code>\notherwise.<\/p>\n<pre class=\"language-dart\"><code>path.isWithin('\/root\/path', '\/root\/path\/a'); \/\/ -&gt; true\npath.isWithin('\/root\/path', '\/root\/other'); \/\/ -&gt; false\npath.isWithin('\/root\/path', '\/root\/path'); \/\/ -&gt; false\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "parent",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "child",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/isWithin.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool isWithin(String parent, String child) =&gt;\n    _isWithinOrEquals(parent, child) == _PathRelation.within;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "join",
+            "type": "dart:core.String",
+            "desc": "<p>Joins the given path parts into a single path. Example:<\/p>\n<pre class=\"language-dart\"><code>context.join('path', 'to', 'foo'); \/\/ -&gt; 'path\/to\/foo'\n<\/code><\/pre>\n<p>If any part ends in a path separator, then a redundant separator will not\nbe added:<\/p>\n<pre class=\"language-dart\"><code>context.join('path\/', 'to', 'foo'); \/\/ -&gt; 'path\/to\/foo\n<\/code><\/pre>\n<p>If a part is an absolute path, then anything before that will be ignored:<\/p>\n<pre class=\"language-dart\"><code>context.join('path', '\/to', 'foo'); \/\/ -&gt; '\/to\/foo'\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "part1",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "part2",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "part3",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "part4",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "part5",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "part6",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "part7",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "part8",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/join.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String join(String part1,\n    [String part2,\n    String part3,\n    String part4,\n    String part5,\n    String part6,\n    String part7,\n    String part8]) {\n  var parts = &lt;String&gt;[\n    part1,\n    part2,\n    part3,\n    part4,\n    part5,\n    part6,\n    part7,\n    part8\n  ];\n  _validateArgList(\"join\", parts);\n  return joinAll(parts.where((part) =&gt; part != null));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "joinAll",
+            "type": "dart:core.String",
+            "desc": "<p>Joins the given path parts into a single path. Example:<\/p>\n<pre class=\"language-dart\"><code>context.joinAll(['path', 'to', 'foo']); \/\/ -&gt; 'path\/to\/foo'\n<\/code><\/pre>\n<p>If any part ends in a path separator, then a redundant separator will not\nbe added:<\/p>\n<pre class=\"language-dart\"><code>context.joinAll(['path\/', 'to', 'foo']); \/\/ -&gt; 'path\/to\/foo\n<\/code><\/pre>\n<p>If a part is an absolute path, then anything before that will be ignored:<\/p>\n<pre class=\"language-dart\"><code>context.joinAll(['path', '\/to', 'foo']); \/\/ -&gt; '\/to\/foo'\n<\/code><\/pre>\n<p>For a fixed number of parts, <a href=\"package-path_path\/Context\/join.html\">join<\/a> is usually terser.<\/p>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "parts",
+                    "type": "dart:core.Iterable<dart:core.String>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.Iterable",
+                        "dart:core.String"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/joinAll.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String joinAll(Iterable&lt;String&gt; parts) {\n  var buffer = new StringBuffer();\n  var needsSeparator = false;\n  var isAbsoluteAndNotRootRelative = false;\n\n  for (var part in parts.where((part) =&gt; part != '')) {\n    if (this.isRootRelative(part) &amp;&amp; isAbsoluteAndNotRootRelative) {\n      \/\/ If the new part is root-relative, it preserves the previous root but\n      \/\/ replaces the path after it.\n      var parsed = _parse(part);\n      var path = buffer.toString();\n      parsed.root =\n          path.substring(0, style.rootLength(path, withDrive: true));\n      if (style.needsSeparator(parsed.root)) {\n        parsed.separators[0] = style.separator;\n      }\n      buffer.clear();\n      buffer.write(parsed.toString());\n    } else if (this.isAbsolute(part)) {\n      isAbsoluteAndNotRootRelative = !this.isRootRelative(part);\n      \/\/ An absolute path discards everything before it.\n      buffer.clear();\n      buffer.write(part);\n    } else {\n      if (part.length &gt; 0 &amp;&amp; style.containsSeparator(part[0])) {\n        \/\/ The part starts with a separator, so we don't need to add one.\n      } else if (needsSeparator) {\n        buffer.write(separator);\n      }\n\n      buffer.write(part);\n    }\n\n    \/\/ Unless this part ends with a separator, we'll need to add one before\n    \/\/ the next part.\n    needsSeparator = style.needsSeparator(part);\n  }\n\n  return buffer.toString();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "normalize",
+            "type": "dart:core.String",
+            "desc": "<p>Normalizes <code>path<\/code>, simplifying it by handling <code>..<\/code>, and <code>.<\/code>, and\nremoving redundant path separators whenever possible.<\/p>\n<p>Note that this is <em>not<\/em> guaranteed to return the same result for two\nequivalent input paths. For that, see <a href=\"package-path_path\/Context\/canonicalize.html\">canonicalize<\/a>. Or, if you're using\npaths as map keys, pass <a href=\"package-path_path\/Context\/equals.html\">equals<\/a> and <a href=\"package-path_path\/Context\/hash.html\">hash<\/a> to <a href=\"dart-collection\/HashMap\/HashMap.html\">new HashMap<\/a>.<\/p>\n<pre class=\"language-dart\"><code>context.normalize('path\/.\/to\/..\/\/file.text'); \/\/ -&gt; 'path\/file.txt'\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/normalize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String normalize(String path) {\n  if (!_needsNormalization(path)) return path;\n\n  var parsed = _parse(path);\n  parsed.normalize();\n  return parsed.toString();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "prettyUri",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a terse, human-readable representation of <code>uri<\/code>.<\/p>\n<p><code>uri<\/code> can be a <a href=\"dart-core\/String-class.html\">String<\/a> or a <a href=\"dart-core\/Uri-class.html\">Uri<\/a>. If it can be made relative to the\ncurrent working directory, that's done. Otherwise, it's returned as-is.\nThis gracefully handles non-<code>file:<\/code> URIs for <a href=\"package-path_path\/Style\/posix.html\">Style.posix<\/a> and\n<a href=\"package-path_path\/Style\/windows.html\">Style.windows<\/a>.<\/p>\n<p>The returned value is meant for human consumption, and may be either URI-\nor path-formatted.<\/p>\n<pre class=\"language-dart\"><code>\/\/ POSIX\nvar context = new Context(current: '\/root\/path');\ncontext.prettyUri('file:\/\/\/root\/path\/a\/b.dart'); \/\/ -&gt; 'a\/b.dart'\ncontext.prettyUri('http:\/\/dartlang.org\/'); \/\/ -&gt; 'http:\/\/dartlang.org'\n\n\/\/ Windows\nvar context = new Context(current: r'C:\\root\\path');\ncontext.prettyUri('file:\/\/\/C:\/root\/path\/a\/b.dart'); \/\/ -&gt; r'a\\b.dart'\ncontext.prettyUri('http:\/\/dartlang.org\/'); \/\/ -&gt; 'http:\/\/dartlang.org'\n\n\/\/ URL\nvar context = new Context(current: 'http:\/\/dartlang.org\/root\/path');\ncontext.prettyUri('http:\/\/dartlang.org\/root\/path\/a\/b.dart');\n    \/\/ -&gt; r'a\/b.dart'\ncontext.prettyUri('file:\/\/\/root\/path'); \/\/ -&gt; 'file:\/\/\/root\/path'\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "uri",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/prettyUri.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String prettyUri(uri) {\n  var typedUri = _parseUri(uri);\n  if (typedUri.scheme == 'file' &amp;&amp; style == Style.url) {\n    return typedUri.toString();\n  } else if (typedUri.scheme != 'file' &amp;&amp;\n      typedUri.scheme != '' &amp;&amp;\n      style != Style.url) {\n    return typedUri.toString();\n  }\n\n  var path = normalize(fromUri(typedUri));\n  var rel = relative(path);\n\n  \/\/ Only return a relative path if it's actually shorter than the absolute\n  \/\/ path. This avoids ugly things like long \"..\/\" chains to get to the root\n  \/\/ and then go back down.\n  return split(rel).length &gt; split(path).length ? path : rel;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "relative",
+            "type": "dart:core.String",
+            "desc": "<p>Attempts to convert <code>path<\/code> to an equivalent relative path relative to\n<code>root<\/code>.<\/p>\n<pre class=\"language-dart\"><code>var context = new Context(current: '\/root\/path');\ncontext.relative('\/root\/path\/a\/b.dart'); \/\/ -&gt; 'a\/b.dart'\ncontext.relative('\/root\/other.dart'); \/\/ -&gt; '..\/other.dart'\n<\/code><\/pre>\n<p>If the <code>from<\/code> argument is passed, <code>path<\/code> is made relative to that instead.<\/p>\n<pre class=\"language-dart\"><code>context.relative('\/root\/path\/a\/b.dart',\n    from: '\/root\/path'); \/\/ -&gt; 'a\/b.dart'\ncontext.relative('\/root\/other.dart',\n    from: '\/root\/path'); \/\/ -&gt; '..\/other.dart'\n<\/code><\/pre>\n<p>If <code>path<\/code> and\/or <code>from<\/code> are relative paths, they are assumed to be\nrelative to <a href=\"package-path_path\/Context\/current.html\">current<\/a>.<\/p>\n<p>Since there is no relative path from one drive letter to another on\nWindows, this will return an absolute path in that case.<\/p>\n<pre class=\"language-dart\"><code>context.relative(r'D:\\other', from: r'C:\\other'); \/\/ -&gt; 'D:\\other'\n<\/code><\/pre>\n<p>This will also return an absolute path if an absolute <code>path<\/code> is passed to\na context with a relative path for <a href=\"package-path_path\/Context\/current.html\">current<\/a>.<\/p>\n<pre class=\"language-dart\"><code>var context = new Context(r'some\/relative\/path');\ncontext.relative(r'\/absolute\/path'); \/\/ -&gt; '\/absolute\/path'\n<\/code><\/pre>\n<p>If <code>root<\/code> is relative, it may be impossible to determine a path from\n<code>from<\/code> to <code>path<\/code>. For example, if <code>root<\/code> and <code>path<\/code> are \".\" and <code>from<\/code> is\n\"\/\", no path can be determined. In this case, a <a href=\"package-path_path\/PathException-class.html\">PathException<\/a> will be\nthrown.<\/p>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "from",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/relative.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String relative(String path, {String from}) {\n  \/\/ Avoid expensive computation if the path is already relative.\n  if (from == null &amp;&amp; this.isRelative(path)) return this.normalize(path);\n\n  from = from == null ? current : absolute(from);\n\n  \/\/ We can't determine the path from a relative path to an absolute path.\n  if (this.isRelative(from) &amp;&amp; this.isAbsolute(path)) {\n    return this.normalize(path);\n  }\n\n  \/\/ If the given path is relative, resolve it relative to the context's\n  \/\/ current directory.\n  if (this.isRelative(path) || this.isRootRelative(path)) {\n    path = this.absolute(path);\n  }\n\n  \/\/ If the path is still relative and `from` is absolute, we're unable to\n  \/\/ find a path from `from` to `path`.\n  if (this.isRelative(path) &amp;&amp; this.isAbsolute(from)) {\n    throw new PathException('Unable to find a path to \"$path\" from \"$from\".');\n  }\n\n  var fromParsed = _parse(from)..normalize();\n  var pathParsed = _parse(path)..normalize();\n\n  if (fromParsed.parts.length &gt; 0 &amp;&amp; fromParsed.parts[0] == '.') {\n    return pathParsed.toString();\n  }\n\n  \/\/ If the root prefixes don't match (for example, different drive letters\n  \/\/ on Windows), then there is no relative path, so just return the absolute\n  \/\/ one. In Windows, drive letters are case-insenstive and we allow\n  \/\/ calculation of relative paths, even if a path has not been normalized.\n  if (fromParsed.root != pathParsed.root &amp;&amp;\n      ((fromParsed.root == null || pathParsed.root == null) ||\n          !style.pathsEqual(fromParsed.root, pathParsed.root))) {\n    return pathParsed.toString();\n  }\n\n  \/\/ Strip off their common prefix.\n  while (fromParsed.parts.length &gt; 0 &amp;&amp;\n      pathParsed.parts.length &gt; 0 &amp;&amp;\n      style.pathsEqual(fromParsed.parts[0], pathParsed.parts[0])) {\n    fromParsed.parts.removeAt(0);\n    fromParsed.separators.removeAt(1);\n    pathParsed.parts.removeAt(0);\n    pathParsed.separators.removeAt(1);\n  }\n\n  \/\/ If there are any directories left in the from path, we need to walk up\n  \/\/ out of them. If a directory left in the from path is '..', it cannot\n  \/\/ be cancelled by adding a '..'.\n  if (fromParsed.parts.length &gt; 0 &amp;&amp; fromParsed.parts[0] == '..') {\n    throw new PathException('Unable to find a path to \"$path\" from \"$from\".');\n  }\n  pathParsed.parts\n      .insertAll(0, new List.filled(fromParsed.parts.length, '..'));\n  pathParsed.separators[0] = '';\n  pathParsed.separators.insertAll(\n      1, new List.filled(fromParsed.parts.length, style.separator));\n\n  \/\/ Corner case: the paths completely collapsed.\n  if (pathParsed.parts.length == 0) return '.';\n\n  \/\/ Corner case: path was '.' and some '..' directories were added in front.\n  \/\/ Don't add a final '\/.' in that case.\n  if (pathParsed.parts.length &gt; 1 &amp;&amp; pathParsed.parts.last == '.') {\n    pathParsed.parts.removeLast();\n    pathParsed.separators\n      ..removeLast()\n      ..removeLast()\n      ..add('');\n  }\n\n  \/\/ Make it relative.\n  pathParsed.root = '';\n  pathParsed.removeTrailingSeparators();\n\n  return pathParsed.toString();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "rootPrefix",
+            "type": "dart:core.String",
+            "desc": "<p>Returns the root of <code>path<\/code> if it's absolute, or an empty string if it's\nrelative.<\/p>\n<pre class=\"language-dart\"><code>\/\/ Unix\ncontext.rootPrefix('path\/to\/foo'); \/\/ -&gt; ''\ncontext.rootPrefix('\/path\/to\/foo'); \/\/ -&gt; '\/'\n\n\/\/ Windows\ncontext.rootPrefix(r'path\\to\\foo'); \/\/ -&gt; ''\ncontext.rootPrefix(r'C:\\path\\to\\foo'); \/\/ -&gt; r'C:\\'\n\n\/\/ URL\ncontext.rootPrefix('path\/to\/foo'); \/\/ -&gt; ''\ncontext.rootPrefix('http:\/\/dartlang.org\/path\/to\/foo');\n  \/\/ -&gt; 'http:\/\/dartlang.org'\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/rootPrefix.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String rootPrefix(String path) =&gt; path.substring(0, style.rootLength(path));<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "setExtension",
+            "type": "dart:core.String",
+            "desc": "<p>Returns <code>path<\/code> with the trailing extension set to <code>extension<\/code>.<\/p>\n<p>If <code>path<\/code> doesn't have a trailing extension, this just adds <code>extension<\/code> to\nthe end.<\/p>\n<pre class=\"language-dart\"><code>context.setExtension('path\/to\/foo.dart', '.js')\n  \/\/ -&gt; 'path\/to\/foo.js'\ncontext.setExtension('path\/to\/foo.dart.js', '.map')\n  \/\/ -&gt; 'path\/to\/foo.dart.map'\ncontext.setExtension('path\/to\/foo', '.js')\n  \/\/ -&gt; 'path\/to\/foo.js'\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "extension",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/setExtension.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String setExtension(String path, String extension) =&gt;\n    withoutExtension(path) + extension;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "split",
+            "type": "dart:core.List<dart:core.String>",
+            "desc": "<p>Splits <code>path<\/code> into its components using the current platform's\n<a href=\"package-path_path\/Context\/separator.html\">separator<\/a>. Example:<\/p>\n<pre class=\"language-dart\"><code>context.split('path\/to\/foo'); \/\/ -&gt; ['path', 'to', 'foo']\n<\/code><\/pre>\n<p>The path will <em>not<\/em> be normalized before splitting.<\/p>\n<pre class=\"language-dart\"><code>context.split('path\/..\/foo'); \/\/ -&gt; ['path', '..', 'foo']\n<\/code><\/pre>\n<p>If <code>path<\/code> is absolute, the root directory will be the first element in the\narray. Example:<\/p>\n<pre class=\"language-dart\"><code>\/\/ Unix\ncontext.split('\/path\/to\/foo'); \/\/ -&gt; ['\/', 'path', 'to', 'foo']\n\n\/\/ Windows\ncontext.split(r'C:\\path\\to\\foo'); \/\/ -&gt; [r'C:\\', 'path', 'to', 'foo']\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/split.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;String&gt; split(String path) {\n  var parsed = _parse(path);\n  \/\/ Filter out empty parts that exist due to multiple separators in a row.\n  parsed.parts = parsed.parts.where((part) =&gt; !part.isEmpty).toList();\n  if (parsed.root != null) parsed.parts.insert(0, parsed.root);\n  return parsed.parts;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:core.List",
+                "dart:core.String"
+            ]
+        },
+        {
+            "name": "toUri",
+            "type": "dart:core.Uri",
+            "desc": "<p>Returns the URI that represents <code>path<\/code>.<\/p>\n<p>For POSIX and Windows styles, this will return a <code>file:<\/code> URI. For the URL\nstyle, this will just convert <code>path<\/code> to a <a href=\"dart-core\/Uri-class.html\">Uri<\/a>.<\/p>\n<pre class=\"language-dart\"><code>\/\/ POSIX\ncontext.toUri('\/path\/to\/foo')\n  \/\/ -&gt; Uri.parse('file:\/\/\/path\/to\/foo')\n\n\/\/ Windows\ncontext.toUri(r'C:\\path\\to\\foo')\n  \/\/ -&gt; Uri.parse('file:\/\/\/C:\/path\/to\/foo')\n\n\/\/ URL\ncontext.toUri('http:\/\/dartlang.org\/path\/to\/foo')\n  \/\/ -&gt; Uri.parse('http:\/\/dartlang.org\/path\/to\/foo')\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/toUri.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Uri toUri(String path) {\n  if (isRelative(path)) {\n    return style.relativePathToUri(path);\n  } else {\n    return style.absolutePathToUri(join(current, path));\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "withoutExtension",
+            "type": "dart:core.String",
+            "desc": "<p>Removes a trailing extension from the last part of <code>path<\/code>.<\/p>\n<pre class=\"language-dart\"><code>context.withoutExtension('path\/to\/foo.dart'); \/\/ -&gt; 'path\/to\/foo'\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "path.Context",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-path_path\/Context\/withoutExtension.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String withoutExtension(String path) {\n  var parsed = _parse(path);\n\n  for (var i = parsed.parts.length - 1; i &gt;= 0; i--) {\n    if (!parsed.parts[i].isEmpty) {\n      parsed.parts[i] = parsed.basenameWithoutExtension;\n      break;\n    }\n  }\n\n  return parsed.toString();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "current",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>The current directory that relative paths are relative to.<\/p>\n        ",
+            "memberOf": "path.Context",
+            "isConstant": false,
+            "href": "package-path_path\/Context\/current.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get current =&gt; _current != null ? _current : p.current;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "separator",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>Gets the path separator for the context's <a href=\"package-path_path\/Context\/style.html\">style<\/a>. On Mac and Linux,\nthis is <code>\/<\/code>. On Windows, it's <code>\\<\/code>.<\/p>\n        ",
+            "memberOf": "path.Context",
+            "isConstant": false,
+            "href": "package-path_path\/Context\/separator.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get separator =&gt; style.separator;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "style",
+            "type": "",
+            "types": [],
+            "desc": "<p>The style of path that this context works with.<\/p>\n        ",
+            "memberOf": "path.Context",
+            "isConstant": false,
+            "href": "package-path_path\/Context\/style.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final InternalStyle style\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-path_path\/Context-class.html",
+    "desc": "<p>An instantiable class for manipulating paths. Unlike the top-level\nfunctions, this lets you explicitly select what platform the paths will use.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Context"
+}

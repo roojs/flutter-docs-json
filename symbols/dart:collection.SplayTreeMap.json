@@ -1,0 +1,809 @@
+{
+    "name": "dart:collection.SplayTreeMap",
+    "extends": [],
+    "memberOf": "dart:collection",
+    "events": [],
+    "methods": [
+        {
+            "name": "SplayTreeMap",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key2",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key1",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key2",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "potentialKey",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "potentialKey",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-collection\/SplayTreeMap\/SplayTreeMap.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">SplayTreeMap([int compare(K key1, K key2), bool isValidKey(potentialKey)])\n    : _comparator = compare ?? _defaultCompare&lt;K&gt;(),\n      _validKey = isValidKey ?? ((v) =&gt; v is K);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "operator []",
+            "type": "",
+            "desc": "<p>Returns the value for the given <code>key<\/code> or null if <code>key<\/code> is not in the map.<\/p>\n<p>Some maps allow keys to have <code>null<\/code> as a value.\nFor those maps, a lookup using this operator cannot distinguish between a\nkey not being in the map and the key having a <code>null<\/code> value.\nMethods like <a href=\"dart-collection\/SplayTreeMap\/containsKey.html\">containsKey<\/a> or <a href=\"dart-collection\/SplayTreeMap\/putIfAbsent.html\">putIfAbsent<\/a> can be used if the distinction\nis important.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-collection\/SplayTreeMap\/operator_get.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">V operator [](Object key) {\n  if (!_validKey(key)) return null;\n  if (_root != null) {\n    int comp = _splay(key);\n    if (comp == 0) {\n      return _root.value;\n    }\n  }\n  return null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "operator []=",
+            "type": "",
+            "desc": "<p>Associates the <code>key<\/code> with the given <code>value<\/code>.<\/p>\n<p>If the key was already in the map, its associated value is changed.\nOtherwise the key\/value pair is added to the map.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-collection\/SplayTreeMap\/operator_put.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void operator []=(K key, V value) {\n  if (key == null) throw ArgumentError(key);\n  \/\/ Splay on the key to move the last node on the search path for\n  \/\/ the key to the root of the tree.\n  int comp = _splay(key);\n  if (comp == 0) {\n    _root.value = value;\n    return;\n  }\n  _addNewRoot(_SplayTreeMapNode(key, value), comp);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addAll",
+            "type": "",
+            "desc": "<p>Adds all key\/value pairs of <code>other<\/code> to this map.<\/p>\n<p>If a key of <code>other<\/code> is already in this map, its value is overwritten.<\/p>\n<p>The operation is equivalent to doing <code>this[key] = value<\/code> for each key\nand associated value in other. It iterates over <code>other<\/code>, which must\ntherefore not change during the iteration.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "type": "dart:core.Map",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-collection\/SplayTreeMap\/addAll.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addAll(Map&lt;K, V&gt; other) {\n  other.forEach((K key, V value) {\n    this[key] = value;\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "clear",
+            "type": "",
+            "desc": "<p>Removes all pairs from the map.<\/p>\n<p>After this, the map is empty.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-collection\/SplayTreeMap\/clear.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void clear() {\n  _clear();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "containsKey",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns true if this map contains the given <code>key<\/code>.<\/p>\n<p>Returns true if any of the keys in the map are equal to <code>key<\/code>\naccording to the equality used by the map.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-collection\/SplayTreeMap\/containsKey.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool containsKey(Object key) {\n  return _validKey(key) &amp;&amp; _splay(key) == 0;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "containsValue",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns true if this map contains the given <code>value<\/code>.<\/p>\n<p>Returns true if any of the values in the map are equal to <code>value<\/code>\naccording to the <code>==<\/code> operator.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-collection\/SplayTreeMap\/containsValue.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool containsValue(Object value) {\n  int initialSplayCount = _splayCount;\n  bool visit(_SplayTreeMapNode node) {\n    while (node != null) {\n      if (node.value == value) return true;\n      if (initialSplayCount != _splayCount) {\n        throw ConcurrentModificationError(this);\n      }\n      if (node.right != null &amp;&amp; visit(node.right)) return true;\n      node = node.left;\n    }\n    return false;\n  }\n\n  return visit(_root);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "firstKey",
+            "type": "",
+            "desc": "<p>Get the first key in the map. Returns <code>null<\/code> if the map is empty.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-collection\/SplayTreeMap\/firstKey.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">K firstKey() {\n  if (_root == null) return null;\n  return _first.key;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "firstKeyAfter",
+            "type": "",
+            "desc": "<p>Get the first key in the map that is strictly larger than <code>key<\/code>. Returns\n<code>null<\/code> if no key was not found.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-collection\/SplayTreeMap\/firstKeyAfter.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">K firstKeyAfter(K key) {\n  if (key == null) throw ArgumentError(key);\n  if (_root == null) return null;\n  int comp = _splay(key);\n  if (comp &gt; 0) return _root.key;\n  _SplayTreeNode&lt;K&gt; node = _root.right;\n  if (node == null) return null;\n  while (node.left != null) {\n    node = node.left;\n  }\n  return node.key;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "forEach",
+            "type": "",
+            "desc": "<p>Applies <code>f<\/code> to each key\/value pair of the map.<\/p>\n<p>Calling <code>f<\/code> must not add or remove keys from the map.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-collection\/SplayTreeMap\/forEach.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void forEach(void f(K key, V value)) {\n  Iterator&lt;_SplayTreeNode&lt;K&gt;&gt; nodes = _SplayTreeNodeIterator&lt;K&gt;(this);\n  while (nodes.moveNext()) {\n    _SplayTreeMapNode&lt;K, V&gt; node = nodes.current;\n    f(node.key, node.value);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "SplayTreeMap.from",
+            "type": "",
+            "desc": "<p>Creates a <a href=\"dart-collection\/SplayTreeMap-class.html\">SplayTreeMap<\/a> that contains all key\/value pairs of <code>other<\/code>.<\/p>\n<p>The keys must all be instances of <code>K<\/code> and the values of <code>V<\/code>.\nThe <code>other<\/code> map itself can have any type.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "type": "dart:core.Map",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "key2",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key1",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key2",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "potentialKey",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "potentialKey",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-collection\/SplayTreeMap\/SplayTreeMap.from.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory SplayTreeMap.from(Map other,\n    [int compare(K key1, K key2), bool isValidKey(potentialKey)]) {\n  SplayTreeMap&lt;K, V&gt; result = SplayTreeMap&lt;K, V&gt;(compare, isValidKey);\n  other.forEach((k, v) {\n    result[k] = v;\n  });\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "SplayTreeMap.fromIterable",
+            "type": "",
+            "desc": "<p>Creates a <a href=\"dart-collection\/SplayTreeMap-class.html\">SplayTreeMap<\/a> where the keys and values are computed from the\n<code>iterable<\/code>.<\/p>\n<p>For each element of the <code>iterable<\/code> this constructor computes a key\/value\npair, by applying <code>key<\/code> and <code>value<\/code> respectively.<\/p>\n<p>The keys of the key\/value pairs do not need to be unique. The last\noccurrence of a key will simply overwrite any previous value.<\/p>\n<p>If no functions are specified for <code>key<\/code> and <code>value<\/code> the default is to\nuse the iterable value itself.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "iterable",
+                    "type": "dart:core.Iterable",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key2",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key1",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key2",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "potentialKey",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "potentialKey",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-collection\/SplayTreeMap\/SplayTreeMap.fromIterable.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory SplayTreeMap.fromIterable(Iterable iterable,\n    {K key(element),\n    V value(element),\n    int compare(K key1, K key2),\n    bool isValidKey(potentialKey)}) {\n  SplayTreeMap&lt;K, V&gt; map = SplayTreeMap&lt;K, V&gt;(compare, isValidKey);\n  MapBase._fillMapWithMappedIterable(map, iterable, key, value);\n  return map;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "SplayTreeMap.fromIterables",
+            "type": "",
+            "desc": "<p>Creates a <a href=\"dart-collection\/SplayTreeMap-class.html\">SplayTreeMap<\/a> associating the given <code>keys<\/code> to <code>values<\/code>.<\/p>\n<p>This constructor iterates over <code>keys<\/code> and <code>values<\/code> and maps each element\nof <code>keys<\/code> to the corresponding element of <code>values<\/code>.<\/p>\n<p>If <code>keys<\/code> contains the same object multiple times, the last occurrence\noverwrites the previous value.<\/p>\n<p>It is an error if the two <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>s don't have the same length.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "keys",
+                    "type": "dart:core.Iterable",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "values",
+                    "type": "dart:core.Iterable",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "key2",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key1",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key2",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "potentialKey",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "potentialKey",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-collection\/SplayTreeMap\/SplayTreeMap.fromIterables.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory SplayTreeMap.fromIterables(Iterable&lt;K&gt; keys, Iterable&lt;V&gt; values,\n    [int compare(K key1, K key2), bool isValidKey(potentialKey)]) {\n  SplayTreeMap&lt;K, V&gt; map = SplayTreeMap&lt;K, V&gt;(compare, isValidKey);\n  MapBase._fillMapWithIterables(map, keys, values);\n  return map;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "lastKey",
+            "type": "",
+            "desc": "<p>Get the last key in the map. Returns <code>null<\/code> if the map is empty.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-collection\/SplayTreeMap\/lastKey.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">K lastKey() {\n  if (_root == null) return null;\n  return _last.key;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "lastKeyBefore",
+            "type": "",
+            "desc": "<p>Get the last key in the map that is strictly smaller than <code>key<\/code>. Returns\n<code>null<\/code> if no key was not found.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-collection\/SplayTreeMap\/lastKeyBefore.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">K lastKeyBefore(K key) {\n  if (key == null) throw ArgumentError(key);\n  if (_root == null) return null;\n  int comp = _splay(key);\n  if (comp &lt; 0) return _root.key;\n  _SplayTreeNode&lt;K&gt; node = _root.left;\n  if (node == null) return null;\n  while (node.right != null) {\n    node = node.right;\n  }\n  return node.key;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "SplayTreeMap.of",
+            "type": "",
+            "desc": "<p>Creates a <a href=\"dart-collection\/SplayTreeMap-class.html\">SplayTreeMap<\/a> that contains all key\/value pairs of <code>other<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "type": "dart:core.Map",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "key2",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key1",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key2",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "potentialKey",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "potentialKey",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-collection\/SplayTreeMap\/SplayTreeMap.of.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory SplayTreeMap.of(Map&lt;K, V&gt; other,\n        [int compare(K key1, K key2), bool isValidKey(potentialKey)]) =&gt;\n    SplayTreeMap&lt;K, V&gt;(compare, isValidKey)..addAll(other);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "putIfAbsent",
+            "type": "",
+            "desc": "<p>Look up the value of <code>key<\/code>, or add a new value if it isn't there.<\/p>\n<p>Returns the value associated to <code>key<\/code>, if there is one.\nOtherwise calls <code>ifAbsent<\/code> to get a new value, associates <code>key<\/code> to\nthat value, and then returns the new value.<\/p>\n<pre class=\"language-dart\"><code>Map&lt;String, int&gt; scores = {'Bob': 36};\nfor (var key in ['Bob', 'Rohan', 'Sophena']) {\n  scores.putIfAbsent(key, () =&gt; key.length);\n}\nscores['Bob'];      \/\/ 36\nscores['Rohan'];    \/\/  5\nscores['Sophena'];  \/\/  7\n<\/code><\/pre>\n<p>Calling <code>ifAbsent<\/code> must not add or remove keys from the map.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "ifAbsent",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-collection\/SplayTreeMap\/putIfAbsent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">V putIfAbsent(K key, V ifAbsent()) {\n  if (key == null) throw ArgumentError(key);\n  int comp = _splay(key);\n  if (comp == 0) {\n    return _root.value;\n  }\n  int modificationCount = _modificationCount;\n  int splayCount = _splayCount;\n  V value = ifAbsent();\n  if (modificationCount != _modificationCount) {\n    throw ConcurrentModificationError(this);\n  }\n  if (splayCount != _splayCount) {\n    comp = _splay(key);\n    \/\/ Key is still not there, otherwise _modificationCount would be changed.\n    assert(comp != 0);\n  }\n  _addNewRoot(_SplayTreeMapNode(key, value), comp);\n  return value;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "remove",
+            "type": "",
+            "desc": "<p>Removes <code>key<\/code> and its associated value, if present, from the map.<\/p>\n<p>Returns the value associated with <code>key<\/code> before it was removed.\nReturns <code>null<\/code> if <code>key<\/code> was not in the map.<\/p>\n<p>Note that values can be <code>null<\/code> and a returned <code>null<\/code> value doesn't\nalways mean that the key was absent.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:collection.SplayTreeMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-collection\/SplayTreeMap\/remove.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">V remove(Object key) {\n  if (!_validKey(key)) return null;\n  _SplayTreeMapNode&lt;K, V&gt; mapRoot = _remove(key);\n  if (mapRoot != null) return mapRoot.value;\n  return null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "isEmpty",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Returns true if there is no key\/value pair in the map.<\/p>\n        ",
+            "memberOf": "dart:collection.SplayTreeMap",
+            "isConstant": false,
+            "href": "dart-collection\/SplayTreeMap\/isEmpty.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isEmpty {\n  return (_root == null);\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isNotEmpty",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Returns true if there is at least one key\/value pair in the map.<\/p>\n        ",
+            "memberOf": "dart:collection.SplayTreeMap",
+            "isConstant": false,
+            "href": "dart-collection\/SplayTreeMap\/isNotEmpty.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isNotEmpty =&gt; !isEmpty;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "keys",
+            "type": "dart:core.Iterable",
+            "types": [],
+            "desc": "<p>The keys of <a href=\"dart-collection\/SplayTreeMap-class.html\">this<\/a>.<\/p>\n<p>The returned iterable has efficient <code>length<\/code> and <code>contains<\/code> operations,\nbased on <a href=\"dart-collection\/SplayTreeMap\/length.html\">length<\/a> and <a href=\"dart-collection\/SplayTreeMap\/containsKey.html\">containsKey<\/a> of the map.<\/p>\n<p>The order of iteration is defined by the individual <code>Map<\/code> implementation,\nbut must be consistent between changes to the map.<\/p>\n<p>Modifying the map while iterating the keys\nmay break the iteration.<\/p>\n        ",
+            "memberOf": "dart:collection.SplayTreeMap",
+            "isConstant": false,
+            "href": "dart-collection\/SplayTreeMap\/keys.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;K&gt; get keys =&gt; _SplayTreeKeyIterable&lt;K&gt;(this);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "length",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The number of key\/value pairs in the map.<\/p>\n        ",
+            "memberOf": "dart:collection.SplayTreeMap",
+            "isConstant": false,
+            "href": "dart-collection\/SplayTreeMap\/length.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get length {\n  return _count;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "values",
+            "type": "dart:core.Iterable",
+            "types": [],
+            "desc": "<p>The values of <a href=\"dart-collection\/SplayTreeMap-class.html\">this<\/a>.<\/p>\n<p>The values are iterated in the order of their corresponding keys.\nThis means that iterating <a href=\"dart-collection\/SplayTreeMap\/keys.html\">keys<\/a> and <a href=\"dart-collection\/SplayTreeMap\/values.html\">values<\/a> in parallel will\nprovide matching pairs of keys and values.<\/p>\n<p>The returned iterable has an efficient <code>length<\/code> method based on the\n<a href=\"dart-collection\/SplayTreeMap\/length.html\">length<\/a> of the map. Its <a href=\"dart-core\/Iterable\/contains.html\">Iterable.contains<\/a> method is based on\n<code>==<\/code> comparison.<\/p>\n<p>Modifying the map while iterating the\nvalues may break the iteration.<\/p>\n        ",
+            "memberOf": "dart:collection.SplayTreeMap",
+            "isConstant": false,
+            "href": "dart-collection\/SplayTreeMap\/values.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;V&gt; get values =&gt; _SplayTreeValueIterable&lt;K, V&gt;(this);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "dart-collection\/SplayTreeMap-class.html",
+    "desc": "<p>A <a href=\"dart-core\/Map-class.html\">Map<\/a> of objects that can be ordered relative to each other.<\/p>\n<p>The map is based on a self-balancing binary tree. It allows most operations\nin amortized logarithmic time.<\/p>\n<p>Keys of the map are compared using the <code>compare<\/code> function passed in\nthe constructor, both for ordering and for equality.\nIf the map contains only the key <code>a<\/code>, then <code>map.containsKey(b)<\/code>\nwill return <code>true<\/code> if and only if <code>compare(a, b) == 0<\/code>,\nand the value of <code>a == b<\/code> is not even checked.\nIf the compare function is omitted, the objects are assumed to be\n<a href=\"dart-core\/Comparable-class.html\">Comparable<\/a>, and are compared using their <a href=\"dart-core\/Comparable\/compareTo.html\">Comparable.compareTo<\/a> method.\nNon-comparable objects (including <code>null<\/code>) will not work as keys\nin that case.<\/p>\n<p>To allow calling <a href=\"dart-collection\/SplayTreeMap\/operator_get.html\">operator []<\/a>, <a href=\"dart-collection\/SplayTreeMap\/remove.html\">remove<\/a> or <a href=\"dart-collection\/SplayTreeMap\/containsKey.html\">containsKey<\/a> with objects\nthat are not supported by the <code>compare<\/code> function, an extra <code>isValidKey<\/code>\npredicate function can be supplied. This function is tested before\nusing the <code>compare<\/code> function on an argument value that may not be a <code>K<\/code>\nvalue. If omitted, the <code>isValidKey<\/code> function defaults to testing if the\nvalue is a <code>K<\/code>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "SplayTreeMap"
+}

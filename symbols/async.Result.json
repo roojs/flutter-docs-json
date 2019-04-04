@@ -1,0 +1,495 @@
+{
+    "name": "async.Result",
+    "extends": [],
+    "memberOf": "async",
+    "events": [],
+    "methods": [
+        {
+            "name": "Result",
+            "type": "",
+            "desc": "<p>Creates a <code>Result<\/code> with the result of calling <code>computation<\/code>.<\/p>\n<p>This generates either a <a href=\"package-async_async\/ValueResult-class.html\">ValueResult<\/a> with the value returned by\ncalling <code>computation<\/code>, or an <a href=\"package-async_async\/ErrorResult-class.html\">ErrorResult<\/a> with an error thrown by\nthe call.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "computation",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-async_async\/Result\/Result.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Result(T computation()) {\n  try {\n    return new ValueResult&lt;T&gt;(computation());\n  } catch (e, s) {\n    return new ErrorResult(e, s);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "addTo",
+            "type": "",
+            "desc": "<p>Adds this result to an <a href=\"dart-async\/EventSink-class.html\">EventSink<\/a>.<\/p>\n<p>Calls the sink's <code>add<\/code> or <code>addError<\/code> method as appropriate.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "sink",
+                    "type": "dart:async.EventSink",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/Result\/addTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addTo(EventSink&lt;T&gt; sink);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "capture",
+            "type": "dart:async.Future<async.Result>",
+            "desc": "<p>Captures the result of a future into a <code>Result<\/code> future.<\/p>\n<p>The resulting future will never have an error.\nErrors have been converted to an <a href=\"package-async_async\/ErrorResult-class.html\">ErrorResult<\/a> value.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "future",
+                    "type": "dart:async.Future",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/Result\/capture.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;Result&lt;T&gt;&gt; capture&lt;T&gt;(Future&lt;T&gt; future) {\n  return future.then((value) =&gt; new ValueResult(value),\n      onError: (error, stackTrace) =&gt; new ErrorResult(error, stackTrace));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "async.Result"
+            ]
+        },
+        {
+            "name": "captureAll",
+            "type": "dart:async.Future<dart:core.List<async.Result>>",
+            "desc": "<p>Captures each future in <code>elements<\/code>,<\/p>\n<p>Returns a (future of) a list of results for each element in <code>elements<\/code>,\nin iteration order.\nEach future in <code>elements<\/code> is <a href=\"package-async_async\/Result\/capture.html\">capture<\/a>d and each non-future is\nwrapped as a <a href=\"package-async_async\/Result\/Result.value.html\">Result.value<\/a>.\nThe returned future will never have an error.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "elements",
+                    "type": "dart:core.Iterable<dart:async.FutureOr>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.Iterable",
+                        "dart:async.FutureOr"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/Result\/captureAll.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;List&lt;Result&lt;T&gt;&gt;&gt; captureAll&lt;T&gt;(Iterable&lt;FutureOr&lt;T&gt;&gt; elements) {\n  var results = &lt;Result&lt;T&gt;&gt;[];\n  int pending = 0;\n  Completer&lt;List&lt;Result&lt;T&gt;&gt;&gt; completer;\n  for (var element in elements) {\n    if (element is Future&lt;T&gt;) {\n      int i = results.length;\n      results.add(null);\n      pending++;\n      Result.capture&lt;T&gt;(element).then((result) {\n        results[i] = result;\n        if (--pending == 0) {\n          completer.complete(results);\n        }\n      });\n    } else {\n      results.add(new Result&lt;T&gt;.value(element));\n    }\n  }\n  if (pending == 0) {\n    return new Future&lt;List&lt;Result&lt;T&gt;&gt;&gt;.value(results);\n  }\n  completer = new Completer&lt;List&lt;Result&lt;T&gt;&gt;&gt;();\n  return completer.future;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.List",
+                "async.Result"
+            ]
+        },
+        {
+            "name": "captureSink",
+            "type": "dart:async.EventSink",
+            "desc": "<p>Captures the events of the returned sink into results on <code>sink<\/code>.<\/p>\n<p>Data and error events added to the returned sink are captured into\n<a href=\"package-async_async\/Result-class.html\">Result<\/a> values and added as data events on the provided <code>sink<\/code>.\nNo error events are ever added to <code>sink<\/code>.<\/p>\n<p>When the returned sink is closed, so is <code>sink<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "sink",
+                    "type": "dart:async.EventSink<async.Result>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:async.EventSink",
+                        "async.Result"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/Result\/captureSink.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static EventSink&lt;T&gt; captureSink&lt;T&gt;(EventSink&lt;Result&lt;T&gt;&gt; sink) =&gt;\n    new CaptureSink&lt;T&gt;(sink);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "captureStream",
+            "type": "dart:async.Stream<async.Result>",
+            "desc": "<p>Captures the results of a stream into a stream of <a href=\"package-async_async\/Result-class.html\">Result<\/a> values.<\/p>\n<p>The returned stream will not have any error events.\nErrors from the source stream have been converted to <a href=\"package-async_async\/ErrorResult-class.html\">ErrorResult<\/a>s.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "source",
+                    "type": "dart:async.Stream",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/Result\/captureStream.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Stream&lt;Result&lt;T&gt;&gt; captureStream&lt;T&gt;(Stream&lt;T&gt; source) =&gt;\n    source.transform(new CaptureStreamTransformer&lt;T&gt;());<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Stream",
+                "async.Result"
+            ]
+        },
+        {
+            "name": "complete",
+            "type": "",
+            "desc": "<p>Completes a completer with this result.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "completer",
+                    "type": "dart:async.Completer",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/Result\/complete.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void complete(Completer&lt;T&gt; completer);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "Result.error",
+            "type": "",
+            "desc": "<p>Creates a <code>Result<\/code> holding an error.<\/p>\n<p>Alias for <a href=\"package-async_async\/ErrorResult\/ErrorResult.html\">ErrorResult.ErrorResult<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "error",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "stackTrace",
+                    "type": "dart:core.StackTrace",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-async_async\/Result\/Result.error.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Result.error(Object error, [StackTrace stackTrace]) =&gt;\n    new ErrorResult(error, stackTrace);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "flatten",
+            "type": "async.Result",
+            "desc": "<p>Converts a result of a result to a single result.<\/p>\n<p>If the result is an error, or it is a <code>Result<\/code> value\nwhich is then an error, then a result with that error is returned.\nOtherwise both levels of results are value results, and a single\nresult with the value is returned.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "result",
+                    "type": "async.Result<async.Result>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "async.Result",
+                        "async.Result"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/Result\/flatten.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Result&lt;T&gt; flatten&lt;T&gt;(Result&lt;Result&lt;T&gt;&gt; result) {\n  if (result.isValue) return result.asValue.value;\n  return result.asError;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "flattenAll",
+            "type": "async.Result<dart:core.List>",
+            "desc": "<p>Converts a sequence of results to a result of a list.<\/p>\n<p>Returns either a list of values if <code>results<\/code> doesn't contain any errors,\nor the first error result in <code>results<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "results",
+                    "type": "dart:core.Iterable<async.Result>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.Iterable",
+                        "async.Result"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/Result\/flattenAll.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Result&lt;List&lt;T&gt;&gt; flattenAll&lt;T&gt;(Iterable&lt;Result&lt;T&gt;&gt; results) {\n  var values = &lt;T&gt;[];\n  for (var result in results) {\n    if (result.isValue) {\n      values.add(result.asValue.value);\n    } else {\n      return result.asError;\n    }\n  }\n  return new Result&lt;List&lt;T&gt;&gt;.value(values);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "async.Result",
+                "dart:core.List"
+            ]
+        },
+        {
+            "name": "release",
+            "type": "dart:async.Future",
+            "desc": "<p>Releases the result of a captured future.<\/p>\n<p>Converts the <a href=\"package-async_async\/Result-class.html\">Result<\/a> value of the given <code>future<\/code> to a value or error\ncompletion of the returned future.<\/p>\n<p>If <code>future<\/code> completes with an error, the returned future completes with\nthe same error.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "future",
+                    "type": "dart:async.Future<async.Result>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:async.Future",
+                        "async.Result"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/Result\/release.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;T&gt; release&lt;T&gt;(Future&lt;Result&lt;T&gt;&gt; future) =&gt;\n    future.then&lt;T&gt;((result) =&gt; result.asFuture);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "releaseSink",
+            "type": "dart:async.EventSink<async.Result>",
+            "desc": "<p>Releases results added to the returned sink as data and errors on <code>sink<\/code>.<\/p>\n<p>A <a href=\"package-async_async\/Result-class.html\">Result<\/a> added to the returned sink is added as a data or error event\non <code>sink<\/code>. Errors added to the returned sink are forwarded directly to\n<code>sink<\/code> and so is the <a href=\"dart-async\/EventSink\/close.html\">EventSink.close<\/a> calls.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "sink",
+                    "type": "dart:async.EventSink",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/Result\/releaseSink.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static EventSink&lt;Result&lt;T&gt;&gt; releaseSink&lt;T&gt;(EventSink&lt;T&gt; sink) =&gt;\n    new ReleaseSink&lt;T&gt;(sink);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.EventSink",
+                "async.Result"
+            ]
+        },
+        {
+            "name": "releaseStream",
+            "type": "dart:async.Stream",
+            "desc": "<p>Releases a stream of <code>result<\/code> values into a stream of the results.<\/p>\n<p><code>Result<\/code> values of the source stream become value or error events in\nthe returned stream as appropriate.\nErrors from the source stream become errors in the returned stream.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "source",
+                    "type": "dart:async.Stream<async.Result>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:async.Stream",
+                        "async.Result"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/Result\/releaseStream.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Stream&lt;T&gt; releaseStream&lt;T&gt;(Stream&lt;Result&lt;T&gt;&gt; source) =&gt;\n    source.transform(new ReleaseStreamTransformer&lt;T&gt;());<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Result.value",
+            "type": "",
+            "desc": "<p>Creates a <code>Result<\/code> holding a value.<\/p>\n<p>Alias for <a href=\"package-async_async\/ValueResult\/ValueResult.html\">ValueResult.ValueResult<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.Result",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-async_async\/Result\/Result.value.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Result.value(T value) = ValueResult&lt;T&gt;;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "asError",
+            "type": "async.ErrorResult",
+            "types": [],
+            "desc": "<p>If this is an error result, returns itself.<\/p>\n<p>Otherwise returns <code>null<\/code>.<\/p>\n        ",
+            "memberOf": "async.Result",
+            "isConstant": false,
+            "href": "package-async_async\/Result\/asError.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">ErrorResult get asError;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "asFuture",
+            "type": "dart:async.Future",
+            "types": [],
+            "desc": "<p>A future that has been completed with this result as a value or an error.<\/p>\n        ",
+            "memberOf": "async.Result",
+            "isConstant": false,
+            "href": "package-async_async\/Result\/asFuture.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; get asFuture;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "asValue",
+            "type": "async.ValueResult",
+            "types": [],
+            "desc": "<p>If this is a value result, returns itself.<\/p>\n<p>Otherwise returns <code>null<\/code>.<\/p>\n        ",
+            "memberOf": "async.Result",
+            "isConstant": false,
+            "href": "package-async_async\/Result\/asValue.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">ValueResult&lt;T&gt; get asValue;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "type": "",
+            "href": "package-async_async\/Result\/captureSinkTransformer-constant.html",
+            "desc": "<p>A sink transformer that captures events into <a href=\"package-async_async\/Result-class.html\">Result<\/a>s.<\/p>\n<p>The result of the transformation is a sink that only forwards <a href=\"package-async_async\/Result-class.html\">Result<\/a>\nvalues and no error events.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">captureSinkTransformer =\nconst StreamSinkTransformer&lt;Object, Result&lt;Object&gt;&gt;.fromStreamTransformer(\n    const CaptureStreamTransformer&lt;Object&gt;())\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "captureSinkTransformer",
+            "memberOf": "async.Result"
+        },
+        {
+            "type": "",
+            "href": "package-async_async\/Result\/captureStreamTransformer-constant.html",
+            "desc": "<p>A stream transformer that captures a stream of events into <a href=\"package-async_async\/Result-class.html\">Result<\/a>s.<\/p>\n<p>The result of the transformation is a stream of <a href=\"package-async_async\/Result-class.html\">Result<\/a> values and no\nerror events. This is the transformer used by <a href=\"package-async_async\/Result\/captureStream.html\">captureStream<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">captureStreamTransformer = const CaptureStreamTransformer&lt;Object&gt;()\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "captureStreamTransformer",
+            "memberOf": "async.Result"
+        },
+        {
+            "name": "isError",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether this result is an error result.<\/p>\n<p>Always the opposite of <a href=\"package-async_async\/Result\/isValue.html\">isValue<\/a>.<\/p>\n        ",
+            "memberOf": "async.Result",
+            "isConstant": false,
+            "href": "package-async_async\/Result\/isError.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isError;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isValue",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether this result is a value result.<\/p>\n<p>Always the opposite of <a href=\"package-async_async\/Result\/isError.html\">isError<\/a>.<\/p>\n        ",
+            "memberOf": "async.Result",
+            "isConstant": false,
+            "href": "package-async_async\/Result\/isValue.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isValue;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "type": "",
+            "href": "package-async_async\/Result\/releaseSinkTransformer-constant.html",
+            "desc": "<p>A sink transformer that releases result events.<\/p>\n<p>The result of the transformation is a sink that forwards of values and\nerror events.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">releaseSinkTransformer =\nconst StreamSinkTransformer&lt;Result&lt;Object&gt;, Object&gt;.fromStreamTransformer(\n    const ReleaseStreamTransformer&lt;Object&gt;())\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "releaseSinkTransformer",
+            "memberOf": "async.Result"
+        },
+        {
+            "type": "",
+            "href": "package-async_async\/Result\/releaseStreamTransformer-constant.html",
+            "desc": "<p>A stream transformer that releases a stream of result events.<\/p>\n<p>The result of the transformation is a stream of values and error events.\nThis is the transformer used by <a href=\"package-async_async\/Result\/releaseStream.html\">releaseStream<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">releaseStreamTransformer = const ReleaseStreamTransformer&lt;Object&gt;()\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "releaseStreamTransformer",
+            "memberOf": "async.Result"
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-async_async\/Result-class.html",
+    "desc": "<p>The result of a computation.<\/p>\n<p>Capturing a result (either a returned value or a thrown error) means\nconverting it into a <a href=\"package-async_async\/Result-class.html\">Result<\/a> - either a <a href=\"package-async_async\/ValueResult-class.html\">ValueResult<\/a> or an <a href=\"package-async_async\/ErrorResult-class.html\">ErrorResult<\/a>.<\/p>\n<p>This value can release itself by writing itself either to a <a href=\"dart-async\/EventSink-class.html\">EventSink<\/a> or a\n<a href=\"dart-async\/Completer-class.html\">Completer<\/a>, or by becoming a <a href=\"dart-async\/Future-class.html\">Future<\/a>.<\/p>\n<p>A <a href=\"dart-async\/Future-class.html\">Future<\/a> represents a potential result, one that might not have been\ncomputed yet, and a <a href=\"package-async_async\/Result-class.html\">Result<\/a> is always a completed and available result.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Result"
+}

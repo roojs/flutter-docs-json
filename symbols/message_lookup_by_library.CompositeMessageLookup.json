@@ -1,0 +1,178 @@
+{
+    "name": "message_lookup_by_library.CompositeMessageLookup",
+    "extends": [],
+    "memberOf": "message_lookup_by_library",
+    "events": [],
+    "methods": [
+        {
+            "name": "CompositeMessageLookup",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "message_lookup_by_library.CompositeMessageLookup",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "message_lookup_by_library\/CompositeMessageLookup\/CompositeMessageLookup.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "addLocale",
+            "type": "",
+            "desc": "<p>If we do not already have a locale for <code>localeName<\/code> then\n<code>findLocale<\/code> will be called and the result stored as the lookup\nmechanism for that locale.<\/p>\n    ",
+            "static": false,
+            "memberOf": "message_lookup_by_library.CompositeMessageLookup",
+            "sig": "",
+            "params": [
+                {
+                    "name": "localeName",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "findLocale",
+                    "type": "dart:core.Function",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "message_lookup_by_library\/CompositeMessageLookup\/addLocale.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addLocale(String localeName, Function findLocale) {\n  if (localeExists(localeName)) return;\n  var canonical = Intl.canonicalizedLocale(localeName);\n  var newLocale = findLocale(canonical);\n  if (newLocale != null) {\n    availableMessages[localeName] = newLocale;\n    availableMessages[canonical] = newLocale;\n    \/\/ If there was already a failed lookup for [newLocale], null the cache.\n    if (_lastLocale == newLocale) {\n      _lastLocale = null;\n      _lastLookup = null;\n    }\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "localeExists",
+            "type": "dart:core.bool",
+            "desc": "<p>Return true if we have a message lookup for <code>localeName<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "message_lookup_by_library.CompositeMessageLookup",
+            "sig": "",
+            "params": [
+                {
+                    "name": "localeName",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "message_lookup_by_library\/CompositeMessageLookup\/localeExists.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool localeExists(localeName) =&gt; availableMessages.containsKey(localeName);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "lookupMessage",
+            "type": "dart:core.String",
+            "desc": "<p>Look up the message with the given <code>name<\/code> and <code>locale<\/code> and return the\ntranslated version with the values in <code>args<\/code> interpolated.  If nothing is\nfound, return the result of <code>ifAbsent<\/code> or <code>message_str<\/code>. The\n<code>desc<\/code> and <code>examples<\/code> parameters are ignored<\/p>\n    ",
+            "static": false,
+            "memberOf": "message_lookup_by_library.CompositeMessageLookup",
+            "sig": "",
+            "params": [
+                {
+                    "name": "message_str",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "locale",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "name",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "args",
+                    "type": "dart:core.List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "meaning",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "ifAbsent",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "message_lookup_by_library\/CompositeMessageLookup\/lookupMessage.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String lookupMessage(\n    String message_str, String locale, String name, List args, String meaning,\n    {MessageIfAbsent ifAbsent}) {\n  \/\/ If passed null, use the default.\n  var knownLocale = locale ?? Intl.getCurrentLocale();\n  var messages = (knownLocale == _lastLocale)\n      ? _lastLookup\n      : _lookupMessageCatalog(knownLocale);\n  \/\/ If we didn't find any messages for this locale, use the original string,\n  \/\/ faking interpolations if necessary.\n  if (messages == null) {\n    return ifAbsent == null ? message_str : ifAbsent(message_str, args);\n  }\n  return messages.lookupMessage(message_str, locale, name, args, meaning,\n      ifAbsent: ifAbsent);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "availableMessages",
+            "type": "dart:core.Map<dart:core.String<message_lookup_by_library.MessageLookupByLibrary>>",
+            "types": [
+                "dart:core.Map",
+                "dart:core.String",
+                "message_lookup_by_library.MessageLookupByLibrary"
+            ],
+            "desc": "<p>A map from locale names to the corresponding lookups.<\/p>\n        ",
+            "memberOf": "message_lookup_by_library.CompositeMessageLookup",
+            "isConstant": false,
+            "href": "message_lookup_by_library\/CompositeMessageLookup\/availableMessages.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Map&lt;String, MessageLookupByLibrary&gt; availableMessages = new Map()\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "message_lookup_by_library\/CompositeMessageLookup-class.html",
+    "desc": "<p>This is a message lookup mechanism that delegates to one of a collection\nof individual <a href=\"message_lookup_by_library\/MessageLookupByLibrary-class.html\">MessageLookupByLibrary<\/a> instances.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "CompositeMessageLookup"
+}

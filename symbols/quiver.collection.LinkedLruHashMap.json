@@ -1,0 +1,630 @@
+{
+    "name": "quiver.collection.LinkedLruHashMap",
+    "extends": [],
+    "memberOf": "quiver.collection",
+    "events": [],
+    "methods": [
+        {
+            "name": "LinkedLruHashMap",
+            "type": "",
+            "desc": "<p>Create a new LinkedLruHashMap with a <code>maximumSize<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "maximumSize",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "quiver.collection\/LinkedLruHashMap\/LinkedLruHashMap.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory LinkedLruHashMap({int maximumSize}) =&gt;\n    new LinkedLruHashMap._fromMap(new HashMap&lt;K, _LinkedEntry&lt;K, V&gt;&gt;(),\n        maximumSize: maximumSize);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "operator []",
+            "type": "",
+            "desc": "<p>Get the value for a <code>key<\/code> in the <a href=\"dart-core\/Map-class.html\">Map<\/a>.\nThe <code>key<\/code> will be promoted to the 'Most Recently Used' position.<\/p>\n<p><em>NOTE<\/em>: Calling <code>[]<\/code> inside an iteration over keys\/values is currently\nunsupported; use <a href=\"quiver.collection\/LinkedLruHashMap\/keys.html\">keys<\/a> or <a href=\"quiver.collection\/LinkedLruHashMap\/values.html\">values<\/a> if you need information about entries\nwithout modifying their position.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/operator_get.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nV operator [](Object key) {\n  final entry = _entries[key];\n  if (entry != null) {\n    _promoteEntry(entry);\n    return entry.value;\n  } else {\n    return null;\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "operator []=",
+            "type": "",
+            "desc": "<p>If <code>key<\/code> already exists, promotes it to the MRU position &amp; assigns\n<code>value<\/code>.<\/p>\n<p>Otherwise, adds <code>key<\/code> and <code>value<\/code> to the MRU position.  If <a href=\"quiver.collection\/LinkedLruHashMap\/length.html\">length<\/a>\nexceeds <a href=\"quiver.collection\/LinkedLruHashMap\/maximumSize.html\">maximumSize<\/a> while adding, removes the LRU position.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/operator_put.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid operator []=(K key, V value) {\n  \/\/ Add this item to the MRU position.\n  _insertMru(_createEntry(key, value));\n\n  \/\/ Remove the LRU item if the size would be exceeded by adding this item.\n  if (length &gt; maximumSize) {\n    assert(length == maximumSize + 1);\n    _removeLru();\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addAll",
+            "type": "",
+            "desc": "<p>Adds all key-value pairs of <code>other<\/code> to this map.<\/p>\n<p>The operation is equivalent to doing <code>this[key] = value<\/code> for each key and\nassociated value in <code>other<\/code>. It iterates over <code>other<\/code>, which must\ntherefore not change during the iteration.<\/p>\n<p>If a key of <code>other<\/code> is already in this map, its value is overwritten. If\nthe number of unique keys is greater than <a href=\"quiver.collection\/LinkedLruHashMap\/maximumSize.html\">maximumSize<\/a> then the least\nrecently use keys are evicted. For keys written to by <code>other<\/code>, the least\nrecently user order is determined by <code>other<\/code>'s iteration order.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "type": "dart:core.Map",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/addAll.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid addAll(Map&lt;K, V&gt; other) =&gt; other.forEach((k, v) =&gt; this[k] = v);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addEntries",
+            "type": "",
+            "desc": "<p>Adds all key\/value pairs of <code>newEntries<\/code> to this map.<\/p>\n<p>If a key of <code>newEntries<\/code> is already in this map,\nthe corresponding value is overwritten.<\/p>\n<p>The operation is equivalent to doing <code>this[entry.key] = entry.value<\/code>\nfor each <a href=\"dart-core\/MapEntry-class.html\">MapEntry<\/a> of the iterable.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "entries",
+                    "type": "dart:core.Iterable<dart:core.MapEntry>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.Iterable",
+                        "dart:core.MapEntry"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/addEntries.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid addEntries(Iterable&lt;MapEntry&lt;K, V&gt;&gt; entries) =&gt;\n    entries.forEach((entry) =&gt; this[entry.key] = entry.value);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "cast",
+            "type": "quiver.collection.LinkedLruHashMap",
+            "desc": "<p>Provides a view of this map as having <code>RK<\/code> keys and <code>RV<\/code> instances,\nif necessary.<\/p>\n<p>If this map is already a <code>Map&lt;RK, RV&gt;<\/code>, it is returned unchanged.<\/p>\n<p>If this set contains only keys of type <code>RK<\/code> and values of type <code>RV<\/code>,\nall read operations will work correctly.\nIf any operation exposes a non-<code>RK<\/code> key or non-<code>RV<\/code> value,\nthe operation will throw instead.<\/p>\n<p>Entries added to the map must be valid for both a <code>Map&lt;K, V&gt;<\/code> and a\n<code>Map&lt;RK, RV&gt;<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/cast.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\n\/\/ TODO: Dart 2.0 requires this method to be implemented.\n\/\/ ignore: override_on_non_overriding_method\nLinkedLruHashMap&lt;K2, V2&gt; cast&lt;K2, V2&gt;() {\n  throw new UnimplementedError(\"cast\");\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "clear",
+            "type": "",
+            "desc": "<p>Removes all pairs from the map.<\/p>\n<p>After this, the map is empty.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/clear.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid clear() {\n  _entries.clear();\n  _head = _tail = null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "containsKey",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns true if this map contains the given <code>key<\/code>.<\/p>\n<p>Returns true if any of the keys in the map are equal to <code>key<\/code>\naccording to the equality used by the map.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/containsKey.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool containsKey(Object key) =&gt; _entries.containsKey(key);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "containsValue",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns true if this map contains the given <code>value<\/code>.<\/p>\n<p>Returns true if any of the values in the map are equal to <code>value<\/code>\naccording to the <code>==<\/code> operator.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/containsValue.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool containsValue(Object value) =&gt; values.contains(value);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "forEach",
+            "type": "",
+            "desc": "<p>Applies <code>action<\/code> to each key-value pair of the map in order of MRU to\nLRU.<\/p>\n<p>Calling <code>action<\/code> must not add or remove keys from the map.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/forEach.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid forEach(void action(K key, V value)) {\n  var head = _head;\n  while (head != null) {\n    action(head.key, head.value);\n    head = head.next;\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "map",
+            "type": "dart:core.Map",
+            "desc": "<p>Returns a new map where all entries of this map are transformed by\nthe given <code>f<\/code> function.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/map.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\n\/\/ TODO: Dart 2.0 requires this method to be implemented.\n\/\/ ignore: override_on_non_overriding_method\nMap&lt;K2, V2&gt; map&lt;K2, V2&gt;(Object transform(K key, V value)) {\n  \/\/ Change Object to MapEntry&lt;K2, V2&gt; when\n  \/\/ the MapEntry class has been added.\n  throw new UnimplementedError(\"map\");\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "putIfAbsent",
+            "type": "",
+            "desc": "<p>Look up the value associated with <code>key<\/code>, or add a new value if it isn't\nthere. The pair is promoted to the MRU position.<\/p>\n<p>Otherwise calls <code>ifAbsent<\/code> to get a new value, associates <code>key<\/code> to that\n<code>value<\/code>, and then returns the new <code>value<\/code>, with the key-value pair in the\nMRU position. If this causes <a href=\"quiver.collection\/LinkedLruHashMap\/length.html\">length<\/a> to exceed <a href=\"quiver.collection\/LinkedLruHashMap\/maximumSize.html\">maximumSize<\/a>, then the\nLRU position is removed.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "ifAbsent",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/putIfAbsent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nV putIfAbsent(K key, V ifAbsent()) {\n  final entry =\n      _entries.putIfAbsent(key, () =&gt; _createEntry(key, ifAbsent()));\n  if (length &gt; maximumSize) {\n    _removeLru();\n  }\n  _promoteEntry(entry);\n  return entry.value;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "remove",
+            "type": "",
+            "desc": "<p>Removes <code>key<\/code> and its associated value, if present, from the map.<\/p>\n<p>Returns the value associated with <code>key<\/code> before it was removed.\nReturns <code>null<\/code> if <code>key<\/code> was not in the map.<\/p>\n<p>Note that values can be <code>null<\/code> and a returned <code>null<\/code> value doesn't\nalways mean that the key was absent.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/remove.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nV remove(Object key) {\n  final entry = _entries.remove(key);\n  if (entry != null) {\n    if (entry == _head &amp;&amp; entry == _tail) {\n      _head = _tail = null;\n    } else if (entry == _head) {\n      _head = _head.next;\n      _head?.previous = null;\n    } else if (entry == _tail) {\n      _tail = _tail.previous;\n      _tail?.next = null;\n    } else {\n      entry.previous.next = entry.next;\n      entry.next.previous = entry.previous;\n    }\n    return entry.value;\n  }\n  return null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "removeWhere",
+            "type": "",
+            "desc": "<p>Removes all entries of this map that satisfy the given <a href=\"package-matcher_matcher\/predicate.html\">predicate<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/removeWhere.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid removeWhere(bool test(K key, V value)) {\n  var keysToRemove = &lt;K&gt;[];\n  _entries.forEach((key, entry) {\n    if (test(key, entry.value)) keysToRemove.add(key);\n  });\n  for (var key in keysToRemove) {\n    remove(key);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "retype",
+            "type": "quiver.collection.LinkedLruHashMap",
+            "desc": "",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/retype.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\n\/\/ TODO: Dart 2.0 requires this method to be implemented.\n\/\/ ignore: override_on_non_overriding_method\nLinkedLruHashMap&lt;K2, V2&gt; retype&lt;K2, V2&gt;() {\n  throw new UnimplementedError(\"retype\");\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\n\/\/ TODO: Use the `MapBase.mapToString()` static method when the minimum SDK\n\/\/ version of this package has been bumped to 2.0.0 or greater.\nString toString() {\n  \/\/ Detect toString() cycles.\n  if (_isToStringVisiting(this)) {\n    return '{...}';\n  }\n\n  var result = new StringBuffer();\n  try {\n    _toStringVisiting.add(this);\n    result.write('{');\n    bool first = true;\n    forEach((k, v) {\n      if (!first) {\n        result.write(', ');\n      }\n      first = false;\n      result.write('$k: $v');\n    });\n    result.write('}');\n  } finally {\n    assert(identical(_toStringVisiting.last, this));\n    _toStringVisiting.removeLast();\n  }\n\n  return result.toString();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "update",
+            "type": "",
+            "desc": "<p>Updates the value for the provided <code>key<\/code>.<\/p>\n<p>Returns the new value of the key.<\/p>\n<p>If the key is present, invokes <code>update<\/code> with the current value and stores\nthe new value in the map.<\/p>\n<p>If the key is not present and <code>ifAbsent<\/code> is provided, calls <code>ifAbsent<\/code>\nand adds the key with the returned value to the map.<\/p>\n<p>It's an error if the key is not present and <code>ifAbsent<\/code> is not provided.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "ifAbsent",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/update.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nV update(K key, V update(V value), {V ifAbsent()}) {\n  V newValue;\n  if (containsKey(key)) {\n    newValue = update(this[key]);\n  } else {\n    if (ifAbsent == null)\n      throw new ArgumentError.value(key, 'key', 'Key not in map');\n    newValue = ifAbsent();\n  }\n\n  \/\/ Add this item to the MRU position.\n  _insertMru(_createEntry(key, newValue));\n\n  \/\/ Remove the LRU item if the size would be exceeded by adding this item.\n  if (length &gt; maximumSize) {\n    assert(length == maximumSize + 1);\n    _removeLru();\n  }\n  return newValue;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "updateAll",
+            "type": "",
+            "desc": "<p>Updates all values.<\/p>\n<p>Iterates over all entries in the map and updates them with the result\nof invoking <code>update<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "key",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/updateAll.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid updateAll(V update(K key, V value)) {\n  _entries.forEach((key, entry) {\n    var newValue = _createEntry(key, update(key, entry.value));\n    _entries[key] = newValue;\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "entries",
+            "type": "dart:core.Iterable<dart:core.MapEntry>",
+            "types": [
+                "dart:core.Iterable",
+                "dart:core.MapEntry"
+            ],
+            "desc": "<p>The map entries of <a href=\"quiver.collection\/LinkedLruHashMap-class.html\">this<\/a>.<\/p>\n        ",
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "isConstant": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/entries.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterable&lt;MapEntry&lt;K, V&gt;&gt; get entries =&gt; _entries.values\n    .map((entry) =&gt; new MapEntry&lt;K, V&gt;(entry.key, entry.value));<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isEmpty",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Returns true if there is no key\/value pair in the map.<\/p>\n        ",
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "isConstant": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/isEmpty.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get isEmpty =&gt; _entries.isEmpty;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isNotEmpty",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Returns true if there is at least one key\/value pair in the map.<\/p>\n        ",
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "isConstant": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/isNotEmpty.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get isNotEmpty =&gt; _entries.isNotEmpty;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "keys",
+            "type": "dart:core.Iterable",
+            "types": [],
+            "desc": "<p>The keys of <a href=\"quiver.collection\/LinkedLruHashMap-class.html\">this<\/a> - in order of MRU to LRU.<\/p>\n<p>The returned iterable does <em>not<\/em> have efficient <code>length<\/code> or <code>contains<\/code>.<\/p>\n        ",
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "isConstant": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/keys.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterable&lt;K&gt; get keys =&gt; _iterable().map((e) =&gt; e.key);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "length",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The number of key\/value pairs in the map.<\/p>\n        ",
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "isConstant": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/length.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get length =&gt; _entries.length;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "maximumSize",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>Maximum size of the <a href=\"dart-core\/Map-class.html\">Map<\/a>. If <a href=\"quiver.collection\/LinkedLruHashMap\/length.html\">length<\/a> exceeds this value at any time, n\nentries accessed the earliest are removed, where n is <a href=\"quiver.collection\/LinkedLruHashMap\/length.html\">length<\/a> -\n<a href=\"quiver.collection\/LinkedLruHashMap\/maximumSize.html\">maximumSize<\/a>.<\/p>\n        ",
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "isConstant": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/maximumSize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get maximumSize =&gt; _maximumSize;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "values",
+            "type": "dart:core.Iterable",
+            "types": [],
+            "desc": "<p>The values of <a href=\"quiver.collection\/LinkedLruHashMap-class.html\">this<\/a> - in order of MRU to LRU.<\/p>\n<p>The returned iterable does <em>not<\/em> have efficient <code>length<\/code> or <code>contains<\/code>.<\/p>\n        ",
+            "memberOf": "quiver.collection.LinkedLruHashMap",
+            "isConstant": false,
+            "href": "quiver.collection\/LinkedLruHashMap\/values.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterable&lt;V&gt; get values =&gt; _iterable().map((e) =&gt; e.value);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "quiver.collection\/LinkedLruHashMap-class.html",
+    "desc": "<p>A linked hash-table based implementation of <a href=\"quiver.collection\/LruMap-class.html\">LruMap<\/a>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "LinkedLruHashMap"
+}

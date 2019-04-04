@@ -1,0 +1,62 @@
+{
+    "name": "painting.DefaultShaderWarmUp",
+    "extends": [
+        "painting.ShaderWarmUp",
+        "dart:core.Object"
+    ],
+    "memberOf": "painting",
+    "events": [],
+    "methods": [
+        {
+            "name": "DefaultShaderWarmUp",
+            "type": "",
+            "desc": "<p>Allow <a href=\"painting\/DefaultShaderWarmUp-class.html\">DefaultShaderWarmUp<\/a> to be used as the default value of parameters.<\/p>\n    ",
+            "static": false,
+            "memberOf": "painting.DefaultShaderWarmUp",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "painting\/DefaultShaderWarmUp\/DefaultShaderWarmUp.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const DefaultShaderWarmUp();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "warmUpOnCanvas",
+            "type": "dart:async.Future",
+            "desc": "<p>Trigger common draw operations on a canvas to warm up GPU shader\ncompilation cache.<\/p>\n    ",
+            "static": false,
+            "memberOf": "painting.DefaultShaderWarmUp",
+            "sig": "",
+            "params": [
+                {
+                    "name": "canvas",
+                    "type": "dart:ui.Canvas",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "painting\/DefaultShaderWarmUp\/warmUpOnCanvas.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;void&gt; warmUpOnCanvas(ui.Canvas canvas) async {\n  final ui.RRect rrect = ui.RRect.fromLTRBXY(20.0, 20.0, 60.0, 60.0, 10.0, 10.0);\n  final ui.Path rrectPath = ui.Path()..addRRect(rrect);\n\n  final ui.Path circlePath = ui.Path()..addOval(\n      ui.Rect.fromCircle(center: const ui.Offset(40.0, 40.0), radius: 20.0)\n  );\n\n  \/\/ The following path is based on\n  \/\/ https:\/\/skia.org\/user\/api\/SkCanvas_Reference#SkCanvas_drawPath\n  final ui.Path path = ui.Path();\n  path.moveTo(20.0, 60.0);\n  path.quadraticBezierTo(60.0, 20.0, 60.0, 60.0);\n  path.close();\n  path.moveTo(60.0, 20.0);\n  path.quadraticBezierTo(60.0, 60.0, 20.0, 60.0);\n\n  final ui.Path convexPath = ui.Path();\n  convexPath.moveTo(20.0, 30.0);\n  convexPath.lineTo(40.0, 20.0);\n  convexPath.lineTo(60.0, 30.0);\n  convexPath.lineTo(60.0, 60.0);\n  convexPath.lineTo(20.0, 60.0);\n  convexPath.close();\n\n  \/\/ Skia uses different shaders based on the kinds of paths being drawn and\n  \/\/ the associated paint configurations. According to our experience and\n  \/\/ tracing, drawing the following paths\/paints generates various of\n  \/\/ shaders that are commonly used.\n  final List&lt;ui.Path&gt; paths = &lt;ui.Path&gt;[rrectPath, circlePath, path, convexPath];\n\n  final List&lt;ui.Paint&gt; paints = &lt;ui.Paint&gt;[\n    ui.Paint()\n      ..isAntiAlias = true\n      ..style = ui.PaintingStyle.fill,\n    ui.Paint()\n      ..isAntiAlias = false\n      ..style = ui.PaintingStyle.fill,\n    ui.Paint()\n      ..isAntiAlias = true\n      ..style = ui.PaintingStyle.stroke\n      ..strokeWidth = 10,\n    ui.Paint()\n      ..isAntiAlias = true\n      ..style = ui.PaintingStyle.stroke\n      ..strokeWidth = 0.1,  \/\/ hairline\n  ];\n\n  \/\/ Warm up path stroke and fill shaders.\n  for (int i = 0; i &lt; paths.length; i += 1) {\n    canvas.save();\n    for (ui.Paint paint in paints) {\n      canvas.drawPath(paths[i], paint);\n      canvas.translate(80.0, 0.0);\n    }\n    canvas.restore();\n    canvas.translate(0.0, 80.0);\n  }\n\n  \/\/ Warm up shadow shaders.\n  const ui.Color black = ui.Color(0xFF000000);\n  canvas.save();\n  canvas.drawShadow(rrectPath, black, 10.0, true);\n  canvas.translate(80.0, 0.0);\n  canvas.drawShadow(rrectPath, black, 10.0, false);\n  canvas.restore();\n\n  \/\/ Warm up text shaders.\n  canvas.translate(0.0, 80.0);\n  final ui.ParagraphBuilder paragraphBuilder = ui.ParagraphBuilder(\n    ui.ParagraphStyle(textDirection: ui.TextDirection.ltr),\n  )..pushStyle(ui.TextStyle(color: black))..addText('_');\n  final ui.Paragraph paragraph = paragraphBuilder.build()\n    ..layout(const ui.ParagraphConstraints(width: 60.0));\n  canvas.drawParagraph(paragraph, const ui.Offset(20.0, 20.0));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "painting\/DefaultShaderWarmUp-class.html",
+    "desc": "<p>Default way of warming up Skia shader compilations.<\/p>\n<p>The draw operations being warmed up here are decided according to Flutter\nengineers' observation and experience based on the apps and the performance\nissues seen so far.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "DefaultShaderWarmUp"
+}

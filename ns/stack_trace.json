@@ -1,0 +1,1414 @@
+{
+    "name": "stack_trace",
+    "href": "package-stack_trace_stack_trace\/package-stack_trace_stack_trace-library.html",
+    "cn": [
+        {
+            "name": "stack_trace.Chain",
+            "extends": [],
+            "memberOf": "stack_trace",
+            "events": [],
+            "methods": [
+                {
+                    "name": "Chain",
+                    "type": "",
+                    "desc": "<p>Returns a new <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">Chain<\/a> comprised of <code>traces<\/code>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Chain",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "traces",
+                            "type": "dart:core.Iterable<stack_trace.Trace>",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false,
+                            "types": [
+                                "dart:core.Iterable",
+                                "stack_trace.Trace"
+                            ]
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Chain\/Chain.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Chain(Iterable&lt;Trace&gt; traces) : traces = new List&lt;Trace&gt;.unmodifiable(traces);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "capture",
+                    "type": "",
+                    "desc": "<p>If <code>when<\/code> is <code>true<\/code>, runs <code>callback<\/code> in a <a href=\"dart-async\/Zone-class.html\">Zone<\/a> in which the current\nstack chain is tracked and automatically associated with (most) errors.<\/p>\n<p>If <code>when<\/code> is <code>false<\/code>, this does not track stack chains. Instead, it's\nidentical to <a href=\"dart-async\/runZoned.html\">runZoned<\/a>, except that it wraps any errors in <a href=\"package-stack_trace_stack_trace\/Chain\/Chain.forTrace.html\">new\nChain.forTrace<\/a>\u2014which will only wrap the trace unless there's a different\n<a href=\"package-stack_trace_stack_trace\/Chain\/capture.html\">Chain.capture<\/a> active. This makes it easy for the caller to only capture\nstack chains in debug mode or during development.<\/p>\n<p>If <code>onError<\/code> is passed, any error in the zone that would otherwise go\nunhandled is passed to it, along with the <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">Chain<\/a> associated with that\nerror. Note that if <code>callback<\/code> produces multiple unhandled errors,\n<code>onError<\/code> may be called more than once. If <code>onError<\/code> isn't passed, the\nparent Zone's <code>unhandledErrorHandler<\/code> will be called with the error and\nits chain.<\/p>\n<p>If <code>errorZone<\/code> is <code>true<\/code>, the zone this creates will be an error zone,\neven if <code>onError<\/code> isn't passed. This means that any errors that would\ncross the zone boundary are considered unhandled. If <code>errorZone<\/code> is\n<code>false<\/code>, <code>onError<\/code> must be <code>null<\/code>.<\/p>\n<p>If <code>callback<\/code> returns a value, it will be returned by <a href=\"package-stack_trace_stack_trace\/Chain\/capture.html\">capture<\/a> as well.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Chain",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "callback",
+                            "type": "",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false,
+                            "types": []
+                        },
+                        {
+                            "name": "chain",
+                            "type": "stack_trace.Chain",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false,
+                            "types": []
+                        },
+                        {
+                            "name": "error",
+                            "type": "",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false,
+                            "types": []
+                        },
+                        {
+                            "name": "chain",
+                            "type": "stack_trace.Chain",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "when",
+                            "type": "dart:core.bool",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "errorZone",
+                            "type": "dart:core.bool",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "package-stack_trace_stack_trace\/Chain\/capture.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static T capture&lt;T&gt;(T callback(),\n    {void onError(error, Chain chain),\n    bool when: true,\n    bool errorZone: true}) {\n  if (!errorZone &amp;&amp; onError != null) {\n    throw new ArgumentError.value(\n        onError, \"onError\", \"must be null if errorZone is false\");\n  }\n\n  if (!when) {\n    var newOnError;\n    if (onError != null) {\n      newOnError = (error, stackTrace) {\n        onError(\n            error,\n            stackTrace == null\n                ? new Chain.current()\n                : new Chain.forTrace(stackTrace));\n      };\n    }\n\n    return runZoned(callback, onError: newOnError);\n  }\n\n  var spec = new StackZoneSpecification(onError, errorZone: errorZone);\n  return runZoned(() {\n    try {\n      return callback();\n    } catch (error, stackTrace) {\n      \/\/ TODO(nweiz): Don't special-case this when issue 19566 is fixed.\n      Zone.current.handleUncaughtError(error, stackTrace);\n      return null;\n    }\n  },\n      zoneSpecification: spec.toSpec(),\n      zoneValues: {_specKey: spec, StackZoneSpecification.disableKey: false});\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "Chain.current",
+                    "type": "",
+                    "desc": "<p>Returns the current stack chain.<\/p>\n<p>By default, the first frame of the first trace will be the line where\n<a href=\"package-stack_trace_stack_trace\/Chain\/Chain.current.html\">Chain.current<\/a> is called. If <code>level<\/code> is passed, the first trace will\nstart that many frames up instead.<\/p>\n<p>If this is called outside of a <a href=\"package-stack_trace_stack_trace\/Chain\/capture.html\">capture<\/a> zone, it just returns a\nsingle-trace chain.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Chain",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "level",
+                            "type": "dart:core.int",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Chain\/Chain.current.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Chain.current([int level = 0]) {\n  if (_currentSpec != null) return _currentSpec.currentChain(level + 1);\n\n  var chain = new Chain.forTrace(StackTrace.current);\n  return new LazyChain(() {\n    \/\/ JS includes a frame for the call to StackTrace.current, but the VM\n    \/\/ doesn't, so we skip an extra frame in a JS context.\n    var first = new Trace(\n        chain.traces.first.frames.skip(level + (inJS ? 2 : 1)),\n        original: chain.traces.first.original.toString());\n    return new Chain([first]..addAll(chain.traces.skip(1)));\n  });\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "disable",
+                    "type": "",
+                    "desc": "<p>If <code>when<\/code> is <code>true<\/code> and this is called within a <a href=\"package-stack_trace_stack_trace\/Chain\/capture.html\">Chain.capture<\/a> zone, runs\n<code>callback<\/code> in a <a href=\"dart-async\/Zone-class.html\">Zone<\/a> in which chain capturing is disabled.<\/p>\n<p>If <code>callback<\/code> returns a value, it will be returned by <a href=\"package-stack_trace_stack_trace\/Chain\/disable.html\">disable<\/a> as well.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Chain",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "callback",
+                            "type": "",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false,
+                            "types": []
+                        },
+                        {
+                            "name": "when",
+                            "type": "dart:core.bool",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "package-stack_trace_stack_trace\/Chain\/disable.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static T disable&lt;T&gt;(T callback(), {bool when: true}) {\n  var zoneValues =\n      when ? {_specKey: null, StackZoneSpecification.disableKey: true} : null;\n\n  return runZoned(callback, zoneValues: zoneValues);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "foldFrames",
+                    "type": "stack_trace.Chain",
+                    "desc": "<p>Returns a new <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">Chain<\/a> based on <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">this<\/a> where multiple stack frames matching\n<code>predicate<\/code> are folded together.<\/p>\n<p>This means that whenever there are multiple frames in a row that match\n<code>predicate<\/code>, only the last one is kept. In addition, traces that are\ncomposed entirely of frames matching <code>predicate<\/code> are omitted.<\/p>\n<p>This is useful for limiting the amount of library code that appears in a\nstack trace by only showing user code and code that's called by user code.<\/p>\n<p>If <code>terse<\/code> is true, this will also fold together frames from the core\nlibrary or from this package, and simplify core library frames as in\n<a href=\"package-stack_trace_stack_trace\/Chain\/terse.html\">Trace.terse<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Chain",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "frame",
+                            "type": "stack_trace.Frame",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "frame",
+                            "type": "stack_trace.Frame",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "terse",
+                            "type": "dart:core.bool",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "package-stack_trace_stack_trace\/Chain\/foldFrames.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Chain foldFrames(bool predicate(Frame frame), {bool terse: false}) {\n  var foldedTraces =\n      traces.map((trace) =&gt; trace.foldFrames(predicate, terse: terse));\n  var nonEmptyTraces = foldedTraces.where((trace) {\n    \/\/ Ignore traces that contain only folded frames.\n    if (trace.frames.length &gt; 1) return true;\n    if (trace.frames.isEmpty) return false;\n\n    \/\/ In terse mode, the trace may have removed an outer folded frame,\n    \/\/ leaving a single non-folded frame. We can detect a folded frame because\n    \/\/ it has no line information.\n    if (!terse) return false;\n    return trace.frames.single.line != null;\n  });\n\n  \/\/ If all the traces contain only internal processing, preserve the last\n  \/\/ (top-most) one so that the chain isn't empty.\n  if (nonEmptyTraces.isEmpty &amp;&amp; foldedTraces.isNotEmpty) {\n    return new Chain([foldedTraces.last]);\n  }\n\n  return new Chain(nonEmptyTraces);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Chain.forTrace",
+                    "type": "",
+                    "desc": "<p>Returns the stack chain associated with <code>trace<\/code>.<\/p>\n<p>The first stack trace in the returned chain will always be <code>trace<\/code>\n(converted to a <a href=\"package-stack_trace_stack_trace\/Trace-class.html\">Trace<\/a> if necessary). If there is no chain associated\nwith <code>trace<\/code> or if this is called outside of a <a href=\"package-stack_trace_stack_trace\/Chain\/capture.html\">capture<\/a> zone, this just\nreturns a single-trace chain containing <code>trace<\/code>.<\/p>\n<p>If <code>trace<\/code> is already a <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">Chain<\/a>, it will be returned as-is.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Chain",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "trace",
+                            "type": "dart:core.StackTrace",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Chain\/Chain.forTrace.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Chain.forTrace(StackTrace trace) {\n  if (trace is Chain) return trace;\n  if (_currentSpec != null) return _currentSpec.chainFor(trace);\n  if (trace is Trace) return new Chain([trace]);\n  return new LazyChain(() =&gt; new Chain.parse(trace.toString()));\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Chain.parse",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a stack chain.<\/p>\n<p>If <code>chain<\/code> is the output of a call to <a href=\"package-stack_trace_stack_trace\/Chain\/toString.html\">Chain.toString<\/a>, it will be parsed\nas a full stack chain. Otherwise, it will be parsed as in <a href=\"package-stack_trace_stack_trace\/Chain\/Chain.parse.html\">Trace.parse<\/a>\nand returned as a single-trace chain.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Chain",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "chain",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Chain\/Chain.parse.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Chain.parse(String chain) {\n  if (chain.isEmpty) return new Chain([]);\n  if (chain.contains(vmChainGap)) {\n    return new Chain(\n        chain.split(vmChainGap).map((trace) =&gt; new Trace.parseVM(trace)));\n  }\n  if (!chain.contains(chainGap)) return new Chain([new Trace.parse(chain)]);\n\n  return new Chain(\n      chain.split(chainGap).map((trace) =&gt; new Trace.parseFriendly(trace)));\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "toString",
+                    "type": "dart:core.String",
+                    "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Chain",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "package-stack_trace_stack_trace\/Chain\/toString.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() {\n  \/\/ Figure out the longest path so we know how much to pad.\n  var longest = traces.map((trace) {\n    return trace.frames\n        .map((frame) =&gt; frame.location.length)\n        .fold(0, math.max);\n  }).fold(0, math.max);\n\n  \/\/ Don't call out to [Trace.toString] here because that doesn't ensure that\n  \/\/ padding is consistent across all traces.\n  return traces.map((trace) {\n    return trace.frames.map((frame) {\n      return '${frame.location.padRight(longest)}  ${frame.member}\\n';\n    }).join();\n  }).join(chainGap);\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "toTrace",
+                    "type": "stack_trace.Trace",
+                    "desc": "<p>Converts <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">this<\/a> to a <a href=\"package-stack_trace_stack_trace\/Trace-class.html\">Trace<\/a>.<\/p>\n<p>The trace version of a chain is just the concatenation of all the traces\nin the chain.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Chain",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "package-stack_trace_stack_trace\/Chain\/toTrace.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Trace toTrace() =&gt; new Trace(traces.expand((trace) =&gt; trace.frames));<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "track",
+                    "type": "",
+                    "desc": "<p>Returns <code>futureOrStream<\/code> unmodified.<\/p>\n<p>Prior to Dart 1.7, this was necessary to ensure that stack traces for\nexceptions reported with <a href=\"dart-async\/Completer\/completeError.html\">Completer.completeError<\/a> and\n<a href=\"dart-async\/StreamController\/addError.html\">StreamController.addError<\/a> were tracked correctly.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Chain",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "futureOrStream",
+                            "type": "",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false,
+                            "types": []
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "package-stack_trace_stack_trace\/Chain\/track.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@Deprecated(\"Chain.track is not necessary in Dart 1.7+.\")\nstatic track(futureOrStream) =&gt; futureOrStream;<\/code><\/pre>\n    ",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "props": [
+                {
+                    "name": "terse",
+                    "type": "stack_trace.Chain",
+                    "types": [],
+                    "desc": "<p>Returns a terser version of <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">this<\/a>.<\/p>\n<p>This calls <a href=\"package-stack_trace_stack_trace\/Chain\/terse.html\">Trace.terse<\/a> on every trace in <a href=\"package-stack_trace_stack_trace\/Chain\/traces.html\">traces<\/a>, and discards any\ntrace that contain only internal frames.<\/p>\n<p>This won't do anything with a raw JavaScript trace, since there's no way\nto determine which frames come from which Dart libraries. However, the\n<a href=\"https:\/\/pub.dartlang.org\/packages\/source_map_stack_trace\"><code>source_map_stack_trace<\/code><\/a> package can be used to\nconvert JavaScript traces into Dart-style traces.<\/p>\n        ",
+                    "memberOf": "stack_trace.Chain",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Chain\/terse.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Chain get terse =&gt; foldFrames((_) =&gt; false, terse: true);<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "traces",
+                    "type": "dart:core.List<stack_trace.Trace>",
+                    "types": [
+                        "dart:core.List",
+                        "stack_trace.Trace"
+                    ],
+                    "desc": "<p>The stack traces that make up this chain.<\/p>\n<p>Like the frames in a stack trace, the traces are ordered from most local\nto least local. The first one is the trace where the actual exception was\nraised, the second one is where that callback was scheduled, and so on.<\/p>\n        ",
+                    "memberOf": "stack_trace.Chain",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Chain\/traces.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final List&lt;Trace&gt; traces\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                }
+            ],
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": false,
+            "isConstant": false,
+            "isAbstract": false,
+            "implementors": [],
+            "realImplementors": [],
+            "cn": [],
+            "href": "package-stack_trace_stack_trace\/Chain-class.html",
+            "desc": "<p>A chain of stack traces.<\/p>\n<p>A stack chain is a collection of one or more stack traces that collectively\nrepresent the path from <code>main<\/code> through nested function calls to a particular\ncode location, usually where an error was thrown. Multiple stack traces are\nnecessary when using asynchronous functions, since the program's stack is\nreset before each asynchronous callback is run.<\/p>\n<p>Stack chains can be automatically tracked using <a href=\"package-stack_trace_stack_trace\/Chain\/capture.html\">Chain.capture<\/a>. This sets\nup a new <a href=\"dart-async\/Zone-class.html\">Zone<\/a> in which the current stack chain is tracked and can be\naccessed using <a href=\"package-stack_trace_stack_trace\/Chain\/Chain.current.html\">new Chain.current<\/a>. Any errors that would be top-leveled in\nthe zone can be handled, along with their associated chains, with the\n<code>onError<\/code> callback. For example:<\/p>\n<pre class=\"language-dart\"><code>Chain.capture(() {\n  \/\/ ...\n}, onError: (error, stackChain) {\n  print(\"Caught error $error\\n\"\n        \"$stackChain\");\n});\n<\/code><\/pre>\n    ",
+            "example": "",
+            "isDeprecated": false,
+            "dtype": "class",
+            "shortname": "Chain"
+        },
+        {
+            "name": "stack_trace.ChainHandler",
+            "type": "",
+            "desc": "<p>A function that handles errors in the zone wrapped by <a href=\"package-stack_trace_stack_trace\/Chain\/capture.html\">Chain.capture<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace",
+            "sig": "",
+            "params": [
+                {
+                    "name": "error",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "chain",
+                    "type": "stack_trace.Chain",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-stack_trace_stack_trace\/ChainHandler.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@Deprecated(\"Will be removed in stack_trace 2.0.0.\")\ntypedef void ChainHandler(error, Chain chain);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": true,
+            "isConstant": false,
+            "dtype": "typedef",
+            "types": []
+        },
+        {
+            "name": "stack_trace.Frame",
+            "extends": [],
+            "memberOf": "stack_trace",
+            "events": [],
+            "methods": [
+                {
+                    "name": "Frame",
+                    "type": "",
+                    "desc": "",
+                    "static": false,
+                    "memberOf": "stack_trace.Frame",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "uri",
+                            "type": "dart:core.Uri",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "line",
+                            "type": "dart:core.int",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "column",
+                            "type": "dart:core.int",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "member",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Frame\/Frame.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Frame(this.uri, this.line, this.column, this.member);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Frame.caller",
+                    "type": "",
+                    "desc": "<p>Returns a single frame of the current stack.<\/p>\n<p>By default, this will return the frame above the current method. If\n<code>level<\/code> is <code>0<\/code>, it will return the current method's frame; if <code>level<\/code> is\nhigher than <code>1<\/code>, it will return higher frames.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Frame",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "level",
+                            "type": "dart:core.int",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Frame\/Frame.caller.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.caller([int level = 1]) {\n  if (level &lt; 0) {\n    throw new ArgumentError(\"Argument [level] must be greater than or equal \"\n        \"to 0.\");\n  }\n\n  return new Trace.current(level + 1).frames.first;\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Frame.parseFirefox",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a Firefox stack frame.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Frame",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "frame",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseFirefox.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseFirefox(String frame) =&gt; _catchFormatException(frame, () {\n      var match = _firefoxSafariFrame.firstMatch(frame);\n      if (match == null) return new UnparsedFrame(frame);\n\n      \/\/ Normally this is a URI, but in a jsshell trace it can be a path.\n      var uri = _uriOrPathToUri(match[3]);\n\n      var member;\n      if (match[1] != null) {\n        member = match[1];\n        member +=\n            new List.filled('\/'.allMatches(match[2]).length, \".&lt;fn&gt;\").join();\n        if (member == '') member = '&lt;fn&gt;';\n\n        \/\/ Some Firefox members have initial dots. We remove them for consistency\n        \/\/ with other platforms.\n        member = member.replaceFirst(_initialDot, '');\n      } else {\n        member = '&lt;fn&gt;';\n      }\n\n      var line = match[4] == '' ? null : int.parse(match[4]);\n      var column =\n          match[5] == null || match[5] == '' ? null : int.parse(match[5]);\n      return new Frame(uri, line, column, member);\n    });<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Frame.parseFriendly",
+                    "type": "",
+                    "desc": "<p>Parses this package's string representation of a stack frame.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Frame",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "frame",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseFriendly.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseFriendly(String frame) =&gt; _catchFormatException(frame, () {\n      var match = _friendlyFrame.firstMatch(frame);\n      if (match == null) {\n        throw new FormatException(\n            \"Couldn't parse package:stack_trace stack trace line '$frame'.\");\n      }\n      \/\/ Fake truncated data urls generated by the friendly stack trace format\n      \/\/ cause Uri.parse to throw an exception so we have to special case them.\n      var uri = match[1] == 'data:...'\n          ? new Uri.dataFromString('')\n          : Uri.parse(match[1]);\n      \/\/ If there's no scheme, this is a relative URI. We should interpret it as\n      \/\/ relative to the current working directory.\n      if (uri.scheme == '') {\n        uri = path.toUri(path.absolute(path.fromUri(uri)));\n      }\n\n      var line = match[2] == null ? null : int.parse(match[2]);\n      var column = match[3] == null ? null : int.parse(match[3]);\n      return new Frame(uri, line, column, match[4]);\n    });<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Frame.parseIE",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of an IE stack frame.<\/p>\n<p>IE10+ frames look just like V8 frames. Prior to IE10, stack traces can't\nbe retrieved.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Frame",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "frame",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseIE.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseIE(String frame) =&gt; new Frame.parseV8(frame);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Frame.parseJSCore",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a JavaScriptCore stack trace.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Frame",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "frame",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseJSCore.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseJSCore(String frame) =&gt; new Frame.parseV8(frame);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Frame.parseSafari",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a Safari stack frame.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Frame",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "frame",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseSafari.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseSafari(String frame) =&gt; new Frame.parseFirefox(frame);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Frame.parseSafari6_0",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a Safari 6.0 stack frame.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Frame",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "frame",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseSafari6_0.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@Deprecated(\"Use Frame.parseSafari instead.\")\nfactory Frame.parseSafari6_0(String frame) =&gt; new Frame.parseFirefox(frame);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Frame.parseSafari6_1",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a Safari 6.1+ stack frame.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Frame",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "frame",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseSafari6_1.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@Deprecated(\"Use Frame.parseSafari instead.\")\nfactory Frame.parseSafari6_1(String frame) =&gt; new Frame.parseFirefox(frame);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Frame.parseV8",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a Chrome\/V8 stack frame.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Frame",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "frame",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseV8.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseV8(String frame) =&gt; _catchFormatException(frame, () {\n      var match = _v8Frame.firstMatch(frame);\n      if (match == null) return new UnparsedFrame(frame);\n\n      \/\/ v8 location strings can be arbitrarily-nested, since it adds a layer of\n      \/\/ nesting for each eval performed on that line.\n      parseLocation(location, member) {\n        var evalMatch = _v8EvalLocation.firstMatch(location);\n        while (evalMatch != null) {\n          location = evalMatch[1];\n          evalMatch = _v8EvalLocation.firstMatch(location);\n        }\n\n        if (location == 'native') {\n          return new Frame(Uri.parse('native'), null, null, member);\n        }\n\n        var urlMatch = _v8UrlLocation.firstMatch(location);\n        if (urlMatch == null) return new UnparsedFrame(frame);\n\n        return new Frame(_uriOrPathToUri(urlMatch[1]), int.parse(urlMatch[2]),\n            int.parse(urlMatch[3]), member);\n      }\n\n      \/\/ V8 stack frames can be in two forms.\n      if (match[2] != null) {\n        \/\/ The first form looks like \" at FUNCTION (LOCATION)\". V8 proper lists\n        \/\/ anonymous functions within eval as \"&lt;anonymous&gt;\", while IE10 lists them\n        \/\/ as \"Anonymous function\".\n        return parseLocation(\n            match[2],\n            match[1]\n                .replaceAll(\"&lt;anonymous&gt;\", \"&lt;fn&gt;\")\n                .replaceAll(\"Anonymous function\", \"&lt;fn&gt;\")\n                .replaceAll(\"(anonymous function)\", \"&lt;fn&gt;\"));\n      } else {\n        \/\/ The second form looks like \" at LOCATION\", and is used for anonymous\n        \/\/ functions.\n        return parseLocation(match[3], \"&lt;fn&gt;\");\n      }\n    });<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Frame.parseVM",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a Dart VM stack frame.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Frame",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "frame",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseVM.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseVM(String frame) =&gt; _catchFormatException(frame, () {\n      \/\/ The VM sometimes folds multiple stack frames together and replaces them\n      \/\/ with \"...\".\n      if (frame == '...') {\n        return new Frame(new Uri(), null, null, '...');\n      }\n\n      var match = _vmFrame.firstMatch(frame);\n      if (match == null) return new UnparsedFrame(frame);\n\n      \/\/ Get the pieces out of the regexp match. Function, URI and line should\n      \/\/ always be found. The column is optional.\n      var member = match[1]\n          .replaceAll(_asyncBody, \"&lt;async&gt;\")\n          .replaceAll(\"&lt;anonymous closure&gt;\", \"&lt;fn&gt;\");\n      var uri = Uri.parse(match[2]);\n\n      var lineAndColumn = match[3].split(':');\n      var line =\n          lineAndColumn.length &gt; 1 ? int.parse(lineAndColumn[1]) : null;\n      var column =\n          lineAndColumn.length &gt; 2 ? int.parse(lineAndColumn[2]) : null;\n      return new Frame(uri, line, column, member);\n    });<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "toString",
+                    "type": "dart:core.String",
+                    "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Frame",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "package-stack_trace_stack_trace\/Frame\/toString.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() =&gt; '$location in $member';<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                }
+            ],
+            "props": [
+                {
+                    "name": "column",
+                    "type": "dart:core.int",
+                    "types": [],
+                    "desc": "<p>The column number of the code location.<\/p>\n<p>This can be null, indicating that the column number is unknown or\nunimportant.<\/p>\n        ",
+                    "memberOf": "stack_trace.Frame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Frame\/column.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int column\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "isCore",
+                    "type": "dart:core.bool",
+                    "types": [],
+                    "desc": "<p>Whether this stack frame comes from the Dart core libraries.<\/p>\n        ",
+                    "memberOf": "stack_trace.Frame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Frame\/isCore.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isCore =&gt; uri.scheme == 'dart';<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "library",
+                    "type": "dart:core.String",
+                    "types": [],
+                    "desc": "<p>Returns a human-friendly description of the library that this stack frame\ncomes from.<\/p>\n<p>This will usually be the string form of <a href=\"package-stack_trace_stack_trace\/Frame\/uri.html\">uri<\/a>, but a relative URI will be\nused if possible. Data URIs will be truncated.<\/p>\n        ",
+                    "memberOf": "stack_trace.Frame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Frame\/library.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get library {\n  if (uri.scheme == 'data') return \"data:...\";\n  return path.prettyUri(uri);\n}<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "line",
+                    "type": "dart:core.int",
+                    "types": [],
+                    "desc": "<p>The line number on which the code location is located.<\/p>\n<p>This can be null, indicating that the line number is unknown or\nunimportant.<\/p>\n        ",
+                    "memberOf": "stack_trace.Frame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Frame\/line.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int line\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "location",
+                    "type": "dart:core.String",
+                    "types": [],
+                    "desc": "<p>A human-friendly description of the code location.<\/p>\n        ",
+                    "memberOf": "stack_trace.Frame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Frame\/location.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get location {\n  if (line == null) return library;\n  if (column == null) return '$library $line';\n  return '$library $line:$column';\n}<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "member",
+                    "type": "dart:core.String",
+                    "types": [],
+                    "desc": "<p>The name of the member in which the code location occurs.<\/p>\n<p>Anonymous closures are represented as <code>&lt;fn&gt;<\/code> in this member string.<\/p>\n        ",
+                    "memberOf": "stack_trace.Frame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Frame\/member.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String member\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "package",
+                    "type": "dart:core.String",
+                    "types": [],
+                    "desc": "<p>Returns the name of the package this stack frame comes from, or <code>null<\/code> if\nthis stack frame doesn't come from a <code>package:<\/code> URL.<\/p>\n        ",
+                    "memberOf": "stack_trace.Frame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Frame\/package.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get package {\n  if (uri.scheme != 'package') return null;\n  return uri.path.split('\/').first;\n}<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "uri",
+                    "type": "dart:core.Uri",
+                    "types": [],
+                    "desc": "<p>The URI of the file in which the code is located.<\/p>\n<p>This URI will usually have the scheme <code>dart<\/code>, <code>file<\/code>, <code>http<\/code>, or <code>https<\/code>.<\/p>\n        ",
+                    "memberOf": "stack_trace.Frame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Frame\/uri.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Uri uri\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                }
+            ],
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": false,
+            "isConstant": false,
+            "isAbstract": false,
+            "implementors": [],
+            "realImplementors": [],
+            "cn": [],
+            "href": "package-stack_trace_stack_trace\/Frame-class.html",
+            "desc": "<p>A single stack frame. Each frame points to a precise location in Dart code.<\/p>\n    ",
+            "example": "",
+            "isDeprecated": false,
+            "dtype": "class",
+            "shortname": "Frame"
+        },
+        {
+            "name": "stack_trace.Trace",
+            "extends": [],
+            "memberOf": "stack_trace",
+            "events": [],
+            "methods": [
+                {
+                    "name": "Trace",
+                    "type": "",
+                    "desc": "<p>Returns a new <a href=\"package-stack_trace_stack_trace\/Trace-class.html\">Trace<\/a> comprised of <code>frames<\/code>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "frames",
+                            "type": "dart:core.Iterable<stack_trace.Frame>",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false,
+                            "types": [
+                                "dart:core.Iterable",
+                                "stack_trace.Frame"
+                            ]
+                        },
+                        {
+                            "name": "original",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Trace\/Trace.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Trace(Iterable&lt;Frame&gt; frames, {String original})\n    : frames = new List&lt;Frame&gt;.unmodifiable(frames),\n      original = new StackTrace.fromString(original);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Trace.current",
+                    "type": "",
+                    "desc": "<p>Returns the current stack trace.<\/p>\n<p>By default, the first frame of this trace will be the line where\n<a href=\"package-stack_trace_stack_trace\/Trace\/Trace.current.html\">Trace.current<\/a> is called. If <code>level<\/code> is passed, the trace will start that\nmany frames up instead.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "level",
+                            "type": "dart:core.int",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Trace\/Trace.current.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Trace.current([int level = 0]) {\n  if (level &lt; 0) {\n    throw new ArgumentError(\"Argument [level] must be greater than or equal \"\n        \"to 0.\");\n  }\n\n  var trace = new Trace.from(StackTrace.current);\n  return new LazyTrace(() {\n    \/\/ JS includes a frame for the call to StackTrace.current, but the VM\n    \/\/ doesn't, so we skip an extra frame in a JS context.\n    return new Trace(trace.frames.skip(level + (inJS ? 2 : 1)),\n        original: trace.original.toString());\n  });\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "foldFrames",
+                    "type": "stack_trace.Trace",
+                    "desc": "<p>Returns a new <a href=\"package-stack_trace_stack_trace\/Trace-class.html\">Trace<\/a> based on <a href=\"package-stack_trace_stack_trace\/Trace-class.html\">this<\/a> where multiple stack frames matching\n<code>predicate<\/code> are folded together.<\/p>\n<p>This means that whenever there are multiple frames in a row that match\n<code>predicate<\/code>, only the last one is kept. This is useful for limiting the\namount of library code that appears in a stack trace by only showing user\ncode and code that's called by user code.<\/p>\n<p>If <code>terse<\/code> is true, this will also fold together frames from the core\nlibrary or from this package, simplify core library frames, and\npotentially remove the outermost frame as in <a href=\"package-stack_trace_stack_trace\/Trace\/terse.html\">Trace.terse<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "frame",
+                            "type": "stack_trace.Frame",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "frame",
+                            "type": "stack_trace.Frame",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "terse",
+                            "type": "dart:core.bool",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "package-stack_trace_stack_trace\/Trace\/foldFrames.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Trace foldFrames(bool predicate(Frame frame), {bool terse: false}) {\n  if (terse) {\n    var oldPredicate = predicate;\n    predicate = (frame) {\n      if (oldPredicate(frame)) return true;\n\n      if (frame.isCore) return true;\n      if (frame.package == 'stack_trace') return true;\n\n      \/\/ Ignore async stack frames without any line or column information.\n      \/\/ These come from the VM's async\/await implementation and represent\n      \/\/ internal frames. They only ever show up in stack chains and are\n      \/\/ always surrounded by other traces that are actually useful, so we can\n      \/\/ just get rid of them.\n      \/\/ TODO(nweiz): Get rid of this logic some time after issue 22009 is\n      \/\/ fixed.\n      if (!frame.member.contains('&lt;async&gt;')) return false;\n      return frame.line == null;\n    };\n  }\n\n  var newFrames = &lt;Frame&gt;[];\n  for (var frame in frames.reversed) {\n    if (frame is UnparsedFrame || !predicate(frame)) {\n      newFrames.add(frame);\n    } else if (newFrames.isEmpty || !predicate(newFrames.last)) {\n      newFrames\n          .add(new Frame(frame.uri, frame.line, frame.column, frame.member));\n    }\n  }\n\n  if (terse) {\n    newFrames = newFrames.map((frame) {\n      if (frame is UnparsedFrame || !predicate(frame)) return frame;\n      var library = frame.library.replaceAll(_terseRegExp, '');\n      return new Frame(Uri.parse(library), null, null, frame.member);\n    }).toList();\n\n    if (newFrames.length &gt; 1 &amp;&amp; predicate(newFrames.first)) {\n      newFrames.removeAt(0);\n    }\n  }\n\n  return new Trace(newFrames.reversed, original: this.original.toString());\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "format",
+                    "type": "dart:core.String",
+                    "desc": "<p>Returns a human-readable representation of <code>stackTrace<\/code>. If <code>terse<\/code> is\nset, this folds together multiple stack frames from the Dart core\nlibraries, so that only the core library method directly called from user\ncode is visible (see <a href=\"package-stack_trace_stack_trace\/Trace\/terse.html\">Trace.terse<\/a>).<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "stackTrace",
+                            "type": "dart:core.StackTrace",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        },
+                        {
+                            "name": "terse",
+                            "type": "dart:core.bool",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": false,
+                    "href": "package-stack_trace_stack_trace\/Trace\/format.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static String format(StackTrace stackTrace, {bool terse: true}) {\n  var trace = new Trace.from(stackTrace);\n  if (terse) trace = trace.terse;\n  return trace.toString();\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Trace.from",
+                    "type": "",
+                    "desc": "<p>Returns a new stack trace containing the same data as <code>trace<\/code>.<\/p>\n<p>If <code>trace<\/code> is a native <a href=\"dart-core\/StackTrace-class.html\">StackTrace<\/a>, its data will be parsed out; if it's\na <a href=\"package-stack_trace_stack_trace\/Trace-class.html\">Trace<\/a>, it will be returned as-is.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "trace",
+                            "type": "dart:core.StackTrace",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Trace\/Trace.from.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Trace.from(StackTrace trace) {\n  \/\/ Normally explicitly validating null arguments is bad Dart style, but here\n  \/\/ the natural failure will only occur when the LazyTrace is materialized,\n  \/\/ and we want to provide an error that's more local to the actual problem.\n  if (trace == null) {\n    throw new ArgumentError(\"Cannot create a Trace from null.\");\n  }\n\n  if (trace is Trace) return trace;\n  if (trace is Chain) return trace.toTrace();\n  return new LazyTrace(() =&gt; new Trace.parse(trace.toString()));\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Trace.parse",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a stack trace.<\/p>\n<p><code>trace<\/code> should be formatted in the same way as a Dart VM or browser stack\ntrace. If it's formatted as a stack chain, this will return the equivalent\nof <a href=\"package-stack_trace_stack_trace\/Chain\/toTrace.html\">Chain.toTrace<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "trace",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Trace\/Trace.parse.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Trace.parse(String trace) {\n  try {\n    if (trace.isEmpty) return new Trace(&lt;Frame&gt;[]);\n    if (trace.contains(_v8Trace)) return new Trace.parseV8(trace);\n    if (trace.contains(\"\\tat \")) return new Trace.parseJSCore(trace);\n    if (trace.contains(_firefoxSafariTrace)) {\n      return new Trace.parseFirefox(trace);\n    }\n    if (trace.contains(chainGap)) return new Chain.parse(trace).toTrace();\n    if (trace.contains(_friendlyTrace)) {\n      return new Trace.parseFriendly(trace);\n    }\n\n    \/\/ Default to parsing the stack trace as a VM trace. This is also hit on\n    \/\/ IE and Safari, where the stack trace is just an empty string (issue\n    \/\/ 11257).\n    return new Trace.parseVM(trace);\n  } on FormatException catch (error) {\n    throw new FormatException('${error.message}\\nStack trace:\\n$trace');\n  }\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Trace.parseFirefox",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a Firefox stack trace.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "trace",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Trace\/Trace.parseFirefox.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Trace.parseFirefox(String trace)\n    : this(\n          trace\n              .trim()\n              .split(\"\\n\")\n              .where((line) =&gt; line.isNotEmpty &amp;&amp; line != '[native code]')\n              .map((line) =&gt; new Frame.parseFirefox(line)),\n          original: trace);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Trace.parseFriendly",
+                    "type": "",
+                    "desc": "<p>Parses this package's string representation of a stack trace.<\/p>\n<p>This also parses string representations of <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">Chain<\/a>s. They parse to the\nsame trace that <a href=\"package-stack_trace_stack_trace\/Chain\/toTrace.html\">Chain.toTrace<\/a> would return.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "trace",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Trace\/Trace.parseFriendly.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Trace.parseFriendly(String trace)\n    : this(\n          trace.isEmpty\n              ? []\n              : trace\n                  .trim()\n                  .split(\"\\n\")\n                  \/\/ Filter out asynchronous gaps from [Chain]s.\n                  .where((line) =&gt; !line.startsWith('====='))\n                  .map((line) =&gt; new Frame.parseFriendly(line)),\n          original: trace);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Trace.parseIE",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of an Internet Explorer stack trace.<\/p>\n<p>IE10+ traces look just like V8 traces. Prior to IE10, stack traces can't\nbe retrieved.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "trace",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Trace\/Trace.parseIE.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Trace.parseIE(String trace) : this.parseV8(trace);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Trace.parseJSCore",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a JavaScriptCore stack trace.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "trace",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Trace\/Trace.parseJSCore.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Trace.parseJSCore(String trace)\n    : this(\n          trace\n              .split(\"\\n\")\n              .where((line) =&gt; line != \"\\tat \")\n              .map((line) =&gt; new Frame.parseV8(line)),\n          original: trace);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Trace.parseSafari",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a Safari stack trace.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "trace",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Trace\/Trace.parseSafari.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Trace.parseSafari(String trace) : this.parseFirefox(trace);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Trace.parseSafari6_0",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a Safari 6.0 stack trace.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "trace",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Trace\/Trace.parseSafari6_0.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@Deprecated(\"Use Trace.parseSafari instead.\")\nTrace.parseSafari6_0(String trace)\n    : this(\n          trace\n              .trim()\n              .split(\"\\n\")\n              .where((line) =&gt; line != '[native code]')\n              .map((line) =&gt; new Frame.parseFirefox(line)),\n          original: trace);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Trace.parseSafari6_1",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a Safari 6.1+ stack trace.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "trace",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Trace\/Trace.parseSafari6_1.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@Deprecated(\"Use Trace.parseSafari instead.\")\nTrace.parseSafari6_1(String trace) : this.parseSafari(trace);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Trace.parseV8",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a Chrome\/V8 stack trace.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "trace",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Trace\/Trace.parseV8.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Trace.parseV8(String trace)\n    : this(\n          trace\n              .split(\"\\n\")\n              .skip(1)\n              \/\/ It's possible that an Exception's description contains a line that\n              \/\/ looks like a V8 trace line, which will screw this up.\n              \/\/ Unfortunately, that's impossible to detect.\n              .skipWhile((line) =&gt; !line.startsWith(_v8TraceLine))\n              .map((line) =&gt; new Frame.parseV8(line)),\n          original: trace);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "Trace.parseVM",
+                    "type": "",
+                    "desc": "<p>Parses a string representation of a Dart VM stack trace.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "trace",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/Trace\/Trace.parseVM.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Trace.parseVM(String trace) : this(_parseVM(trace), original: trace);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "toString",
+                    "type": "dart:core.String",
+                    "desc": "<p>Returns a human-readable string representation of <a href=\"package-stack_trace_stack_trace\/Trace-class.html\">this<\/a>.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.Trace",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "package-stack_trace_stack_trace\/Trace\/toString.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() {\n  \/\/ Figure out the longest path so we know how much to pad.\n  var longest =\n      frames.map((frame) =&gt; frame.location.length).fold(0, math.max);\n\n  \/\/ Print out the stack trace nicely formatted.\n  return frames.map((frame) {\n    if (frame is UnparsedFrame) return \"$frame\\n\";\n    return '${frame.location.padRight(longest)}  ${frame.member}\\n';\n  }).join();\n}<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                }
+            ],
+            "props": [
+                {
+                    "name": "frames",
+                    "type": "dart:core.List<stack_trace.Frame>",
+                    "types": [
+                        "dart:core.List",
+                        "stack_trace.Frame"
+                    ],
+                    "desc": "<p>The stack frames that comprise this stack trace.<\/p>\n        ",
+                    "memberOf": "stack_trace.Trace",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Trace\/frames.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final List&lt;Frame&gt; frames\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "original",
+                    "type": "dart:core.StackTrace",
+                    "types": [],
+                    "desc": "<p>The original stack trace from which this trace was parsed.<\/p>\n        ",
+                    "memberOf": "stack_trace.Trace",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Trace\/original.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final StackTrace original\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "terse",
+                    "type": "stack_trace.Trace",
+                    "types": [],
+                    "desc": "<p>Returns a terser version of <a href=\"package-stack_trace_stack_trace\/Trace-class.html\">this<\/a>.<\/p>\n<p>This is accomplished by folding together multiple stack frames from the\ncore library or from this package, as in <a href=\"package-stack_trace_stack_trace\/Trace\/foldFrames.html\">foldFrames<\/a>. Remaining core\nlibrary frames have their libraries, \"-patch\" suffixes, and line numbers\nremoved. If the outermost frame of the stack trace is a core library\nframe, it's removed entirely.<\/p>\n<p>This won't do anything with a raw JavaScript trace, since there's no way\nto determine which frames come from which Dart libraries. However, the\n<a href=\"https:\/\/pub.dartlang.org\/packages\/source_map_stack_trace\"><code>source_map_stack_trace<\/code><\/a> package can be used to\nconvert JavaScript traces into Dart-style traces.<\/p>\n<p>For custom folding, see <a href=\"package-stack_trace_stack_trace\/Trace\/foldFrames.html\">foldFrames<\/a>.<\/p>\n        ",
+                    "memberOf": "stack_trace.Trace",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Trace\/terse.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Trace get terse =&gt; foldFrames((_) =&gt; false, terse: true);<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "vmTrace",
+                    "type": "dart:core.StackTrace",
+                    "types": [],
+                    "desc": "<p>Returns a VM-style <a href=\"dart-core\/StackTrace-class.html\">StackTrace<\/a> object.<\/p>\n<p>The return value's <a href=\"package-stack_trace_stack_trace\/Trace\/toString.html\">toString<\/a> method will always return a string\nrepresentation in the Dart VM's stack trace format, regardless of what\nplatform is being used.<\/p>\n        ",
+                    "memberOf": "stack_trace.Trace",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/Trace\/vmTrace.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">StackTrace get vmTrace =&gt; new VMTrace(frames);<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                }
+            ],
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": false,
+            "isConstant": false,
+            "isAbstract": false,
+            "implementors": [],
+            "realImplementors": [],
+            "cn": [],
+            "href": "package-stack_trace_stack_trace\/Trace-class.html",
+            "desc": "<p>A stack trace, comprised of a list of stack frames.<\/p>\n    ",
+            "example": "",
+            "isDeprecated": false,
+            "dtype": "class",
+            "shortname": "Trace"
+        },
+        {
+            "name": "stack_trace.UnparsedFrame",
+            "extends": [],
+            "memberOf": "stack_trace",
+            "events": [],
+            "methods": [
+                {
+                    "name": "UnparsedFrame",
+                    "type": "",
+                    "desc": "",
+                    "static": false,
+                    "memberOf": "stack_trace.UnparsedFrame",
+                    "sig": "",
+                    "params": [
+                        {
+                            "name": "member",
+                            "type": "dart:core.String",
+                            "desc": "",
+                            "isOptional": true,
+                            "href": "",
+                            "example": "",
+                            "isDeprecated": false
+                        }
+                    ],
+                    "isConstructor": true,
+                    "href": "package-stack_trace_stack_trace\/UnparsedFrame\/UnparsedFrame.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">UnparsedFrame(this.member);<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "toString",
+                    "type": "dart:core.String",
+                    "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+                    "static": false,
+                    "memberOf": "stack_trace.UnparsedFrame",
+                    "sig": "",
+                    "params": [],
+                    "isConstructor": false,
+                    "href": "package-stack_trace_stack_trace\/UnparsedFrame\/toString.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() =&gt; member;<\/code><\/pre>\n    ",
+                    "isDeprecated": false
+                }
+            ],
+            "props": [
+                {
+                    "name": "column",
+                    "type": "dart:core.int",
+                    "types": [],
+                    "desc": "<p>The column number of the code location.<\/p>\n<p>This can be null, indicating that the column number is unknown or\nunimportant.<\/p>\n        ",
+                    "memberOf": "stack_trace.UnparsedFrame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/UnparsedFrame\/column.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int column = null\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "isCore",
+                    "type": "dart:core.bool",
+                    "types": [],
+                    "desc": "<p>Whether this stack frame comes from the Dart core libraries.<\/p>\n        ",
+                    "memberOf": "stack_trace.UnparsedFrame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/UnparsedFrame\/isCore.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool isCore = false\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "library",
+                    "type": "dart:core.String",
+                    "types": [],
+                    "desc": "<p>Returns a human-friendly description of the library that this stack frame\ncomes from.<\/p>\n<p>This will usually be the string form of <a href=\"package-stack_trace_stack_trace\/UnparsedFrame\/uri.html\">uri<\/a>, but a relative URI will be\nused if possible. Data URIs will be truncated.<\/p>\n        ",
+                    "memberOf": "stack_trace.UnparsedFrame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/UnparsedFrame\/library.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String library = \"unparsed\"\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "line",
+                    "type": "dart:core.int",
+                    "types": [],
+                    "desc": "<p>The line number on which the code location is located.<\/p>\n<p>This can be null, indicating that the line number is unknown or\nunimportant.<\/p>\n        ",
+                    "memberOf": "stack_trace.UnparsedFrame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/UnparsedFrame\/line.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int line = null\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "location",
+                    "type": "dart:core.String",
+                    "types": [],
+                    "desc": "<p>A human-friendly description of the code location.<\/p>\n        ",
+                    "memberOf": "stack_trace.UnparsedFrame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/UnparsedFrame\/location.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String location = \"unparsed\"\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "member",
+                    "type": "dart:core.String",
+                    "types": [],
+                    "desc": "<p>The name of the member in which the code location occurs.<\/p>\n<p>Anonymous closures are represented as <code>&lt;fn&gt;<\/code> in this member string.<\/p>\n        ",
+                    "memberOf": "stack_trace.UnparsedFrame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/UnparsedFrame\/member.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String member\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "package",
+                    "type": "dart:core.String",
+                    "types": [],
+                    "desc": "<p>Returns the name of the package this stack frame comes from, or <code>null<\/code> if\nthis stack frame doesn't come from a <code>package:<\/code> URL.<\/p>\n        ",
+                    "memberOf": "stack_trace.UnparsedFrame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/UnparsedFrame\/package.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String package = null\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "uri",
+                    "type": "dart:core.Uri",
+                    "types": [],
+                    "desc": "<p>The URI of the file in which the code is located.<\/p>\n<p>This URI will usually have the scheme <code>dart<\/code>, <code>file<\/code>, <code>http<\/code>, or <code>https<\/code>.<\/p>\n        ",
+                    "memberOf": "stack_trace.UnparsedFrame",
+                    "isConstant": false,
+                    "href": "package-stack_trace_stack_trace\/UnparsedFrame\/uri.html",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Uri uri = new Uri(path: \"unparsed\")\n\n<\/code><\/pre>\n        ",
+                    "isDeprecated": false
+                }
+            ],
+            "isMixin": false,
+            "isEnum": false,
+            "isTypedef": false,
+            "isConstant": false,
+            "isAbstract": false,
+            "implementors": [],
+            "realImplementors": [],
+            "cn": [],
+            "href": "package-stack_trace_stack_trace\/UnparsedFrame-class.html",
+            "desc": "<p>A frame that failed to parse.<\/p>\n<p>The <a href=\"package-stack_trace_stack_trace\/UnparsedFrame\/member.html\">member<\/a> property contains the original frame's contents.<\/p>\n    ",
+            "example": "",
+            "isDeprecated": false,
+            "dtype": "class",
+            "shortname": "UnparsedFrame"
+        }
+    ],
+    "isFakeNamespace": false,
+    "desc": "",
+    "example": "",
+    "isDeprecated": false
+}

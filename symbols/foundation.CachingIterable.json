@@ -1,0 +1,312 @@
+{
+    "name": "foundation.CachingIterable",
+    "extends": [
+        "dart:collection.IterableBase",
+        "dart:core.Iterable",
+        "dart:core.Object"
+    ],
+    "memberOf": "foundation",
+    "events": [],
+    "methods": [
+        {
+            "name": "CachingIterable",
+            "type": "",
+            "desc": "<p>Creates a CachingIterable using the given <a href=\"dart-core\/Iterator-class.html\">Iterator<\/a> as the\nsource of data. The iterator must be non-null and must not throw\nexceptions.<\/p>\n<p>Since the argument is an <a href=\"dart-core\/Iterator-class.html\">Iterator<\/a>, not an <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>, it is\nguaranteed that the underlying data set will only be walked\nonce. If you have an <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>, you can pass its <a href=\"foundation\/CachingIterable\/iterator.html\">iterator<\/a>\nfield as the argument to this constructor.<\/p>\n<p>You can use a <code>sync*<\/code> function with this as follows:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;int&gt; range(int start, int end) sync* {\n  for (int index = start; index &lt;= end; index += 1)\n    yield index;\n }\n\nIterable&lt;int&gt; i = CachingIterable&lt;int&gt;(range(1, 5).iterator);\nprint(i.length); \/\/ walks the list\nprint(i.length); \/\/ efficient\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "foundation.CachingIterable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "_prefillIterator",
+                    "type": "dart:core.Iterator",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "foundation\/CachingIterable\/CachingIterable.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">CachingIterable(this._prefillIterator);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "expand",
+            "type": "dart:core.Iterable",
+            "desc": "<p>Expands each element of this <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> into zero or more elements.<\/p>\n<p>The resulting Iterable runs through the elements returned\nby <code>f<\/code> for each element of this, in iteration order.<\/p>\n<p>The returned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> is lazy, and calls <code>f<\/code> for each element\nof this every time it's iterated.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>var pairs = [[1, 2], [3, 4]];\nvar flattened = pairs.expand((pair) =&gt; pair).toList();\nprint(flattened); \/\/ =&gt; [1, 2, 3, 4];\n\nvar input = [1, 2, 3];\nvar duplicated = input.expand((i) =&gt; [i, i]).toList();\nprint(duplicated); \/\/ =&gt; [1, 1, 2, 2, 3, 3]\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "foundation.CachingIterable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/CachingIterable\/expand.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterable&lt;T&gt; expand&lt;T&gt;(Iterable&lt;T&gt; f(E element)) {\n  return CachingIterable&lt;T&gt;(super.expand&lt;T&gt;(f).iterator);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "map",
+            "type": "dart:core.Iterable",
+            "desc": "<p>Returns a new lazy <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> with elements that are created by\ncalling <code>f<\/code> on each element of this <code>Iterable<\/code> in iteration order.<\/p>\n<p>This method returns a view of the mapped elements. As long as the\nreturned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> is not iterated over, the supplied function <code>f<\/code> will\nnot be invoked. The transformed elements will not be cached. Iterating\nmultiple times over the returned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> will invoke the supplied\nfunction <code>f<\/code> multiple times on the same element.<\/p>\n<p>Methods on the returned iterable are allowed to omit calling <code>f<\/code>\non any element where the result isn't needed.\nFor example, <a href=\"dart-core\/Iterable\/elementAt.html\">elementAt<\/a> may call <code>f<\/code> only once.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.CachingIterable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "e",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "e",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/CachingIterable\/map.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterable&lt;T&gt; map&lt;T&gt;(T f(E e)) {\n  return CachingIterable&lt;T&gt;(super.map&lt;T&gt;(f).iterator);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "skip",
+            "type": "dart:core.Iterable",
+            "desc": "<p>Returns an <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> that provides all but the first <code>count<\/code> elements.<\/p>\n<p>When the returned iterable is iterated, it starts iterating over <code>this<\/code>,\nfirst skipping past the initial <code>count<\/code> elements.\nIf <code>this<\/code> has fewer than <code>count<\/code> elements, then the resulting Iterable is\nempty.\nAfter that, the remaining elements are iterated in the same order as\nin this iterable.<\/p>\n<p>Some iterables may be able to find later elements without first iterating\nthrough earlier elements, for example when iterating a <a href=\"dart-core\/List-class.html\">List<\/a>.\nSuch iterables are allowed to ignore the initial skipped elements.<\/p>\n<p>The <code>count<\/code> must not be negative.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.CachingIterable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "count",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/CachingIterable\/skip.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterable&lt;E&gt; skip(int count) {\n  return CachingIterable&lt;E&gt;(super.skip(count).iterator);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "skipWhile",
+            "type": "dart:core.Iterable",
+            "desc": "<p>Returns an <code>Iterable<\/code> that skips leading elements while <code>test<\/code> is satisfied.<\/p>\n<p>The filtering happens lazily. Every new <a href=\"dart-core\/Iterator-class.html\">Iterator<\/a> of the returned\niterable iterates over all elements of <code>this<\/code>.<\/p>\n<p>The returned iterable provides elements by iterating this iterable,\nbut skipping over all initial elements where <code>test(element)<\/code> returns\ntrue. If all elements satisfy <code>test<\/code> the resulting iterable is empty,\notherwise it iterates the remaining elements in their original order,\nstarting with the first element for which <code>test(element)<\/code> returns <code>false<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.CachingIterable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/CachingIterable\/skipWhile.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterable&lt;E&gt; skipWhile(bool test(E value)) {\n  return CachingIterable&lt;E&gt;(super.skipWhile(test).iterator);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "take",
+            "type": "dart:core.Iterable",
+            "desc": "<p>Returns a lazy iterable of the <code>count<\/code> first elements of this iterable.<\/p>\n<p>The returned <code>Iterable<\/code> may contain fewer than <code>count<\/code> elements, if <code>this<\/code>\ncontains fewer than <code>count<\/code> elements.<\/p>\n<p>The elements can be computed by stepping through <a href=\"foundation\/CachingIterable\/iterator.html\">iterator<\/a> until <code>count<\/code>\nelements have been seen.<\/p>\n<p>The <code>count<\/code> must not be negative.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.CachingIterable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "count",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/CachingIterable\/take.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterable&lt;E&gt; take(int count) {\n  return CachingIterable&lt;E&gt;(super.take(count).iterator);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "takeWhile",
+            "type": "dart:core.Iterable",
+            "desc": "<p>Returns a lazy iterable of the leading elements satisfying <code>test<\/code>.<\/p>\n<p>The filtering happens lazily. Every new iterator of the returned\niterable starts iterating over the elements of <code>this<\/code>.<\/p>\n<p>The elements can be computed by stepping through <a href=\"foundation\/CachingIterable\/iterator.html\">iterator<\/a> until an\nelement is found where <code>test(element)<\/code> is false. At that point,\nthe returned iterable stops (its <code>moveNext()<\/code> returns false).<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.CachingIterable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/CachingIterable\/takeWhile.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterable&lt;E&gt; takeWhile(bool test(E value)) {\n  return CachingIterable&lt;E&gt;(super.takeWhile(test).iterator);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toList",
+            "type": "dart:core.List",
+            "desc": "<p>Creates a <a href=\"dart-core\/List-class.html\">List<\/a> containing the elements of this <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>.<\/p>\n<p>The elements are in iteration order.\nThe list is fixed-length if <code>growable<\/code> is false.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.CachingIterable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "growable",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/CachingIterable\/toList.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nList&lt;E&gt; toList({ bool growable = true }) {\n  _precacheEntireList();\n  return List&lt;E&gt;.from(_results, growable: growable);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "where",
+            "type": "dart:core.Iterable",
+            "desc": "<p>Returns a new lazy <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> with all elements that satisfy the\npredicate <code>test<\/code>.<\/p>\n<p>The matching elements have the same order in the returned iterable\nas they have in <a href=\"foundation\/CachingIterable\/iterator.html\">iterator<\/a>.<\/p>\n<p>This method returns a view of the mapped elements.\nAs long as the returned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> is not iterated over,\nthe supplied function <code>test<\/code> will not be invoked.\nIterating will not cache results, and thus iterating multiple times over\nthe returned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> may invoke the supplied\nfunction <code>test<\/code> multiple times on the same element.<\/p>\n    ",
+            "static": false,
+            "memberOf": "foundation.CachingIterable",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "foundation\/CachingIterable\/where.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterable&lt;E&gt; where(bool test(E element)) {\n  return CachingIterable&lt;E&gt;(super.where(test).iterator);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "iterator",
+            "type": "dart:core.Iterator",
+            "types": [],
+            "desc": "<p>Returns a new <code>Iterator<\/code> that allows iterating the elements of this\n<code>Iterable<\/code>.<\/p>\n<p>Iterable classes may specify the iteration order of their elements\n(for example <a href=\"dart-core\/List-class.html\">List<\/a> always iterate in index order),\nor they may leave it unspecified (for example a hash-based <a href=\"dart-core\/Set-class.html\">Set<\/a>\nmay iterate in any order).<\/p>\n<p>Each time <code>iterator<\/code> is read, it returns a new iterator,\nwhich can be used to iterate through all the elements again.\nThe iterators of the same iterable can be stepped through independently,\nbut should return the same elements in the same order,\nas long as the underlying collection isn't changed.<\/p>\n<p>Modifying the collection may cause new iterators to produce\ndifferent elements, and may change the order of existing elements.\nA <a href=\"dart-core\/List-class.html\">List<\/a> specifies its iteration order precisely,\nso modifying the list changes the iteration order predictably.\nA hash-based <a href=\"dart-core\/Set-class.html\">Set<\/a> may change its iteration order completely\nwhen adding a new element to the set.<\/p>\n<p>Modifying the underlying collection after creating the new iterator\nmay cause an error the next time <a href=\"dart-core\/Iterator\/moveNext.html\">Iterator.moveNext<\/a> is called\non that iterator.\nAny <em>modifiable<\/em> iterable class should specify which operations will\nbreak iteration.<\/p>\n        ",
+            "memberOf": "foundation.CachingIterable",
+            "isConstant": false,
+            "href": "foundation\/CachingIterable\/iterator.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterator&lt;E&gt; get iterator {\n  return _LazyListIterator&lt;E&gt;(this);\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "length",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>Returns the number of elements in <a href=\"foundation\/CachingIterable-class.html\">this<\/a>.<\/p>\n<p>Counting all elements may involve iterating through all elements and can\ntherefore be slow.\nSome iterables have a more efficient way to find the number of elements.<\/p>\n        ",
+            "memberOf": "foundation.CachingIterable",
+            "isConstant": false,
+            "href": "foundation\/CachingIterable\/length.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get length {\n  _precacheEntireList();\n  return _results.length;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "foundation\/CachingIterable-class.html",
+    "desc": "<p>A lazy caching version of <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>.<\/p>\n<p>This iterable is efficient in the following ways:<\/p>\n<ul>\n<li>\n<p>It will not walk the given iterator more than you ask for.<\/p>\n<\/li>\n<li>\n<p>If you use it twice (e.g. you check <a href=\"dart-core\/Iterable\/isNotEmpty.html\">isNotEmpty<\/a>, then\nuse <a href=\"dart-core\/Iterable\/single.html\">single<\/a>), it will only walk the given iterator\nonce. This caching will even work efficiently if you are\nrunning two side-by-side iterators on the same iterable.<\/p>\n<\/li>\n<li>\n<p><a href=\"foundation\/CachingIterable\/toList.html\">toList<\/a> uses its EfficientLength variant to create its\nlist quickly.<\/p>\n<\/li>\n<\/ul>\n<p>It is inefficient in the following ways:<\/p>\n<ul>\n<li>\n<p>The first iteration through has caching overhead.<\/p>\n<\/li>\n<li>\n<p>It requires more memory than a non-caching iterator.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"foundation\/CachingIterable\/length.html\">length<\/a> and <a href=\"foundation\/CachingIterable\/toList.html\">toList<\/a> properties immediately pre-cache the\nentire list. Using these fields therefore loses the laziness of\nthe iterable. However, it still gets cached.<\/p>\n<\/li>\n<\/ul>\n<p>The caching behavior is propagated to the iterators that are\ncreated by <a href=\"foundation\/CachingIterable\/map.html\">map<\/a>, <a href=\"foundation\/CachingIterable\/where.html\">where<\/a>, <a href=\"foundation\/CachingIterable\/expand.html\">expand<\/a>, <a href=\"foundation\/CachingIterable\/take.html\">take<\/a>, <a href=\"foundation\/CachingIterable\/takeWhile.html\">takeWhile<\/a>, <a href=\"foundation\/CachingIterable\/skip.html\">skip<\/a>,\nand <a href=\"foundation\/CachingIterable\/skipWhile.html\">skipWhile<\/a>, and is used by the built-in methods that use an\niterator like <a href=\"dart-core\/Iterable\/isNotEmpty.html\">isNotEmpty<\/a> and <a href=\"dart-core\/Iterable\/single.html\">single<\/a>.<\/p>\n<p>Because a CachingIterable only walks the underlying data once, it\ncannot be used multiple times with the underlying data changing\nbetween each use. You must create a new iterable each time. This\nalso applies to any iterables derived from this one, e.g. as\nreturned by <code>where<\/code>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "CachingIterable"
+}

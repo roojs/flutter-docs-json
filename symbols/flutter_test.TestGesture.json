@@ -1,0 +1,250 @@
+{
+    "name": "flutter_test.TestGesture",
+    "extends": [],
+    "memberOf": "flutter_test",
+    "events": [],
+    "methods": [
+        {
+            "name": "TestGesture",
+            "type": "",
+            "desc": "<p>Create a <a href=\"flutter_test\/TestGesture-class.html\">TestGesture<\/a> without dispatching any events from it.\nThe <a href=\"flutter_test\/TestGesture-class.html\">TestGesture<\/a> can then be manipulated to perform future actions.<\/p>\n<p>By default, the pointer identifier used is 1. This can be overridden by\nproviding the <code>pointer<\/code> argument.<\/p>\n<p>A function to use for hit testing must be provided via the <code>hitTester<\/code>\nargument, and a function to use for dispatching events must be provided\nvia the <code>dispatcher<\/code> argument.<\/p>\n<p>The device <code>kind<\/code> defaults to <a href=\"dart-ui\/PointerDeviceKind-class.html\">PointerDeviceKind.touch<\/a>, but move events\nwhen the pointer is \"up\" require a kind other than\n<a href=\"dart-ui\/PointerDeviceKind-class.html\">PointerDeviceKind.touch<\/a>, like <a href=\"dart-ui\/PointerDeviceKind-class.html\">PointerDeviceKind.mouse<\/a>, for example,\nbecause touch devices can't produce movement events when they are \"up\".<\/p>\n<p>None of the arguments may be null. The <code>dispatcher<\/code> and <code>hitTester<\/code>\narguments are required.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.TestGesture",
+            "sig": "",
+            "params": [
+                {
+                    "name": "dispatcher",
+                    "type": "flutter_test.EventDispatcher",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "hitTester",
+                    "type": "flutter_test.HitTester",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "pointer",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "kind",
+                    "type": "dart:ui.PointerDeviceKind",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "flutter_test\/TestGesture\/TestGesture.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TestGesture({\n  @required EventDispatcher dispatcher,\n  @required HitTester hitTester,\n  int pointer = 1,\n  PointerDeviceKind kind = PointerDeviceKind.touch,\n}) : assert(dispatcher != null),\n     assert(hitTester != null),\n     assert(pointer != null),\n     assert(kind != null),\n     _dispatcher = dispatcher,\n     _hitTester = hitTester,\n     _pointer = TestPointer(pointer, kind),\n     _result = null;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "cancel",
+            "type": "dart:async.Future",
+            "desc": "<p>End the gesture by canceling the pointer (as would happen if the\nsystem showed a modal dialog on top of the Flutter application,\nfor instance).<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.TestGesture",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "flutter_test\/TestGesture\/cancel.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; cancel() {\n  return TestAsyncUtils.guard&lt;void&gt;(() async {\n    assert(_pointer._isDown);\n    await _dispatcher(_pointer.cancel(), _result);\n    assert(!_pointer._isDown);\n    _result = null;\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "down",
+            "type": "dart:async.Future",
+            "desc": "<p>Dispatch a pointer down event at the given <code>downLocation<\/code>, caching the\nhit test result.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.TestGesture",
+            "sig": "",
+            "params": [
+                {
+                    "name": "downLocation",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_test\/TestGesture\/down.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; down(Offset downLocation) async {\n  return TestAsyncUtils.guard&lt;void&gt;(() async {\n    _result = _hitTester(downLocation);\n    return _dispatcher(_pointer.down(downLocation), _result);\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "downWithCustomEvent",
+            "type": "dart:async.Future",
+            "desc": "<p>Dispatch a pointer down event at the given <code>downLocation<\/code>, caching the\nhit test result with a custom down event.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.TestGesture",
+            "sig": "",
+            "params": [
+                {
+                    "name": "downLocation",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "event",
+                    "type": "gestures.PointerDownEvent",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_test\/TestGesture\/downWithCustomEvent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; downWithCustomEvent(Offset downLocation, PointerDownEvent event) async {\n  _pointer.setDownInfo(event, downLocation);\n  return TestAsyncUtils.guard&lt;void&gt;(() async {\n    _result = _hitTester(downLocation);\n    return _dispatcher(event, _result);\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "moveBy",
+            "type": "dart:async.Future",
+            "desc": "<p>Send a move event moving the pointer by the given offset.<\/p>\n<p>If the pointer is down, then a move event is dispatched. If the pointer is\nup, then a hover event is dispatched. Touch devices are not able to send\nhover events.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.TestGesture",
+            "sig": "",
+            "params": [
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeStamp",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_test\/TestGesture\/moveBy.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; moveBy(Offset offset, {Duration timeStamp = Duration.zero}) {\n  return moveTo(_pointer.location + offset, timeStamp: timeStamp);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "moveTo",
+            "type": "dart:async.Future",
+            "desc": "<p>Send a move event moving the pointer to the given location.<\/p>\n<p>If the pointer is down, then a move event is dispatched. If the pointer is\nup, then a hover event is dispatched. Touch devices are not able to send\nhover events.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.TestGesture",
+            "sig": "",
+            "params": [
+                {
+                    "name": "location",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeStamp",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_test\/TestGesture\/moveTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; moveTo(Offset location, {Duration timeStamp = Duration.zero}) {\n  return TestAsyncUtils.guard&lt;void&gt;(() {\n    if (_pointer._isDown) {\n      assert(_result != null,\n          'Move events with the pointer down must be preceeded by a down '\n          'event that captures a hit test result.');\n      return _dispatcher(_pointer.move(location, timeStamp: timeStamp), _result);\n    } else {\n      assert(_pointer.kind != PointerDeviceKind.touch,\n          'Touch device move events can only be sent if the pointer is down.');\n      return _dispatcher(_pointer.hover(location, timeStamp: timeStamp), null);\n    }\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "up",
+            "type": "dart:async.Future",
+            "desc": "<p>End the gesture by releasing the pointer.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.TestGesture",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "flutter_test\/TestGesture\/up.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; up() {\n  return TestAsyncUtils.guard&lt;void&gt;(() async {\n    assert(_pointer._isDown);\n    await _dispatcher(_pointer.up(), _result);\n    assert(!_pointer._isDown);\n    _result = null;\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "updateWithCustomEvent",
+            "type": "dart:async.Future",
+            "desc": "<p>In a test, send a move event that moves the pointer by the given offset.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_test.TestGesture",
+            "sig": "",
+            "params": [
+                {
+                    "name": "event",
+                    "type": "gestures.PointerEvent",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeStamp",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_test\/TestGesture\/updateWithCustomEvent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@visibleForTesting\nFuture&lt;void&gt; updateWithCustomEvent(PointerEvent event, { Duration timeStamp = Duration.zero }) {\n  _pointer.setDownInfo(event, event.position);\n  return TestAsyncUtils.guard&lt;void&gt;(() {\n    return _dispatcher(event, _result);\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "flutter_test\/TestGesture-class.html",
+    "desc": "<p>A class for performing gestures in tests.<\/p>\n<p>The simplest way to create a <a href=\"flutter_test\/TestGesture-class.html\">TestGesture<\/a> is to call\n<a href=\"flutter_test\/WidgetController\/startGesture.html\">WidgetTester.startGesture<\/a>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "TestGesture"
+}

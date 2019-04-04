@@ -1,0 +1,184 @@
+{
+    "name": "dart:core.RuneIterator",
+    "extends": [],
+    "memberOf": "dart:core",
+    "events": [],
+    "methods": [
+        {
+            "name": "RuneIterator",
+            "type": "",
+            "desc": "<p>Create an iterator positioned at the beginning of the string.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:core.RuneIterator",
+            "sig": "",
+            "params": [
+                {
+                    "name": "string",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-core\/RuneIterator\/RuneIterator.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RuneIterator(String string)\n    : this.string = string,\n      _position = 0,\n      _nextPosition = 0;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "RuneIterator.at",
+            "type": "",
+            "desc": "<p>Create an iterator positioned before the <code>index<\/code>th code unit of the string.<\/p>\n<p>When created, there is no <a href=\"dart-core\/RuneIterator\/current.html\">current<\/a> value.\nA <a href=\"dart-core\/RuneIterator\/moveNext.html\">moveNext<\/a> will use the rune starting at <code>index<\/code> the current value,\nand a <a href=\"dart-core\/RuneIterator\/movePrevious.html\">movePrevious<\/a> will use the rune ending just before <code>index<\/code> as the\nthe current value.<\/p>\n<p>The <code>index<\/code> position must not be in the middle of a surrogate pair.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:core.RuneIterator",
+            "sig": "",
+            "params": [
+                {
+                    "name": "string",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "index",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "dart-core\/RuneIterator\/RuneIterator.at.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RuneIterator.at(String string, int index)\n    : string = string,\n      _position = index,\n      _nextPosition = index {\n  RangeError.checkValueInInterval(index, 0, string.length);\n  _checkSplitSurrogate(index);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "moveNext",
+            "type": "dart:core.bool",
+            "desc": "<p>Moves to the next element.<\/p>\n<p>Returns true if <a href=\"dart-core\/RuneIterator\/current.html\">current<\/a> contains the next element.\nReturns false if no elements are left.<\/p>\n<p>It is safe to invoke <a href=\"dart-core\/RuneIterator\/moveNext.html\">moveNext<\/a> even when the iterator is already\npositioned after the last element.\nIn this case <a href=\"dart-core\/RuneIterator\/moveNext.html\">moveNext<\/a> returns false again and has no effect.<\/p>\n<p>A call to <code>moveNext<\/code> may throw if iteration has been broken by\nchanging the underlying collection.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:core.RuneIterator",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-core\/RuneIterator\/moveNext.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool moveNext() {\n  _position = _nextPosition;\n  if (_position == string.length) {\n    _currentCodePoint = null;\n    return false;\n  }\n  int codeUnit = string.codeUnitAt(_position);\n  int nextPosition = _position + 1;\n  if (_isLeadSurrogate(codeUnit) &amp;&amp; nextPosition &lt; string.length) {\n    int nextCodeUnit = string.codeUnitAt(nextPosition);\n    if (_isTrailSurrogate(nextCodeUnit)) {\n      _nextPosition = nextPosition + 1;\n      _currentCodePoint = _combineSurrogatePair(codeUnit, nextCodeUnit);\n      return true;\n    }\n  }\n  _nextPosition = nextPosition;\n  _currentCodePoint = codeUnit;\n  return true;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "movePrevious",
+            "type": "dart:core.bool",
+            "desc": "<p>Move back to the previous element.<\/p>\n<p>Returns true and updates <a href=\"dart-core\/RuneIterator\/current.html\">current<\/a> if successful. Returns false\nand sets <a href=\"dart-core\/RuneIterator\/current.html\">current<\/a> to null if there is no previous element.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:core.RuneIterator",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-core\/RuneIterator\/movePrevious.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool movePrevious() {\n  _nextPosition = _position;\n  if (_position == 0) {\n    _currentCodePoint = null;\n    return false;\n  }\n  int position = _position - 1;\n  int codeUnit = string.codeUnitAt(position);\n  if (_isTrailSurrogate(codeUnit) &amp;&amp; position &gt; 0) {\n    int prevCodeUnit = string.codeUnitAt(position - 1);\n    if (_isLeadSurrogate(prevCodeUnit)) {\n      _position = position - 1;\n      _currentCodePoint = _combineSurrogatePair(prevCodeUnit, codeUnit);\n      return true;\n    }\n  }\n  _position = position;\n  _currentCodePoint = codeUnit;\n  return true;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "reset",
+            "type": "",
+            "desc": "<p>Resets the iterator to the given index into the string.<\/p>\n<p>After this the <a href=\"dart-core\/RuneIterator\/current.html\">current<\/a> value is unset.\nYou must call <a href=\"dart-core\/RuneIterator\/moveNext.html\">moveNext<\/a> make the rune at the position current,\nor <a href=\"dart-core\/RuneIterator\/movePrevious.html\">movePrevious<\/a> for the last rune before the position.<\/p>\n<p>Setting a negative <code>rawIndex<\/code>, or one greater than <code>string.length<\/code>,\nis an error. So is setting it in the middle of a surrogate pair.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:core.RuneIterator",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rawIndex",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-core\/RuneIterator\/reset.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void reset([int rawIndex = 0]) {\n  RangeError.checkValueInInterval(rawIndex, 0, string.length, \"rawIndex\");\n  _checkSplitSurrogate(rawIndex);\n  _position = _nextPosition = rawIndex;\n  _currentCodePoint = null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "current",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The rune (integer Unicode code point) starting at the current position in<\/p>\n<ul><li> the string.<\/li><\/ul>",
+            "memberOf": "dart:core.RuneIterator",
+            "isConstant": false,
+            "href": "dart-core\/RuneIterator\/current.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get current =&gt; _currentCodePoint;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "currentAsString",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>A string containing the current rune.<\/p>\n<p>For runes outside the basic multilingual plane, this will be\na String of length 2, containing two code units.<\/p>\n<p>Returns null if <a href=\"dart-core\/RuneIterator\/current.html\">current<\/a> is null.<\/p>\n        ",
+            "memberOf": "dart:core.RuneIterator",
+            "isConstant": false,
+            "href": "dart-core\/RuneIterator\/currentAsString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get currentAsString {\n  if (_position == _nextPosition) return null;\n  if (_position + 1 == _nextPosition) return string[_position];\n  return string.substring(_position, _nextPosition);\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "currentSize",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The number of code units comprising the current rune.<\/p>\n<p>Returns zero if there is no current rune (<a href=\"dart-core\/RuneIterator\/current.html\">current<\/a> is null).<\/p>\n        ",
+            "memberOf": "dart:core.RuneIterator",
+            "isConstant": false,
+            "href": "dart-core\/RuneIterator\/currentSize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get currentSize =&gt; _nextPosition - _position;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "rawIndex",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>Returns the starting position of the current rune in the string.<\/p>\n<p>Returns null if the <a href=\"dart-core\/RuneIterator\/current.html\">current<\/a> rune is null.<\/p>\n        ",
+            "memberOf": "dart:core.RuneIterator",
+            "isConstant": false,
+            "href": "dart-core\/RuneIterator\/rawIndex.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get rawIndex =&gt; (_position != _nextPosition) ? _position : null;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "string",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>String being iterated.<\/p>\n        ",
+            "memberOf": "dart:core.RuneIterator",
+            "isConstant": false,
+            "href": "dart-core\/RuneIterator\/string.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String string\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "dart-core\/RuneIterator-class.html",
+    "desc": "<p><a href=\"dart-core\/Iterator-class.html\">Iterator<\/a> for reading runes (integer Unicode code points) out of a Dart<\/p>\n<ul><li>string.<\/li><\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "RuneIterator"
+}

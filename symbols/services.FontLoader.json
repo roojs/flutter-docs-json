@@ -1,0 +1,131 @@
+{
+    "name": "services.FontLoader",
+    "extends": [],
+    "memberOf": "services",
+    "events": [],
+    "methods": [
+        {
+            "name": "FontLoader",
+            "type": "",
+            "desc": "<p>Creates a new <a href=\"services\/FontLoader-class.html\">FontLoader<\/a> that will load font assets for the specified\n<code>family<\/code>.<\/p>\n<p>The font family will not be available for use until <a href=\"services\/FontLoader\/load.html\">load<\/a> has been\ncalled.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.FontLoader",
+            "sig": "",
+            "params": [
+                {
+                    "name": "family",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "services\/FontLoader\/FontLoader.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">FontLoader(this.family)\n  : _loaded = false,\n    _fontFutures = &lt;Future&lt;Uint8List&gt;&gt;[];<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "addFont",
+            "type": "",
+            "desc": "<p>Registers a font asset to be loaded by this font loader.<\/p>\n<p>The <code>bytes<\/code> argument specifies the actual font asset bytes. Currently,\nonly TrueType (TTF) fonts are supported.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.FontLoader",
+            "sig": "",
+            "params": [
+                {
+                    "name": "bytes",
+                    "type": "dart:async.Future<dart:typed_data.ByteData>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:async.Future",
+                        "dart:typed_data.ByteData"
+                    ]
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/FontLoader\/addFont.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addFont(Future&lt;ByteData&gt; bytes) {\n  if (_loaded)\n    throw StateError('FontLoader is already loaded');\n\n  _fontFutures.add(bytes.then(\n      (ByteData data) =&gt; Uint8List.view(data.buffer, data.offsetInBytes, data.lengthInBytes)\n  ));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "load",
+            "type": "dart:async.Future",
+            "desc": "<p>Loads this font loader's font <a href=\"services\/FontLoader\/family.html\">family<\/a> and all of its associated assets\ninto the Flutter engine, making the font available to the current\napplication.<\/p>\n<p>This method should only be called once per font loader. Attempts to\nload fonts from the same loader more than once will cause a <a href=\"dart-core\/StateError-class.html\">StateError<\/a>\nto be thrown.<\/p>\n<p>The returned future will complete with an error if any of the font asset\nfutures yield an error.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.FontLoader",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "services\/FontLoader\/load.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; load() async {\n  if (_loaded)\n    throw StateError('FontLoader is already loaded');\n  _loaded = true;\n\n  final Iterable&lt;Future&lt;void&gt;&gt; loadFutures = _fontFutures.map(\n      (Future&lt;Uint8List&gt; f) =&gt; f.then&lt;void&gt;(\n          (Uint8List list) =&gt; loadFont(list, family)\n      )\n  );\n  return Future.wait(loadFutures.toList());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "loadFont",
+            "type": "dart:async.Future",
+            "desc": "<p>Hook called to load a font asset into the engine.<\/p>\n<p>Subclasses may override this to replace the default loading logic with\ncustom logic (for example, to mock the underlying engine API in tests).<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.FontLoader",
+            "sig": "",
+            "params": [
+                {
+                    "name": "list",
+                    "type": "dart:typed_data.Uint8List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "family",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/FontLoader\/loadFont.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@visibleForTesting\nFuture&lt;void&gt; loadFont(Uint8List list, String family) {\n  return loadFontFromList(list, fontFamily: family);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "family",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>The font family being loaded.<\/p>\n<p>The family groups a series of related font assets, each of which defines\nhow to render a specific <a href=\"dart-ui\/FontWeight-class.html\">FontWeight<\/a> and <a href=\"dart-ui\/FontStyle-class.html\">FontStyle<\/a> within the family.<\/p>\n        ",
+            "memberOf": "services.FontLoader",
+            "isConstant": false,
+            "href": "services\/FontLoader\/family.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String family\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "services\/FontLoader-class.html",
+    "desc": "<p>A class that enables the dynamic loading of fonts at runtime.<\/p>\n<p>The <a href=\"services\/FontLoader-class.html\">FontLoader<\/a> class provides a builder pattern, where the caller builds\nup the assets that make up a font family, then calls <a href=\"services\/FontLoader\/load.html\">load<\/a> to load the\nentire font family into a running Flutter application.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "FontLoader"
+}

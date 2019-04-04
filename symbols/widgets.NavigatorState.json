@@ -1,0 +1,650 @@
+{
+    "name": "widgets.NavigatorState",
+    "extends": [
+        "widgets.Navigator",
+        "widgets.State",
+        "foundation.Diagnosticable",
+        "dart:core.Object"
+    ],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "NavigatorState",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "widgets\/NavigatorState\/NavigatorState.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "build",
+            "type": "widgets.Widget",
+            "desc": "<p>Describes the part of the user interface represented by this widget.<\/p>\n<p>The framework calls this method in a number of different situations:<\/p>\n<ul>\n<li>After calling <a href=\"widgets\/NavigatorState\/initState.html\">initState<\/a>.<\/li>\n<li>After calling <a href=\"widgets\/NavigatorState\/didUpdateWidget.html\">didUpdateWidget<\/a>.<\/li>\n<li>After receiving a call to <a href=\"widgets\/State\/setState.html\">setState<\/a>.<\/li>\n<li>After a dependency of this <a href=\"widgets\/State-class.html\">State<\/a> object changes (e.g., an\n<a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> referenced by the previous <a href=\"widgets\/NavigatorState\/build.html\">build<\/a> changes).<\/li>\n<li>After calling <a href=\"widgets\/State\/deactivate.html\">deactivate<\/a> and then reinserting the <a href=\"widgets\/State-class.html\">State<\/a> object into\nthe tree at another location.<\/li>\n<\/ul>\n<p>The framework replaces the subtree below this widget with the widget\nreturned by this method, either by updating the existing subtree or by\nremoving the subtree and inflating a new subtree, depending on whether the\nwidget returned by this method can update the root of the existing\nsubtree, as determined by calling <a href=\"widgets\/Widget\/canUpdate.html\">Widget.canUpdate<\/a>.<\/p>\n<p>Typically implementations return a newly created constellation of widgets\nthat are configured with information from this widget's constructor, the\ngiven <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a>, and the internal state of this <a href=\"widgets\/State-class.html\">State<\/a> object.<\/p>\n<p>The given <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> contains information about the location in the\ntree at which this widget is being built. For example, the context\nprovides the set of inherited widgets for this location in the tree. The\n<a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> argument is always the same as the <code>context<\/code> property of\nthis <a href=\"widgets\/State-class.html\">State<\/a> object and will remain the same for the lifetime of this\nobject. The <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> argument is provided redundantly here so that\nthis method matches the signature for a <a href=\"widgets\/WidgetBuilder.html\">WidgetBuilder<\/a>.<\/p>\n<h2 id=\"design-discussion\">Design discussion<\/h2>\n<h3 id=\"why-is-the-build-method-on-state-and-not-statefulwidget\">Why is the <a href=\"widgets\/NavigatorState\/build.html\">build<\/a> method on <a href=\"widgets\/State-class.html\">State<\/a>, and not <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>?<\/h3>\n<p>Putting a <code>Widget build(BuildContext context)<\/code> method on <a href=\"widgets\/State-class.html\">State<\/a> rather\nputting a <code>Widget build(BuildContext context, State state)<\/code> method on\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> gives developers more flexibility when subclassing\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>.<\/p>\n<p>For example, <a href=\"widgets\/AnimatedWidget-class.html\">AnimatedWidget<\/a> is a subclass of <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> that\nintroduces an abstract <code>Widget build(BuildContext context)<\/code> method for its\nsubclasses to implement. If <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> already had a <a href=\"widgets\/NavigatorState\/build.html\">build<\/a> method\nthat took a <a href=\"widgets\/State-class.html\">State<\/a> argument, <a href=\"widgets\/AnimatedWidget-class.html\">AnimatedWidget<\/a> would be forced to provide\nits <a href=\"widgets\/State-class.html\">State<\/a> object to subclasses even though its <a href=\"widgets\/State-class.html\">State<\/a> object is an\ninternal implementation detail of <a href=\"widgets\/AnimatedWidget-class.html\">AnimatedWidget<\/a>.<\/p>\n<p>Conceptually, <a href=\"widgets\/StatelessWidget-class.html\">StatelessWidget<\/a> could also be implemented as a subclass of\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> in a similar manner. If the <a href=\"widgets\/NavigatorState\/build.html\">build<\/a> method were on\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> rather than <a href=\"widgets\/State-class.html\">State<\/a>, that would not be possible anymore.<\/p>\n<p>Putting the <a href=\"widgets\/NavigatorState\/build.html\">build<\/a> function on <a href=\"widgets\/State-class.html\">State<\/a> rather than <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> also\nhelps avoid a category of bugs related to closures implicitly capturing\n<code>this<\/code>. If you defined a closure in a <a href=\"widgets\/NavigatorState\/build.html\">build<\/a> function on a\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>, that closure would implicitly capture <code>this<\/code>, which is\nthe current widget instance, and would have the (immutable) fields of that\ninstance in scope:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class MyButton extends StatefulWidget {\n  ...\n  final Color color;\n\n  @override\n  Widget build(BuildContext context, MyButtonState state) {\n    ... () { print(\"color: $color\"); } ...\n  }\n}\n<\/code><\/pre>\n<p>For example, suppose the parent builds <code>MyButton<\/code> with <code>color<\/code> being blue,\nthe <code>$color<\/code> in the print function refers to blue, as expected. Now,\nsuppose the parent rebuilds <code>MyButton<\/code> with green. The closure created by\nthe first build still implicitly refers to the original widget and the\n<code>$color<\/code> still prints blue even through the widget has been updated to\ngreen.<\/p>\n<p>In contrast, with the <a href=\"widgets\/NavigatorState\/build.html\">build<\/a> function on the <a href=\"widgets\/State-class.html\">State<\/a> object, closures\ncreated during <a href=\"widgets\/NavigatorState\/build.html\">build<\/a> implicitly capture the <a href=\"widgets\/State-class.html\">State<\/a> instance instead of\nthe widget instance:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class MyButtonState extends State&lt;MyButton&gt; {\n  ...\n  @override\n  Widget build(BuildContext context) {\n    ... () { print(\"color: ${widget.color}\"); } ...\n  }\n}\n<\/code><\/pre>\n<p>Now when the parent rebuilds <code>MyButton<\/code> with green, the closure created by\nthe first build still refers to <a href=\"widgets\/State-class.html\">State<\/a> object, which is preserved across\nrebuilds, but the framework has updated that <a href=\"widgets\/State-class.html\">State<\/a> object's <a href=\"widgets\/State\/widget.html\">widget<\/a>\nproperty to refer to the new <code>MyButton<\/code> instance and <code>${widget.color}<\/code>\nprints green, as expected.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>, which contains the discussion on performance considerations.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "widgets.BuildContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/build.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nWidget build(BuildContext context) {\n  assert(!_debugLocked);\n  assert(_history.isNotEmpty);\n  return Listener(\n    onPointerDown: _handlePointerDown,\n    onPointerUp: _handlePointerUpOrCancel,\n    onPointerCancel: _handlePointerUpOrCancel,\n    child: AbsorbPointer(\n      absorbing: false, \/\/ it's mutated directly by _cancelActivePointers above\n      child: FocusScope(\n        node: focusScopeNode,\n        autofocus: true,\n        child: Overlay(\n          key: _overlayKey,\n          initialEntries: _initialOverlayEntries,\n        ),\n      ),\n    ),\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "canPop",
+            "type": "dart:core.bool",
+            "desc": "<p>Whether the navigator can be popped.<\/p>\n<p>The initial route cannot be popped off the navigator, which implies that\nthis function returns true only if popping the navigator would not remove\nthe initial route.<\/p>\n<p>If there is no <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> in scope, returns false.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/Route\/isFirst.html\">Route.isFirst<\/a>, which returns true for routes for which <a href=\"widgets\/NavigatorState\/canPop.html\">canPop<\/a>\nreturns false.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/canPop.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool canPop() {\n  assert(_history.isNotEmpty);\n  return _history.length &gt; 1 || _history[0].willHandlePopInternally;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "didStartUserGesture",
+            "type": "",
+            "desc": "<p>The navigator is being controlled by a user gesture.<\/p>\n<p>For example, called when the user beings an iOS back gesture.<\/p>\n<p>When the gesture finishes, call <a href=\"widgets\/NavigatorState\/didStopUserGesture.html\">didStopUserGesture<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/didStartUserGesture.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void didStartUserGesture() {\n  _userGesturesInProgress += 1;\n  if (_userGesturesInProgress == 1) {\n    final Route&lt;dynamic&gt; route = _history.last;\n    final Route&lt;dynamic&gt; previousRoute = !route.willHandlePopInternally &amp;&amp; _history.length &gt; 1\n        ? _history[_history.length - 2]\n        : null;\n    \/\/ Don't operate the _history list since the gesture may be cancelled.\n    \/\/ In case of a back swipe, the gesture controller will call .pop() itself.\n\n    for (NavigatorObserver observer in widget.observers)\n      observer.didStartUserGesture(route, previousRoute);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "didStopUserGesture",
+            "type": "",
+            "desc": "<p>A user gesture completed.<\/p>\n<p>Notifies the navigator that a gesture regarding which the navigator was\npreviously notified with <a href=\"widgets\/NavigatorState\/didStartUserGesture.html\">didStartUserGesture<\/a> has completed.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/didStopUserGesture.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void didStopUserGesture() {\n  assert(_userGesturesInProgress &gt; 0);\n  _userGesturesInProgress -= 1;\n  if (_userGesturesInProgress == 0) {\n    for (NavigatorObserver observer in widget.observers)\n      observer.didStopUserGesture();\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "didUpdateWidget",
+            "type": "",
+            "desc": "<p>Called whenever the widget configuration changes.<\/p>\n<p>If the parent widget rebuilds and request that this location in the tree\nupdate to display a new widget with the same <a href=\"dart-core\/Object\/runtimeType.html\">runtimeType<\/a> and\n<a href=\"widgets\/Widget\/key.html\">Widget.key<\/a>, the framework will update the <a href=\"widgets\/State\/widget.html\">widget<\/a> property of this\n<a href=\"widgets\/State-class.html\">State<\/a> object to refer to the new widget and then call this method\nwith the previous widget as an argument.<\/p>\n<p>Override this method to respond when the <a href=\"widgets\/State\/widget.html\">widget<\/a> changes (e.g., to start\nimplicit animations).<\/p>\n<p>The framework always calls <a href=\"widgets\/NavigatorState\/build.html\">build<\/a> after calling <a href=\"widgets\/NavigatorState\/didUpdateWidget.html\">didUpdateWidget<\/a>, which\nmeans any calls to <a href=\"widgets\/State\/setState.html\">setState<\/a> in <a href=\"widgets\/NavigatorState\/didUpdateWidget.html\">didUpdateWidget<\/a> are redundant.<\/p>\n<p>If a <a href=\"widgets\/State-class.html\">State<\/a>'s <a href=\"widgets\/NavigatorState\/build.html\">build<\/a> method depends on an object that can itself\nchange state, for example a <a href=\"foundation\/ChangeNotifier-class.html\">ChangeNotifier<\/a> or <a href=\"dart-async\/Stream-class.html\">Stream<\/a>, or some\nother object to which one can subscribe to receive notifications, then\nbe sure to subscribe and unsubscribe properly in <a href=\"widgets\/NavigatorState\/initState.html\">initState<\/a>,\n<a href=\"widgets\/NavigatorState\/didUpdateWidget.html\">didUpdateWidget<\/a>, and <a href=\"widgets\/NavigatorState\/dispose.html\">dispose<\/a>:<\/p>\n<ul>\n<li>In <a href=\"widgets\/NavigatorState\/initState.html\">initState<\/a>, subscribe to the object.<\/li>\n<li>In <a href=\"widgets\/NavigatorState\/didUpdateWidget.html\">didUpdateWidget<\/a> unsubscribe from the old object and subscribe\nto the new one if the updated widget configuration requires\nreplacing the object.<\/li>\n<li>In <a href=\"widgets\/NavigatorState\/dispose.html\">dispose<\/a>, unsubscribe from the object.<\/li>\n<\/ul>\n<p>If you override this, make sure your method starts with a call to\nsuper.didUpdateWidget(oldWidget).<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "oldWidget",
+                    "type": "widgets.Navigator",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/didUpdateWidget.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid didUpdateWidget(Navigator oldWidget) {\n  super.didUpdateWidget(oldWidget);\n  if (oldWidget.observers != widget.observers) {\n    for (NavigatorObserver observer in oldWidget.observers)\n      observer._navigator = null;\n    for (NavigatorObserver observer in widget.observers) {\n      assert(observer.navigator == null);\n      observer._navigator = this;\n    }\n  }\n  for (Route&lt;dynamic&gt; route in _history)\n    route.changedExternalState();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "dispose",
+            "type": "",
+            "desc": "<p>Called when this object is removed from the tree permanently.<\/p>\n<p>The framework calls this method when this <a href=\"widgets\/State-class.html\">State<\/a> object will never\nbuild again. After the framework calls <a href=\"widgets\/NavigatorState\/dispose.html\">dispose<\/a>, the <a href=\"widgets\/State-class.html\">State<\/a> object is\nconsidered unmounted and the <a href=\"widgets\/State\/mounted.html\">mounted<\/a> property is false. It is an error\nto call <a href=\"widgets\/State\/setState.html\">setState<\/a> at this point. This stage of the lifecycle is terminal:\nthere is no way to remount a <a href=\"widgets\/State-class.html\">State<\/a> object that has been disposed.<\/p>\n<p>Subclasses should override this method to release any resources retained\nby this object (e.g., stop any active animations).<\/p>\n<p>If a <a href=\"widgets\/State-class.html\">State<\/a>'s <a href=\"widgets\/NavigatorState\/build.html\">build<\/a> method depends on an object that can itself\nchange state, for example a <a href=\"foundation\/ChangeNotifier-class.html\">ChangeNotifier<\/a> or <a href=\"dart-async\/Stream-class.html\">Stream<\/a>, or some\nother object to which one can subscribe to receive notifications, then\nbe sure to subscribe and unsubscribe properly in <a href=\"widgets\/NavigatorState\/initState.html\">initState<\/a>,\n<a href=\"widgets\/NavigatorState\/didUpdateWidget.html\">didUpdateWidget<\/a>, and <a href=\"widgets\/NavigatorState\/dispose.html\">dispose<\/a>:<\/p>\n<ul>\n<li>In <a href=\"widgets\/NavigatorState\/initState.html\">initState<\/a>, subscribe to the object.<\/li>\n<li>In <a href=\"widgets\/NavigatorState\/didUpdateWidget.html\">didUpdateWidget<\/a> unsubscribe from the old object and subscribe\nto the new one if the updated widget configuration requires\nreplacing the object.<\/li>\n<li>In <a href=\"widgets\/NavigatorState\/dispose.html\">dispose<\/a>, unsubscribe from the object.<\/li>\n<\/ul>\n<p>If you override this, make sure to end your method with a call to\nsuper.dispose().<\/p>\n<p>See also <a href=\"widgets\/State\/deactivate.html\">deactivate<\/a>, which is called prior to <a href=\"widgets\/NavigatorState\/dispose.html\">dispose<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/dispose.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  assert(!_debugLocked);\n  assert(() { _debugLocked = true; return true; }());\n  for (NavigatorObserver observer in widget.observers)\n    observer._navigator = null;\n  final List&lt;Route&lt;dynamic&gt;&gt; doomed = _poppedRoutes.toList()..addAll(_history);\n  for (Route&lt;dynamic&gt; route in doomed)\n    route.dispose();\n  _poppedRoutes.clear();\n  _history.clear();\n  focusScopeNode.detach();\n  super.dispose();\n  assert(() { _debugLocked = false; return true; }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "finalizeRoute",
+            "type": "",
+            "desc": "<p>Complete the lifecycle for a route that has been popped off the navigator.<\/p>\n<p>When the navigator pops a route, the navigator retains a reference to the\nroute in order to call <a href=\"widgets\/NavigatorState\/dispose.html\">Route.dispose<\/a> if the navigator itself is removed\nfrom the tree. When the route is finished with any exit animation, the\nroute should call this function to complete its lifecycle (e.g., to\nreceive a call to <a href=\"widgets\/NavigatorState\/dispose.html\">Route.dispose<\/a>).<\/p>\n<p>The given <code>route<\/code> must have already received a call to <a href=\"widgets\/Route\/didPop.html\">Route.didPop<\/a>.\nThis function may be called directly from <a href=\"widgets\/Route\/didPop.html\">Route.didPop<\/a> if <a href=\"widgets\/Route\/didPop.html\">Route.didPop<\/a>\nwill return true.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "route",
+                    "type": "widgets.Route",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/finalizeRoute.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void finalizeRoute(Route&lt;dynamic&gt; route) {\n  _poppedRoutes.remove(route);\n  route.dispose();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "initState",
+            "type": "",
+            "desc": "<p>Called when this object is inserted into the tree.<\/p>\n<p>The framework will call this method exactly once for each <a href=\"widgets\/State-class.html\">State<\/a> object\nit creates.<\/p>\n<p>Override this method to perform initialization that depends on the\nlocation at which this object was inserted into the tree (i.e., <a href=\"widgets\/State\/context.html\">context<\/a>)\nor on the widget used to configure this object (i.e., <a href=\"widgets\/State\/widget.html\">widget<\/a>).<\/p>\n<p>If a <a href=\"widgets\/State-class.html\">State<\/a>'s <a href=\"widgets\/NavigatorState\/build.html\">build<\/a> method depends on an object that can itself\nchange state, for example a <a href=\"foundation\/ChangeNotifier-class.html\">ChangeNotifier<\/a> or <a href=\"dart-async\/Stream-class.html\">Stream<\/a>, or some\nother object to which one can subscribe to receive notifications, then\nbe sure to subscribe and unsubscribe properly in <a href=\"widgets\/NavigatorState\/initState.html\">initState<\/a>,\n<a href=\"widgets\/NavigatorState\/didUpdateWidget.html\">didUpdateWidget<\/a>, and <a href=\"widgets\/NavigatorState\/dispose.html\">dispose<\/a>:<\/p>\n<ul>\n<li>In <a href=\"widgets\/NavigatorState\/initState.html\">initState<\/a>, subscribe to the object.<\/li>\n<li>In <a href=\"widgets\/NavigatorState\/didUpdateWidget.html\">didUpdateWidget<\/a> unsubscribe from the old object and subscribe\nto the new one if the updated widget configuration requires\nreplacing the object.<\/li>\n<li>In <a href=\"widgets\/NavigatorState\/dispose.html\">dispose<\/a>, unsubscribe from the object.\nYou cannot use <a href=\"widgets\/BuildContext\/inheritFromWidgetOfExactType.html\">BuildContext.inheritFromWidgetOfExactType<\/a> from this\nmethod. However, <a href=\"widgets\/TickerProviderStateMixin\/didChangeDependencies.html\">didChangeDependencies<\/a> will be called immediately\nfollowing this method, and <a href=\"widgets\/BuildContext\/inheritFromWidgetOfExactType.html\">BuildContext.inheritFromWidgetOfExactType<\/a> can\nbe used there.<\/li>\n<\/ul>\n<p>If you override this, make sure your method starts with a call to\nsuper.initState().<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/initState.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid initState() {\n  super.initState();\n  for (NavigatorObserver observer in widget.observers) {\n    assert(observer.navigator == null);\n    observer._navigator = this;\n  }\n  String initialRouteName = widget.initialRoute ?? Navigator.defaultRouteName;\n  if (initialRouteName.startsWith('\/') &amp;&amp; initialRouteName.length &gt; 1) {\n    initialRouteName = initialRouteName.substring(1); \/\/ strip leading '\/'\n    assert(Navigator.defaultRouteName == '\/');\n    final List&lt;String&gt; plannedInitialRouteNames = &lt;String&gt;[\n      Navigator.defaultRouteName,\n    ];\n    final List&lt;Route&lt;dynamic&gt;&gt; plannedInitialRoutes = &lt;Route&lt;dynamic&gt;&gt;[\n      _routeNamed&lt;dynamic&gt;(Navigator.defaultRouteName, allowNull: true, arguments: null),\n    ];\n    final List&lt;String&gt; routeParts = initialRouteName.split('\/');\n    if (initialRouteName.isNotEmpty) {\n      String routeName = '';\n      for (String part in routeParts) {\n        routeName += '\/$part';\n        plannedInitialRouteNames.add(routeName);\n        plannedInitialRoutes.add(_routeNamed&lt;dynamic&gt;(routeName, allowNull: true, arguments: null));\n      }\n    }\n    if (plannedInitialRoutes.contains(null)) {\n      assert(() {\n        FlutterError.reportError(\n          FlutterErrorDetails(\n            exception:\n              'Could not navigate to initial route.\\n'\n              'The requested route name was: \"\/$initialRouteName\"\\n'\n              'The following routes were therefore attempted:\\n'\n              ' * ${plannedInitialRouteNames.join(\"\\n * \")}\\n'\n              'This resulted in the following objects:\\n'\n              ' * ${plannedInitialRoutes.join(\"\\n * \")}\\n'\n              'One or more of those objects was null, and therefore the initial route specified will be '\n              'ignored and \"${Navigator.defaultRouteName}\" will be used instead.'\n          ),\n        );\n        return true;\n      }());\n      push(_routeNamed&lt;Object&gt;(Navigator.defaultRouteName, arguments: null));\n    } else {\n      plannedInitialRoutes.forEach(push);\n    }\n  } else {\n    Route&lt;Object&gt; route;\n    if (initialRouteName != Navigator.defaultRouteName)\n      route = _routeNamed&lt;Object&gt;(initialRouteName, allowNull: true, arguments: null);\n    route ??= _routeNamed&lt;Object&gt;(Navigator.defaultRouteName, arguments: null);\n    push(route);\n  }\n  for (Route&lt;dynamic&gt; route in _history)\n    _initialOverlayEntries.addAll(route.overlayEntries);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "maybePop",
+            "type": "dart:async.Future<dart:core.bool>",
+            "desc": "<p>Returns the value of the current route's <a href=\"widgets\/Route\/willPop.html\">Route.willPop<\/a> method for the\nnavigator.<\/p>\n<p>This method is typically called before a user-initiated <a href=\"widgets\/NavigatorState\/pop.html\">pop<\/a>. For example\non Android it's called by the binding for the system's back button.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the current\nroute.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/Form-class.html\">Form<\/a>, which provides an <code>onWillPop<\/code> callback that enables the form\nto veto a <a href=\"widgets\/NavigatorState\/pop.html\">pop<\/a> initiated by the app's back button.<\/li>\n<li>\n<a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a>, which provides a <code>scopedWillPopCallback<\/code> that can be used\nto define the route's <code>willPop<\/code> method.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "result",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/maybePop.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nFuture&lt;bool&gt; maybePop&lt;T extends Object&gt;([ T result ]) async {\n  final Route&lt;T&gt; route = _history.last;\n  assert(route._navigator == this);\n  final RoutePopDisposition disposition = await route.willPop();\n  if (disposition != RoutePopDisposition.bubble &amp;&amp; mounted) {\n    if (disposition == RoutePopDisposition.pop)\n      pop(result);\n    return true;\n  }\n  return false;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.bool"
+            ]
+        },
+        {
+            "name": "pop",
+            "type": "dart:core.bool",
+            "desc": "<p>Pop the top-most route off the navigator.<\/p>\n<p>The current route's <a href=\"widgets\/Route\/didPop.html\">Route.didPop<\/a> method is called first. If that method\nreturns false, then this method returns true but nothing else is changed\n(the route is expected to have popped some internal state; see e.g.\n<a href=\"widgets\/LocalHistoryRoute-mixin.html\">LocalHistoryRoute<\/a>). Otherwise, the rest of this description applies.<\/p>\n<p>If non-null, <code>result<\/code> will be used as the result of the route that is\npopped; the future that had been returned from pushing the popped route\nwill complete with <code>result<\/code>. Routes such as dialogs or popup menus\ntypically use this mechanism to return the value selected by the user to\nthe widget that created their route. The type of <code>result<\/code>, if provided,\nmust match the type argument of the class of the popped route (<code>T<\/code>).<\/p>\n<p>The popped route and the route below it are notified (see <a href=\"widgets\/Route\/didPop.html\">Route.didPop<\/a>,\n<a href=\"widgets\/Route\/didComplete.html\">Route.didComplete<\/a>, and <a href=\"widgets\/Route\/didPopNext.html\">Route.didPopNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didPop.html\">NavigatorObserver.didPop<\/a>).<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the popped route.<\/p>\n<p>Returns true if a route was popped (including if <a href=\"widgets\/Route\/didPop.html\">Route.didPop<\/a> returned\nfalse); returns false if there are no further previous routes.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage for closing a route is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _handleClose() {\n  navigator.pop();\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nA dialog box might be closed with a result:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _handleAccept() {\n  navigator.pop(true); \/\/ dialog returns true\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "result",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/pop.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nbool pop&lt;T extends Object&gt;([ T result ]) {\n  assert(!_debugLocked);\n  assert(() { _debugLocked = true; return true; }());\n  final Route&lt;dynamic&gt; route = _history.last;\n  assert(route._navigator == this);\n  bool debugPredictedWouldPop;\n  assert(() { debugPredictedWouldPop = !route.willHandlePopInternally; return true; }());\n  if (route.didPop(result ?? route.currentResult)) {\n    assert(debugPredictedWouldPop);\n    if (_history.length &gt; 1) {\n      _history.removeLast();\n      \/\/ If route._navigator is null, the route called finalizeRoute from\n      \/\/ didPop, which means the route has already been disposed and doesn't\n      \/\/ need to be added to _poppedRoutes for later disposal.\n      if (route._navigator != null)\n        _poppedRoutes.add(route);\n      _history.last.didPopNext(route);\n      for (NavigatorObserver observer in widget.observers)\n        observer.didPop(route, _history.last);\n    } else {\n      assert(() { _debugLocked = false; return true; }());\n      return false;\n    }\n  } else {\n    assert(!debugPredictedWouldPop);\n  }\n  assert(() { _debugLocked = false; return true; }());\n  _afterNavigation();\n  return true;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "popAndPushNamed",
+            "type": "dart:async.Future",
+            "desc": "<p>Pop the current route off the navigator and push a named route in its\nplace.<\/p>\n<p>If non-null, <code>result<\/code> will be used as the result of the route that is\npopped; the future that had been returned from pushing the popped route\nwill complete with <code>result<\/code>. Routes such as dialogs or popup menus\ntypically use this mechanism to return the value selected by the user to\nthe widget that created their route. The type of <code>result<\/code>, if provided,\nmust match the type argument of the class of the popped route (<code>TO<\/code>).<\/p>\n<p>The route name will be passed to the navigator's <code>onGenerateRoute<\/code>\ncallback. The returned route will be pushed into the navigator.<\/p>\n<p>The new route, the old route, and the route below the old route (if any)\nare all notified (see <a href=\"widgets\/Route\/didPop.html\">Route.didPop<\/a>, <a href=\"widgets\/Route\/didComplete.html\">Route.didComplete<\/a>,\n<a href=\"widgets\/Route\/didPopNext.html\">Route.didPopNext<\/a>, <a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a>, and <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any <a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well\n(see <a href=\"widgets\/NavigatorObserver\/didPop.html\">NavigatorObserver.didPop<\/a> and <code>NavigatorObservers.didPush<\/code>). The\nanimations for the pop and the push are performed simultaneously, so the\nroute below may be briefly visible even if both the old route and the new\nroute are opaque (see <a href=\"widgets\/TransitionRoute\/opaque.html\">TransitionRoute.opaque<\/a>).<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/NavigatorState\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route,\nand <code>TO<\/code> is the return value type of the old route.<\/p>\n<p>The provided <code>arguments<\/code> are passed to the pushed route via\n<a href=\"widgets\/RouteSettings\/arguments.html\">RouteSettings.arguments<\/a>. Any object can be passed as <code>arguments<\/code> (e.g. a\n<a href=\"dart-core\/String-class.html\">String<\/a>, <a href=\"dart-core\/int-class.html\">int<\/a>, or an instance of a custom <code>MyRouteArguments<\/code> class).\nOften, a <a href=\"dart-core\/Map-class.html\">Map<\/a> is used to pass key-value pairs.<\/p>\n<p>The <code>arguments<\/code> may be used in <a href=\"widgets\/Navigator\/onGenerateRoute.html\">Navigator.onGenerateRoute<\/a> or\n<a href=\"widgets\/Navigator\/onUnknownRoute.html\">Navigator.onUnknownRoute<\/a> to construct the route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _begin() {\n  navigator.popAndPushNamed('\/nyc\/1776');\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "routeName",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "result",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "arguments",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/popAndPushNamed.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nFuture&lt;T&gt; popAndPushNamed&lt;T extends Object, TO extends Object&gt;(\n  String routeName, {\n  TO result,\n  Object arguments,\n}) {\n  pop&lt;TO&gt;(result);\n  return pushNamed&lt;T&gt;(routeName, arguments: arguments);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "popUntil",
+            "type": "",
+            "desc": "<p>Calls <a href=\"widgets\/NavigatorState\/pop.html\">pop<\/a> repeatedly until the predicate returns true.<\/p>\n<p>The predicate may be applied to the same route more than once if\n<a href=\"widgets\/Route\/willHandlePopInternally.html\">Route.willHandlePopInternally<\/a> is true.<\/p>\n<p>To pop until a route with a certain name, use the <a href=\"widgets\/RoutePredicate.html\">RoutePredicate<\/a>\nreturned from <a href=\"widgets\/ModalRoute\/withName.html\">ModalRoute.withName<\/a>.<\/p>\n<p>The routes are closed with null as their <code>return<\/code> value.<\/p>\n<p>See <a href=\"widgets\/NavigatorState\/pop.html\">pop<\/a> for more details of the semantics of popping a route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _doLogout() {\n  navigator.popUntil(ModalRoute.withName('\/login'));\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "predicate",
+                    "type": "widgets.RoutePredicate",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/popUntil.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void popUntil(RoutePredicate predicate) {\n  while (!predicate(_history.last))\n    pop();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "push",
+            "type": "dart:async.Future",
+            "desc": "<p>Push the given route onto the navigator.<\/p>\n<p>The new route and the previous route (if any) are notified (see\n<a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a> and <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didPush.html\">NavigatorObserver.didPush<\/a>).<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/NavigatorState\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _openPage() {\n  navigator.push(MaterialPageRoute(builder: (BuildContext context) =&gt; MyPage()));\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "route",
+                    "type": "widgets.Route",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/push.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nFuture&lt;T&gt; push&lt;T extends Object&gt;(Route&lt;T&gt; route) {\n  assert(!_debugLocked);\n  assert(() { _debugLocked = true; return true; }());\n  assert(route != null);\n  assert(route._navigator == null);\n  final Route&lt;dynamic&gt; oldRoute = _history.isNotEmpty ? _history.last : null;\n  route._navigator = this;\n  route.install(_currentOverlayEntry);\n  _history.add(route);\n  route.didPush();\n  route.didChangeNext(null);\n  if (oldRoute != null) {\n    oldRoute.didChangeNext(route);\n    route.didChangePrevious(oldRoute);\n  }\n  for (NavigatorObserver observer in widget.observers)\n    observer.didPush(route, oldRoute);\n  assert(() { _debugLocked = false; return true; }());\n  _afterNavigation();\n  return route.popped;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "pushAndRemoveUntil",
+            "type": "dart:async.Future",
+            "desc": "<p>Push the given route onto the navigator, and then remove all the previous\nroutes until the <code>predicate<\/code> returns true.<\/p>\n<p>The predicate may be applied to the same route more than once if\n<a href=\"widgets\/Route\/willHandlePopInternally.html\">Route.willHandlePopInternally<\/a> is true.<\/p>\n<p>To remove routes until a route with a certain name, use the\n<a href=\"widgets\/RoutePredicate.html\">RoutePredicate<\/a> returned from <a href=\"widgets\/ModalRoute\/withName.html\">ModalRoute.withName<\/a>.<\/p>\n<p>To remove all the routes below the pushed route, use a <a href=\"widgets\/RoutePredicate.html\">RoutePredicate<\/a>\nthat always returns false (e.g. <code>(Route&lt;dynamic&gt; route) =&gt; false<\/code>).<\/p>\n<p>The removed routes are removed without being completed, so this method\ndoes not take a return value argument.<\/p>\n<p>The new route and the route below the bottommost removed route (which\nbecomes the route below the new route) are notified (see <a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a>\nand <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<code>NavigatorObservers.didPush<\/code> and <code>NavigatorObservers.didRemove<\/code>). The\nremoved routes are disposed, without being notified, once the new route\nhas finished animating. The futures that had been returned from pushing\nthose routes will not complete.<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/NavigatorState\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _resetAndOpenPage() {\n  navigator.pushAndRemoveUntil(\n    MaterialPageRoute(builder: (BuildContext context) =&gt; MyHomePage()),\n    ModalRoute.withName('\/'),\n  );\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "newRoute",
+                    "type": "widgets.Route",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "predicate",
+                    "type": "widgets.RoutePredicate",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/pushAndRemoveUntil.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nFuture&lt;T&gt; pushAndRemoveUntil&lt;T extends Object&gt;(Route&lt;T&gt; newRoute, RoutePredicate predicate) {\n  assert(!_debugLocked);\n  assert(() { _debugLocked = true; return true; }());\n  final List&lt;Route&lt;dynamic&gt;&gt; removedRoutes = &lt;Route&lt;dynamic&gt;&gt;[];\n  while (_history.isNotEmpty &amp;&amp; !predicate(_history.last)) {\n    final Route&lt;dynamic&gt; removedRoute = _history.removeLast();\n    assert(removedRoute != null &amp;&amp; removedRoute._navigator == this);\n    assert(removedRoute.overlayEntries.isNotEmpty);\n    removedRoutes.add(removedRoute);\n  }\n  assert(newRoute._navigator == null);\n  assert(newRoute.overlayEntries.isEmpty);\n  final Route&lt;dynamic&gt; oldRoute = _history.isNotEmpty ? _history.last : null;\n  newRoute._navigator = this;\n  newRoute.install(_currentOverlayEntry);\n  _history.add(newRoute);\n  newRoute.didPush().whenCompleteOrCancel(() {\n    if (mounted) {\n      for (Route&lt;dynamic&gt; route in removedRoutes)\n        route.dispose();\n    }\n  });\n  newRoute.didChangeNext(null);\n  if (oldRoute != null)\n    oldRoute.didChangeNext(newRoute);\n  for (NavigatorObserver observer in widget.observers) {\n    observer.didPush(newRoute, oldRoute);\n    for (Route&lt;dynamic&gt; removedRoute in removedRoutes)\n      observer.didRemove(removedRoute, oldRoute);\n  }\n  assert(() { _debugLocked = false; return true; }());\n  _afterNavigation();\n  return newRoute.popped;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "pushNamed",
+            "type": "dart:async.Future",
+            "desc": "<p>Push a named route onto the navigator.<\/p>\n<p>The route name will be passed to that navigator's <code>onGenerateRoute<\/code>\ncallback. The returned route will be pushed into the navigator.<\/p>\n<p>The new route and the previous route (if any) are notified (see\n<a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a> and <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didPush.html\">NavigatorObserver.didPush<\/a>).<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/NavigatorState\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the route.<\/p>\n<p>The provided <code>arguments<\/code> are passed to the pushed route via\n<a href=\"widgets\/RouteSettings\/arguments.html\">RouteSettings.arguments<\/a>. Any object can be passed as <code>arguments<\/code> (e.g. a\n<a href=\"dart-core\/String-class.html\">String<\/a>, <a href=\"dart-core\/int-class.html\">int<\/a>, or an instance of a custom <code>MyRouteArguments<\/code> class).\nOften, a <a href=\"dart-core\/Map-class.html\">Map<\/a> is used to pass key-value pairs.<\/p>\n<p>The <code>arguments<\/code> may be used in <a href=\"widgets\/Navigator\/onGenerateRoute.html\">Navigator.onGenerateRoute<\/a> or\n<a href=\"widgets\/Navigator\/onUnknownRoute.html\">Navigator.onUnknownRoute<\/a> to construct the route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _aaronBurrSir() {\n  navigator.pushNamed('\/nyc\/1776');\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "routeName",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "arguments",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/pushNamed.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nFuture&lt;T&gt; pushNamed&lt;T extends Object&gt;(\n  String routeName, {\n  Object arguments,\n}) {\n  return push&lt;T&gt;(_routeNamed&lt;T&gt;(routeName, arguments: arguments));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "pushNamedAndRemoveUntil",
+            "type": "dart:async.Future",
+            "desc": "<p>Push the route with the given name onto the navigator, and then remove all\nthe previous routes until the <code>predicate<\/code> returns true.<\/p>\n<p>The predicate may be applied to the same route more than once if\n<a href=\"widgets\/Route\/willHandlePopInternally.html\">Route.willHandlePopInternally<\/a> is true.<\/p>\n<p>To remove routes until a route with a certain name, use the\n<a href=\"widgets\/RoutePredicate.html\">RoutePredicate<\/a> returned from <a href=\"widgets\/ModalRoute\/withName.html\">ModalRoute.withName<\/a>.<\/p>\n<p>To remove all the routes below the pushed route, use a <a href=\"widgets\/RoutePredicate.html\">RoutePredicate<\/a>\nthat always returns false (e.g. <code>(Route&lt;dynamic&gt; route) =&gt; false<\/code>).<\/p>\n<p>The removed routes are removed without being completed, so this method\ndoes not take a return value argument.<\/p>\n<p>The new route's name (<code>routeName<\/code>) will be passed to the navigator's\n<code>onGenerateRoute<\/code> callback. The returned route will be pushed into the\nnavigator.<\/p>\n<p>The new route and the route below the bottommost removed route (which\nbecomes the route below the new route) are notified (see <a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a>\nand <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<code>NavigatorObservers.didPush<\/code> and <code>NavigatorObservers.didRemove<\/code>). The\nremoved routes are disposed, without being notified, once the new route\nhas finished animating. The futures that had been returned from pushing\nthose routes will not complete.<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/NavigatorState\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route.<\/p>\n<p>The provided <code>arguments<\/code> are passed to the pushed route via\n<a href=\"widgets\/RouteSettings\/arguments.html\">RouteSettings.arguments<\/a>. Any object can be passed as <code>arguments<\/code> (e.g. a\n<a href=\"dart-core\/String-class.html\">String<\/a>, <a href=\"dart-core\/int-class.html\">int<\/a>, or an instance of a custom <code>MyRouteArguments<\/code> class).\nOften, a <a href=\"dart-core\/Map-class.html\">Map<\/a> is used to pass key-value pairs.<\/p>\n<p>The <code>arguments<\/code> may be used in <a href=\"widgets\/Navigator\/onGenerateRoute.html\">Navigator.onGenerateRoute<\/a> or\n<a href=\"widgets\/Navigator\/onUnknownRoute.html\">Navigator.onUnknownRoute<\/a> to construct the route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _handleOpenCalendar() {\n  navigator.pushNamedAndRemoveUntil('\/calendar', ModalRoute.withName('\/'));\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "newRouteName",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "predicate",
+                    "type": "widgets.RoutePredicate",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "arguments",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/pushNamedAndRemoveUntil.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nFuture&lt;T&gt; pushNamedAndRemoveUntil&lt;T extends Object&gt;(\n  String newRouteName,\n  RoutePredicate predicate, {\n  Object arguments,\n}) {\n  return pushAndRemoveUntil&lt;T&gt;(_routeNamed&lt;T&gt;(newRouteName, arguments: arguments), predicate);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "pushReplacement",
+            "type": "dart:async.Future",
+            "desc": "<p>Replace the current route of the navigator by pushing the given route and\nthen disposing the previous route once the new route has finished\nanimating in.<\/p>\n<p>If non-null, <code>result<\/code> will be used as the result of the route that is\nremoved; the future that had been returned from pushing that old route will\ncomplete with <code>result<\/code>. Routes such as dialogs or popup menus typically\nuse this mechanism to return the value selected by the user to the widget\nthat created their route. The type of <code>result<\/code>, if provided, must match\nthe type argument of the class of the old route (<code>TO<\/code>).<\/p>\n<p>The new route and the route below the removed route are notified (see\n<a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a> and <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didReplace.html\">NavigatorObserver.didReplace<\/a>). The removed route is notified once the\nnew route has finished animating (see <a href=\"widgets\/Route\/didComplete.html\">Route.didComplete<\/a>).<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/NavigatorState\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route,\nand <code>TO<\/code> is the type of the return value of the old route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _doOpenPage() {\n  navigator.pushReplacement(\n      MaterialPageRoute(builder: (BuildContext context) =&gt; MyHomePage()));\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "newRoute",
+                    "type": "widgets.Route",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "result",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/pushReplacement.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nFuture&lt;T&gt; pushReplacement&lt;T extends Object, TO extends Object&gt;(Route&lt;T&gt; newRoute, { TO result }) {\n  assert(!_debugLocked);\n  assert(() { _debugLocked = true; return true; }());\n  final Route&lt;dynamic&gt; oldRoute = _history.last;\n  assert(oldRoute != null &amp;&amp; oldRoute._navigator == this);\n  assert(oldRoute.overlayEntries.isNotEmpty);\n  assert(newRoute._navigator == null);\n  assert(newRoute.overlayEntries.isEmpty);\n  final int index = _history.length - 1;\n  assert(index &gt;= 0);\n  assert(_history.indexOf(oldRoute) == index);\n  newRoute._navigator = this;\n  newRoute.install(_currentOverlayEntry);\n  _history[index] = newRoute;\n  newRoute.didPush().whenCompleteOrCancel(() {\n    \/\/ The old route's exit is not animated. We're assuming that the\n    \/\/ new route completely obscures the old one.\n    if (mounted) {\n      oldRoute\n        ..didComplete(result ?? oldRoute.currentResult)\n        ..dispose();\n    }\n  });\n  newRoute.didChangeNext(null);\n  if (index &gt; 0) {\n    _history[index - 1].didChangeNext(newRoute);\n    newRoute.didChangePrevious(_history[index - 1]);\n  }\n  for (NavigatorObserver observer in widget.observers)\n    observer.didReplace(newRoute: newRoute, oldRoute: oldRoute);\n  assert(() { _debugLocked = false; return true; }());\n  _afterNavigation();\n  return newRoute.popped;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "pushReplacementNamed",
+            "type": "dart:async.Future",
+            "desc": "<p>Replace the current route of the navigator by pushing the route named\n<code>routeName<\/code> and then disposing the previous route once the new route has\nfinished animating in.<\/p>\n<p>If non-null, <code>result<\/code> will be used as the result of the route that is\nremoved; the future that had been returned from pushing that old route\nwill complete with <code>result<\/code>. Routes such as dialogs or popup menus\ntypically use this mechanism to return the value selected by the user to\nthe widget that created their route. The type of <code>result<\/code>, if provided,\nmust match the type argument of the class of the old route (<code>TO<\/code>).<\/p>\n<p>The route name will be passed to the navigator's <code>onGenerateRoute<\/code>\ncallback. The returned route will be pushed into the navigator.<\/p>\n<p>The new route and the route below the removed route are notified (see\n<a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a> and <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didReplace.html\">NavigatorObserver.didReplace<\/a>). The removed route is notified once the\nnew route has finished animating (see <a href=\"widgets\/Route\/didComplete.html\">Route.didComplete<\/a>). The removed\nroute's exit animation is not run (see <a href=\"widgets\/NavigatorState\/popAndPushNamed.html\">popAndPushNamed<\/a> for a variant\nthat does animated the removed route).<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/NavigatorState\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route,\nand <code>TO<\/code> is the type of the return value of the old route.<\/p>\n<p>The provided <code>arguments<\/code> are passed to the pushed route via\n<a href=\"widgets\/RouteSettings\/arguments.html\">RouteSettings.arguments<\/a>. Any object can be passed as <code>arguments<\/code> (e.g. a\n<a href=\"dart-core\/String-class.html\">String<\/a>, <a href=\"dart-core\/int-class.html\">int<\/a>, or an instance of a custom <code>MyRouteArguments<\/code> class).\nOften, a <a href=\"dart-core\/Map-class.html\">Map<\/a> is used to pass key-value pairs.<\/p>\n<p>The <code>arguments<\/code> may be used in <a href=\"widgets\/Navigator\/onGenerateRoute.html\">Navigator.onGenerateRoute<\/a> or\n<a href=\"widgets\/Navigator\/onUnknownRoute.html\">Navigator.onUnknownRoute<\/a> to construct the route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _startBike() {\n  navigator.pushReplacementNamed('\/jouett\/1781');\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "routeName",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "result",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "arguments",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/pushReplacementNamed.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nFuture&lt;T&gt; pushReplacementNamed&lt;T extends Object, TO extends Object&gt;(\n  String routeName, {\n  TO result,\n  Object arguments,\n}) {\n  return pushReplacement&lt;T, TO&gt;(_routeNamed&lt;T&gt;(routeName, arguments: arguments), result: result);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "removeRoute",
+            "type": "",
+            "desc": "<p>Immediately remove <code>route<\/code> from the navigator, and <a href=\"widgets\/NavigatorState\/dispose.html\">Route.dispose<\/a> it.<\/p>\n<p>The removed route is removed without being completed, so this method does\nnot take a return value argument. No animations are run as a result of\nthis method call.<\/p>\n<p>The routes below and above the removed route are notified (see\n<a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a> and <a href=\"widgets\/Route\/didChangePrevious.html\">Route.didChangePrevious<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>\nhas any <a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didRemove.html\">NavigatorObserver.didRemove<\/a>). The removed route is disposed without\nbeing notified. The future that had been returned from pushing that routes\nwill not complete.<\/p>\n<p>The given <code>route<\/code> must be in the history; this method will throw an\nexception if it is not.<\/p>\n<p>Ongoing gestures within the current route are canceled.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "route",
+                    "type": "widgets.Route",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/removeRoute.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeRoute(Route&lt;dynamic&gt; route) {\n  assert(route != null);\n  assert(!_debugLocked);\n  assert(() { _debugLocked = true; return true; }());\n  assert(route._navigator == this);\n  final int index = _history.indexOf(route);\n  assert(index != -1);\n  final Route&lt;dynamic&gt; previousRoute = index &gt; 0 ? _history[index - 1] : null;\n  final Route&lt;dynamic&gt; nextRoute = (index + 1 &lt; _history.length) ? _history[index + 1] : null;\n  _history.removeAt(index);\n  previousRoute?.didChangeNext(nextRoute);\n  nextRoute?.didChangePrevious(previousRoute);\n  for (NavigatorObserver observer in widget.observers)\n    observer.didRemove(route, previousRoute);\n  route.dispose();\n  assert(() { _debugLocked = false; return true; }());\n  _afterNavigation();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "removeRouteBelow",
+            "type": "",
+            "desc": "<p>Immediately remove a route from the navigator, and <a href=\"widgets\/NavigatorState\/dispose.html\">Route.dispose<\/a> it. The\nroute to be replaced is the one below the given <code>anchorRoute<\/code>.<\/p>\n<p>The removed route is removed without being completed, so this method does\nnot take a return value argument. No animations are run as a result of\nthis method call.<\/p>\n<p>The routes below and above the removed route are notified (see\n<a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a> and <a href=\"widgets\/Route\/didChangePrevious.html\">Route.didChangePrevious<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>\nhas any <a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didRemove.html\">NavigatorObserver.didRemove<\/a>). The removed route is disposed without\nbeing notified. The future that had been returned from pushing that routes\nwill not complete.<\/p>\n<p>The given <code>anchorRoute<\/code> must be in the history and must have a route below\nit; this method will throw an exception if it is not or does not.<\/p>\n<p>Ongoing gestures within the current route are canceled.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "anchorRoute",
+                    "type": "widgets.Route",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/removeRouteBelow.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeRouteBelow(Route&lt;dynamic&gt; anchorRoute) {\n  assert(!_debugLocked);\n  assert(() { _debugLocked = true; return true; }());\n  assert(anchorRoute._navigator == this);\n  final int index = _history.indexOf(anchorRoute) - 1;\n  assert(index &gt;= 0);\n  final Route&lt;dynamic&gt; targetRoute = _history[index];\n  assert(targetRoute._navigator == this);\n  assert(targetRoute.overlayEntries.isEmpty || !overlay.debugIsVisible(targetRoute.overlayEntries.last));\n  _history.removeAt(index);\n  final Route&lt;dynamic&gt; nextRoute = index &lt; _history.length ? _history[index] : null;\n  final Route&lt;dynamic&gt; previousRoute = index &gt; 0 ? _history[index - 1] : null;\n  if (previousRoute != null)\n    previousRoute.didChangeNext(nextRoute);\n  if (nextRoute != null)\n    nextRoute.didChangePrevious(previousRoute);\n  targetRoute.dispose();\n  assert(() { _debugLocked = false; return true; }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "replace",
+            "type": "",
+            "desc": "<p>Replaces a route on the navigator with a new route.<\/p>\n<p>The old route must not be current visible, as this method skips the\nanimations and therefore the removal would be jarring if it was visible.\nTo replace the top-most route, consider <a href=\"widgets\/NavigatorState\/pushReplacement.html\">pushReplacement<\/a> instead, which\n<em>does<\/em> animate the new route, and delays removing the old route until the\nnew route has finished animating.<\/p>\n<p>The removed route is removed without being completed, so this method does\nnot take a return value argument.<\/p>\n<p>The new route, the route below the new route (if any), and the route above\nthe new route, are all notified (see <a href=\"widgets\/Route\/didReplace.html\">Route.didReplace<\/a>,\n<a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>, and <a href=\"widgets\/Route\/didChangePrevious.html\">Route.didChangePrevious<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>\nhas any <a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<code>NavigatorObservers.didReplace<\/code>). The removed route is disposed without\nbeing notified. The future that had been returned from pushing that routes\nwill not complete.<\/p>\n<p>This can be useful in combination with <a href=\"widgets\/NavigatorState\/removeRouteBelow.html\">removeRouteBelow<\/a> when building a\nnon-linear user experience.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/NavigatorState\/replaceRouteBelow.html\">replaceRouteBelow<\/a>, which is the same but identifies the route to be\nremoved by reference to the route above it, rather than directly.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "oldRoute",
+                    "type": "widgets.Route",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "newRoute",
+                    "type": "widgets.Route",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/replace.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nvoid replace&lt;T extends Object&gt;({ @required Route&lt;dynamic&gt; oldRoute, @required Route&lt;T&gt; newRoute }) {\n  assert(!_debugLocked);\n  assert(oldRoute != null);\n  assert(newRoute != null);\n  if (oldRoute == newRoute)\n    return;\n  assert(() { _debugLocked = true; return true; }());\n  assert(oldRoute._navigator == this);\n  assert(newRoute._navigator == null);\n  assert(oldRoute.overlayEntries.isNotEmpty);\n  assert(newRoute.overlayEntries.isEmpty);\n  assert(!overlay.debugIsVisible(oldRoute.overlayEntries.last));\n  final int index = _history.indexOf(oldRoute);\n  assert(index &gt;= 0);\n  newRoute._navigator = this;\n  newRoute.install(oldRoute.overlayEntries.last);\n  _history[index] = newRoute;\n  newRoute.didReplace(oldRoute);\n  if (index + 1 &lt; _history.length) {\n    newRoute.didChangeNext(_history[index + 1]);\n    _history[index + 1].didChangePrevious(newRoute);\n  } else {\n    newRoute.didChangeNext(null);\n  }\n  if (index &gt; 0) {\n    _history[index - 1].didChangeNext(newRoute);\n    newRoute.didChangePrevious(_history[index - 1]);\n  }\n  for (NavigatorObserver observer in widget.observers)\n    observer.didReplace(newRoute: newRoute, oldRoute: oldRoute);\n  oldRoute.dispose();\n  assert(() { _debugLocked = false; return true; }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "replaceRouteBelow",
+            "type": "",
+            "desc": "<p>Replaces a route on the navigator with a new route. The route to be\nreplaced is the one below the given <code>anchorRoute<\/code>.<\/p>\n<p>The old route must not be current visible, as this method skips the\nanimations and therefore the removal would be jarring if it was visible.\nTo replace the top-most route, consider <a href=\"widgets\/NavigatorState\/pushReplacement.html\">pushReplacement<\/a> instead, which\n<em>does<\/em> animate the new route, and delays removing the old route until the\nnew route has finished animating.<\/p>\n<p>The removed route is removed without being completed, so this method does\nnot take a return value argument.<\/p>\n<p>The new route, the route below the new route (if any), and the route above\nthe new route, are all notified (see <a href=\"widgets\/Route\/didReplace.html\">Route.didReplace<\/a>,\n<a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>, and <a href=\"widgets\/Route\/didChangePrevious.html\">Route.didChangePrevious<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>\nhas any <a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<code>NavigatorObservers.didReplace<\/code>). The removed route is disposed without\nbeing notified. The future that had been returned from pushing that routes\nwill not complete.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/NavigatorState\/replace.html\">replace<\/a>, which is the same but identifies the route to be removed\ndirectly.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "widgets.NavigatorState",
+            "sig": "",
+            "params": [
+                {
+                    "name": "anchorRoute",
+                    "type": "widgets.Route",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "newRoute",
+                    "type": "widgets.Route",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/NavigatorState\/replaceRouteBelow.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nvoid replaceRouteBelow&lt;T extends Object&gt;({ @required Route&lt;dynamic&gt; anchorRoute, Route&lt;T&gt; newRoute }) {\n  assert(anchorRoute != null);\n  assert(anchorRoute._navigator == this);\n  assert(_history.indexOf(anchorRoute) &gt; 0);\n  replace&lt;T&gt;(oldRoute: _history[_history.indexOf(anchorRoute) - 1], newRoute: newRoute);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "focusScopeNode",
+            "type": "widgets.FocusScopeNode",
+            "types": [],
+            "desc": "<p>The <a href=\"widgets\/FocusScopeNode-class.html\">FocusScopeNode<\/a> for the <a href=\"widgets\/FocusScope-class.html\">FocusScope<\/a> that encloses the routes.<\/p>\n        ",
+            "memberOf": "widgets.NavigatorState",
+            "isConstant": false,
+            "href": "widgets\/NavigatorState\/focusScopeNode.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final FocusScopeNode focusScopeNode = FocusScopeNode()\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "overlay",
+            "type": "widgets.OverlayState",
+            "types": [],
+            "desc": "<p>The overlay this navigator uses for its visual presentation.<\/p>\n        ",
+            "memberOf": "widgets.NavigatorState",
+            "isConstant": false,
+            "href": "widgets\/NavigatorState\/overlay.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">OverlayState get overlay =&gt; _overlayKey.currentState;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "userGestureInProgress",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether a route is currently being manipulated by the user, e.g.\nas during an iOS back gesture.<\/p>\n        ",
+            "memberOf": "widgets.NavigatorState",
+            "isConstant": false,
+            "href": "widgets\/NavigatorState\/userGestureInProgress.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get userGestureInProgress =&gt; _userGesturesInProgress &gt; 0;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "widgets\/NavigatorState-class.html",
+    "desc": "<p>The state for a <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> widget.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "NavigatorState"
+}

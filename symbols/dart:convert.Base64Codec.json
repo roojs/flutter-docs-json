@@ -1,0 +1,142 @@
+{
+    "name": "dart:convert.Base64Codec",
+    "extends": [
+        "dart:core.String",
+        "dart:core.int",
+        "dart:core.List",
+        "dart:convert.Codec",
+        "dart:core.Object"
+    ],
+    "memberOf": "dart:convert",
+    "events": [],
+    "methods": [
+        {
+            "name": "Base64Codec",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "dart:convert.Base64Codec",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "dart-convert\/Base64Codec\/Base64Codec.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Base64Codec() : _encoder = const Base64Encoder();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "decode",
+            "type": "dart:typed_data.Uint8List",
+            "desc": "<p>Decodes <code>encoded<\/code>.<\/p>\n<p>The input is decoded as if by <code>decoder.convert<\/code>.<\/p>\n<p>The returned <a href=\"dart-typed_data\/Uint8List-class.html\">Uint8List<\/a> contains exactly the decoded bytes,\nso the <a href=\"dart-core\/List\/length.html\">Uint8List.length<\/a> is precisely the number of decoded bytes.\nThe <a href=\"dart-typed_data\/TypedData\/buffer.html\">Uint8List.buffer<\/a> may be larger than the decoded bytes.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:convert.Base64Codec",
+            "sig": "",
+            "params": [
+                {
+                    "name": "encoded",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-convert\/Base64Codec\/decode.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Uint8List decode(String encoded) =&gt; decoder.convert(encoded);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "normalize",
+            "type": "dart:core.String",
+            "desc": "<p>Validates and normalizes the base64 encoded data in <code>source<\/code>.<\/p>\n<p>Only acts on the substring from <code>start<\/code> to <code>end<\/code>, with <code>end<\/code>\ndefaulting to the end of the string.<\/p>\n<p>Normalization will:<\/p>\n<ul>\n<li>Unescape any <code>%<\/code>-escapes.<\/li>\n<li>Only allow valid characters (<code>A<\/code>-<code>Z<\/code>, <code>a<\/code>-<code>z<\/code>, <code>0<\/code>-<code>9<\/code>, <code>\/<\/code> and <code>+<\/code>).<\/li>\n<li>Normalize a <code>_<\/code> or <code>-<\/code> character to <code>\/<\/code> or <code>+<\/code>.<\/li>\n<li>Validate that existing padding (trailing <code>=<\/code> characters) is correct.<\/li>\n<li>If no padding exists, add correct padding if necessary and possible.<\/li>\n<li>Validate that the length is correct (a multiple of four).<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "dart:convert.Base64Codec",
+            "sig": "",
+            "params": [
+                {
+                    "name": "source",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "start",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "end",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-convert\/Base64Codec\/normalize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String normalize(String source, [int start = 0, int end]) {\n  end = RangeError.checkValidRange(start, end, source.length);\n  const percent = 0x25;\n  const equals = 0x3d;\n  StringBuffer buffer;\n  var sliceStart = start;\n  var alphabet = _Base64Encoder._base64Alphabet;\n  var inverseAlphabet = _Base64Decoder._inverseAlphabet;\n  var firstPadding = -1;\n  var firstPaddingSourceIndex = -1;\n  var paddingCount = 0;\n  for (var i = start; i &lt; end;) {\n    var sliceEnd = i;\n    var char = source.codeUnitAt(i++);\n    var originalChar = char;\n    \/\/ Normalize char, keep originalChar to see if it matches the source.\n    if (char == percent) {\n      if (i + 2 &lt;= end) {\n        char = parseHexByte(source, i); \/\/ May be negative.\n        i += 2;\n        \/\/ We know that %25 isn't valid, but our table considers it\n        \/\/ a potential padding start, so skip the checks.\n        if (char == percent) char = -1;\n      } else {\n        \/\/ An invalid HEX escape (too short).\n        \/\/ Just skip past the handling and reach the throw below.\n        char = -1;\n      }\n    }\n    \/\/ If char is negative here, hex-decoding failed in some way.\n    if (0 &lt;= char &amp;&amp; char &lt;= 127) {\n      var value = inverseAlphabet[char];\n      if (value &gt;= 0) {\n        char = alphabet.codeUnitAt(value);\n        if (char == originalChar) continue;\n      } else if (value == _Base64Decoder._padding) {\n        \/\/ We have ruled out percent, so char is '='.\n        if (firstPadding &lt; 0) {\n          \/\/ Mark position in normalized output where padding occurs.\n          firstPadding = (buffer?.length ?? 0) + (sliceEnd - sliceStart);\n          firstPaddingSourceIndex = sliceEnd;\n        }\n        paddingCount++;\n        \/\/ It could have been an escaped equals (%3D).\n        if (originalChar == equals) continue;\n      }\n      if (value != _Base64Decoder._invalid) {\n        buffer ??= StringBuffer();\n        buffer.write(source.substring(sliceStart, sliceEnd));\n        buffer.writeCharCode(char);\n        sliceStart = i;\n        continue;\n      }\n    }\n    throw FormatException(\"Invalid base64 data\", source, sliceEnd);\n  }\n  if (buffer != null) {\n    buffer.write(source.substring(sliceStart, end));\n    if (firstPadding &gt;= 0) {\n      \/\/ There was padding in the source. Check that it is valid:\n      \/\/ * result length a multiple of four\n      \/\/ * one or two padding characters at the end.\n      _checkPadding(source, firstPaddingSourceIndex, end, firstPadding,\n          paddingCount, buffer.length);\n    } else {\n      \/\/ Length of last chunk (1-4 chars) in the encoding.\n      var endLength = ((buffer.length - 1) % 4) + 1;\n      if (endLength == 1) {\n        \/\/ The data must have length 0, 2 or 3 modulo 4.\n        throw FormatException(\"Invalid base64 encoding length \", source, end);\n      }\n      while (endLength &lt; 4) {\n        buffer.write(\"=\");\n        endLength++;\n      }\n    }\n    return source.replaceRange(start, end, buffer.toString());\n  }\n  \/\/ Original was already normalized, only check padding.\n  var length = end - start;\n  if (firstPadding &gt;= 0) {\n    _checkPadding(source, firstPaddingSourceIndex, end, firstPadding,\n        paddingCount, length);\n  } else {\n    \/\/ No padding given, so add some if needed it.\n    var endLength = length % 4;\n    if (endLength == 1) {\n      \/\/ The data must have length 0, 2 or 3 modulo 4.\n      throw FormatException(\"Invalid base64 encoding length \", source, end);\n    }\n    if (endLength &gt; 1) {\n      \/\/ There is no \"insertAt\" on String, but this works as well.\n      source = source.replaceRange(end, end, (endLength == 2) ? \"==\" : \"=\");\n    }\n  }\n  return source;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Base64Codec.urlSafe",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "dart:convert.Base64Codec",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "dart-convert\/Base64Codec\/Base64Codec.urlSafe.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Base64Codec.urlSafe() : _encoder = const Base64Encoder.urlSafe();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "decoder",
+            "type": "dart:convert.Base64Decoder",
+            "types": [],
+            "desc": "<p>Returns the decoder of <code>this<\/code>, converting from <code>T<\/code> to <code>S<\/code>.<\/p>\n<p>It may be stateful and should not be reused.<\/p>\n        ",
+            "memberOf": "dart:convert.Base64Codec",
+            "isConstant": false,
+            "href": "dart-convert\/Base64Codec\/decoder.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Base64Decoder get decoder =&gt; const Base64Decoder();<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "encoder",
+            "type": "dart:convert.Base64Encoder",
+            "types": [],
+            "desc": "<p>Returns the encoder from <code>S<\/code> to <code>T<\/code>.<\/p>\n<p>It may be stateful and should not be reused.<\/p>\n        ",
+            "memberOf": "dart:convert.Base64Codec",
+            "isConstant": false,
+            "href": "dart-convert\/Base64Codec\/encoder.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Base64Encoder get encoder =&gt; _encoder;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "dart-convert\/Base64Codec-class.html",
+    "desc": "<p>A <a href=\"https:\/\/tools.ietf.org\/html\/rfc4648\">base64<\/a> encoder and decoder.<\/p>\n<p>A <a href=\"dart-convert\/Base64Codec-class.html\">Base64Codec<\/a> allows base64 encoding bytes into ASCII strings and\ndecoding valid encodings back to bytes.<\/p>\n<p>This implementation only handles the simplest RFC 4648 base64 and base64url\nencodings.\nIt does not allow invalid characters when decoding and it requires,\nand generates, padding so that the input is always a multiple of four\ncharacters.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Base64Codec"
+}

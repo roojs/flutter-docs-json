@@ -1,0 +1,258 @@
+{
+    "name": "scheduler.Ticker",
+    "extends": [],
+    "memberOf": "scheduler",
+    "events": [],
+    "methods": [
+        {
+            "name": "Ticker",
+            "type": "",
+            "desc": "<p>Creates a ticker that will call the provided callback once per frame while\nrunning.<\/p>\n<p>An optional label can be provided for debugging purposes. That label\nwill appear in the <a href=\"scheduler\/Ticker\/toString.html\">toString<\/a> output in debug builds.<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler.Ticker",
+            "sig": "",
+            "params": [
+                {
+                    "name": "_onTick",
+                    "type": "scheduler.TickerCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "debugLabel",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "scheduler\/Ticker\/Ticker.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Ticker(this._onTick, { this.debugLabel }) {\n  assert(() {\n    _debugCreationStack = StackTrace.current;\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "absorbTicker",
+            "type": "",
+            "desc": "<p>Makes this <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> take the state of another ticker, and disposes the\nother ticker.<\/p>\n<p>This is useful if an object with a <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> is given a new\n<a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> but needs to maintain continuity. In particular, this\nmaintains the identity of the <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> returned by the <a href=\"scheduler\/Ticker\/start.html\">start<\/a>\nfunction of the original <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> if the original ticker is active.<\/p>\n<p>This ticker must not be active when this method is called.<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler.Ticker",
+            "sig": "",
+            "params": [
+                {
+                    "name": "originalTicker",
+                    "type": "scheduler.Ticker",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "scheduler\/Ticker\/absorbTicker.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void absorbTicker(Ticker originalTicker) {\n  assert(!isActive);\n  assert(_future == null);\n  assert(_startTime == null);\n  assert(_animationId == null);\n  assert((originalTicker._future == null) == (originalTicker._startTime == null), 'Cannot absorb Ticker after it has been disposed.');\n  if (originalTicker._future != null) {\n    _future = originalTicker._future;\n    _startTime = originalTicker._startTime;\n    if (shouldScheduleTick)\n      scheduleTick();\n    originalTicker._future = null; \/\/ so that it doesn't get disposed when we dispose of originalTicker\n    originalTicker.unscheduleTick();\n  }\n  originalTicker.dispose();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "dispose",
+            "type": "",
+            "desc": "<p>Release the resources used by this object. The object is no longer usable\nafter this method is called.<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler.Ticker",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "scheduler\/Ticker\/dispose.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid dispose() {\n  if (_future != null) {\n    final TickerFuture localFuture = _future;\n    _future = null;\n    assert(!isActive);\n    unscheduleTick();\n    localFuture._cancel(this);\n  }\n  assert(() {\n    \/\/ We intentionally don't null out _startTime. This means that if start()\n    \/\/ was ever called, the object is now in a bogus state. This weakly helps\n    \/\/ catch cases of use-after-dispose.\n    _startTime = Duration.zero;\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "scheduleTick",
+            "type": "",
+            "desc": "<p>Schedules a tick for the next frame.<\/p>\n<p>This should only be called if <a href=\"scheduler\/Ticker\/shouldScheduleTick.html\">shouldScheduleTick<\/a> is true.<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler.Ticker",
+            "sig": "",
+            "params": [
+                {
+                    "name": "rescheduling",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "scheduler\/Ticker\/scheduleTick.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid scheduleTick({ bool rescheduling = false }) {\n  assert(!scheduled);\n  assert(shouldScheduleTick);\n  _animationId = SchedulerBinding.instance.scheduleFrameCallback(_tick, rescheduling: rescheduling);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "start",
+            "type": "scheduler.TickerFuture",
+            "desc": "<p>Starts the clock for this <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a>. If the ticker is not <a href=\"scheduler\/Ticker\/muted.html\">muted<\/a>, then this\nalso starts calling the ticker's callback once per animation frame.<\/p>\n<p>The returned future resolves once the ticker <a href=\"scheduler\/Ticker\/stop.html\">stop<\/a>s ticking. If the\nticker is disposed, the future does not resolve. A derivative future is\navailable from the returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> object that resolves with an\nerror in that case, via <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>.<\/p>\n<p>Calling this sets <a href=\"scheduler\/Ticker\/isActive.html\">isActive<\/a> to true.<\/p>\n<p>This method cannot be called while the ticker is active. To restart the\nticker, first <a href=\"scheduler\/Ticker\/stop.html\">stop<\/a> it.<\/p>\n<p>By convention, this method is used by the object that receives the ticks\n(as opposed to the <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> which created the ticker).<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler.Ticker",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "scheduler\/Ticker\/start.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture start() {\n  assert(() {\n    if (isActive) {\n      throw FlutterError(\n        'A ticker was started twice.\\n'\n        'A ticker that is already active cannot be started again without first stopping it.\\n'\n        'The affected ticker was: ${ toString(debugIncludeStack: true) }'\n      );\n    }\n    return true;\n  }());\n  assert(_startTime == null);\n  _future = TickerFuture._();\n  if (shouldScheduleTick) {\n    scheduleTick();\n  }\n  if (SchedulerBinding.instance.schedulerPhase.index &gt; SchedulerPhase.idle.index &amp;&amp;\n      SchedulerBinding.instance.schedulerPhase.index &lt; SchedulerPhase.postFrameCallbacks.index)\n    _startTime = SchedulerBinding.instance.currentFrameTimeStamp;\n  return _future;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "stop",
+            "type": "",
+            "desc": "<p>Stops calling this <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a>'s callback.<\/p>\n<p>If called with the <code>canceled<\/code> argument set to false (the default), causes\nthe future returned by <a href=\"scheduler\/Ticker\/start.html\">start<\/a> to resolve. If called with the <code>canceled<\/code>\nargument set to true, the future does not resolve, and the future obtained\nfrom <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>, if any, resolves with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a>\nerror.<\/p>\n<p>Calling this sets <a href=\"scheduler\/Ticker\/isActive.html\">isActive<\/a> to false.<\/p>\n<p>This method does nothing if called when the ticker is inactive.<\/p>\n<p>By convention, this method is used by the object that receives the ticks\n(as opposed to the <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> which created the ticker).<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler.Ticker",
+            "sig": "",
+            "params": [
+                {
+                    "name": "canceled",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "scheduler\/Ticker\/stop.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void stop({ bool canceled = false }) {\n  if (!isActive)\n    return;\n\n  \/\/ We take the _future into a local variable so that isTicking is false\n  \/\/ when we actually complete the future (isTicking uses _future to\n  \/\/ determine its state).\n  final TickerFuture localFuture = _future;\n  _future = null;\n  _startTime = null;\n  assert(!isActive);\n\n  unscheduleTick();\n  if (canceled) {\n    localFuture._cancel(this);\n  } else {\n    localFuture._complete();\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler.Ticker",
+            "sig": "",
+            "params": [
+                {
+                    "name": "debugIncludeStack",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "scheduler\/Ticker\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString({ bool debugIncludeStack = false }) {\n  final StringBuffer buffer = StringBuffer();\n  buffer.write('$runtimeType(');\n  assert(() {\n    buffer.write(debugLabel ?? '');\n    return true;\n  }());\n  buffer.write(')');\n  assert(() {\n    if (debugIncludeStack) {\n      buffer.writeln();\n      buffer.writeln('The stack trace when the $runtimeType was actually created was:');\n      FlutterError.defaultStackFilter(_debugCreationStack.toString().trimRight().split('\\n')).forEach(buffer.writeln);\n    }\n    return true;\n  }());\n  return buffer.toString();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "unscheduleTick",
+            "type": "",
+            "desc": "<p>Cancels the frame callback that was requested by <a href=\"scheduler\/Ticker\/scheduleTick.html\">scheduleTick<\/a>, if any.<\/p>\n<p>Calling this method when no tick is <a href=\"scheduler\/Ticker\/scheduled.html\">scheduled<\/a> is harmless.<\/p>\n<p>This method should not be called when <a href=\"scheduler\/Ticker\/shouldScheduleTick.html\">shouldScheduleTick<\/a> would return\ntrue if no tick was scheduled.<\/p>\n    ",
+            "static": false,
+            "memberOf": "scheduler.Ticker",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "scheduler\/Ticker\/unscheduleTick.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid unscheduleTick() {\n  if (scheduled) {\n    SchedulerBinding.instance.cancelFrameCallbackWithId(_animationId);\n    _animationId = null;\n  }\n  assert(!shouldScheduleTick);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "debugLabel",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>An optional label can be provided for debugging purposes.<\/p>\n<p>This label will appear in the <a href=\"scheduler\/Ticker\/toString.html\">toString<\/a> output in debug builds.<\/p>\n        ",
+            "memberOf": "scheduler.Ticker",
+            "isConstant": false,
+            "href": "scheduler\/Ticker\/debugLabel.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String debugLabel\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isActive",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether time is elapsing for this <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a>. Becomes true when <a href=\"scheduler\/Ticker\/start.html\">start<\/a> is\ncalled and false when <a href=\"scheduler\/Ticker\/stop.html\">stop<\/a> is called.<\/p>\n<p>A ticker can be active yet not be actually ticking (i.e. not be calling\nthe callback). To determine if a ticker is actually ticking, use\n<a href=\"scheduler\/Ticker\/isTicking.html\">isTicking<\/a>.<\/p>\n        ",
+            "memberOf": "scheduler.Ticker",
+            "isConstant": false,
+            "href": "scheduler\/Ticker\/isActive.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isActive =&gt; _future != null;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isTicking",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether this <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> has scheduled a call to call its callback\non the next frame.<\/p>\n<p>A ticker that is <a href=\"scheduler\/Ticker\/muted.html\">muted<\/a> can be active (see <a href=\"scheduler\/Ticker\/isActive.html\">isActive<\/a>) yet not be\nticking. In that case, the ticker will not call its callback, and\n<a href=\"scheduler\/Ticker\/isTicking.html\">isTicking<\/a> will be false, but time will still be progressing.<\/p>\n<p>This will return false if the <code>Scheduler.lifecycleState<\/code> is one that\nindicates the application is not currently visible (e.g. if the device's\nscreen is turned off).<\/p>\n        ",
+            "memberOf": "scheduler.Ticker",
+            "isConstant": false,
+            "href": "scheduler\/Ticker\/isTicking.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isTicking {\n  if (_future == null)\n    return false;\n  if (muted)\n    return false;\n  if (SchedulerBinding.instance.framesEnabled)\n    return true;\n  if (SchedulerBinding.instance.schedulerPhase != SchedulerPhase.idle)\n    return true; \/\/ for example, we might be in a warm-up frame or forced frame\n  return false;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "muted",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether this ticker has been silenced.<\/p>\n<p>While silenced, a ticker's clock can still run, but the callback will not\nbe called.<\/p>\n        ",
+            "memberOf": "scheduler.Ticker",
+            "isConstant": false,
+            "href": "scheduler\/Ticker\/muted.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get muted =&gt; _muted;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "scheduled",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether this <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> has already scheduled a frame callback.<\/p>\n        ",
+            "memberOf": "scheduler.Ticker",
+            "isConstant": false,
+            "href": "scheduler\/Ticker\/scheduled.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool get scheduled =&gt; _animationId != null;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "shouldScheduleTick",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether a tick should be scheduled.<\/p>\n<p>If this is true, then calling <a href=\"scheduler\/Ticker\/scheduleTick.html\">scheduleTick<\/a> should succeed.<\/p>\n<p>Reasons why a tick should not be scheduled include:<\/p>\n<ul>\n<li>A tick has already been scheduled for the coming frame.<\/li>\n<li>The ticker is not active (<a href=\"scheduler\/Ticker\/start.html\">start<\/a> has not been called).<\/li>\n<li>The ticker is not ticking, e.g. because it is <a href=\"scheduler\/Ticker\/muted.html\">muted<\/a> (see <a href=\"scheduler\/Ticker\/isTicking.html\">isTicking<\/a>).<\/li>\n<\/ul>",
+            "memberOf": "scheduler.Ticker",
+            "isConstant": false,
+            "href": "scheduler\/Ticker\/shouldScheduleTick.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool get shouldScheduleTick =&gt; !muted &amp;&amp; isActive &amp;&amp; !scheduled;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "scheduler\/Ticker-class.html",
+    "desc": "<p>Calls its callback once per animation frame.<\/p>\n<p>When created, a ticker is initially disabled. Call <a href=\"scheduler\/Ticker\/start.html\">start<\/a> to\nenable the ticker.<\/p>\n<p>A <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> can be silenced by setting <a href=\"scheduler\/Ticker\/muted.html\">muted<\/a> to true. While silenced, time\nstill elapses, and <a href=\"scheduler\/Ticker\/start.html\">start<\/a> and <a href=\"scheduler\/Ticker\/stop.html\">stop<\/a> can still be called, but no callbacks\nare called.<\/p>\n<p>By convention, the <a href=\"scheduler\/Ticker\/start.html\">start<\/a> and <a href=\"scheduler\/Ticker\/stop.html\">stop<\/a> methods are used by the ticker's\nconsumer, and the <a href=\"scheduler\/Ticker\/muted.html\">muted<\/a> property is controlled by the <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a>\nthat created the ticker.<\/p>\n<p>Tickers are driven by the <a href=\"scheduler\/SchedulerBinding-mixin.html\">SchedulerBinding<\/a>. See\n<a href=\"scheduler\/SchedulerBinding\/scheduleFrameCallback.html\">SchedulerBinding.scheduleFrameCallback<\/a>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Ticker"
+}

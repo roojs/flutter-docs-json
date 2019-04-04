@@ -1,0 +1,74 @@
+{
+    "name": "async.StreamQueueTransaction",
+    "extends": [],
+    "memberOf": "async",
+    "events": [],
+    "methods": [
+        {
+            "name": "commit",
+            "type": "",
+            "desc": "<p>Commits a queue created using <a href=\"package-async_async\/StreamQueueTransaction\/newQueue.html\">newQueue<\/a>.<\/p>\n<p>The parent queue's position is updated to be the same as <code>queue<\/code>'s.\nFurther requests on all queues created by this transaction, including\n<code>queue<\/code>, will complete as though <code>cancel<\/code> were called with <code>immediate:\ntrue<\/code>.<\/p>\n<p>Throws a <a href=\"dart-core\/StateError-class.html\">StateError<\/a> if <a href=\"package-async_async\/StreamQueueTransaction\/commit.html\">commit<\/a> or <a href=\"package-async_async\/StreamQueueTransaction\/reject.html\">reject<\/a> have already been called, or\nif there are pending requests on <code>queue<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.StreamQueueTransaction",
+            "sig": "",
+            "params": [
+                {
+                    "name": "queue",
+                    "type": "async.StreamQueue",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/StreamQueueTransaction\/commit.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void commit(StreamQueue&lt;T&gt; queue) {\n  _assertActive();\n  if (!_queues.contains(queue)) {\n    throw new ArgumentError(\"Queue doesn't belong to this transaction.\");\n  } else if (queue._requestQueue.isNotEmpty) {\n    throw new StateError(\"A queue with pending requests can't be committed.\");\n  }\n  _committed = true;\n\n  \/\/ Remove all events from the parent queue that were consumed by the\n  \/\/ child queue.\n  for (var j = 0; j &lt; queue.eventsDispatched; j++) {\n    _parent._eventQueue.removeFirst();\n  }\n\n  _done();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "newQueue",
+            "type": "async.StreamQueue",
+            "desc": "<p>Creates a new copy of the parent queue.<\/p>\n<p>This copy starts at the parent queue's position when\n<a href=\"package-async_async\/StreamQueue\/startTransaction.html\">StreamQueue.startTransaction<\/a> was called. Its position can be committed\nto the parent queue using <a href=\"package-async_async\/StreamQueueTransaction\/commit.html\">commit<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.StreamQueueTransaction",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "package-async_async\/StreamQueueTransaction\/newQueue.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamQueue&lt;T&gt; newQueue() {\n  var queue = new StreamQueue(_splitter.split());\n  _queues.add(queue);\n  return queue;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "reject",
+            "type": "",
+            "desc": "<p>Rejects this transaction without updating the parent queue.<\/p>\n<p>The parent will continue as though <a href=\"package-async_async\/StreamQueue\/startTransaction.html\">StreamQueue.startTransaction<\/a> hadn't\nbeen called. Further requests on all queues created by this transaction\nwill complete as though <code>cancel<\/code> were called with <code>immediate: true<\/code>.<\/p>\n<p>Throws a <a href=\"dart-core\/StateError-class.html\">StateError<\/a> if <a href=\"package-async_async\/StreamQueueTransaction\/commit.html\">commit<\/a> or <a href=\"package-async_async\/StreamQueueTransaction\/reject.html\">reject<\/a> have already been called.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.StreamQueueTransaction",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "package-async_async\/StreamQueueTransaction\/reject.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void reject() {\n  _assertActive();\n  _rejected = true;\n  _done();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-async_async\/StreamQueueTransaction-class.html",
+    "desc": "<p>A transaction on a <a href=\"package-async_async\/StreamQueue-class.html\">StreamQueue<\/a>, created by <a href=\"package-async_async\/StreamQueue\/startTransaction.html\">StreamQueue.startTransaction<\/a>.<\/p>\n<p>Copies of the parent queue may be created using <a href=\"package-async_async\/StreamQueueTransaction\/newQueue.html\">newQueue<\/a>. Calling <a href=\"package-async_async\/StreamQueueTransaction\/commit.html\">commit<\/a>\nmoves the parent queue to a copy's position, and calling <a href=\"package-async_async\/StreamQueueTransaction\/reject.html\">reject<\/a> causes it\nto continue as though <a href=\"package-async_async\/StreamQueue\/startTransaction.html\">StreamQueue.startTransaction<\/a> was never called.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "StreamQueueTransaction"
+}

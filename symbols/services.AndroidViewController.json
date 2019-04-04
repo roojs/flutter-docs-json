@@ -1,0 +1,291 @@
+{
+    "name": "services.AndroidViewController",
+    "extends": [],
+    "memberOf": "services",
+    "events": [],
+    "methods": [
+        {
+            "name": "addOnPlatformViewCreatedListener",
+            "type": "",
+            "desc": "<p>Adds a callback that will get invoke after the platform view has been\ncreated.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.AndroidViewController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "listener",
+                    "type": "services.PlatformViewCreatedCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/AndroidViewController\/addOnPlatformViewCreatedListener.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addOnPlatformViewCreatedListener(PlatformViewCreatedCallback listener) {\n  assert(listener != null);\n  assert(_state != _AndroidViewState.disposed);\n  _platformViewCreatedCallbacks.add(listener);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "dispose",
+            "type": "dart:async.Future",
+            "desc": "<p>Disposes the Android view.<\/p>\n<p>The <a href=\"services\/AndroidViewController-class.html\">AndroidViewController<\/a> object is unusable after calling this.\nThe identifier of the platform view cannot be reused after the view is\ndisposed.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.AndroidViewController",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "services\/AndroidViewController\/dispose.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; dispose() async {\n  if (_state == _AndroidViewState.creating || _state == _AndroidViewState.created)\n    await SystemChannels.platform_views.invokeMethod&lt;void&gt;('dispose', id);\n  _platformViewCreatedCallbacks.clear();\n  _state = _AndroidViewState.disposed;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "pointerAction",
+            "type": "dart:core.int",
+            "desc": "<p>Creates a masked Android MotionEvent action value for an indexed pointer.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.AndroidViewController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "pointerId",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "action",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/AndroidViewController\/pointerAction.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static int pointerAction(int pointerId, int action) {\n  return ((pointerId &lt;&lt; 8) &amp; 0xff00) | (action &amp; 0xff);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "removeOnPlatformViewCreatedListener",
+            "type": "",
+            "desc": "<p>Removes a callback added with <a href=\"services\/AndroidViewController\/addOnPlatformViewCreatedListener.html\">addOnPlatformViewCreatedListener<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.AndroidViewController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "listener",
+                    "type": "services.PlatformViewCreatedCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/AndroidViewController\/removeOnPlatformViewCreatedListener.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeOnPlatformViewCreatedListener(PlatformViewCreatedCallback listener) {\n  assert(_state != _AndroidViewState.disposed);\n  _platformViewCreatedCallbacks.remove(listener);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "sendMotionEvent",
+            "type": "dart:async.Future",
+            "desc": "<p>Sends an Android <a href=\"https:\/\/developer.android.com\/reference\/android\/view\/MotionEvent\">MotionEvent<\/a>\nto the view.<\/p>\n<p>The Android MotionEvent object is created with <a href=\"https:\/\/developer.android.com\/reference\/android\/view\/MotionEvent.html#obtain(long,%20long,%20int,%20float,%20float,%20float,%20float,%20int,%20float,%20float,%20int,%20int)\">MotionEvent.obtain<\/a>.\nSee documentation of <a href=\"https:\/\/developer.android.com\/reference\/android\/view\/MotionEvent.html#obtain(long,%20long,%20int,%20float,%20float,%20float,%20float,%20int,%20float,%20float,%20int,%20int)\">MotionEvent.obtain<\/a>\nfor description of the parameters.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.AndroidViewController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "event",
+                    "type": "services.AndroidMotionEvent",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/AndroidViewController\/sendMotionEvent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; sendMotionEvent(AndroidMotionEvent event) async {\n  await SystemChannels.platform_views.invokeMethod&lt;dynamic&gt;(\n      'touch',\n      event._asList(id),\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "setLayoutDirection",
+            "type": "dart:async.Future",
+            "desc": "<p>Sets the layout direction for the Android view.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.AndroidViewController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "layoutDirection",
+                    "type": "dart:ui.TextDirection",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/AndroidViewController\/setLayoutDirection.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; setLayoutDirection(TextDirection layoutDirection) async {\n  assert(_state != _AndroidViewState.disposed,'trying to set a layout direction for a disposed UIView. View id: $id');\n\n  if (layoutDirection == _layoutDirection)\n    return;\n\n  assert(layoutDirection != null);\n  _layoutDirection = layoutDirection;\n\n  \/\/ If the view was not yet created we just update _layoutDirection and return, as the new\n  \/\/ direction will be used in _create.\n  if (_state == _AndroidViewState.waitingForSize)\n    return;\n\n  await SystemChannels.platform_views.invokeMethod&lt;void&gt;('setDirection', &lt;String, dynamic&gt;{\n    'id': id,\n    'direction': _getAndroidDirection(layoutDirection),\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "setSize",
+            "type": "dart:async.Future",
+            "desc": "<p>Sizes the Android View.<\/p>\n<p><code>size<\/code> is the view's new size in logical pixel, it must not be null and must\nbe bigger than zero.<\/p>\n<p>The first time a size is set triggers the creation of the Android view.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.AndroidViewController",
+            "sig": "",
+            "params": [
+                {
+                    "name": "size",
+                    "type": "dart:ui.Size",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/AndroidViewController\/setSize.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; setSize(Size size) async {\n  assert(_state != _AndroidViewState.disposed, 'trying to size a disposed Android View. View id: $id');\n\n  assert(size != null);\n  assert(!size.isEmpty);\n\n  if (_state == _AndroidViewState.waitingForSize)\n    return _create(size);\n\n  await SystemChannels.platform_views.invokeMethod&lt;void&gt;('resize', &lt;String, dynamic&gt;{\n    'id': id,\n    'width': size.width,\n    'height': size.height,\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "id",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The unique identifier of the Android view controlled by this controller.<\/p>\n        ",
+            "memberOf": "services.AndroidViewController",
+            "isConstant": false,
+            "href": "services\/AndroidViewController\/id.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int id\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isCreated",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether the platform view has already been created.<\/p>\n        ",
+            "memberOf": "services.AndroidViewController",
+            "isConstant": false,
+            "href": "services\/AndroidViewController\/isCreated.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isCreated =&gt; _state == _AndroidViewState.created;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "type": "",
+            "href": "services\/AndroidViewController\/kActionCancel-constant.html",
+            "desc": "<p>Action code for when a motion event has been cancelled.<\/p>\n<p>Android's <a href=\"https:\/\/developer.android.com\/reference\/android\/view\/MotionEvent#ACTION_CANCEL\">MotionEvent.ACTION_CANCEL<\/a><\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const int kActionCancel = 3\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "kActionCancel",
+            "memberOf": "services.AndroidViewController"
+        },
+        {
+            "type": "",
+            "href": "services\/AndroidViewController\/kActionDown-constant.html",
+            "desc": "<p>Action code for when a primary pointer touched the screen.<\/p>\n<p>Android's <a href=\"https:\/\/developer.android.com\/reference\/android\/view\/MotionEvent#ACTION_DOWN\">MotionEvent.ACTION_DOWN<\/a><\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const int kActionDown =  0\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "kActionDown",
+            "memberOf": "services.AndroidViewController"
+        },
+        {
+            "type": "",
+            "href": "services\/AndroidViewController\/kActionMove-constant.html",
+            "desc": "<p>Action code for when the event only includes information about pointer movement.<\/p>\n<p>Android's <a href=\"https:\/\/developer.android.com\/reference\/android\/view\/MotionEvent#ACTION_MOVE\">MotionEvent.ACTION_MOVE<\/a><\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const int kActionMove = 2\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "kActionMove",
+            "memberOf": "services.AndroidViewController"
+        },
+        {
+            "type": "",
+            "href": "services\/AndroidViewController\/kActionPointerDown-constant.html",
+            "desc": "<p>Action code for when a secondary pointer touched the screen.<\/p>\n<p>Android's <a href=\"https:\/\/developer.android.com\/reference\/android\/view\/MotionEvent#ACTION_POINTER_DOWN\">MotionEvent.ACTION_POINTER_DOWN<\/a><\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const int kActionPointerDown =  5\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "kActionPointerDown",
+            "memberOf": "services.AndroidViewController"
+        },
+        {
+            "type": "",
+            "href": "services\/AndroidViewController\/kActionPointerUp-constant.html",
+            "desc": "<p>Action code for when a secondary pointer stopped touching the screen.<\/p>\n<p>Android's <a href=\"https:\/\/developer.android.com\/reference\/android\/view\/MotionEvent#ACTION_POINTER_UP\">MotionEvent.ACTION_POINTER_UP<\/a><\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const int kActionPointerUp =  6\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "kActionPointerUp",
+            "memberOf": "services.AndroidViewController"
+        },
+        {
+            "type": "",
+            "href": "services\/AndroidViewController\/kActionUp-constant.html",
+            "desc": "<p>Action code for when a primary pointer stopped touching the screen.<\/p>\n<p>Android's <a href=\"https:\/\/developer.android.com\/reference\/android\/view\/MotionEvent#ACTION_UP\">MotionEvent.ACTION_UP<\/a><\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const int kActionUp =  1\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "kActionUp",
+            "memberOf": "services.AndroidViewController"
+        },
+        {
+            "type": "",
+            "href": "services\/AndroidViewController\/kAndroidLayoutDirectionLtr-constant.html",
+            "desc": "<p>Android's <a href=\"https:\/\/developer.android.com\/reference\/android\/view\/View.html#LAYOUT_DIRECTION_LTR\">View.LAYOUT_DIRECTION_LTR<\/a> value.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const int kAndroidLayoutDirectionLtr = 0\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "kAndroidLayoutDirectionLtr",
+            "memberOf": "services.AndroidViewController"
+        },
+        {
+            "type": "",
+            "href": "services\/AndroidViewController\/kAndroidLayoutDirectionRtl-constant.html",
+            "desc": "<p>Android's <a href=\"https:\/\/developer.android.com\/reference\/android\/view\/View.html#LAYOUT_DIRECTION_RTL\">View.LAYOUT_DIRECTION_RTL<\/a> value.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const int kAndroidLayoutDirectionRtl = 1\n\n<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "name": "kAndroidLayoutDirectionRtl",
+            "memberOf": "services.AndroidViewController"
+        },
+        {
+            "name": "textureId",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>Returns the texture entry id that the Android view is rendering into.<\/p>\n<p>Returns null if the Android view has not been successfully created, or if it has been\ndisposed.<\/p>\n        ",
+            "memberOf": "services.AndroidViewController",
+            "isConstant": false,
+            "href": "services\/AndroidViewController\/textureId.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get textureId =&gt; _textureId;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "services\/AndroidViewController-class.html",
+    "desc": "<p>Controls an Android view.<\/p>\n<p>Typically created with <a href=\"services\/PlatformViewsService\/initAndroidView.html\">PlatformViewsService.initAndroidView<\/a>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "AndroidViewController"
+}

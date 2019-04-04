@@ -1,0 +1,77 @@
+{
+    "name": "vector_math_geometry.BarycentricFilter",
+    "extends": [
+        "vector_math_geometry.GeometryFilter",
+        "dart:core.Object"
+    ],
+    "memberOf": "vector_math_geometry",
+    "events": [],
+    "methods": [
+        {
+            "name": "BarycentricFilter",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "vector_math_geometry.BarycentricFilter",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "vector_math_geometry\/BarycentricFilter\/BarycentricFilter.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "filter",
+            "type": "vector_math_geometry.MeshGeometry",
+            "desc": "<p>Returns a copy of the mesh with any filter transforms applied.<\/p>\n    ",
+            "static": false,
+            "memberOf": "vector_math_geometry.BarycentricFilter",
+            "sig": "",
+            "params": [
+                {
+                    "name": "mesh",
+                    "type": "vector_math_geometry.MeshGeometry",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "vector_math_geometry\/BarycentricFilter\/filter.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nMeshGeometry filter(MeshGeometry mesh) {\n  final List&lt;VertexAttrib&gt; newAttribs =\n      new List&lt;VertexAttrib&gt;.from(mesh.attribs, growable: true);\n\n  if (mesh.getAttrib('BARYCENTRIC') == null) {\n    newAttribs.add(new VertexAttrib('BARYCENTRIC', 3, 'float'));\n  }\n\n  final MeshGeometry output =\n      new MeshGeometry(mesh.triangleVertexCount, newAttribs);\n\n  Vector3List barycentricCoords;\n  final VectorList&lt;Vector&gt; view = output.getViewForAttrib('BARYCENTRIC');\n  if (view is Vector3List) {\n    barycentricCoords = view;\n  } else {\n    return null;\n  }\n\n  final List&lt;VectorList&lt;Vector&gt;&gt; srcAttribs = &lt;VectorList&lt;Vector&gt;&gt;[];\n  final List&lt;VectorList&lt;Vector&gt;&gt; destAttribs = &lt;VectorList&lt;Vector&gt;&gt;[];\n  for (VertexAttrib attrib in mesh.attribs) {\n    if (attrib.name == 'BARYCENTRIC') {\n      continue;\n    }\n\n    srcAttribs.add(mesh.getViewForAttrib(attrib.name));\n    destAttribs.add(output.getViewForAttrib(attrib.name));\n  }\n\n  final Vector3 b0 = new Vector3(1.0, 0.0, 0.0);\n  final Vector3 b1 = new Vector3(0.0, 1.0, 0.0);\n  final Vector3 b2 = new Vector3(0.0, 0.0, 1.0);\n\n  int i0, i1, i2;\n\n  for (int i = 0; i &lt; output.length; i += 3) {\n    if (mesh.indices != null) {\n      i0 = mesh.indices[i];\n      i1 = mesh.indices[i + 1];\n      i2 = mesh.indices[i + 2];\n    } else {\n      i0 = i;\n      i1 = i + 1;\n      i2 = i + 2;\n    }\n\n    barycentricCoords[i] = b0;\n    barycentricCoords[i + 1] = b1;\n    barycentricCoords[i + 2] = b2;\n\n    \/\/ Copy the remaining attributes over\n    for (int j = 0; j &lt; srcAttribs.length; ++j) {\n      destAttribs[j][i] = srcAttribs[j][i0];\n      destAttribs[j][i + 1] = srcAttribs[j][i1];\n      destAttribs[j][i + 2] = srcAttribs[j][i2];\n    }\n  }\n\n  return output;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "generates",
+            "type": "dart:core.List<vector_math_geometry.VertexAttrib>",
+            "types": [
+                "dart:core.List",
+                "vector_math_geometry.VertexAttrib"
+            ],
+            "desc": "",
+            "memberOf": "vector_math_geometry.BarycentricFilter",
+            "isConstant": false,
+            "href": "vector_math_geometry\/BarycentricFilter\/generates.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nList&lt;VertexAttrib&gt; get generates =&gt;\n    &lt;VertexAttrib&gt;[new VertexAttrib('BARYCENTRIC', 3, 'float')];<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "vector_math_geometry\/BarycentricFilter-class.html",
+    "desc": "",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "BarycentricFilter"
+}

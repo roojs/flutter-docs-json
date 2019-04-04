@@ -1,0 +1,166 @@
+{
+    "name": "dart:io.FileStat",
+    "extends": [],
+    "memberOf": "dart:io",
+    "events": [],
+    "methods": [
+        {
+            "name": "modeString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns the mode value as a human-readable string.<\/p>\n<p>The string is in the format \"rwxrwxrwx\", reflecting the user, group, and\nworld permissions to read, write, and execute the file system object, with\n\"-\" replacing the letter for missing permissions.  Extra permission bits\nmay be represented by prepending \"(suid)\", \"(guid)\", and\/or \"(sticky)\" to\nthe mode string.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:io.FileStat",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-io\/FileStat\/modeString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String modeString() {\n  var permissions = mode &amp; 0xFFF;\n  var codes = const ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx'];\n  var result = [];\n  if ((permissions &amp; 0x800) != 0) result.add(\"(suid) \");\n  if ((permissions &amp; 0x400) != 0) result.add(\"(guid) \");\n  if ((permissions &amp; 0x200) != 0) result.add(\"(sticky) \");\n  result\n    ..add(codes[(permissions &gt;&gt; 6) &amp; 0x7])\n    ..add(codes[(permissions &gt;&gt; 3) &amp; 0x7])\n    ..add(codes[permissions &amp; 0x7]);\n  return result.join();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "stat",
+            "type": "dart:async.Future<dart:io.FileStat>",
+            "desc": "<p>Asynchronously calls the operating system's stat() function on <code>path<\/code>.<\/p>\n<p>Returns a Future which completes with a <a href=\"dart-io\/FileStat-class.html\">FileStat<\/a> object containing\nthe data returned by stat(). If the call fails, completes the future with a\n<a href=\"dart-io\/FileStat-class.html\">FileStat<\/a> object with <code>.type<\/code> set to FileSystemEntityType.notFound and\nthe other fields invalid.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:io.FileStat",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-io\/FileStat\/stat.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;FileStat&gt; stat(String path) {\n  final IOOverrides overrides = IOOverrides.current;\n  if (overrides == null) {\n    return _stat(path);\n  }\n  return overrides.stat(path);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:io.FileStat"
+            ]
+        },
+        {
+            "name": "statSync",
+            "type": "dart:io.FileStat",
+            "desc": "<p>Calls the operating system's stat() function on <code>path<\/code>.<\/p>\n<p>Returns a <a href=\"dart-io\/FileStat-class.html\">FileStat<\/a> object containing the data returned by stat().\nIf the call fails, returns a <a href=\"dart-io\/FileStat-class.html\">FileStat<\/a> object with .type set to\nFileSystemEntityType.notFound and the other fields invalid.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:io.FileStat",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-io\/FileStat\/statSync.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static FileStat statSync(String path) {\n  final IOOverrides overrides = IOOverrides.current;\n  if (overrides == null) {\n    return _statSyncInternal(path);\n  }\n  return overrides.statSync(path);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:io.FileStat",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-io\/FileStat\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() =&gt; \"\"\"\nFileStat: type $type\n        changed $changed\n        modified $modified\n        accessed $accessed\n        mode ${modeString()}\n        size $size\"\"\";<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "accessed",
+            "type": "dart:core.DateTime",
+            "types": [],
+            "desc": "<p>The time of the last access to the data of the file system object.<\/p>\n<p>On Windows platforms, this may have 1 day granularity, and be\nout of date by an hour.<\/p>\n        ",
+            "memberOf": "dart:io.FileStat",
+            "isConstant": false,
+            "href": "dart-io\/FileStat\/accessed.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final DateTime accessed\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "changed",
+            "type": "dart:core.DateTime",
+            "types": [],
+            "desc": "<p>The time of the last change to the data or metadata of the file system\nobject.<\/p>\n<p>On Windows platforms, this is instead the file creation time.<\/p>\n        ",
+            "memberOf": "dart:io.FileStat",
+            "isConstant": false,
+            "href": "dart-io\/FileStat\/changed.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final DateTime changed\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "mode",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The mode of the file system object.<\/p>\n<p>Permissions are encoded in the lower 16 bits of this number, and can be\ndecoded using the <a href=\"dart-io\/FileStat\/modeString.html\">modeString<\/a> getter.<\/p>\n        ",
+            "memberOf": "dart:io.FileStat",
+            "isConstant": false,
+            "href": "dart-io\/FileStat\/mode.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int mode\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "modified",
+            "type": "dart:core.DateTime",
+            "types": [],
+            "desc": "<p>The time of the last change to the data of the file system object.<\/p>\n        ",
+            "memberOf": "dart:io.FileStat",
+            "isConstant": false,
+            "href": "dart-io\/FileStat\/modified.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final DateTime modified\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "size",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The size of the file system object.<\/p>\n        ",
+            "memberOf": "dart:io.FileStat",
+            "isConstant": false,
+            "href": "dart-io\/FileStat\/size.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int size\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "type",
+            "type": "dart:io.FileSystemEntityType",
+            "types": [],
+            "desc": "<p>The type of the object (file, directory, or link).<\/p>\n<p>If the call to stat() fails, the type of the returned object is notFound.<\/p>\n        ",
+            "memberOf": "dart:io.FileStat",
+            "isConstant": false,
+            "href": "dart-io\/FileStat\/type.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final FileSystemEntityType type\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "dart-io\/FileStat-class.html",
+    "desc": "<p>A FileStat object represents the result of calling the POSIX stat() function\non a file system object.  It is an immutable object, representing the\nsnapshotted values returned by the stat() call.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "FileStat"
+}

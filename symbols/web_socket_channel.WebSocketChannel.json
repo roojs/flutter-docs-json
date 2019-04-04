@@ -1,0 +1,160 @@
+{
+    "name": "web_socket_channel.WebSocketChannel",
+    "extends": [
+        "stream_channel.StreamChannelMixin",
+        "dart:core.Object"
+    ],
+    "memberOf": "web_socket_channel",
+    "events": [],
+    "methods": [
+        {
+            "name": "WebSocketChannel",
+            "type": "",
+            "desc": "<p>Creates a new WebSocket handling messaging across an existing <code>channel<\/code>.<\/p>\n<p>This is a cross-platform constructor; it doesn't use either <code>dart:io<\/code> or\n<code>dart:html<\/code>. It's also HTTP-API-agnostic, which means that the initial\n<a href=\"https:\/\/tools.ietf.org\/html\/rfc6455#section-4\">WebSocket handshake<\/a> must have already been completed on the socket\nbefore this is called.<\/p>\n<p><code>protocol<\/code> should be the protocol negotiated by this handshake, if any.<\/p>\n<p><code>pingInterval<\/code> controls the interval for sending ping signals. If a ping\nmessage is not answered by a pong message from the peer, the WebSocket is\nassumed disconnected and the connection is closed with a <code>goingAway<\/code> close\ncode. When a ping signal is sent, the pong message must be received within\n<code>pingInterval<\/code>. It defaults to <code>null<\/code>, indicating that ping messages are\ndisabled.<\/p>\n<p>If this is a WebSocket server, <code>serverSide<\/code> should be <code>true<\/code> (the\ndefault); if it's a client, <code>serverSide<\/code> should be <code>false<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "web_socket_channel.WebSocketChannel",
+            "sig": "",
+            "params": [
+                {
+                    "name": "channel",
+                    "type": "stream_channel.StreamChannel<dart:core.List<dart:core.int>>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "stream_channel.StreamChannel",
+                        "dart:core.List",
+                        "dart:core.int"
+                    ]
+                },
+                {
+                    "name": "protocol",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "pingInterval",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "serverSide",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-web_socket_channel_web_socket_channel\/WebSocketChannel\/WebSocketChannel.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">WebSocketChannel(StreamChannel&lt;List&lt;int&gt;&gt; channel,\n    {String protocol, Duration pingInterval, bool serverSide: true})\n    : _webSocket = new WebSocketImpl.fromSocket(\n          channel.stream, channel.sink, protocol, serverSide)\n        ..pingInterval = pingInterval;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "signKey",
+            "type": "dart:core.String",
+            "desc": "<p>Signs a <code>Sec-WebSocket-Key<\/code> header sent by a WebSocket client as part of\nthe <a href=\"https:\/\/tools.ietf.org\/html\/rfc6455#section-4.2.2\">initial handshake<\/a>.<\/p>\n<p>The return value should be sent back to the client in a\n<code>Sec-WebSocket-Accept<\/code> header.<\/p>\n    ",
+            "static": false,
+            "memberOf": "web_socket_channel.WebSocketChannel",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-web_socket_channel_web_socket_channel\/WebSocketChannel\/signKey.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static String signKey(String key) {\n  \/\/ We use [codeUnits] here rather than UTF-8-decoding the string because\n  \/\/ [key] is expected to be base64 encoded, and so will be pure ASCII.\n  return convert.base64\n      .encode(sha1.convert((key + webSocketGUID).codeUnits).bytes);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "closeCode",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The <a href=\"https:\/\/tools.ietf.org\/html\/rfc6455#section-7.1.5\">close code<\/a> set when the WebSocket connection is closed.<\/p>\n<p>Before the connection has been closed, this will be <code>null<\/code>.<\/p>\n        ",
+            "memberOf": "web_socket_channel.WebSocketChannel",
+            "isConstant": false,
+            "href": "package-web_socket_channel_web_socket_channel\/WebSocketChannel\/closeCode.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get closeCode =&gt; _webSocket.closeCode;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "closeReason",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>The <a href=\"https:\/\/tools.ietf.org\/html\/rfc6455#section-7.1.6\">close reason<\/a> set when the WebSocket connection is closed.<\/p>\n<p>Before the connection has been closed, this will be <code>null<\/code>.<\/p>\n        ",
+            "memberOf": "web_socket_channel.WebSocketChannel",
+            "isConstant": false,
+            "href": "package-web_socket_channel_web_socket_channel\/WebSocketChannel\/closeReason.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get closeReason =&gt; _webSocket.closeReason;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "protocol",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>The subprotocol selected by the server.<\/p>\n<p>For a client socket, this is initially <code>null<\/code>. After the WebSocket\nconnection is established the value is set to the subprotocol selected by\nthe server. If no subprotocol is negotiated the value will remain <code>null<\/code>.<\/p>\n        ",
+            "memberOf": "web_socket_channel.WebSocketChannel",
+            "isConstant": false,
+            "href": "package-web_socket_channel_web_socket_channel\/WebSocketChannel\/protocol.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get protocol =&gt; _webSocket.protocol;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "sink",
+            "type": "web_socket_channel.WebSocketSink",
+            "types": [],
+            "desc": "<p>The sink for sending values to the other endpoint.<\/p>\n<p>This supports additional arguments to <a href=\"package-web_socket_channel_web_socket_channel\/WebSocketSink\/close.html\">WebSocketSink.close<\/a> that provide\nthe remote endpoint reasons for closing the connection.<\/p>\n        ",
+            "memberOf": "web_socket_channel.WebSocketChannel",
+            "isConstant": false,
+            "href": "package-web_socket_channel_web_socket_channel\/WebSocketChannel\/sink.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">WebSocketSink get sink =&gt; new WebSocketSink._(_webSocket);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "stream",
+            "type": "dart:async.Stream",
+            "types": [],
+            "desc": "<p>The single-subscription stream that emits values from the other endpoint.<\/p>\n        ",
+            "memberOf": "web_socket_channel.WebSocketChannel",
+            "isConstant": false,
+            "href": "package-web_socket_channel_web_socket_channel\/WebSocketChannel\/stream.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Stream get stream =&gt; new StreamView(_webSocket);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-web_socket_channel_web_socket_channel\/WebSocketChannel-class.html",
+    "desc": "<p>A <a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a> that communicates over a WebSocket.<\/p>\n<p>This is implemented by classes that use <code>dart:io<\/code> and <code>dart:html<\/code>. The <a href=\"package-web_socket_channel_web_socket_channel\/WebSocketChannel\/WebSocketChannel.html\">new\nWebSocketChannel<\/a> constructor can also be used on any platform to connect to\nuse the WebSocket protocol over a pre-existing channel.<\/p>\n<p>All implementations emit <a href=\"package-web_socket_channel_web_socket_channel\/WebSocketChannelException-class.html\">WebSocketChannelException<\/a>s. These exceptions wrap\nthe native exception types where possible.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "WebSocketChannel"
+}

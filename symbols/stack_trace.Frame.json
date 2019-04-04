@@ -1,0 +1,405 @@
+{
+    "name": "stack_trace.Frame",
+    "extends": [],
+    "memberOf": "stack_trace",
+    "events": [],
+    "methods": [
+        {
+            "name": "Frame",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "stack_trace.Frame",
+            "sig": "",
+            "params": [
+                {
+                    "name": "uri",
+                    "type": "dart:core.Uri",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "line",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "column",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "member",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Frame\/Frame.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Frame(this.uri, this.line, this.column, this.member);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Frame.caller",
+            "type": "",
+            "desc": "<p>Returns a single frame of the current stack.<\/p>\n<p>By default, this will return the frame above the current method. If\n<code>level<\/code> is <code>0<\/code>, it will return the current method's frame; if <code>level<\/code> is\nhigher than <code>1<\/code>, it will return higher frames.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Frame",
+            "sig": "",
+            "params": [
+                {
+                    "name": "level",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Frame\/Frame.caller.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.caller([int level = 1]) {\n  if (level &lt; 0) {\n    throw new ArgumentError(\"Argument [level] must be greater than or equal \"\n        \"to 0.\");\n  }\n\n  return new Trace.current(level + 1).frames.first;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Frame.parseFirefox",
+            "type": "",
+            "desc": "<p>Parses a string representation of a Firefox stack frame.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Frame",
+            "sig": "",
+            "params": [
+                {
+                    "name": "frame",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseFirefox.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseFirefox(String frame) =&gt; _catchFormatException(frame, () {\n      var match = _firefoxSafariFrame.firstMatch(frame);\n      if (match == null) return new UnparsedFrame(frame);\n\n      \/\/ Normally this is a URI, but in a jsshell trace it can be a path.\n      var uri = _uriOrPathToUri(match[3]);\n\n      var member;\n      if (match[1] != null) {\n        member = match[1];\n        member +=\n            new List.filled('\/'.allMatches(match[2]).length, \".&lt;fn&gt;\").join();\n        if (member == '') member = '&lt;fn&gt;';\n\n        \/\/ Some Firefox members have initial dots. We remove them for consistency\n        \/\/ with other platforms.\n        member = member.replaceFirst(_initialDot, '');\n      } else {\n        member = '&lt;fn&gt;';\n      }\n\n      var line = match[4] == '' ? null : int.parse(match[4]);\n      var column =\n          match[5] == null || match[5] == '' ? null : int.parse(match[5]);\n      return new Frame(uri, line, column, member);\n    });<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Frame.parseFriendly",
+            "type": "",
+            "desc": "<p>Parses this package's string representation of a stack frame.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Frame",
+            "sig": "",
+            "params": [
+                {
+                    "name": "frame",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseFriendly.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseFriendly(String frame) =&gt; _catchFormatException(frame, () {\n      var match = _friendlyFrame.firstMatch(frame);\n      if (match == null) {\n        throw new FormatException(\n            \"Couldn't parse package:stack_trace stack trace line '$frame'.\");\n      }\n      \/\/ Fake truncated data urls generated by the friendly stack trace format\n      \/\/ cause Uri.parse to throw an exception so we have to special case them.\n      var uri = match[1] == 'data:...'\n          ? new Uri.dataFromString('')\n          : Uri.parse(match[1]);\n      \/\/ If there's no scheme, this is a relative URI. We should interpret it as\n      \/\/ relative to the current working directory.\n      if (uri.scheme == '') {\n        uri = path.toUri(path.absolute(path.fromUri(uri)));\n      }\n\n      var line = match[2] == null ? null : int.parse(match[2]);\n      var column = match[3] == null ? null : int.parse(match[3]);\n      return new Frame(uri, line, column, match[4]);\n    });<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Frame.parseIE",
+            "type": "",
+            "desc": "<p>Parses a string representation of an IE stack frame.<\/p>\n<p>IE10+ frames look just like V8 frames. Prior to IE10, stack traces can't\nbe retrieved.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Frame",
+            "sig": "",
+            "params": [
+                {
+                    "name": "frame",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseIE.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseIE(String frame) =&gt; new Frame.parseV8(frame);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Frame.parseJSCore",
+            "type": "",
+            "desc": "<p>Parses a string representation of a JavaScriptCore stack trace.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Frame",
+            "sig": "",
+            "params": [
+                {
+                    "name": "frame",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseJSCore.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseJSCore(String frame) =&gt; new Frame.parseV8(frame);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Frame.parseSafari",
+            "type": "",
+            "desc": "<p>Parses a string representation of a Safari stack frame.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Frame",
+            "sig": "",
+            "params": [
+                {
+                    "name": "frame",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseSafari.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseSafari(String frame) =&gt; new Frame.parseFirefox(frame);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Frame.parseSafari6_0",
+            "type": "",
+            "desc": "<p>Parses a string representation of a Safari 6.0 stack frame.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Frame",
+            "sig": "",
+            "params": [
+                {
+                    "name": "frame",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseSafari6_0.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@Deprecated(\"Use Frame.parseSafari instead.\")\nfactory Frame.parseSafari6_0(String frame) =&gt; new Frame.parseFirefox(frame);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Frame.parseSafari6_1",
+            "type": "",
+            "desc": "<p>Parses a string representation of a Safari 6.1+ stack frame.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Frame",
+            "sig": "",
+            "params": [
+                {
+                    "name": "frame",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseSafari6_1.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@Deprecated(\"Use Frame.parseSafari instead.\")\nfactory Frame.parseSafari6_1(String frame) =&gt; new Frame.parseFirefox(frame);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Frame.parseV8",
+            "type": "",
+            "desc": "<p>Parses a string representation of a Chrome\/V8 stack frame.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Frame",
+            "sig": "",
+            "params": [
+                {
+                    "name": "frame",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseV8.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseV8(String frame) =&gt; _catchFormatException(frame, () {\n      var match = _v8Frame.firstMatch(frame);\n      if (match == null) return new UnparsedFrame(frame);\n\n      \/\/ v8 location strings can be arbitrarily-nested, since it adds a layer of\n      \/\/ nesting for each eval performed on that line.\n      parseLocation(location, member) {\n        var evalMatch = _v8EvalLocation.firstMatch(location);\n        while (evalMatch != null) {\n          location = evalMatch[1];\n          evalMatch = _v8EvalLocation.firstMatch(location);\n        }\n\n        if (location == 'native') {\n          return new Frame(Uri.parse('native'), null, null, member);\n        }\n\n        var urlMatch = _v8UrlLocation.firstMatch(location);\n        if (urlMatch == null) return new UnparsedFrame(frame);\n\n        return new Frame(_uriOrPathToUri(urlMatch[1]), int.parse(urlMatch[2]),\n            int.parse(urlMatch[3]), member);\n      }\n\n      \/\/ V8 stack frames can be in two forms.\n      if (match[2] != null) {\n        \/\/ The first form looks like \" at FUNCTION (LOCATION)\". V8 proper lists\n        \/\/ anonymous functions within eval as \"&lt;anonymous&gt;\", while IE10 lists them\n        \/\/ as \"Anonymous function\".\n        return parseLocation(\n            match[2],\n            match[1]\n                .replaceAll(\"&lt;anonymous&gt;\", \"&lt;fn&gt;\")\n                .replaceAll(\"Anonymous function\", \"&lt;fn&gt;\")\n                .replaceAll(\"(anonymous function)\", \"&lt;fn&gt;\"));\n      } else {\n        \/\/ The second form looks like \" at LOCATION\", and is used for anonymous\n        \/\/ functions.\n        return parseLocation(match[3], \"&lt;fn&gt;\");\n      }\n    });<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Frame.parseVM",
+            "type": "",
+            "desc": "<p>Parses a string representation of a Dart VM stack frame.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Frame",
+            "sig": "",
+            "params": [
+                {
+                    "name": "frame",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Frame\/Frame.parseVM.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Frame.parseVM(String frame) =&gt; _catchFormatException(frame, () {\n      \/\/ The VM sometimes folds multiple stack frames together and replaces them\n      \/\/ with \"...\".\n      if (frame == '...') {\n        return new Frame(new Uri(), null, null, '...');\n      }\n\n      var match = _vmFrame.firstMatch(frame);\n      if (match == null) return new UnparsedFrame(frame);\n\n      \/\/ Get the pieces out of the regexp match. Function, URI and line should\n      \/\/ always be found. The column is optional.\n      var member = match[1]\n          .replaceAll(_asyncBody, \"&lt;async&gt;\")\n          .replaceAll(\"&lt;anonymous closure&gt;\", \"&lt;fn&gt;\");\n      var uri = Uri.parse(match[2]);\n\n      var lineAndColumn = match[3].split(':');\n      var line =\n          lineAndColumn.length &gt; 1 ? int.parse(lineAndColumn[1]) : null;\n      var column =\n          lineAndColumn.length &gt; 2 ? int.parse(lineAndColumn[2]) : null;\n      return new Frame(uri, line, column, member);\n    });<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Frame",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "package-stack_trace_stack_trace\/Frame\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() =&gt; '$location in $member';<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "column",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The column number of the code location.<\/p>\n<p>This can be null, indicating that the column number is unknown or\nunimportant.<\/p>\n        ",
+            "memberOf": "stack_trace.Frame",
+            "isConstant": false,
+            "href": "package-stack_trace_stack_trace\/Frame\/column.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int column\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isCore",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether this stack frame comes from the Dart core libraries.<\/p>\n        ",
+            "memberOf": "stack_trace.Frame",
+            "isConstant": false,
+            "href": "package-stack_trace_stack_trace\/Frame\/isCore.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isCore =&gt; uri.scheme == 'dart';<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "library",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>Returns a human-friendly description of the library that this stack frame\ncomes from.<\/p>\n<p>This will usually be the string form of <a href=\"package-stack_trace_stack_trace\/Frame\/uri.html\">uri<\/a>, but a relative URI will be\nused if possible. Data URIs will be truncated.<\/p>\n        ",
+            "memberOf": "stack_trace.Frame",
+            "isConstant": false,
+            "href": "package-stack_trace_stack_trace\/Frame\/library.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get library {\n  if (uri.scheme == 'data') return \"data:...\";\n  return path.prettyUri(uri);\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "line",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The line number on which the code location is located.<\/p>\n<p>This can be null, indicating that the line number is unknown or\nunimportant.<\/p>\n        ",
+            "memberOf": "stack_trace.Frame",
+            "isConstant": false,
+            "href": "package-stack_trace_stack_trace\/Frame\/line.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int line\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "location",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>A human-friendly description of the code location.<\/p>\n        ",
+            "memberOf": "stack_trace.Frame",
+            "isConstant": false,
+            "href": "package-stack_trace_stack_trace\/Frame\/location.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get location {\n  if (line == null) return library;\n  if (column == null) return '$library $line';\n  return '$library $line:$column';\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "member",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>The name of the member in which the code location occurs.<\/p>\n<p>Anonymous closures are represented as <code>&lt;fn&gt;<\/code> in this member string.<\/p>\n        ",
+            "memberOf": "stack_trace.Frame",
+            "isConstant": false,
+            "href": "package-stack_trace_stack_trace\/Frame\/member.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String member\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "package",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>Returns the name of the package this stack frame comes from, or <code>null<\/code> if\nthis stack frame doesn't come from a <code>package:<\/code> URL.<\/p>\n        ",
+            "memberOf": "stack_trace.Frame",
+            "isConstant": false,
+            "href": "package-stack_trace_stack_trace\/Frame\/package.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get package {\n  if (uri.scheme != 'package') return null;\n  return uri.path.split('\/').first;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "uri",
+            "type": "dart:core.Uri",
+            "types": [],
+            "desc": "<p>The URI of the file in which the code is located.<\/p>\n<p>This URI will usually have the scheme <code>dart<\/code>, <code>file<\/code>, <code>http<\/code>, or <code>https<\/code>.<\/p>\n        ",
+            "memberOf": "stack_trace.Frame",
+            "isConstant": false,
+            "href": "package-stack_trace_stack_trace\/Frame\/uri.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Uri uri\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-stack_trace_stack_trace\/Frame-class.html",
+    "desc": "<p>A single stack frame. Each frame points to a precise location in Dart code.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Frame"
+}

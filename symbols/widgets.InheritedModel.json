@@ -1,0 +1,163 @@
+{
+    "name": "widgets.InheritedModel",
+    "extends": [
+        "widgets.InheritedWidget",
+        "widgets.ProxyWidget",
+        "widgets.Widget",
+        "foundation.DiagnosticableTree",
+        "foundation.Diagnosticable",
+        "dart:core.Object"
+    ],
+    "memberOf": "widgets",
+    "events": [],
+    "methods": [
+        {
+            "name": "InheritedModel",
+            "type": "",
+            "desc": "<p>Creates an inherited widget that supports dependencies qualified by\n\"aspects\", i.e. a descendant widget can indicate that it should\nonly be rebuilt if a specific aspect of the model changes.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.InheritedModel",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "foundation.Key",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "child",
+                    "type": "widgets.Widget",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "widgets\/InheritedModel\/InheritedModel.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const InheritedModel({ Key key, Widget child }) : super(key: key, child: child);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "createElement",
+            "type": "widgets.InheritedModelElement",
+            "desc": "<p>Inflates this configuration to a concrete instance.<\/p>\n<p>A given widget can be included in the tree zero or more times. In particular\na given widget can be placed in the tree multiple times. Each time a widget\nis placed in the tree, it is inflated into an <a href=\"widgets\/Element-class.html\">Element<\/a>, which means a\nwidget that is incorporated into the tree multiple times will be inflated\nmultiple times.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.InheritedModel",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "widgets\/InheritedModel\/createElement.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nInheritedModelElement&lt;T&gt; createElement() =&gt; InheritedModelElement&lt;T&gt;(this);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "inheritFrom",
+            "type": "",
+            "desc": "<p>Makes <code>context<\/code> dependent on the specified <code>aspect<\/code> of an <a href=\"widgets\/InheritedModel-class.html\">InheritedModel<\/a>\nof type T.<\/p>\n<p>When the given <code>aspect<\/code> of the model changes, the <code>context<\/code> will be\nrebuilt. The <a href=\"widgets\/InheritedModel\/updateShouldNotifyDependent.html\">updateShouldNotifyDependent<\/a> method must determine if a\nchange in the model widget corresponds to an <code>aspect<\/code> value.<\/p>\n<p>The dependencies created by this method target all <a href=\"widgets\/InheritedModel-class.html\">InheritedModel<\/a> ancestors\nof type T up to and including the first one for which <a href=\"widgets\/InheritedModel\/isSupportedAspect.html\">isSupportedAspect<\/a>\nreturns true.<\/p>\n<p>If <code>aspect<\/code> is null this method is the same as\n<code>context.inheritFromWidgetOfExactType(T)<\/code>.<\/p>\n<p>If no ancestor of type T exists, null is returned.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.InheritedModel",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "widgets.BuildContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "aspect",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/InheritedModel\/inheritFrom.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static T inheritFrom&lt;T extends InheritedModel&lt;Object&gt;&gt;(BuildContext context, { Object aspect }) {\n  if (aspect == null)\n    return context.inheritFromWidgetOfExactType(T);\n\n  \/\/ Create a dependency on all of the type T ancestor models up until\n  \/\/ a model is found for which isSupportedAspect(aspect) is true.\n  final List&lt;InheritedElement&gt; models = _findModels&lt;T&gt;(context, aspect).toList();\n  if (models.isEmpty) {\n    return null;\n  }\n\n  final InheritedElement lastModel = models.last;\n  for (InheritedElement model in models) {\n    final T value = context.inheritFromElement(model, aspect: aspect);\n    if (model == lastModel)\n      return value;\n  }\n\n  assert(false);\n  return null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "isSupportedAspect",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns true if this model supports the given <code>aspect<\/code>.<\/p>\n<p>Returns true by default: this model supports all aspects.<\/p>\n<p>Subclasses may override this method to indicate that they do not support\nall model aspects. This is typically done when a model can be used\nto \"shadow\" some aspects of an ancestor.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.InheritedModel",
+            "sig": "",
+            "params": [
+                {
+                    "name": "aspect",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/InheritedModel\/isSupportedAspect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool isSupportedAspect(Object aspect) =&gt; true;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "updateShouldNotifyDependent",
+            "type": "dart:core.bool",
+            "desc": "<p>Return true if the changes between this model and <code>oldWidget<\/code> match any\nof the <code>dependencies<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "widgets.InheritedModel",
+            "sig": "",
+            "params": [
+                {
+                    "name": "oldWidget",
+                    "type": "widgets.InheritedModel",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "dependencies",
+                    "type": "dart:core.Set",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "widgets\/InheritedModel\/updateShouldNotifyDependent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool updateShouldNotifyDependent(covariant InheritedModel&lt;T&gt; oldWidget, Set&lt;T&gt; dependencies);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "widgets\/InheritedModel-class.html",
+    "desc": "<p>An <a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> that's intended to be used as the base class for\nmodels whose dependents may only depend on one part or \"aspect\" of the\noverall model.<\/p>\n<p>An inherited widget's dependents are unconditionally rebuilt when the\ninherited widget changes per <a href=\"widgets\/InheritedWidget\/updateShouldNotify.html\">InheritedWidget.updateShouldNotify<\/a>.\nThis widget is similar except that dependents aren't rebuilt\nunconditionally.<\/p>\n<p>Widgets that depend on an <a href=\"widgets\/InheritedModel-class.html\">InheritedModel<\/a> qualify their dependence\nwith a value that indicates what \"aspect\" of the model they depend\non. When the model is rebuilt, dependents will also be rebuilt, but\nonly if there was a change in the model that corresponds to the aspect\nthey provided.<\/p>\n<p>The type parameter <code>T<\/code> is the type of the model aspect objects.<\/p>\n<p>Widgets create a dependency on an <a href=\"widgets\/InheritedModel-class.html\">InheritedModel<\/a> with a static method:\n<a href=\"widgets\/InheritedModel\/inheritFrom.html\">InheritedModel.inheritFrom<\/a>. This method's <code>context<\/code> parameter\ndefines the subtree that will be rebuilt when the model changes.\nTypically the <code>inheritFrom<\/code> method is called from a model-specific\nstatic <code>of<\/code> method. For example:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class MyModel extends InheritedModel&lt;String&gt; {\n  \/\/ ...\n  static MyModel of(BuildContext context, String aspect) {\n    return InheritedModel.inheritFrom&lt;MyModel&gt;(context, aspect: aspect);\n  }\n}\n<\/code><\/pre>\n<p>Calling <code>MyModel.of(context, 'foo')<\/code> means that <code>context<\/code> should only\nbe rebuilt when the <code>foo<\/code> aspect of <code>MyModel<\/code> changes. If the aspect\nis null, then the model supports all aspects.<\/p>\n<p>When the inherited model is rebuilt the <a href=\"widgets\/InheritedWidget\/updateShouldNotify.html\">updateShouldNotify<\/a> and\n<a href=\"widgets\/InheritedModel\/updateShouldNotifyDependent.html\">updateShouldNotifyDependent<\/a> methods are used to decide what\nshould be rebuilt. If <a href=\"widgets\/InheritedWidget\/updateShouldNotify.html\">updateShouldNotify<\/a> returns true, then the\ninherited model's <a href=\"widgets\/InheritedModel\/updateShouldNotifyDependent.html\">updateShouldNotifyDependent<\/a> method is tested for\neach dependent and the set of aspect objects it depends on.\nThe <a href=\"widgets\/InheritedModel\/updateShouldNotifyDependent.html\">updateShouldNotifyDependent<\/a> method must compare the set of aspect\ndependencies with the changes in the model itself.<\/p>\n<p>For example:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class ABModel extends InheritedModel&lt;String&gt; {\n  ABModel({ this.a, this.b, Widget child }) : super(child: child);\n\n  final int a;\n  final int b;\n\n  @override\n  bool updateShouldNotify(ABModel old) {\n    return a != old.a || b != old.b;\n  }\n\n  @override\n  bool updateShouldNotifyDependent(ABModel old, Set&lt;String&gt; aspects) {\n    return (a != old.a &amp;&amp; aspects.contains('a'))\n        || (b != old.b &amp;&amp; aspects.contains('b'))\n  }\n\n  \/\/ ...\n}\n<\/code><\/pre>\n<p>In the previous example the dependencies checked by\n<a href=\"widgets\/InheritedModel\/updateShouldNotifyDependent.html\">updateShouldNotifyDependent<\/a> are just the aspect strings passed to\n<code>inheritFromWidgetOfExactType<\/code>. They're represented as a <a href=\"dart-core\/Set-class.html\">Set<\/a> because\none Widget can depend on more than one aspect of the model.\nIf a widget depends on the model but doesn't specify an aspect,\nthen changes in the model will cause the widget to be rebuilt\nunconditionally.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a>, an inherited widget that only notifies dependents\nwhen its value is different.<\/li>\n<li>\n<a href=\"widgets\/InheritedNotifier-class.html\">InheritedNotifier<\/a>, an inherited widget whose value can be a\n<a href=\"foundation\/Listenable-class.html\">Listenable<\/a>, and which will notify dependents whenever the value\nsends notifications.<\/li>\n<\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "InheritedModel"
+}

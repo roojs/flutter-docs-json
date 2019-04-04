@@ -1,0 +1,194 @@
+{
+    "name": "services.StandardMethodCodec",
+    "extends": [],
+    "memberOf": "services",
+    "events": [],
+    "methods": [
+        {
+            "name": "StandardMethodCodec",
+            "type": "",
+            "desc": "<p>Creates a <a href=\"services\/MethodCodec-class.html\">MethodCodec<\/a> using the Flutter standard binary encoding.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.StandardMethodCodec",
+            "sig": "",
+            "params": [
+                {
+                    "name": "messageCodec",
+                    "type": "services.StandardMessageCodec",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "services\/StandardMethodCodec\/StandardMethodCodec.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const StandardMethodCodec([this.messageCodec = const StandardMessageCodec()]);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "decodeEnvelope",
+            "type": "",
+            "desc": "<p>Decodes the specified result <code>envelope<\/code> from binary.<\/p>\n<p>Throws <a href=\"services\/PlatformException-class.html\">PlatformException<\/a>, if <code>envelope<\/code> represents an error, otherwise\nreturns the enveloped result.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.StandardMethodCodec",
+            "sig": "",
+            "params": [
+                {
+                    "name": "envelope",
+                    "type": "dart:typed_data.ByteData",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/StandardMethodCodec\/decodeEnvelope.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndynamic decodeEnvelope(ByteData envelope) {\n  \/\/ First byte is zero in success case, and non-zero otherwise.\n  if (envelope.lengthInBytes == 0)\n    throw const FormatException('Expected envelope, got nothing');\n  final ReadBuffer buffer = ReadBuffer(envelope);\n  if (buffer.getUint8() == 0)\n    return messageCodec.readValue(buffer);\n  final dynamic errorCode = messageCodec.readValue(buffer);\n  final dynamic errorMessage = messageCodec.readValue(buffer);\n  final dynamic errorDetails = messageCodec.readValue(buffer);\n  if (errorCode is String &amp;&amp; (errorMessage == null || errorMessage is String) &amp;&amp; !buffer.hasRemaining)\n    throw PlatformException(code: errorCode, message: errorMessage, details: errorDetails);\n  else\n    throw const FormatException('Invalid envelope');\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "decodeMethodCall",
+            "type": "services.MethodCall",
+            "desc": "<p>Decodes the specified <code>methodCall<\/code> from binary.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.StandardMethodCodec",
+            "sig": "",
+            "params": [
+                {
+                    "name": "methodCall",
+                    "type": "dart:typed_data.ByteData",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/StandardMethodCodec\/decodeMethodCall.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nMethodCall decodeMethodCall(ByteData methodCall) {\n  final ReadBuffer buffer = ReadBuffer(methodCall);\n  final dynamic method = messageCodec.readValue(buffer);\n  final dynamic arguments = messageCodec.readValue(buffer);\n  if (method is String &amp;&amp; !buffer.hasRemaining)\n    return MethodCall(method, arguments);\n  else\n    throw const FormatException('Invalid method call');\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "encodeErrorEnvelope",
+            "type": "dart:typed_data.ByteData",
+            "desc": "<p>Encodes an error result into a binary envelope.<\/p>\n<p>The specified error <code>code<\/code>, human-readable error <code>message<\/code>, and error\n<code>details<\/code> correspond to the fields of <a href=\"services\/PlatformException-class.html\">PlatformException<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.StandardMethodCodec",
+            "sig": "",
+            "params": [
+                {
+                    "name": "code",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "message",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "details",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/StandardMethodCodec\/encodeErrorEnvelope.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nByteData encodeErrorEnvelope({ @required String code, String message, dynamic details }) {\n  final WriteBuffer buffer = WriteBuffer();\n  buffer.putUint8(1);\n  messageCodec.writeValue(buffer, code);\n  messageCodec.writeValue(buffer, message);\n  messageCodec.writeValue(buffer, details);\n  return buffer.done();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "encodeMethodCall",
+            "type": "dart:typed_data.ByteData",
+            "desc": "<p>Encodes the specified <code>methodCall<\/code> into binary.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.StandardMethodCodec",
+            "sig": "",
+            "params": [
+                {
+                    "name": "call",
+                    "type": "services.MethodCall",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/StandardMethodCodec\/encodeMethodCall.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nByteData encodeMethodCall(MethodCall call) {\n  final WriteBuffer buffer = WriteBuffer();\n  messageCodec.writeValue(buffer, call.method);\n  messageCodec.writeValue(buffer, call.arguments);\n  return buffer.done();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "encodeSuccessEnvelope",
+            "type": "dart:typed_data.ByteData",
+            "desc": "<p>Encodes a successful <code>result<\/code> into a binary envelope.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.StandardMethodCodec",
+            "sig": "",
+            "params": [
+                {
+                    "name": "result",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/StandardMethodCodec\/encodeSuccessEnvelope.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nByteData encodeSuccessEnvelope(dynamic result) {\n  final WriteBuffer buffer = WriteBuffer();\n  buffer.putUint8(0);\n  messageCodec.writeValue(buffer, result);\n  return buffer.done();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "messageCodec",
+            "type": "services.StandardMessageCodec",
+            "types": [],
+            "desc": "<p>The message codec that this method codec uses for encoding values.<\/p>\n        ",
+            "memberOf": "services.StandardMethodCodec",
+            "isConstant": false,
+            "href": "services\/StandardMethodCodec\/messageCodec.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final StandardMessageCodec messageCodec\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "services\/StandardMethodCodec-class.html",
+    "desc": "<p><a href=\"services\/MethodCodec-class.html\">MethodCodec<\/a> using the Flutter standard binary encoding.<\/p>\n<p>The standard codec is guaranteed to be compatible with the corresponding\nstandard codec for FlutterMethodChannels on the host platform. These parts\nof the Flutter SDK are evolved synchronously.<\/p>\n<p>Values supported as method arguments and result payloads are those supported\nby <a href=\"services\/StandardMessageCodec-class.html\">StandardMessageCodec<\/a>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "StandardMethodCodec"
+}

@@ -1,0 +1,305 @@
+{
+    "name": "collection.QueueList",
+    "extends": [],
+    "memberOf": "collection",
+    "events": [],
+    "methods": [
+        {
+            "name": "QueueList",
+            "type": "",
+            "desc": "<p>Create an empty queue.<\/p>\n<p>If <code>initialCapacity<\/code> is given, prepare the queue for at least that many\nelements.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.QueueList",
+            "sig": "",
+            "params": [
+                {
+                    "name": "initialCapacity",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-collection_collection\/QueueList\/QueueList.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">QueueList([int initialCapacity])\n    : _head = 0,\n      _tail = 0 {\n  if (initialCapacity == null || initialCapacity &lt; _INITIAL_CAPACITY) {\n    initialCapacity = _INITIAL_CAPACITY;\n  } else if (!_isPowerOf2(initialCapacity)) {\n    initialCapacity = _nextPowerOf2(initialCapacity);\n  }\n  assert(_isPowerOf2(initialCapacity));\n  _table = new List&lt;E&gt;(initialCapacity);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "operator []",
+            "type": "",
+            "desc": "<p>Returns the object at the given <code>index<\/code> in the list\nor throws a <a href=\"dart-core\/RangeError-class.html\">RangeError<\/a> if <code>index<\/code> is out of bounds.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.QueueList",
+            "sig": "",
+            "params": [
+                {
+                    "name": "index",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-collection_collection\/QueueList\/operator_get.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">E operator [](int index) {\n  if (index &lt; 0 || index &gt;= length) {\n    throw new RangeError(\"Index $index must be in the range [0..$length).\");\n  }\n\n  return _table[(_head + index) &amp; (_table.length - 1)];\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "operator []=",
+            "type": "",
+            "desc": "<p>Sets the value at the given <code>index<\/code> in the list to <code>value<\/code>\nor throws a <a href=\"dart-core\/RangeError-class.html\">RangeError<\/a> if <code>index<\/code> is out of bounds.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.QueueList",
+            "sig": "",
+            "params": [
+                {
+                    "name": "index",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "value",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-collection_collection\/QueueList\/operator_put.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void operator []=(int index, E value) {\n  if (index &lt; 0 || index &gt;= length) {\n    throw new RangeError(\"Index $index must be in the range [0..$length).\");\n  }\n\n  _table[(_head + index) &amp; (_table.length - 1)] = value;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "add",
+            "type": "",
+            "desc": "<p>Adds <code>value<\/code> at the end of the queue.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.QueueList",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-collection_collection\/QueueList\/add.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void add(E element) {\n  _add(element);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addAll",
+            "type": "",
+            "desc": "<p>Adds all elements of <code>iterable<\/code> at the end of the queue. The\nlength of the queue is extended by the length of <code>iterable<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.QueueList",
+            "sig": "",
+            "params": [
+                {
+                    "name": "iterable",
+                    "type": "dart:core.Iterable",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-collection_collection\/QueueList\/addAll.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addAll(Iterable&lt;E&gt; iterable) {\n  if (iterable is List) {\n    var list = iterable;\n    int addCount = list.length;\n    int length = this.length;\n    if (length + addCount &gt;= _table.length) {\n      _preGrow(length + addCount);\n      \/\/ After preGrow, all elements are at the start of the list.\n      _table.setRange(length, length + addCount, list, 0);\n      _tail += addCount;\n    } else {\n      \/\/ Adding addCount elements won't reach _head.\n      int endSpace = _table.length - _tail;\n      if (addCount &lt; endSpace) {\n        _table.setRange(_tail, _tail + addCount, list, 0);\n        _tail += addCount;\n      } else {\n        int preSpace = addCount - endSpace;\n        _table.setRange(_tail, _tail + endSpace, list, 0);\n        _table.setRange(0, preSpace, list, endSpace);\n        _tail = preSpace;\n      }\n    }\n  } else {\n    for (E element in iterable) _add(element);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addFirst",
+            "type": "",
+            "desc": "<p>Adds <code>value<\/code> at the beginning of the queue.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.QueueList",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-collection_collection\/QueueList\/addFirst.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addFirst(E element) {\n  _head = (_head - 1) &amp; (_table.length - 1);\n  _table[_head] = element;\n  if (_head == _tail) _grow();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addLast",
+            "type": "",
+            "desc": "<p>Adds <code>value<\/code> at the end of the queue.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.QueueList",
+            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-collection_collection\/QueueList\/addLast.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addLast(E element) {\n  _add(element);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "cast",
+            "type": "collection.QueueList",
+            "desc": "<p>Provides a view of this queue as a queue of <code>R<\/code> instances, if necessary.<\/p>\n<p>If this queue contains only instances of <code>R<\/code>, all read operations\nwill work correctly. If any operation tries to access an element\nthat is not an instance of <code>R<\/code>, the access will throw instead.<\/p>\n<p>Elements added to the queue (e.g., by using <a href=\"package-collection_collection\/QueueList\/addFirst.html\">addFirst<\/a> or <a href=\"package-collection_collection\/QueueList\/addAll.html\">addAll<\/a>)\nmust be instance of <code>R<\/code> to be valid arguments to the adding function,\nand they must be instances of <code>E<\/code> as well to be accepted by\nthis queue as well.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.QueueList",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "package-collection_collection\/QueueList\/cast.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">QueueList&lt;T&gt; cast&lt;T&gt;() =&gt; QueueList._castFrom&lt;E, T&gt;(this);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "QueueList.from",
+            "type": "",
+            "desc": "<p>Create a queue initially containing the elements of <code>source<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.QueueList",
+            "sig": "",
+            "params": [
+                {
+                    "name": "source",
+                    "type": "dart:core.Iterable",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-collection_collection\/QueueList\/QueueList.from.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory QueueList.from(Iterable&lt;E&gt; source) {\n  if (source is List) {\n    int length = source.length;\n    QueueList&lt;E&gt; queue = new QueueList(length + 1);\n    assert(queue._table.length &gt; length);\n    var sourceList = source;\n    queue._table.setRange(0, length, sourceList, 0);\n    queue._tail = length;\n    return queue;\n  } else {\n    return new QueueList&lt;E&gt;()..addAll(source);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "removeFirst",
+            "type": "",
+            "desc": "<p>Removes and returns the first element of this queue.<\/p>\n<p>The queue must not be empty when this method is called.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.QueueList",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "package-collection_collection\/QueueList\/removeFirst.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">E removeFirst() {\n  if (_head == _tail) throw new StateError(\"No element\");\n  E result = _table[_head];\n  _table[_head] = null;\n  _head = (_head + 1) &amp; (_table.length - 1);\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "removeLast",
+            "type": "",
+            "desc": "<p>Removes and returns the last element of the queue.<\/p>\n<p>The queue must not be empty when this method is called.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.QueueList",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "package-collection_collection\/QueueList\/removeLast.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">E removeLast() {\n  if (_head == _tail) throw new StateError(\"No element\");\n  _tail = (_tail - 1) &amp; (_table.length - 1);\n  E result = _table[_tail];\n  _table[_tail] = null;\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "retype",
+            "type": "collection.QueueList",
+            "desc": "",
+            "static": false,
+            "memberOf": "collection.QueueList",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "package-collection_collection\/QueueList\/retype.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@deprecated\nQueueList&lt;T&gt; retype&lt;T&gt;() =&gt; cast&lt;T&gt;();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "collection.QueueList",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "package-collection_collection\/QueueList\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() =&gt; IterableBase.iterableToFullString(this, \"{\", \"}\");<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "length",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>Returns the number of elements in the iterable.<\/p>\n<p>This is an efficient operation that doesn't require iterating through\nthe elements.<\/p>\n        ",
+            "memberOf": "collection.QueueList",
+            "isConstant": false,
+            "href": "package-collection_collection\/QueueList\/length.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get length =&gt; (_tail - _head) &amp; (_table.length - 1);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-collection_collection\/QueueList-class.html",
+    "desc": "<p>A class that efficiently implements both <a href=\"dart-collection\/Queue-class.html\">Queue<\/a> and <a href=\"dart-core\/List-class.html\">List<\/a>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "QueueList"
+}

@@ -1,0 +1,129 @@
+{
+    "name": "dart:async.Completer",
+    "extends": [],
+    "memberOf": "dart:async",
+    "events": [],
+    "methods": [
+        {
+            "name": "Completer",
+            "type": "",
+            "desc": "<p>Creates a new completer.<\/p>\n<p>The general workflow for creating a new future is to 1) create a\nnew completer, 2) hand out its future, and, at a later point, 3) invoke\neither <a href=\"dart-async\/Completer\/complete.html\">complete<\/a> or <a href=\"dart-async\/Completer\/completeError.html\">completeError<\/a>.<\/p>\n<p>The completer completes the future asynchronously. That means that\ncallbacks registered on the future are not called immediately when\n<a href=\"dart-async\/Completer\/complete.html\">complete<\/a> or <a href=\"dart-async\/Completer\/completeError.html\">completeError<\/a> is called. Instead the callbacks are\ndelayed until a later microtask.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>var completer = new Completer();\nhandOut(completer.future);\nlater: {\n  completer.complete('completion value');\n}\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Completer",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "dart-async\/Completer\/Completer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Completer() =&gt; new _AsyncCompleter&lt;T&gt;();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "complete",
+            "type": "",
+            "desc": "<p>Completes <a href=\"dart-async\/Completer\/future.html\">future<\/a> with the supplied values.<\/p>\n<p>The value must be either a value of type <code>T<\/code>\nor a future of type <code>Future&lt;T&gt;<\/code>.<\/p>\n<p>If the value is itself a future, the completer will wait for that future\nto complete, and complete with the same result, whether it is a success\nor an error.<\/p>\n<p>Calling <a href=\"dart-async\/Completer\/complete.html\">complete<\/a> or <a href=\"dart-async\/Completer\/completeError.html\">completeError<\/a> must be done at most once.<\/p>\n<p>All listeners on the future are informed about the value.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Completer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "value",
+                    "type": "dart:async.FutureOr",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Completer\/complete.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void complete([FutureOr&lt;T&gt; value]);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "completeError",
+            "type": "",
+            "desc": "<p>Complete <a href=\"dart-async\/Completer\/future.html\">future<\/a> with an error.<\/p>\n<p>Calling <a href=\"dart-async\/Completer\/complete.html\">complete<\/a> or <a href=\"dart-async\/Completer\/completeError.html\">completeError<\/a> must be done at most once.<\/p>\n<p>Completing a future with an error indicates that an exception was thrown\nwhile trying to produce a value.<\/p>\n<p>If <code>error<\/code> is <code>null<\/code>, it is replaced by a <a href=\"dart-core\/NullThrownError-class.html\">NullThrownError<\/a>.<\/p>\n<p>If <code>error<\/code> is a <code>Future<\/code>, the future itself is used as the error value.\nIf you want to complete with the result of the future, you can use:<\/p>\n<pre class=\"language-dart\"><code>thisCompleter.complete(theFuture)\n<\/code><\/pre>\n<p>or if you only want to handle an error from the future:<\/p>\n<pre class=\"language-dart\"><code>theFuture.catchError(thisCompleter.completeError);\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Completer",
+            "sig": "",
+            "params": [
+                {
+                    "name": "error",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "stackTrace",
+                    "type": "dart:core.StackTrace",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-async\/Completer\/completeError.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void completeError(Object error, [StackTrace stackTrace]);<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "Completer.sync",
+            "type": "",
+            "desc": "<p>Completes the future synchronously.<\/p>\n<p>This constructor should be avoided unless the completion of the future is\nknown to be the final result of another asynchronous operation. If in doubt\nuse the default <a href=\"dart-async\/Completer-class.html\">Completer<\/a> constructor.<\/p>\n<p>Using an normal, asynchronous, completer will never give the wrong\nbehavior, but using a synchronous completer incorrectly can cause\notherwise correct programs to break.<\/p>\n<p>A synchronous completer is only intended for optimizing event\npropagation when one asynchronous event immediately triggers another.\nIt should not be used unless the calls to <a href=\"dart-async\/Completer\/complete.html\">complete<\/a> and <a href=\"dart-async\/Completer\/completeError.html\">completeError<\/a>\nare guaranteed to occur in places where it won't break <code>Future<\/code> invariants.<\/p>\n<p>Completing synchronously means that the completer's future will be\ncompleted immediately when calling the <a href=\"dart-async\/Completer\/complete.html\">complete<\/a> or <a href=\"dart-async\/Completer\/completeError.html\">completeError<\/a>\nmethod on a synchronous completer, which also calls any callbacks\nregistered on that future.<\/p>\n<p>Completing synchronously must not break the rule that when you add a\ncallback on a future, that callback must not be called until the code\nthat added the callback has completed.\nFor that reason, a synchronous completion must only occur at the very end\n(in \"tail position\") of another synchronous event,\nbecause at that point, completing the future immediately is be equivalent\nto returning to the event loop and completing the future in the next\nmicrotask.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>var completer = new Completer.sync();\n\/\/ The completion is the result of the asynchronous onDone event.\n\/\/ No other operation is performed after the completion. It is safe\n\/\/ to use the Completer.sync constructor.\nstream.listen(print, onDone: () { completer.complete(\"done\"); });\n<\/code><\/pre>\n<p>Bad example. Do not use this code. Only for illustrative purposes:<\/p>\n<pre class=\"language-dart\"><code>var completer = new Completer.sync();\ncompleter.future.then((_) { bar(); });\n\/\/ The completion is the result of the asynchronous onDone event.\n\/\/ However, there is still code executed after the completion. This\n\/\/ operation is *not* safe.\nstream.listen(print, onDone: () {\n  completer.complete(\"done\");\n  foo();  \/\/ In this case, foo() runs after bar().\n});\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "dart:async.Completer",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "dart-async\/Completer\/Completer.sync.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Completer.sync() =&gt; new _SyncCompleter&lt;T&gt;();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "future",
+            "type": "dart:async.Future",
+            "types": [],
+            "desc": "<p>The future that is completed by this completer.<\/p>\n<p>The future that is completed when <a href=\"dart-async\/Completer\/complete.html\">complete<\/a> or <a href=\"dart-async\/Completer\/completeError.html\">completeError<\/a> is called.<\/p>\n        ",
+            "memberOf": "dart:async.Completer",
+            "isConstant": false,
+            "href": "dart-async\/Completer\/future.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; get future;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isCompleted",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Whether the <a href=\"dart-async\/Completer\/future.html\">future<\/a> has been completed.<\/p>\n<p>Reflects whether <a href=\"dart-async\/Completer\/complete.html\">complete<\/a> or <a href=\"dart-async\/Completer\/completeError.html\">completeError<\/a> has been called.\nA <code>true<\/code> value doesn't necessarily mean that listeners of this future\nhave been invoked yet, either because the completer usually waits until\na later microtask to propagate the result, or because <a href=\"dart-async\/Completer\/complete.html\">complete<\/a>\nwas called with a future that hasn't completed yet.<\/p>\n<p>When this value is <code>true<\/code>, <a href=\"dart-async\/Completer\/complete.html\">complete<\/a> and <a href=\"dart-async\/Completer\/completeError.html\">completeError<\/a> must not be\ncalled again.<\/p>\n        ",
+            "memberOf": "dart:async.Completer",
+            "isConstant": false,
+            "href": "dart-async\/Completer\/isCompleted.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isCompleted;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "dart-async\/Completer-class.html",
+    "desc": "<p>A way to produce Future objects and to complete them later\nwith a value or error.<\/p>\n<p>Most of the time, the simplest way to create a future is to just use\none of the <a href=\"dart-async\/Future-class.html\">Future<\/a> constructors to capture the result of a single\nasynchronous computation:<\/p>\n<pre class=\"language-dart\"><code>new Future(() { doSomething(); return result; });\n<\/code><\/pre>\n<p>or, if the future represents the result of a sequence of asynchronous\ncomputations, they can be chained using <a href=\"dart-async\/Future\/then.html\">Future.then<\/a> or similar functions\non <a href=\"dart-async\/Future-class.html\">Future<\/a>:<\/p>\n<pre class=\"language-dart\"><code>Future doStuff(){\n  return someAsyncOperation().then((result) {\n    return someOtherAsyncOperation(result);\n  });\n}\n<\/code><\/pre>\n<p>If you do need to create a Future from scratch \u2014 for example,\nwhen you're converting a callback-based API into a Future-based\none \u2014 you can use a Completer as follows:<\/p>\n<pre class=\"language-dart\"><code>class AsyncOperation {\n  Completer _completer = new Completer();\n\n  Future&lt;T&gt; doOperation() {\n    _startOperation();\n    return _completer.future; \/\/ Send future object back to client.\n  }\n\n  \/\/ Something calls this when the value is ready.\n  void _finishOperation(T result) {\n    _completer.complete(result);\n  }\n\n  \/\/ If something goes wrong, call this.\n  void _errorHappened(error) {\n    _completer.completeError(error);\n  }\n}\n<\/code><\/pre>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Completer"
+}

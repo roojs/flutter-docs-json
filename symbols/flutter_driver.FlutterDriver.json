@@ -1,0 +1,935 @@
+{
+    "name": "flutter_driver.FlutterDriver",
+    "extends": [],
+    "memberOf": "flutter_driver",
+    "events": [],
+    "methods": [
+        {
+            "name": "checkHealth",
+            "type": "dart:async.Future<flutter_driver.Health>",
+            "desc": "<p>Checks the status of the Flutter Driver extension.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/checkHealth.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;Health&gt; checkHealth({ Duration timeout }) async {\n  return Health.fromJson(await _sendCommand(GetHealth(timeout: timeout)));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "flutter_driver.Health"
+            ]
+        },
+        {
+            "name": "clearTimeline",
+            "type": "dart:async.Future",
+            "desc": "<p>Clears all timeline events recorded up until now.<\/p>\n<p>The <code>timeout<\/code> argument causes a warning to be displayed to the user if the\noperation exceeds the specified timeout; it does not actually cancel the\noperation.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/clearTimeline.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; clearTimeline({\n  Duration timeout = _kUnusuallyLongTimeout,\n}) async {\n  assert(timeout != null);\n  try {\n    await _warnIfSlow&lt;void&gt;(\n      future: _peer.sendRequest(_clearVMTimelineMethodName, &lt;String, String&gt;{}),\n      timeout: timeout,\n      message: 'VM is taking an unusually long time to respond to being told to clear its timeline buffer...',\n    );\n  } catch (error, stackTrace) {\n    throw DriverError(\n      'Failed to clear event timeline due to remote error',\n      error,\n      stackTrace,\n    );\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "close",
+            "type": "dart:async.Future",
+            "desc": "<p>Closes the underlying connection to the VM service.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that fires once the connection has been closed.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/close.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; close() async {\n  \/\/ Don't leak vm_service_client-specific objects, if any\n  await _serviceClient.close();\n  await _peer.close();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "connect",
+            "type": "dart:async.Future<flutter_driver.FlutterDriver>",
+            "desc": "<p>Connects to a Flutter application.<\/p>\n<p>Resumes the application if it is currently paused (e.g. at a breakpoint).<\/p>\n<p><code>dartVmServiceUrl<\/code> is the URL to Dart observatory (a.k.a. VM service). If\nnot specified, the URL specified by the <code>VM_SERVICE_URL<\/code> environment\nvariable is used. One or the other must be specified.<\/p>\n<p><code>printCommunication<\/code> determines whether the command communication between\nthe test and the app should be printed to stdout.<\/p>\n<p><code>logCommunicationToFile<\/code> determines whether the command communication\nbetween the test and the app should be logged to <code>flutter_driver_commands.log<\/code>.<\/p>\n<p><code>isolateNumber<\/code> determines the specific isolate to connect to.\nIf this is left as <code>null<\/code>, will connect to the first isolate found\nrunning on <code>dartVmServiceUrl<\/code>.<\/p>\n<p><code>fuchsiaModuleTarget<\/code> specifies the pattern for determining which mod to\ncontrol. When running on a Fuchsia device, either this or the environment\nvariable <code>FUCHSIA_MODULE_TARGET<\/code> must be set (the environment variable is\ntreated as a substring pattern). This field will be ignored if\n<code>isolateNumber<\/code> is set, as this is already enough information to connect\nto an isolate.<\/p>\n<p>The return value is a future. This method never times out, though it may\nfail (completing with an error). A timeout can be applied by the caller\nusing <a href=\"dart-async\/Future\/timeout.html\">Future.timeout<\/a> if necessary.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "dartVmServiceUrl",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "printCommunication",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "logCommunicationToFile",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "isolateNumber",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "fuchsiaModuleTarget",
+                    "type": "dart:core.Pattern",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/connect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;FlutterDriver&gt; connect({\n  String dartVmServiceUrl,\n  bool printCommunication = false,\n  bool logCommunicationToFile = true,\n  int isolateNumber,\n  Pattern fuchsiaModuleTarget,\n}) async {\n  \/\/ If running on a Fuchsia device, connect to the first isolate whose name\n  \/\/ matches FUCHSIA_MODULE_TARGET.\n  \/\/\n  \/\/ If the user has already supplied an isolate number\/URL to the Dart VM\n  \/\/ service, then this won't be run as it is unnecessary.\n  if (Platform.isFuchsia &amp;&amp; isolateNumber == null) {\n    \/\/ TODO(awdavies): Use something other than print. On fuchsia\n    \/\/ `stderr`\/`stdout` appear to have issues working correctly.\n    flutterDriverLog.listen(print);\n    fuchsiaModuleTarget ??= Platform.environment['FUCHSIA_MODULE_TARGET'];\n    if (fuchsiaModuleTarget == null) {\n      throw DriverError(\n        'No Fuchsia module target has been specified.\\n'\n        'Please make sure to specify the FUCHSIA_MODULE_TARGET '\n        'environment variable.'\n      );\n    }\n    final fuchsia.FuchsiaRemoteConnection fuchsiaConnection =\n        await FuchsiaCompat.connect();\n    final List&lt;fuchsia.IsolateRef&gt; refs =\n        await fuchsiaConnection.getMainIsolatesByPattern(fuchsiaModuleTarget);\n    final fuchsia.IsolateRef ref = refs.first;\n    isolateNumber = ref.number;\n    dartVmServiceUrl = ref.dartVm.uri.toString();\n    await fuchsiaConnection.stop();\n    FuchsiaCompat.cleanup();\n  }\n\n  dartVmServiceUrl ??= Platform.environment['VM_SERVICE_URL'];\n\n  if (dartVmServiceUrl == null) {\n    throw DriverError(\n      'Could not determine URL to connect to application.\\n'\n      'Either the VM_SERVICE_URL environment variable should be set, or an explicit '\n      'URL should be provided to the FlutterDriver.connect() method.'\n    );\n  }\n\n  \/\/ Connect to Dart VM services\n  _log.info('Connecting to Flutter application at $dartVmServiceUrl');\n  final VMServiceClientConnection connection =\n      await vmServiceConnectFunction(dartVmServiceUrl);\n  final VMServiceClient client = connection.client;\n  final VM vm = await client.getVM();\n  final VMIsolateRef isolateRef = isolateNumber ==\n      null ? vm.isolates.first :\n             vm.isolates.firstWhere(\n                 (VMIsolateRef isolate) =&gt; isolate.number == isolateNumber);\n  _log.trace('Isolate found with number: ${isolateRef.number}');\n\n  VMIsolate isolate = await isolateRef.loadRunnable();\n\n  \/\/ TODO(yjbanov): vm_service_client does not support \"None\" pause event yet.\n  \/\/ It is currently reported as null, but we cannot rely on it because\n  \/\/ eventually the event will be reported as a non-null object. For now,\n  \/\/ list all the events we know about. Later we'll check for \"None\" event\n  \/\/ explicitly.\n  \/\/\n  \/\/ See: https:\/\/github.com\/dart-lang\/vm_service_client\/issues\/4\n  if (isolate.pauseEvent is! VMPauseStartEvent &amp;&amp;\n      isolate.pauseEvent is! VMPauseExitEvent &amp;&amp;\n      isolate.pauseEvent is! VMPauseBreakpointEvent &amp;&amp;\n      isolate.pauseEvent is! VMPauseExceptionEvent &amp;&amp;\n      isolate.pauseEvent is! VMPauseInterruptedEvent &amp;&amp;\n      isolate.pauseEvent is! VMResumeEvent) {\n    isolate = await isolateRef.loadRunnable();\n  }\n\n  final FlutterDriver driver = FlutterDriver.connectedTo(\n    client, connection.peer, isolate,\n    printCommunication: printCommunication,\n    logCommunicationToFile: logCommunicationToFile,\n  );\n\n  \/\/ Attempts to resume the isolate, but does not crash if it fails because\n  \/\/ the isolate is already resumed. There could be a race with other tools,\n  \/\/ such as a debugger, any of which could have resumed the isolate.\n  Future&lt;dynamic&gt; resumeLeniently() {\n    _log.trace('Attempting to resume isolate');\n    return isolate.resume().catchError((dynamic e) {\n      const int vmMustBePausedCode = 101;\n      if (e is rpc.RpcException &amp;&amp; e.code == vmMustBePausedCode) {\n        \/\/ No biggie; something else must have resumed the isolate\n        _log.warning(\n          'Attempted to resume an already resumed isolate. This may happen '\n          'when we lose a race with another tool (usually a debugger) that '\n          'is connected to the same isolate.'\n        );\n      } else {\n        \/\/ Failed to resume due to another reason. Fail hard.\n        throw e;\n      }\n    });\n  }\n\n  \/\/\/ Waits for a signal from the VM service that the extension is registered.\n  \/\/\/ Returns [_flutterExtensionMethodName]\n  Future&lt;String&gt; waitForServiceExtension() {\n    return isolate.onExtensionAdded.firstWhere((String extension) {\n      return extension == _flutterExtensionMethodName;\n    });\n  }\n\n  \/\/\/ Tells the Dart VM Service to notify us about \"Isolate\" events.\n  \/\/\/\n  \/\/\/ This is a workaround for an issue in package:vm_service_client, which\n  \/\/\/ subscribes to the \"Isolate\" stream lazily upon subscription, which\n  \/\/\/ results in lost events.\n  \/\/\/\n  \/\/\/ Details: https:\/\/github.com\/dart-lang\/vm_service_client\/issues\/17\n  Future&lt;void&gt; enableIsolateStreams() async {\n    await connection.peer.sendRequest('streamListen', &lt;String, String&gt;{\n      'streamId': 'Isolate',\n    });\n  }\n\n  \/\/ Attempt to resume isolate if it was paused\n  if (isolate.pauseEvent is VMPauseStartEvent) {\n    _log.trace('Isolate is paused at start.');\n\n    \/\/ If the isolate is paused at the start, e.g. via the --start-paused\n    \/\/ option, then the VM service extension is not registered yet. Wait for\n    \/\/ it to be registered.\n    await enableIsolateStreams();\n    final Future&lt;String&gt; whenServiceExtensionReady = waitForServiceExtension();\n    final Future&lt;dynamic&gt; whenResumed = resumeLeniently();\n    await whenResumed;\n\n    _log.trace('Waiting for service extension');\n    \/\/ We will never receive the extension event if the user does not\n    \/\/ register it. If that happens, show a message but continue waiting.\n    await _warnIfSlow&lt;String&gt;(\n      future: whenServiceExtensionReady,\n      timeout: _kUnusuallyLongTimeout,\n      message: 'Flutter Driver extension is taking a long time to become available. '\n               'Ensure your test app (often \"lib\/main.dart\") imports '\n               '\"package:flutter_driver\/driver_extension.dart\" and '\n               'calls enableFlutterDriverExtension() as the first call in main().',\n    );\n  } else if (isolate.pauseEvent is VMPauseExitEvent ||\n             isolate.pauseEvent is VMPauseBreakpointEvent ||\n             isolate.pauseEvent is VMPauseExceptionEvent ||\n             isolate.pauseEvent is VMPauseInterruptedEvent) {\n    \/\/ If the isolate is paused for any other reason, assume the extension is\n    \/\/ already there.\n    _log.trace('Isolate is paused mid-flight.');\n    await resumeLeniently();\n  } else if (isolate.pauseEvent is VMResumeEvent) {\n    _log.trace('Isolate is not paused. Assuming application is ready.');\n  } else {\n    _log.warning(\n      'Unknown pause event type ${isolate.pauseEvent.runtimeType}. '\n      'Assuming application is ready.'\n    );\n  }\n\n  \/\/ Invoked checkHealth and try to fix delays in the registration of Service\n  \/\/ extensions\n  Future&lt;Health&gt; checkHealth() async {\n    try {\n      \/\/ At this point the service extension must be installed. Verify it.\n      return await driver.checkHealth();\n    } on rpc.RpcException catch (e) {\n      if (e.code != error_code.METHOD_NOT_FOUND) {\n        rethrow;\n      }\n      _log.trace(\n        'Check Health failed, try to wait for the service extensions to be'\n        'registered.'\n      );\n      await enableIsolateStreams();\n      await waitForServiceExtension();\n      return driver.checkHealth();\n    }\n  }\n\n  final Health health = await checkHealth();\n  if (health.status != HealthStatus.ok) {\n    await client.close();\n    throw DriverError('Flutter application health check failed.');\n  }\n\n  _log.info('Connected to Flutter application.');\n  return driver;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "flutter_driver.FlutterDriver"
+            ]
+        },
+        {
+            "name": "FlutterDriver.connectedTo",
+            "type": "",
+            "desc": "<p>Creates a driver that uses a connection provided by the given\n<code>_serviceClient<\/code>, <code>_peer<\/code> and <code>_appIsolate<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "_serviceClient",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "_peer",
+                    "type": "json_rpc_2.Peer",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "_appIsolate",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "printCommunication",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "logCommunicationToFile",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "flutter_driver\/FlutterDriver\/FlutterDriver.connectedTo.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@visibleForTesting\nFlutterDriver.connectedTo(\n  this._serviceClient,\n  this._peer,\n  this._appIsolate, {\n  bool printCommunication = false,\n  bool logCommunicationToFile = true,\n}) : _printCommunication = printCommunication,\n     _logCommunicationToFile = logCommunicationToFile,\n     _driverId = _nextDriverId++;<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "enterText",
+            "type": "dart:async.Future",
+            "desc": "<p>Enters <code>text<\/code> into the currently focused text input, such as the\n<a href=\"widgets\/EditableText-class.html\">EditableText<\/a> widget.<\/p>\n<p>This method does not use the operating system keyboard to enter text.\nInstead it emulates text entry by sending events identical to those sent\nby the operating system keyboard (the \"TextInputClient.updateEditingState\"\nmethod channel call).<\/p>\n<p>Generally the behavior is dependent on the implementation of the widget\nreceiving the input. Usually, editable widgets, such as <a href=\"widgets\/EditableText-class.html\">EditableText<\/a> and\nthose built on top of it would replace the currently entered text with the\nprovided <code>text<\/code>.<\/p>\n<p>It is assumed that the widget receiving text input is focused prior to\ncalling this method. Typically, a test would activate a widget, e.g. using\n<a href=\"flutter_driver\/FlutterDriver\/tap.html\">tap<\/a>, then call this method.<\/p>\n<p>For this method to work, text emulation must be enabled (see\n<a href=\"flutter_driver\/FlutterDriver\/setTextEntryEmulation.html\">setTextEntryEmulation<\/a>). Text emulation is enabled by default.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">test('enters text in a text field', () async {\n  var textField = find.byValueKey('enter-text-field');\n  await driver.tap(textField);  \/\/ acquire focus\n  await driver.enterText('Hello!');  \/\/ enter text\n  await driver.waitFor(find.text('Hello!'));  \/\/ verify text appears on UI\n  await driver.enterText('World!');  \/\/ enter another piece of text\n  await driver.waitFor(find.text('World!'));  \/\/ verify new text appears\n});\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "text",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/enterText.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; enterText(String text, { Duration timeout }) async {\n  await _sendCommand(EnterText(text, timeout: timeout));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "forceGC",
+            "type": "dart:async.Future",
+            "desc": "<p>Force a garbage collection run in the VM.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/forceGC.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; forceGC() async {\n  try {\n    await _peer\n        .sendRequest(_collectAllGarbageMethodName, &lt;String, String&gt;{\n          'isolateId': 'isolates\/${_appIsolate.numberAsString}',\n        });\n  } catch (error, stackTrace) {\n    throw DriverError(\n      'Failed to force a GC due to remote error',\n      error,\n      stackTrace,\n    );\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "getRenderTree",
+            "type": "dart:async.Future<flutter_driver.RenderTree>",
+            "desc": "<p>Returns a dump of the render tree.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/getRenderTree.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;RenderTree&gt; getRenderTree({ Duration timeout }) async {\n  return RenderTree.fromJson(await _sendCommand(GetRenderTree(timeout: timeout)));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "flutter_driver.RenderTree"
+            ]
+        },
+        {
+            "name": "getSemanticsId",
+            "type": "dart:async.Future<dart:core.int>",
+            "desc": "<p>Retrieves the semantics node id for the object returned by <code>finder<\/code>, or\nthe nearest ancestor with a semantics node.<\/p>\n<p>Throws an error if <code>finder<\/code> returns multiple elements or a semantics\nnode is not found.<\/p>\n<p>Semantics must be enabled to use this method, either using a platform\nspecific shell command or <a href=\"flutter_driver\/FlutterDriver\/setSemantics.html\">setSemantics<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "finder",
+                    "type": "flutter_driver.SerializableFinder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/getSemanticsId.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;int&gt; getSemanticsId(SerializableFinder finder, { Duration timeout }) async {\n  final Map&lt;String, dynamic&gt; jsonResponse = await _sendCommand(GetSemanticsId(finder, timeout: timeout));\n  final GetSemanticsIdResult result = GetSemanticsIdResult.fromJson(jsonResponse);\n  return result.id;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.int"
+            ]
+        },
+        {
+            "name": "getText",
+            "type": "dart:async.Future<dart:core.String>",
+            "desc": "<p>Returns the text in the <code>Text<\/code> widget located by <code>finder<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "finder",
+                    "type": "flutter_driver.SerializableFinder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/getText.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;String&gt; getText(SerializableFinder finder, { Duration timeout }) async {\n  return GetTextResult.fromJson(await _sendCommand(GetText(finder, timeout: timeout))).text;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.String"
+            ]
+        },
+        {
+            "name": "getVmFlags",
+            "type": "dart:async.Future<dart:core.List<dart:core.Map<dart:core.String>>>",
+            "desc": "<p>Returns the Flags set in the Dart VM as JSON.<\/p>\n<p>See the complete documentation for <a href=\"https:\/\/github.com\/dart-lang\/sdk\/blob\/master\/runtime\/vm\/service\/service.md#getflaglist\">the <code>getFlagList<\/code> Dart VM service\nmethod<\/a>.<\/p>\n<p>Example return value:<\/p>\n<pre class=\"language-dart\"><code>[\n  {\n    \"name\": \"timeline_recorder\",\n    \"comment\": \"Select the timeline recorder used. Valid values: ring, endless, startup, and systrace.\",\n    \"modified\": false,\n    \"_flagType\": \"String\",\n    \"valueAsString\": \"ring\"\n  },\n  ...\n]\n<\/code><\/pre>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/getVmFlags.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;List&lt;Map&lt;String, dynamic&gt;&gt;&gt; getVmFlags() async {\n  final Map&lt;String, dynamic&gt; result = await _peer.sendRequest('getFlagList');\n  return result['flags'];\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.List",
+                "dart:core.Map",
+                "dart:core.String"
+            ]
+        },
+        {
+            "name": "requestData",
+            "type": "dart:async.Future<dart:core.String>",
+            "desc": "<p>Sends a string and returns a string.<\/p>\n<p>This enables generic communication between the driver and the application.\nIt's expected that the application has registered a <a href=\"flutter_driver_extension\/DataHandler.html\">DataHandler<\/a>\ncallback in <a href=\"flutter_driver_extension\/enableFlutterDriverExtension.html\">enableFlutterDriverExtension<\/a> that can successfully handle\nthese requests.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "message",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/requestData.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;String&gt; requestData(String message, { Duration timeout }) async {\n  return RequestDataResult.fromJson(await _sendCommand(RequestData(message, timeout: timeout))).message;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.String"
+            ]
+        },
+        {
+            "name": "runUnsynchronized",
+            "type": "dart:async.Future",
+            "desc": "<p><code>action<\/code> will be executed with the frame sync mechanism disabled.<\/p>\n<p>By default, Flutter Driver waits until there is no pending frame scheduled\nin the app under test before executing an action. This mechanism is called\n\"frame sync\". It greatly reduces flakiness because Flutter Driver will not\nexecute an action while the app under test is undergoing a transition.<\/p>\n<p>Having said that, sometimes it is necessary to disable the frame sync\nmechanism (e.g. if there is an ongoing animation in the app, it will\nnever reach a state where there are no pending frames scheduled and the\naction will time out). For these cases, the sync mechanism can be disabled\nby wrapping the actions to be performed by this <a href=\"flutter_driver\/FlutterDriver\/runUnsynchronized.html\">runUnsynchronized<\/a> method.<\/p>\n<p>With frame sync disabled, its the responsibility of the test author to\nensure that no action is performed while the app is undergoing a\ntransition to avoid flakiness.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "action",
+                    "type": "dart:async.Future",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/runUnsynchronized.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; runUnsynchronized&lt;T&gt;(Future&lt;T&gt; action(), { Duration timeout }) async {\n  await _sendCommand(SetFrameSync(false, timeout: timeout));\n  T result;\n  try {\n    result = await action();\n  } finally {\n    await _sendCommand(SetFrameSync(true, timeout: timeout));\n  }\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "screenshot",
+            "type": "dart:async.Future<dart:core.List<dart:core.int>>",
+            "desc": "<p>Take a screenshot.<\/p>\n<p>The image will be returned as a PNG.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/screenshot.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;List&lt;int&gt;&gt; screenshot() async {\n  \/\/ HACK: this artificial delay here is to deal with a race between the\n  \/\/       driver script and the GPU thread. The issue is that driver API\n  \/\/       synchronizes with the framework based on transient callbacks, which\n  \/\/       are out of sync with the GPU thread. Here's the timeline of events\n  \/\/       in ASCII art:\n  \/\/\n  \/\/       -------------------------------------------------------------------\n  \/\/       Without this delay:\n  \/\/       -------------------------------------------------------------------\n  \/\/       UI    : &lt;-- build --&gt;\n  \/\/       GPU   :               &lt;-- rasterize --&gt;\n  \/\/       Gap   :              | random |\n  \/\/       Driver:                        &lt;-- screenshot --&gt;\n  \/\/\n  \/\/       In the diagram above, the gap is the time between the last driver\n  \/\/       action taken, such as a `tap()`, and the subsequent call to\n  \/\/       `screenshot()`. The gap is random because it is determined by the\n  \/\/       unpredictable network communication between the driver process and\n  \/\/       the application. If this gap is too short, which it typically will\n  \/\/       be, the screenshot is taken before the GPU thread is done\n  \/\/       rasterizing the frame, so the screenshot of the previous frame is\n  \/\/       taken, which is wrong.\n  \/\/\n  \/\/       -------------------------------------------------------------------\n  \/\/       With this delay, if we're lucky:\n  \/\/       -------------------------------------------------------------------\n  \/\/       UI    : &lt;-- build --&gt;\n  \/\/       GPU   :               &lt;-- rasterize --&gt;\n  \/\/       Gap   :              |    2 seconds or more   |\n  \/\/       Driver:                                        &lt;-- screenshot --&gt;\n  \/\/\n  \/\/       The two-second gap should be long enough for the GPU thread to\n  \/\/       finish rasterizing the frame, but not longer than necessary to keep\n  \/\/       driver tests as fast a possible.\n  \/\/\n  \/\/       -------------------------------------------------------------------\n  \/\/       With this delay, if we're not lucky:\n  \/\/       -------------------------------------------------------------------\n  \/\/       UI    : &lt;-- build --&gt;\n  \/\/       GPU   :               &lt;-- rasterize randomly slow today --&gt;\n  \/\/       Gap   :              |    2 seconds or more   |\n  \/\/       Driver:                                        &lt;-- screenshot --&gt;\n  \/\/\n  \/\/       In practice, sometimes the device gets really busy for a while and\n  \/\/       even two seconds isn't enough, which means that this is still racy\n  \/\/       and a source of flakes.\n  await Future&lt;void&gt;.delayed(const Duration(seconds: 2));\n\n  final Map&lt;String, dynamic&gt; result = await _peer.sendRequest('_flutter.screenshot');\n  return base64.decode(result['screenshot']);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.List",
+                "dart:core.int"
+            ]
+        },
+        {
+            "name": "scroll",
+            "type": "dart:async.Future",
+            "desc": "<p>Tell the driver to perform a scrolling action.<\/p>\n<p>A scrolling action begins with a \"pointer down\" event, which commonly maps\nto finger press on the touch screen or mouse button press. A series of\n\"pointer move\" events follow. The action is completed by a \"pointer up\"\nevent.<\/p>\n<p><code>dx<\/code> and <code>dy<\/code> specify the total offset for the entire scrolling action.<\/p>\n<p><code>duration<\/code> specifies the length of the action.<\/p>\n<p>The move events are generated at a given <code>frequency<\/code> in Hz (or events per\nsecond). It defaults to 60Hz.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "finder",
+                    "type": "flutter_driver.SerializableFinder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "dx",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "dy",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "duration",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "frequency",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/scroll.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; scroll(SerializableFinder finder, double dx, double dy, Duration duration, { int frequency = 60, Duration timeout }) async {\n  await _sendCommand(Scroll(finder, dx, dy, duration, frequency, timeout: timeout));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "scrollIntoView",
+            "type": "dart:async.Future",
+            "desc": "<p>Scrolls the Scrollable ancestor of the widget located by <code>finder<\/code>\nuntil the widget is completely visible.<\/p>\n<p>If the widget located by <code>finder<\/code> is contained by a scrolling widget\nthat lazily creates its children, like <a href=\"widgets\/ListView-class.html\">ListView<\/a> or <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>,\nthen this method may fail because <code>finder<\/code> doesn't actually exist.\nThe <a href=\"flutter_driver\/FlutterDriver\/scrollUntilVisible.html\">scrollUntilVisible<\/a> method can be used in this case.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "finder",
+                    "type": "flutter_driver.SerializableFinder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "alignment",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/scrollIntoView.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; scrollIntoView(SerializableFinder finder, { double alignment = 0.0, Duration timeout }) async {\n  await _sendCommand(ScrollIntoView(finder, alignment: alignment, timeout: timeout));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "scrollUntilVisible",
+            "type": "dart:async.Future",
+            "desc": "<p>Repeatedly <a href=\"flutter_driver\/FlutterDriver\/scroll.html\">scroll<\/a> the widget located by <code>scrollable<\/code> by <code>dxScroll<\/code> and\n<code>dyScroll<\/code> until <code>item<\/code> is visible, and then use <a href=\"flutter_driver\/FlutterDriver\/scrollIntoView.html\">scrollIntoView<\/a> to\nensure the item's final position matches <code>alignment<\/code>.<\/p>\n<p>The <code>scrollable<\/code> must locate the scrolling widget that contains <code>item<\/code>.\nTypically <code>find.byType('ListView')<\/code> or <code>find.byType('CustomScrollView')<\/code>.<\/p>\n<p>At least one of <code>dxScroll<\/code> and <code>dyScroll<\/code> must be non-zero.<\/p>\n<p>If <code>item<\/code> is below the currently visible items, then specify a negative\nvalue for <code>dyScroll<\/code> that's a small enough increment to expose <code>item<\/code>\nwithout potentially scrolling it up and completely out of view. Similarly\nif <code>item<\/code> is above, then specify a positive value for <code>dyScroll<\/code>.<\/p>\n<p>If <code>item<\/code> is to the right of the currently visible items, then\nspecify a negative value for <code>dxScroll<\/code> that's a small enough increment to\nexpose <code>item<\/code> without potentially scrolling it up and completely out of\nview. Similarly if <code>item<\/code> is to the left, then specify a positive value\nfor <code>dyScroll<\/code>.<\/p>\n<p>The <code>timeout<\/code> value should be long enough to accommodate as many scrolls\nas needed to bring an item into view. The default is to not time out.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "scrollable",
+                    "type": "flutter_driver.SerializableFinder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "item",
+                    "type": "flutter_driver.SerializableFinder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "alignment",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "dxScroll",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "dyScroll",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/scrollUntilVisible.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; scrollUntilVisible(\n  SerializableFinder scrollable,\n  SerializableFinder item, {\n  double alignment = 0.0,\n  double dxScroll = 0.0,\n  double dyScroll = 0.0,\n  Duration timeout,\n}) async {\n  assert(scrollable != null);\n  assert(item != null);\n  assert(alignment != null);\n  assert(dxScroll != null);\n  assert(dyScroll != null);\n  assert(dxScroll != 0.0 || dyScroll != 0.0);\n\n  \/\/ Kick off an (unawaited) waitFor that will complete when the item we're\n  \/\/ looking for finally scrolls onscreen. We add an initial pause to give it\n  \/\/ the chance to complete if the item is already onscreen; if not, scroll\n  \/\/ repeatedly until we either find the item or time out.\n  bool isVisible = false;\n  waitFor(item, timeout: timeout).then&lt;void&gt;((_) { isVisible = true; });\n  await Future&lt;void&gt;.delayed(const Duration(milliseconds: 500));\n  while (!isVisible) {\n    await scroll(scrollable, dxScroll, dyScroll, const Duration(milliseconds: 100));\n    await Future&lt;void&gt;.delayed(const Duration(milliseconds: 500));\n  }\n\n  return scrollIntoView(item, alignment: alignment);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "setSemantics",
+            "type": "dart:async.Future<dart:core.bool>",
+            "desc": "<p>Turns semantics on or off in the Flutter app under test.<\/p>\n<p>Returns true when the call actually changed the state from on to off or\nvice versa.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "enabled",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/setSemantics.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;bool&gt; setSemantics(bool enabled, { Duration timeout }) async {\n  final SetSemanticsResult result = SetSemanticsResult.fromJson(await _sendCommand(SetSemantics(enabled, timeout: timeout)));\n  return result.changedState;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.bool"
+            ]
+        },
+        {
+            "name": "setTextEntryEmulation",
+            "type": "dart:async.Future",
+            "desc": "<p>Configures text entry emulation.<\/p>\n<p>If <code>enabled<\/code> is true, enables text entry emulation via <a href=\"flutter_driver\/FlutterDriver\/enterText.html\">enterText<\/a>. If\n<code>enabled<\/code> is false, disables it. By default text entry emulation is\nenabled.<\/p>\n<p>When disabled, <a href=\"flutter_driver\/FlutterDriver\/enterText.html\">enterText<\/a> will fail with a <a href=\"flutter_driver\/DriverError-class.html\">DriverError<\/a>. When an\n<a href=\"widgets\/EditableText-class.html\">EditableText<\/a> is focused, the operating system's configured keyboard\nmethod is invoked, such as an on-screen keyboard on a phone or a tablet.<\/p>\n<p>When enabled, the operating system's configured keyboard will not be\ninvoked when the widget is focused, as the <a href=\"services\/SystemChannels\/textInput-constant.html\">SystemChannels.textInput<\/a>\nchannel will be mocked out.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "enabled",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/setTextEntryEmulation.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; setTextEntryEmulation({ @required bool enabled, Duration timeout }) async {\n  assert(enabled != null);\n  await _sendCommand(SetTextEntryEmulation(enabled, timeout: timeout));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "startTracing",
+            "type": "dart:async.Future",
+            "desc": "<p>Starts recording performance traces.<\/p>\n<p>The <code>timeout<\/code> argument causes a warning to be displayed to the user if the\noperation exceeds the specified timeout; it does not actually cancel the\noperation.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "streams",
+                    "type": "dart:core.List<flutter_driver.TimelineStream>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "flutter_driver.TimelineStream"
+                    ]
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/startTracing.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; startTracing({\n  List&lt;TimelineStream&gt; streams = _defaultStreams,\n  Duration timeout = _kUnusuallyLongTimeout,\n}) async {\n  assert(streams != null &amp;&amp; streams.isNotEmpty);\n  assert(timeout != null);\n  try {\n    await _warnIfSlow&lt;void&gt;(\n      future: _peer.sendRequest(_setVMTimelineFlagsMethodName, &lt;String, String&gt;{\n        'recordedStreams': _timelineStreamsToString(streams),\n      }),\n      timeout: timeout,\n      message: 'VM is taking an unusually long time to respond to being told to start tracing...',\n    );\n  } catch (error, stackTrace) {\n    throw DriverError(\n      'Failed to start tracing due to remote error',\n      error,\n      stackTrace,\n    );\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "stopTracingAndDownloadTimeline",
+            "type": "dart:async.Future<flutter_driver.Timeline>",
+            "desc": "<p>Stops recording performance traces and downloads the timeline.<\/p>\n<p>The <code>timeout<\/code> argument causes a warning to be displayed to the user if the\noperation exceeds the specified timeout; it does not actually cancel the\noperation.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/stopTracingAndDownloadTimeline.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;Timeline&gt; stopTracingAndDownloadTimeline({\n  Duration timeout = _kUnusuallyLongTimeout,\n}) async {\n  assert(timeout != null);\n  try {\n    await _warnIfSlow&lt;void&gt;(\n      future: _peer.sendRequest(_setVMTimelineFlagsMethodName, &lt;String, String&gt;{'recordedStreams': '[]'}),\n      timeout: timeout,\n      message: 'VM is taking an unusually long time to respond to being told to stop tracing...',\n    );\n    return Timeline.fromJson(await _peer.sendRequest(_getVMTimelineMethodName));\n  } catch (error, stackTrace) {\n    throw DriverError(\n      'Failed to stop tracing due to remote error',\n      error,\n      stackTrace,\n    );\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "flutter_driver.Timeline"
+            ]
+        },
+        {
+            "name": "tap",
+            "type": "dart:async.Future",
+            "desc": "<p>Taps at the center of the widget located by <code>finder<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "finder",
+                    "type": "flutter_driver.SerializableFinder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/tap.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; tap(SerializableFinder finder, { Duration timeout }) async {\n  await _sendCommand(Tap(finder, timeout: timeout));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "traceAction",
+            "type": "dart:async.Future<flutter_driver.Timeline>",
+            "desc": "<p>Runs <code>action<\/code> and outputs a performance trace for it.<\/p>\n<p>Waits for the <code>Future<\/code> returned by <code>action<\/code> to complete prior to stopping\nthe trace.<\/p>\n<p>This is merely a convenience wrapper on top of <a href=\"flutter_driver\/FlutterDriver\/startTracing.html\">startTracing<\/a> and\n<a href=\"flutter_driver\/FlutterDriver\/stopTracingAndDownloadTimeline.html\">stopTracingAndDownloadTimeline<\/a>.<\/p>\n<p><code>streams<\/code> limits the recorded timeline event streams to only the ones\nlisted. By default, all streams are recorded.<\/p>\n<p>If <code>retainPriorEvents<\/code> is true, retains events recorded prior to calling\n<code>action<\/code>. Otherwise, prior events are cleared before calling <code>action<\/code>. By\ndefault, prior events are cleared.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "action",
+                    "type": "dart:async.Future",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "streams",
+                    "type": "dart:core.List<flutter_driver.TimelineStream>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "flutter_driver.TimelineStream"
+                    ]
+                },
+                {
+                    "name": "retainPriorEvents",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/traceAction.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;Timeline&gt; traceAction(\n  Future&lt;dynamic&gt; action(), {\n  List&lt;TimelineStream&gt; streams = _defaultStreams,\n  bool retainPriorEvents = false,\n}) async {\n  if (!retainPriorEvents) {\n    await clearTimeline();\n  }\n  await startTracing(streams: streams);\n  await action();\n  return stopTracingAndDownloadTimeline();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "flutter_driver.Timeline"
+            ]
+        },
+        {
+            "name": "waitFor",
+            "type": "dart:async.Future",
+            "desc": "<p>Waits until <code>finder<\/code> locates the target.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "finder",
+                    "type": "flutter_driver.SerializableFinder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/waitFor.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; waitFor(SerializableFinder finder, { Duration timeout }) async {\n  await _sendCommand(WaitFor(finder, timeout: timeout));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "waitForAbsent",
+            "type": "dart:async.Future",
+            "desc": "<p>Waits until <code>finder<\/code> can no longer locate the target.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "finder",
+                    "type": "flutter_driver.SerializableFinder",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/waitForAbsent.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; waitForAbsent(SerializableFinder finder, { Duration timeout }) async {\n  await _sendCommand(WaitForAbsent(finder, timeout: timeout));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "waitUntilNoTransientCallbacks",
+            "type": "dart:async.Future",
+            "desc": "<p>Waits until there are no more transient callbacks in the queue.<\/p>\n<p>Use this method when you need to wait for the moment when the application\nbecomes \"stable\", for example, prior to taking a <a href=\"flutter_driver\/FlutterDriver\/screenshot.html\">screenshot<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "flutter_driver.FlutterDriver",
+            "sig": "",
+            "params": [
+                {
+                    "name": "timeout",
+                    "type": "dart:core.Duration",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "flutter_driver\/FlutterDriver\/waitUntilNoTransientCallbacks.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; waitUntilNoTransientCallbacks({ Duration timeout }) async {\n  await _sendCommand(WaitUntilNoTransientCallbacks(timeout: timeout));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "flutter_driver\/FlutterDriver-class.html",
+    "desc": "<p>Drives a Flutter Application running in another process.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "FlutterDriver"
+}

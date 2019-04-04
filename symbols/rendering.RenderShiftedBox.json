@@ -1,0 +1,242 @@
+{
+    "name": "rendering.RenderShiftedBox",
+    "extends": [
+        "rendering.RenderBox",
+        "rendering.RenderObject",
+        "foundation.AbstractNode",
+        "dart:core.Object"
+    ],
+    "memberOf": "rendering",
+    "events": [],
+    "methods": [
+        {
+            "name": "RenderShiftedBox",
+            "type": "",
+            "desc": "<p>Initializes the <code>child<\/code> property for subclasses.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderShiftedBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderBox",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "rendering\/RenderShiftedBox\/RenderShiftedBox.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RenderShiftedBox(RenderBox child) {\n  this.child = child;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeDistanceToActualBaseline",
+            "type": "dart:core.double",
+            "desc": "<p>Returns the distance from the y-coordinate of the position of the box to\nthe y-coordinate of the first given baseline in the box's contents, if\nany, or null otherwise.<\/p>\n<p>Do not call this function directly. If you need to know the baseline of a\nchild from an invocation of <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a> or <a href=\"rendering\/RenderShiftedBox\/paint.html\">paint<\/a>, call\n<a href=\"rendering\/RenderBox\/getDistanceToBaseline.html\">getDistanceToBaseline<\/a>.<\/p>\n<p>Subclasses should override this method to supply the distances to their\nbaselines. When implementing this method, there are generally three\nstrategies:<\/p>\n<ul>\n<li>\n<p>For classes that use the <a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> child model,\nconsider mixing in the <a href=\"rendering\/RenderBoxContainerDefaultsMixin-mixin.html\">RenderBoxContainerDefaultsMixin<\/a> class and\nusing\n<a href=\"rendering\/RenderBoxContainerDefaultsMixin\/defaultComputeDistanceToFirstActualBaseline.html\">RenderBoxContainerDefaultsMixin.defaultComputeDistanceToFirstActualBaseline<\/a>.<\/p>\n<\/li>\n<li>\n<p>For classes that define a particular baseline themselves, return that\nvalue directly.<\/p>\n<\/li>\n<li>\n<p>For classes that have a child to which they wish to defer the\ncomputation, call <a href=\"rendering\/RenderBox\/getDistanceToActualBaseline.html\">getDistanceToActualBaseline<\/a> on the child (not\n<a href=\"rendering\/RenderShiftedBox\/computeDistanceToActualBaseline.html\">computeDistanceToActualBaseline<\/a>, the internal implementation, and not\n<a href=\"rendering\/RenderBox\/getDistanceToBaseline.html\">getDistanceToBaseline<\/a>, the public entry point for this API).<\/p>\n<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "rendering.RenderShiftedBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "baseline",
+                    "type": "dart:ui.TextBaseline",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderShiftedBox\/computeDistanceToActualBaseline.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble computeDistanceToActualBaseline(TextBaseline baseline) {\n  double result;\n  if (child != null) {\n    assert(!debugNeedsLayout);\n    result = child.getDistanceToActualBaseline(baseline);\n    final BoxParentData childParentData = child.parentData;\n    if (result != null)\n      result += childParentData.offset.dy;\n  } else {\n    result = super.computeDistanceToActualBaseline(baseline);\n  }\n  return result;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeMaxIntrinsicHeight",
+            "type": "dart:core.double",
+            "desc": "<p>Computes the value returned by <a href=\"rendering\/RenderBox\/getMaxIntrinsicHeight.html\">getMaxIntrinsicHeight<\/a>. Do not call this\nfunction directly, instead, call <a href=\"rendering\/RenderBox\/getMaxIntrinsicHeight.html\">getMaxIntrinsicHeight<\/a>.<\/p>\n<p>Override in subclasses that implement <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a>. Should return the\nsmallest height beyond which increasing the height never decreases the\npreferred width. The preferred width is the value that would be returned\nby <a href=\"rendering\/RenderShiftedBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a> for that height.<\/p>\n<p>If the layout algorithm is strictly width-in-height-out, or is\nwidth-in-height-out when the height is unconstrained, then this should\nreturn the same value as <a href=\"rendering\/RenderShiftedBox\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a> for the same width.<\/p>\n<p>Otherwise, the width argument should be ignored, and the returned value\nshould be equal to or bigger than the value returned by\n<a href=\"rendering\/RenderShiftedBox\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a>.<\/p>\n<p>The <code>width<\/code> argument will never be negative or null. It may be infinite.<\/p>\n<p>The value returned by this method might not match the size that the object\nwould actually take. For example, a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass that always\nexactly sizes itself using <a href=\"rendering\/BoxConstraints\/biggest.html\">BoxConstraints.biggest<\/a> might well size itself\nbigger than its max intrinsic size.<\/p>\n<p>If this algorithm depends on the intrinsic dimensions of a child, the\nintrinsic dimensions of that child should be obtained using the functions\nwhose names start with <code>get<\/code>, not <code>compute<\/code>.<\/p>\n<p>This function should never return a negative or infinite value.<\/p>\n<p>See also examples in the definition of <a href=\"rendering\/RenderShiftedBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderShiftedBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "width",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderShiftedBox\/computeMaxIntrinsicHeight.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble computeMaxIntrinsicHeight(double width) {\n  if (child != null)\n    return child.getMaxIntrinsicHeight(width);\n  return 0.0;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeMaxIntrinsicWidth",
+            "type": "dart:core.double",
+            "desc": "<p>Computes the value returned by <a href=\"rendering\/RenderBox\/getMaxIntrinsicWidth.html\">getMaxIntrinsicWidth<\/a>. Do not call this\nfunction directly, instead, call <a href=\"rendering\/RenderBox\/getMaxIntrinsicWidth.html\">getMaxIntrinsicWidth<\/a>.<\/p>\n<p>Override in subclasses that implement <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a>. This should return\nthe smallest width beyond which increasing the width never decreases the\npreferred height. The preferred height is the value that would be returned\nby <a href=\"rendering\/RenderShiftedBox\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a> for that width.<\/p>\n<p>If the layout algorithm is strictly height-in-width-out, or is\nheight-in-width-out when the width is unconstrained, then this should\nreturn the same value as <a href=\"rendering\/RenderShiftedBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a> for the same height.<\/p>\n<p>Otherwise, the height argument should be ignored, and the returned value\nshould be equal to or bigger than the value returned by\n<a href=\"rendering\/RenderShiftedBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>.<\/p>\n<p>The <code>height<\/code> argument will never be negative or null. It may be infinite.<\/p>\n<p>The value returned by this method might not match the size that the object\nwould actually take. For example, a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass that always\nexactly sizes itself using <a href=\"rendering\/BoxConstraints\/biggest.html\">BoxConstraints.biggest<\/a> might well size itself\nbigger than its max intrinsic size.<\/p>\n<p>If this algorithm depends on the intrinsic dimensions of a child, the\nintrinsic dimensions of that child should be obtained using the functions\nwhose names start with <code>get<\/code>, not <code>compute<\/code>.<\/p>\n<p>This function should never return a negative or infinite value.<\/p>\n<p>See also examples in the definition of <a href=\"rendering\/RenderShiftedBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderShiftedBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "height",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderShiftedBox\/computeMaxIntrinsicWidth.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble computeMaxIntrinsicWidth(double height) {\n  if (child != null)\n    return child.getMaxIntrinsicWidth(height);\n  return 0.0;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeMinIntrinsicHeight",
+            "type": "dart:core.double",
+            "desc": "<p>Computes the value returned by <a href=\"rendering\/RenderBox\/getMinIntrinsicHeight.html\">getMinIntrinsicHeight<\/a>. Do not call this\nfunction directly, instead, call <a href=\"rendering\/RenderBox\/getMinIntrinsicHeight.html\">getMinIntrinsicHeight<\/a>.<\/p>\n<p>Override in subclasses that implement <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a>. Should return the\nminimum height that this box could be without failing to correctly paint\nits contents within itself, without clipping.<\/p>\n<p>If the layout algorithm is independent of the context (e.g. it always\ntries to be a particular size), or if the layout algorithm is\nheight-in-width-out, or if the layout algorithm uses both the incoming\nheight and width constraints (e.g. it always sizes itself to\n<a href=\"rendering\/BoxConstraints\/biggest.html\">BoxConstraints.biggest<\/a>), then the <code>width<\/code> argument should be ignored.<\/p>\n<p>If the layout algorithm is strictly width-in-height-out, or is\nwidth-in-height-out when the height is unconstrained, then the width\nargument is the width to use.<\/p>\n<p>The <code>width<\/code> argument will never be negative or null. It may be infinite.<\/p>\n<p>If this algorithm depends on the intrinsic dimensions of a child, the\nintrinsic dimensions of that child should be obtained using the functions\nwhose names start with <code>get<\/code>, not <code>compute<\/code>.<\/p>\n<p>This function should never return a negative or infinite value.<\/p>\n<p>See also examples in the definition of <a href=\"rendering\/RenderShiftedBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderShiftedBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "width",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderShiftedBox\/computeMinIntrinsicHeight.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble computeMinIntrinsicHeight(double width) {\n  if (child != null)\n    return child.getMinIntrinsicHeight(width);\n  return 0.0;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "computeMinIntrinsicWidth",
+            "type": "dart:core.double",
+            "desc": "<p>Computes the value returned by <a href=\"rendering\/RenderBox\/getMinIntrinsicWidth.html\">getMinIntrinsicWidth<\/a>. Do not call this\nfunction directly, instead, call <a href=\"rendering\/RenderBox\/getMinIntrinsicWidth.html\">getMinIntrinsicWidth<\/a>.<\/p>\n<p>Override in subclasses that implement <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a>. This method should\nreturn the minimum width that this box could be without failing to\ncorrectly paint its contents within itself, without clipping.<\/p>\n<p>If the layout algorithm is independent of the context (e.g. it always\ntries to be a particular size), or if the layout algorithm is\nwidth-in-height-out, or if the layout algorithm uses both the incoming\nwidth and height constraints (e.g. it always sizes itself to\n<a href=\"rendering\/BoxConstraints\/biggest.html\">BoxConstraints.biggest<\/a>), then the <code>height<\/code> argument should be ignored.<\/p>\n<p>If the layout algorithm is strictly height-in-width-out, or is\nheight-in-width-out when the width is unconstrained, then the height\nargument is the height to use.<\/p>\n<p>The <code>height<\/code> argument will never be negative or null. It may be infinite.<\/p>\n<p>If this algorithm depends on the intrinsic dimensions of a child, the\nintrinsic dimensions of that child should be obtained using the functions\nwhose names start with <code>get<\/code>, not <code>compute<\/code>.<\/p>\n<p>This function should never return a negative or infinite value.<\/p>\n<h2 id=\"examples\">Examples<\/h2>\n<h3 id=\"text\">Text<\/h3>\n<p>Text is the canonical example of a width-in-height-out algorithm. The\n<code>height<\/code> argument is therefore ignored.<\/p>\n<p>Consider the string \"Hello World\" The <em>maximum<\/em> intrinsic width (as\nreturned from <a href=\"rendering\/RenderShiftedBox\/computeMaxIntrinsicWidth.html\">computeMaxIntrinsicWidth<\/a>) would be the width of the string\nwith no line breaks.<\/p>\n<p>The minimum intrinsic width would be the width of the widest word, \"Hello\"\nor \"World\". If the text is rendered in an even narrower width, however, it\nmight still not overflow. For example, maybe the rendering would put a\nline-break half-way through the words, as in \"Hel\u205elo\u205eWor\u205eld\". However,\nthis wouldn't be a <em>correct<\/em> rendering, and <a href=\"rendering\/RenderShiftedBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a> is\nsupposed to render the minimum width that the box could be without failing\nto <em>correctly<\/em> paint the contents within itself.<\/p>\n<p>The minimum intrinsic <em>height<\/em> for a given width smaller than the minimum\nintrinsic width could therefore be greater than the minimum intrinsic\nheight for the minimum intrinsic width.<\/p>\n<h3 id=\"viewports-eg-scrolling-lists\">Viewports (e.g. scrolling lists)<\/h3>\n<p>Some render boxes are intended to clip their children. For example, the\nrender box for a scrolling list might always size itself to its parents'\nsize (or rather, to the maximum incoming constraints), regardless of the\nchildren's sizes, and then clip the children and position them based on\nthe current scroll offset.<\/p>\n<p>The intrinsic dimensions in these cases still depend on the children, even\nthough the layout algorithm sizes the box in a way independent of the\nchildren. It is the size that is needed to paint the box's contents (in\nthis case, the children) <em>without clipping<\/em> that matters.<\/p>\n<h3 id=\"when-the-intrinsic-dimensions-cannot-be-known\">When the intrinsic dimensions cannot be known<\/h3>\n<p>There are cases where render objects do not have an efficient way to\ncompute their intrinsic dimensions. For example, it may be prohibitively\nexpensive to reify and measure every child of a lazy viewport (viewports\ngenerally only instantiate the actually visible children), or the\ndimensions may be computed by a callback about which the render object\ncannot reason.<\/p>\n<p>In such cases, it may be impossible (or at least impractical) to actually\nreturn a valid answer. In such cases, the intrinsic functions should throw\nwhen <a href=\"rendering\/RenderObject\/debugCheckingIntrinsics.html\">RenderObject.debugCheckingIntrinsics<\/a> is false and asserts are\nenabled, and return 0.0 otherwise.<\/p>\n<p>See the implementations of <a href=\"widgets\/LayoutBuilder-class.html\">LayoutBuilder<\/a> or <a href=\"rendering\/RenderViewportBase-class.html\">RenderViewportBase<\/a> for\nexamples (in particular,\n<a href=\"rendering\/RenderViewportBase\/debugThrowIfNotCheckingIntrinsics.html\">RenderViewportBase.debugThrowIfNotCheckingIntrinsics<\/a>).<\/p>\n<h3 id=\"aspect-ratio-driven-boxes\">Aspect-ratio-driven boxes<\/h3>\n<p>Some boxes always return a fixed size based on the constraints. For these\nboxes, the intrinsic functions should return the appropriate size when the\nincoming <code>height<\/code> or <code>width<\/code> argument is finite, treating that as a tight\nconstraint in the respective direction and treating the other direction's\nconstraints as unbounded. This is because the definitions of\n<a href=\"rendering\/RenderShiftedBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a> and <a href=\"rendering\/RenderShiftedBox\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a> are in terms of\nwhat the dimensions <em>could be<\/em>, and such boxes can only be one size in\nsuch cases.<\/p>\n<p>When the incoming argument is not finite, then they should return the\nactual intrinsic dimensions based on the contents, as any other box would.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderShiftedBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "height",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderShiftedBox\/computeMinIntrinsicWidth.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble computeMinIntrinsicWidth(double height) {\n  if (child != null)\n    return child.getMinIntrinsicWidth(height);\n  return 0.0;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "hitTestChildren",
+            "type": "dart:core.bool",
+            "desc": "<p>Override this method to check whether any children are located at the\ngiven position.<\/p>\n<p>Typically children should be hit-tested in reverse paint order so that\nhit tests at locations where children overlap hit the child that is\nvisually \"on top\" (i.e., paints later).<\/p>\n<p>The caller is responsible for transforming <code>position<\/code> from global\ncoordinates to its location relative to the origin of this <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>.\nThis <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> is responsible for checking whether the given position is\nwithin its bounds.<\/p>\n<p>Used by <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a>. If you override <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> and do not call this\nfunction, then you don't need to implement this function.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderShiftedBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "result",
+                    "type": "gestures.HitTestResult",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "position",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderShiftedBox\/hitTestChildren.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool hitTestChildren(HitTestResult result, { Offset position }) {\n  if (child != null) {\n    final BoxParentData childParentData = child.parentData;\n    return child.hitTest(result, position: position - childParentData.offset);\n  }\n  return false;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "paint",
+            "type": "",
+            "desc": "<p>Paint this render object into the given context at the given offset.<\/p>\n<p>Subclasses should override this method to provide a visual appearance\nfor themselves. The render object's local coordinate system is\naxis-aligned with the coordinate system of the context's canvas and the\nrender object's local origin (i.e, x=0 and y=0) is placed at the given\noffset in the context's canvas.<\/p>\n<p>Do not call this function directly. If you wish to paint yourself, call\n<a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a> instead to schedule a call to this function. If you wish\nto paint one of your children, call <a href=\"rendering\/PaintingContext\/paintChild.html\">PaintingContext.paintChild<\/a> on the\ngiven <code>context<\/code>.<\/p>\n<p>When painting one of your children (via a paint child function on the\ngiven context), the current canvas held by the context might change\nbecause draw operations before and after painting children might need to\nbe recorded on separate compositing layers.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.RenderShiftedBox",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "rendering.PaintingContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/RenderShiftedBox\/paint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid paint(PaintingContext context, Offset offset) {\n  if (child != null) {\n    final BoxParentData childParentData = child.parentData;\n    context.paintChild(child, childParentData.offset + offset);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": true,
+    "implementors": [
+        "rendering.RenderAligningShiftedBox",
+        "rendering.RenderAnimatedSize",
+        "rendering.RenderBaseline",
+        "rendering.RenderConstrainedOverflowBox",
+        "rendering.RenderCustomSingleChildLayoutBox",
+        "rendering.RenderFractionallySizedOverflowBox",
+        "rendering.RenderPadding",
+        "rendering.RenderPositionedBox",
+        "rendering.RenderSizedOverflowBox",
+        "rendering.RenderUnconstrainedBox"
+    ],
+    "realImplementors": [],
+    "cn": [],
+    "href": "rendering\/RenderShiftedBox-class.html",
+    "desc": "<p>Abstract class for one-child-layout render boxes that provide control over\nthe child's position.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "RenderShiftedBox"
+}

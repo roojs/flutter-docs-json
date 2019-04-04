@@ -1,0 +1,183 @@
+{
+    "name": "physics.SpringSimulation",
+    "extends": [
+        "physics.Simulation",
+        "dart:core.Object"
+    ],
+    "memberOf": "physics",
+    "events": [],
+    "methods": [
+        {
+            "name": "SpringSimulation",
+            "type": "",
+            "desc": "<p>Creates a spring simulation from the provided spring description, start\ndistance, end distance, and initial velocity.<\/p>\n<p>The units for the start and end distance arguments are arbitrary, but must\nbe consistent with the units used for other lengths in the system.<\/p>\n<p>The units for the velocity are L\/T, where L is the aforementioned\narbitrary unit of length, and T is the time unit used for driving the\n<a href=\"physics\/SpringSimulation-class.html\">SpringSimulation<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "physics.SpringSimulation",
+            "sig": "",
+            "params": [
+                {
+                    "name": "spring",
+                    "type": "physics.SpringDescription",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "start",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "end",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "velocity",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "tolerance",
+                    "type": "physics.Tolerance",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "physics\/SpringSimulation\/SpringSimulation.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">SpringSimulation(\n  SpringDescription spring,\n  double start,\n  double end,\n  double velocity, {\n  Tolerance tolerance = Tolerance.defaultTolerance,\n}) : _endPosition = end,\n     _solution = _SpringSolution(spring, start - end, velocity),\n     super(tolerance: tolerance);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "dx",
+            "type": "dart:core.double",
+            "desc": "<p>The velocity of the object in the simulation at the given time.<\/p>\n    ",
+            "static": false,
+            "memberOf": "physics.SpringSimulation",
+            "sig": "",
+            "params": [
+                {
+                    "name": "time",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "physics\/SpringSimulation\/dx.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble dx(double time) =&gt; _solution.dx(time);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isDone",
+            "type": "dart:core.bool",
+            "desc": "<p>Whether the simulation is \"done\" at the given time.<\/p>\n    ",
+            "static": false,
+            "memberOf": "physics.SpringSimulation",
+            "sig": "",
+            "params": [
+                {
+                    "name": "time",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "physics\/SpringSimulation\/isDone.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool isDone(double time) {\n  return nearZero(_solution.x(time), tolerance.distance) &amp;&amp;\n         nearZero(_solution.dx(time), tolerance.velocity);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "physics.SpringSimulation",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "physics\/SpringSimulation\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; '$runtimeType(end: $_endPosition, $type)';<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "x",
+            "type": "dart:core.double",
+            "desc": "<p>The position of the object in the simulation at the given time.<\/p>\n    ",
+            "static": false,
+            "memberOf": "physics.SpringSimulation",
+            "sig": "",
+            "params": [
+                {
+                    "name": "time",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "physics\/SpringSimulation\/x.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble x(double time) =&gt; _endPosition + _solution.x(time);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "type",
+            "type": "physics.SpringType",
+            "types": [],
+            "desc": "<p>The kind of spring being simulated, for debugging purposes.<\/p>\n<p>This is derived from the <a href=\"physics\/SpringDescription-class.html\">SpringDescription<\/a> provided to the <a href=\"physics\/SpringSimulation\/SpringSimulation.html\">new\nSpringSimulation<\/a> constructor.<\/p>\n        ",
+            "memberOf": "physics.SpringSimulation",
+            "isConstant": false,
+            "href": "physics\/SpringSimulation\/type.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">SpringType get type =&gt; _solution.type;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [
+        "physics.ScrollSpringSimulation"
+    ],
+    "realImplementors": [
+        "physics.ScrollSpringSimulation"
+    ],
+    "cn": [],
+    "href": "physics\/SpringSimulation-class.html",
+    "desc": "<p>A spring simulation.<\/p>\n<p>Models a particle attached to a spring that follows Hooke's law.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "SpringSimulation"
+}

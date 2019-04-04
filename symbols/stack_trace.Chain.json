@@ -1,0 +1,343 @@
+{
+    "name": "stack_trace.Chain",
+    "extends": [],
+    "memberOf": "stack_trace",
+    "events": [],
+    "methods": [
+        {
+            "name": "Chain",
+            "type": "",
+            "desc": "<p>Returns a new <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">Chain<\/a> comprised of <code>traces<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Chain",
+            "sig": "",
+            "params": [
+                {
+                    "name": "traces",
+                    "type": "dart:core.Iterable<stack_trace.Trace>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.Iterable",
+                        "stack_trace.Trace"
+                    ]
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Chain\/Chain.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Chain(Iterable&lt;Trace&gt; traces) : traces = new List&lt;Trace&gt;.unmodifiable(traces);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "capture",
+            "type": "",
+            "desc": "<p>If <code>when<\/code> is <code>true<\/code>, runs <code>callback<\/code> in a <a href=\"dart-async\/Zone-class.html\">Zone<\/a> in which the current\nstack chain is tracked and automatically associated with (most) errors.<\/p>\n<p>If <code>when<\/code> is <code>false<\/code>, this does not track stack chains. Instead, it's\nidentical to <a href=\"dart-async\/runZoned.html\">runZoned<\/a>, except that it wraps any errors in <a href=\"package-stack_trace_stack_trace\/Chain\/Chain.forTrace.html\">new\nChain.forTrace<\/a>\u2014which will only wrap the trace unless there's a different\n<a href=\"package-stack_trace_stack_trace\/Chain\/capture.html\">Chain.capture<\/a> active. This makes it easy for the caller to only capture\nstack chains in debug mode or during development.<\/p>\n<p>If <code>onError<\/code> is passed, any error in the zone that would otherwise go\nunhandled is passed to it, along with the <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">Chain<\/a> associated with that\nerror. Note that if <code>callback<\/code> produces multiple unhandled errors,\n<code>onError<\/code> may be called more than once. If <code>onError<\/code> isn't passed, the\nparent Zone's <code>unhandledErrorHandler<\/code> will be called with the error and\nits chain.<\/p>\n<p>If <code>errorZone<\/code> is <code>true<\/code>, the zone this creates will be an error zone,\neven if <code>onError<\/code> isn't passed. This means that any errors that would\ncross the zone boundary are considered unhandled. If <code>errorZone<\/code> is\n<code>false<\/code>, <code>onError<\/code> must be <code>null<\/code>.<\/p>\n<p>If <code>callback<\/code> returns a value, it will be returned by <a href=\"package-stack_trace_stack_trace\/Chain\/capture.html\">capture<\/a> as well.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Chain",
+            "sig": "",
+            "params": [
+                {
+                    "name": "callback",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "chain",
+                    "type": "stack_trace.Chain",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "error",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "chain",
+                    "type": "stack_trace.Chain",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "when",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "errorZone",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-stack_trace_stack_trace\/Chain\/capture.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static T capture&lt;T&gt;(T callback(),\n    {void onError(error, Chain chain),\n    bool when: true,\n    bool errorZone: true}) {\n  if (!errorZone &amp;&amp; onError != null) {\n    throw new ArgumentError.value(\n        onError, \"onError\", \"must be null if errorZone is false\");\n  }\n\n  if (!when) {\n    var newOnError;\n    if (onError != null) {\n      newOnError = (error, stackTrace) {\n        onError(\n            error,\n            stackTrace == null\n                ? new Chain.current()\n                : new Chain.forTrace(stackTrace));\n      };\n    }\n\n    return runZoned(callback, onError: newOnError);\n  }\n\n  var spec = new StackZoneSpecification(onError, errorZone: errorZone);\n  return runZoned(() {\n    try {\n      return callback();\n    } catch (error, stackTrace) {\n      \/\/ TODO(nweiz): Don't special-case this when issue 19566 is fixed.\n      Zone.current.handleUncaughtError(error, stackTrace);\n      return null;\n    }\n  },\n      zoneSpecification: spec.toSpec(),\n      zoneValues: {_specKey: spec, StackZoneSpecification.disableKey: false});\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "Chain.current",
+            "type": "",
+            "desc": "<p>Returns the current stack chain.<\/p>\n<p>By default, the first frame of the first trace will be the line where\n<a href=\"package-stack_trace_stack_trace\/Chain\/Chain.current.html\">Chain.current<\/a> is called. If <code>level<\/code> is passed, the first trace will\nstart that many frames up instead.<\/p>\n<p>If this is called outside of a <a href=\"package-stack_trace_stack_trace\/Chain\/capture.html\">capture<\/a> zone, it just returns a\nsingle-trace chain.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Chain",
+            "sig": "",
+            "params": [
+                {
+                    "name": "level",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Chain\/Chain.current.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Chain.current([int level = 0]) {\n  if (_currentSpec != null) return _currentSpec.currentChain(level + 1);\n\n  var chain = new Chain.forTrace(StackTrace.current);\n  return new LazyChain(() {\n    \/\/ JS includes a frame for the call to StackTrace.current, but the VM\n    \/\/ doesn't, so we skip an extra frame in a JS context.\n    var first = new Trace(\n        chain.traces.first.frames.skip(level + (inJS ? 2 : 1)),\n        original: chain.traces.first.original.toString());\n    return new Chain([first]..addAll(chain.traces.skip(1)));\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "disable",
+            "type": "",
+            "desc": "<p>If <code>when<\/code> is <code>true<\/code> and this is called within a <a href=\"package-stack_trace_stack_trace\/Chain\/capture.html\">Chain.capture<\/a> zone, runs\n<code>callback<\/code> in a <a href=\"dart-async\/Zone-class.html\">Zone<\/a> in which chain capturing is disabled.<\/p>\n<p>If <code>callback<\/code> returns a value, it will be returned by <a href=\"package-stack_trace_stack_trace\/Chain\/disable.html\">disable<\/a> as well.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Chain",
+            "sig": "",
+            "params": [
+                {
+                    "name": "callback",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "when",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-stack_trace_stack_trace\/Chain\/disable.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static T disable&lt;T&gt;(T callback(), {bool when: true}) {\n  var zoneValues =\n      when ? {_specKey: null, StackZoneSpecification.disableKey: true} : null;\n\n  return runZoned(callback, zoneValues: zoneValues);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "foldFrames",
+            "type": "stack_trace.Chain",
+            "desc": "<p>Returns a new <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">Chain<\/a> based on <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">this<\/a> where multiple stack frames matching\n<code>predicate<\/code> are folded together.<\/p>\n<p>This means that whenever there are multiple frames in a row that match\n<code>predicate<\/code>, only the last one is kept. In addition, traces that are\ncomposed entirely of frames matching <code>predicate<\/code> are omitted.<\/p>\n<p>This is useful for limiting the amount of library code that appears in a\nstack trace by only showing user code and code that's called by user code.<\/p>\n<p>If <code>terse<\/code> is true, this will also fold together frames from the core\nlibrary or from this package, and simplify core library frames as in\n<a href=\"package-stack_trace_stack_trace\/Chain\/terse.html\">Trace.terse<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Chain",
+            "sig": "",
+            "params": [
+                {
+                    "name": "frame",
+                    "type": "stack_trace.Frame",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "frame",
+                    "type": "stack_trace.Frame",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "terse",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-stack_trace_stack_trace\/Chain\/foldFrames.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Chain foldFrames(bool predicate(Frame frame), {bool terse: false}) {\n  var foldedTraces =\n      traces.map((trace) =&gt; trace.foldFrames(predicate, terse: terse));\n  var nonEmptyTraces = foldedTraces.where((trace) {\n    \/\/ Ignore traces that contain only folded frames.\n    if (trace.frames.length &gt; 1) return true;\n    if (trace.frames.isEmpty) return false;\n\n    \/\/ In terse mode, the trace may have removed an outer folded frame,\n    \/\/ leaving a single non-folded frame. We can detect a folded frame because\n    \/\/ it has no line information.\n    if (!terse) return false;\n    return trace.frames.single.line != null;\n  });\n\n  \/\/ If all the traces contain only internal processing, preserve the last\n  \/\/ (top-most) one so that the chain isn't empty.\n  if (nonEmptyTraces.isEmpty &amp;&amp; foldedTraces.isNotEmpty) {\n    return new Chain([foldedTraces.last]);\n  }\n\n  return new Chain(nonEmptyTraces);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Chain.forTrace",
+            "type": "",
+            "desc": "<p>Returns the stack chain associated with <code>trace<\/code>.<\/p>\n<p>The first stack trace in the returned chain will always be <code>trace<\/code>\n(converted to a <a href=\"package-stack_trace_stack_trace\/Trace-class.html\">Trace<\/a> if necessary). If there is no chain associated\nwith <code>trace<\/code> or if this is called outside of a <a href=\"package-stack_trace_stack_trace\/Chain\/capture.html\">capture<\/a> zone, this just\nreturns a single-trace chain containing <code>trace<\/code>.<\/p>\n<p>If <code>trace<\/code> is already a <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">Chain<\/a>, it will be returned as-is.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Chain",
+            "sig": "",
+            "params": [
+                {
+                    "name": "trace",
+                    "type": "dart:core.StackTrace",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Chain\/Chain.forTrace.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Chain.forTrace(StackTrace trace) {\n  if (trace is Chain) return trace;\n  if (_currentSpec != null) return _currentSpec.chainFor(trace);\n  if (trace is Trace) return new Chain([trace]);\n  return new LazyChain(() =&gt; new Chain.parse(trace.toString()));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "Chain.parse",
+            "type": "",
+            "desc": "<p>Parses a string representation of a stack chain.<\/p>\n<p>If <code>chain<\/code> is the output of a call to <a href=\"package-stack_trace_stack_trace\/Chain\/toString.html\">Chain.toString<\/a>, it will be parsed\nas a full stack chain. Otherwise, it will be parsed as in <a href=\"package-stack_trace_stack_trace\/Chain\/Chain.parse.html\">Trace.parse<\/a>\nand returned as a single-trace chain.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Chain",
+            "sig": "",
+            "params": [
+                {
+                    "name": "chain",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-stack_trace_stack_trace\/Chain\/Chain.parse.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory Chain.parse(String chain) {\n  if (chain.isEmpty) return new Chain([]);\n  if (chain.contains(vmChainGap)) {\n    return new Chain(\n        chain.split(vmChainGap).map((trace) =&gt; new Trace.parseVM(trace)));\n  }\n  if (!chain.contains(chainGap)) return new Chain([new Trace.parse(chain)]);\n\n  return new Chain(\n      chain.split(chainGap).map((trace) =&gt; new Trace.parseFriendly(trace)));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Chain",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "package-stack_trace_stack_trace\/Chain\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() {\n  \/\/ Figure out the longest path so we know how much to pad.\n  var longest = traces.map((trace) {\n    return trace.frames\n        .map((frame) =&gt; frame.location.length)\n        .fold(0, math.max);\n  }).fold(0, math.max);\n\n  \/\/ Don't call out to [Trace.toString] here because that doesn't ensure that\n  \/\/ padding is consistent across all traces.\n  return traces.map((trace) {\n    return trace.frames.map((frame) {\n      return '${frame.location.padRight(longest)}  ${frame.member}\\n';\n    }).join();\n  }).join(chainGap);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toTrace",
+            "type": "stack_trace.Trace",
+            "desc": "<p>Converts <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">this<\/a> to a <a href=\"package-stack_trace_stack_trace\/Trace-class.html\">Trace<\/a>.<\/p>\n<p>The trace version of a chain is just the concatenation of all the traces\nin the chain.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Chain",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "package-stack_trace_stack_trace\/Chain\/toTrace.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Trace toTrace() =&gt; new Trace(traces.expand((trace) =&gt; trace.frames));<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "track",
+            "type": "",
+            "desc": "<p>Returns <code>futureOrStream<\/code> unmodified.<\/p>\n<p>Prior to Dart 1.7, this was necessary to ensure that stack traces for\nexceptions reported with <a href=\"dart-async\/Completer\/completeError.html\">Completer.completeError<\/a> and\n<a href=\"dart-async\/StreamController\/addError.html\">StreamController.addError<\/a> were tracked correctly.<\/p>\n    ",
+            "static": false,
+            "memberOf": "stack_trace.Chain",
+            "sig": "",
+            "params": [
+                {
+                    "name": "futureOrStream",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-stack_trace_stack_trace\/Chain\/track.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@Deprecated(\"Chain.track is not necessary in Dart 1.7+.\")\nstatic track(futureOrStream) =&gt; futureOrStream;<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [
+        {
+            "name": "terse",
+            "type": "stack_trace.Chain",
+            "types": [],
+            "desc": "<p>Returns a terser version of <a href=\"package-stack_trace_stack_trace\/Chain-class.html\">this<\/a>.<\/p>\n<p>This calls <a href=\"package-stack_trace_stack_trace\/Chain\/terse.html\">Trace.terse<\/a> on every trace in <a href=\"package-stack_trace_stack_trace\/Chain\/traces.html\">traces<\/a>, and discards any\ntrace that contain only internal frames.<\/p>\n<p>This won't do anything with a raw JavaScript trace, since there's no way\nto determine which frames come from which Dart libraries. However, the\n<a href=\"https:\/\/pub.dartlang.org\/packages\/source_map_stack_trace\"><code>source_map_stack_trace<\/code><\/a> package can be used to\nconvert JavaScript traces into Dart-style traces.<\/p>\n        ",
+            "memberOf": "stack_trace.Chain",
+            "isConstant": false,
+            "href": "package-stack_trace_stack_trace\/Chain\/terse.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Chain get terse =&gt; foldFrames((_) =&gt; false, terse: true);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "traces",
+            "type": "dart:core.List<stack_trace.Trace>",
+            "types": [
+                "dart:core.List",
+                "stack_trace.Trace"
+            ],
+            "desc": "<p>The stack traces that make up this chain.<\/p>\n<p>Like the frames in a stack trace, the traces are ordered from most local\nto least local. The first one is the trace where the actual exception was\nraised, the second one is where that callback was scheduled, and so on.<\/p>\n        ",
+            "memberOf": "stack_trace.Chain",
+            "isConstant": false,
+            "href": "package-stack_trace_stack_trace\/Chain\/traces.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final List&lt;Trace&gt; traces\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-stack_trace_stack_trace\/Chain-class.html",
+    "desc": "<p>A chain of stack traces.<\/p>\n<p>A stack chain is a collection of one or more stack traces that collectively\nrepresent the path from <code>main<\/code> through nested function calls to a particular\ncode location, usually where an error was thrown. Multiple stack traces are\nnecessary when using asynchronous functions, since the program's stack is\nreset before each asynchronous callback is run.<\/p>\n<p>Stack chains can be automatically tracked using <a href=\"package-stack_trace_stack_trace\/Chain\/capture.html\">Chain.capture<\/a>. This sets\nup a new <a href=\"dart-async\/Zone-class.html\">Zone<\/a> in which the current stack chain is tracked and can be\naccessed using <a href=\"package-stack_trace_stack_trace\/Chain\/Chain.current.html\">new Chain.current<\/a>. Any errors that would be top-leveled in\nthe zone can be handled, along with their associated chains, with the\n<code>onError<\/code> callback. For example:<\/p>\n<pre class=\"language-dart\"><code>Chain.capture(() {\n  \/\/ ...\n}, onError: (error, stackChain) {\n  print(\"Caught error $error\\n\"\n        \"$stackChain\");\n});\n<\/code><\/pre>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "Chain"
+}

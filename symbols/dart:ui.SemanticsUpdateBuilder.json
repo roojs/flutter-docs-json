@@ -1,0 +1,331 @@
+{
+    "name": "dart:ui.SemanticsUpdateBuilder",
+    "extends": [],
+    "memberOf": "dart:ui",
+    "events": [],
+    "methods": [
+        {
+            "name": "SemanticsUpdateBuilder",
+            "type": "",
+            "desc": "<p>Creates an empty <a href=\"dart-ui\/SemanticsUpdateBuilder-class.html\">SemanticsUpdateBuilder<\/a> object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.SemanticsUpdateBuilder",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "dart-ui\/SemanticsUpdateBuilder\/SemanticsUpdateBuilder.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@pragma('vm:entry-point')\nSemanticsUpdateBuilder() { _constructor(); }<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "build",
+            "type": "dart:ui.SemanticsUpdate",
+            "desc": "<p>Creates a <a href=\"dart-ui\/SemanticsUpdate-class.html\">SemanticsUpdate<\/a> object that encapsulates the updates recorded\nby this object.<\/p>\n<p>The returned object can be passed to <a href=\"dart-ui\/Window\/updateSemantics.html\">Window.updateSemantics<\/a> to actually\nupdate the semantics retained by the system.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.SemanticsUpdateBuilder",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "dart-ui\/SemanticsUpdateBuilder\/build.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">SemanticsUpdate build() native 'SemanticsUpdateBuilder_build';<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "updateCustomAction",
+            "type": "",
+            "desc": "<p>Update the custom semantics action associated with the given <code>id<\/code>.<\/p>\n<p>The name of the action exposed to the user is the <code>label<\/code>. For overridden\nstandard actions this value is ignored.<\/p>\n<p>The <code>hint<\/code> should describe what happens when an action occurs, not the\nmanner in which a tap is accomplished. For example, use \"delete\" instead\nof \"double tap to delete\".<\/p>\n<p>The text direction of the <code>hint<\/code> and <code>label<\/code> is the same as the global\nwindow.<\/p>\n<p>For overridden standard actions, <code>overrideId<\/code> corresponds with a\n<a href=\"dart-ui\/SemanticsAction\/index.html\">SemanticsAction.index<\/a> value. For custom actions this argument should not be\nprovided.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.SemanticsUpdateBuilder",
+            "sig": "",
+            "params": [
+                {
+                    "name": "id",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "label",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "hint",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "overrideId",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/SemanticsUpdateBuilder\/updateCustomAction.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void updateCustomAction({int id, String label, String hint, int overrideId = -1}) {\n  assert(id != null);\n  assert(overrideId != null);\n  _updateCustomAction(id, label, hint, overrideId);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "updateNode",
+            "type": "",
+            "desc": "<p>Update the information associated with the node with the given <code>id<\/code>.<\/p>\n<p>The semantics nodes form a tree, with the root of the tree always having\nan id of zero. The <code>childrenInTraversalOrder<\/code> and <code>childrenInHitTestOrder<\/code>\nare the ids of the nodes that are immediate children of this node. The\nformer enumerates children in traversal order, and the latter enumerates\nthe same children in the hit test order. The two lists must have the same\nlength and contain the same ids. They may only differ in the order the\nids are listed in. For more information about different child orders, see\n<a href=\"semantics\/DebugSemanticsDumpOrder-class.html\">DebugSemanticsDumpOrder<\/a>.<\/p>\n<p>The system retains the nodes that are currently reachable from the root.\nA given update need not contain information for nodes that do not change\nin the update. If a node is not reachable from the root after an update,\nthe node will be discarded from the tree.<\/p>\n<p>The <code>flags<\/code> are a bit field of <a href=\"dart-ui\/SemanticsFlag-class.html\">SemanticsFlag<\/a>s that apply to this node.<\/p>\n<p>The <code>actions<\/code> are a bit field of <a href=\"dart-ui\/SemanticsAction-class.html\">SemanticsAction<\/a>s that can be undertaken\nby this node. If the user wishes to undertake one of these actions on this\nnode, the <a href=\"dart-ui\/Window\/onSemanticsAction.html\">Window.onSemanticsAction<\/a> will be called with <code>id<\/code> and one of\nthe possible <a href=\"dart-ui\/SemanticsAction-class.html\">SemanticsAction<\/a>s. Because the semantics tree is maintained\nasynchronously, the <a href=\"dart-ui\/Window\/onSemanticsAction.html\">Window.onSemanticsAction<\/a> callback might be called\nwith an action that is no longer possible.<\/p>\n<p>The <code>label<\/code> is a string that describes this node. The <code>value<\/code> property\ndescribes the current value of the node as a string. The <code>increasedValue<\/code>\nstring will become the <code>value<\/code> string after a <a href=\"dart-ui\/SemanticsAction\/increase-constant.html\">SemanticsAction.increase<\/a>\naction is performed. The <code>decreasedValue<\/code> string will become the <code>value<\/code>\nstring after a <a href=\"dart-ui\/SemanticsAction\/decrease-constant.html\">SemanticsAction.decrease<\/a> action is performed. The <code>hint<\/code>\nstring describes what result an action performed on this node has. The\nreading direction of all these strings is given by <code>textDirection<\/code>.<\/p>\n<p>The fields 'textSelectionBase' and 'textSelectionExtent' describe the\ncurrently selected text within <code>value<\/code>.<\/p>\n<p>The field <code>platformViewId<\/code> references the platform view, whose semantics\nnodes will be added as children to this node. If a platform view is\nspecified, <code>childrenInHitTestOrder<\/code> and <code>childrenInTraversalOrder<\/code> must be\nempty.<\/p>\n<p>For scrollable nodes <code>scrollPosition<\/code> describes the current scroll\nposition in logical pixel. <code>scrollExtentMax<\/code> and <code>scrollExtentMin<\/code>\ndescribe the maximum and minimum in-rage values that <code>scrollPosition<\/code> can\nbe. Both or either may be infinity to indicate unbound scrolling. The\nvalue for <code>scrollPosition<\/code> can (temporarily) be outside this range, for\nexample during an overscroll. <code>scrollChildren<\/code> is the count of the\ntotal number of child nodes that contribute semantics and <code>scrollIndex<\/code>\nis the index of the first visible child node that contributes semantics.<\/p>\n<p>The <code>rect<\/code> is the region occupied by this node in its own coordinate\nsystem.<\/p>\n<p>The <code>transform<\/code> is a matrix that maps this node's coordinate system into\nits parent's coordinate system.<\/p>\n<p>The <code>elevation<\/code> describes the distance in z-direction between this node\nand the <code>elevation<\/code> of the parent.<\/p>\n<p>The <code>thickness<\/code> describes how much space this node occupies in the\nz-direction starting at <code>elevation<\/code>. Basically, in the z-direction the\nnode starts at <code>elevation<\/code> above the parent and ends at <code>elevation<\/code> +\n<code>thickness<\/code> above the parent.<\/p>\n    ",
+            "static": false,
+            "memberOf": "dart:ui.SemanticsUpdateBuilder",
+            "sig": "",
+            "params": [
+                {
+                    "name": "id",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "flags",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "actions",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "textSelectionBase",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "textSelectionExtent",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "platformViewId",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "scrollChildren",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "scrollIndex",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "scrollPosition",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "scrollExtentMax",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "scrollExtentMin",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "elevation",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "thickness",
+                    "type": "dart:core.double",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "rect",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "label",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "hint",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "value",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "increasedValue",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "decreasedValue",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "textDirection",
+                    "type": "dart:ui.TextDirection",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "transform",
+                    "type": "dart:typed_data.Float64List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "childrenInTraversalOrder",
+                    "type": "dart:typed_data.Int32List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "childrenInHitTestOrder",
+                    "type": "dart:typed_data.Int32List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "additionalActions",
+                    "type": "dart:typed_data.Int32List",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "dart-ui\/SemanticsUpdateBuilder\/updateNode.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void updateNode({\n  int id,\n  int flags,\n  int actions,\n  int textSelectionBase,\n  int textSelectionExtent,\n  int platformViewId,\n  int scrollChildren,\n  int scrollIndex,\n  double scrollPosition,\n  double scrollExtentMax,\n  double scrollExtentMin,\n  double elevation,\n  double thickness,\n  Rect rect,\n  String label,\n  String hint,\n  String value,\n  String increasedValue,\n  String decreasedValue,\n  TextDirection textDirection,\n  Float64List transform,\n  Int32List childrenInTraversalOrder,\n  Int32List childrenInHitTestOrder,\n  Int32List additionalActions,\n}) {\n  if (transform.length != 16)\n    throw new ArgumentError('transform argument must have 16 entries.');\n  _updateNode(\n    id,\n    flags,\n    actions,\n    textSelectionBase,\n    textSelectionExtent,\n    platformViewId,\n    scrollChildren,\n    scrollIndex,\n    scrollPosition,\n    scrollExtentMax,\n    scrollExtentMin,\n    rect.left,\n    rect.top,\n    rect.right,\n    rect.bottom,\n    elevation,\n    thickness,\n    label,\n    hint,\n    value,\n    increasedValue,\n    decreasedValue,\n    textDirection != null ? textDirection.index + 1 : 0,\n    transform,\n    childrenInTraversalOrder,\n    childrenInHitTestOrder,\n    additionalActions,\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "dart-ui\/SemanticsUpdateBuilder-class.html",
+    "desc": "<p>An object that creates <a href=\"dart-ui\/SemanticsUpdate-class.html\">SemanticsUpdate<\/a> objects.<\/p>\n<p>Once created, the <a href=\"dart-ui\/SemanticsUpdate-class.html\">SemanticsUpdate<\/a> objects can be passed to\n<a href=\"dart-ui\/Window\/updateSemantics.html\">Window.updateSemantics<\/a> to update the semantics conveyed to the user.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "SemanticsUpdateBuilder"
+}

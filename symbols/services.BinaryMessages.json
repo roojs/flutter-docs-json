@@ -1,0 +1,192 @@
+{
+    "name": "services.BinaryMessages",
+    "extends": [],
+    "memberOf": "services",
+    "events": [],
+    "methods": [
+        {
+            "name": "handlePlatformMessage",
+            "type": "dart:async.Future",
+            "desc": "<p>Calls the handler registered for the given channel.<\/p>\n<p>Typically called by <a href=\"services\/ServicesBinding-mixin.html\">ServicesBinding<\/a> to handle platform messages received\nfrom <a href=\"dart-ui\/Window\/onPlatformMessage.html\">Window.onPlatformMessage<\/a>.<\/p>\n<p>To register a handler for a given message channel, see <a href=\"services\/BinaryMessages\/setMessageHandler.html\">setMessageHandler<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.BinaryMessages",
+            "sig": "",
+            "params": [
+                {
+                    "name": "channel",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "data",
+                    "type": "dart:typed_data.ByteData",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "callback",
+                    "type": "dart:ui.PlatformMessageResponseCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/BinaryMessages\/handlePlatformMessage.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;void&gt; handlePlatformMessage(\n  String channel,\n  ByteData data,\n  ui.PlatformMessageResponseCallback callback,\n) async {\n  ByteData response;\n  try {\n    final _MessageHandler handler = _handlers[channel];\n    if (handler != null)\n      response = await handler(data);\n  } catch (exception, stack) {\n    FlutterError.reportError(FlutterErrorDetails(\n      exception: exception,\n      stack: stack,\n      library: 'services library',\n      context: 'during a platform message callback',\n    ));\n  } finally {\n    callback(response);\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "send",
+            "type": "dart:async.Future<dart:typed_data.ByteData>",
+            "desc": "<p>Send a binary message to the platform plugins on the given channel.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> which completes to the received response, undecoded, in\nbinary form.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.BinaryMessages",
+            "sig": "",
+            "params": [
+                {
+                    "name": "channel",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "message",
+                    "type": "dart:typed_data.ByteData",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/BinaryMessages\/send.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;ByteData&gt; send(String channel, ByteData message) {\n  final _MessageHandler handler = _mockHandlers[channel];\n  if (handler != null)\n    return handler(message);\n  return _sendPlatformMessage(channel, message);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:typed_data.ByteData"
+            ]
+        },
+        {
+            "name": "setMessageHandler",
+            "type": "",
+            "desc": "<p>Set a callback for receiving messages from the platform plugins on the\ngiven channel, without decoding them.<\/p>\n<p>The given callback will replace the currently registered callback for that\nchannel, if any. To remove the handler, pass null as the <code>handler<\/code>\nargument.<\/p>\n<p>The handler's return value, if non-null, is sent as a response, unencoded.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.BinaryMessages",
+            "sig": "",
+            "params": [
+                {
+                    "name": "channel",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "message",
+                    "type": "dart:typed_data.ByteData",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:async.Future",
+                        "dart:typed_data.ByteData"
+                    ]
+                },
+                {
+                    "name": "message",
+                    "type": "dart:typed_data.ByteData",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/BinaryMessages\/setMessageHandler.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static void setMessageHandler(String channel, Future&lt;ByteData&gt; handler(ByteData message)) {\n  if (handler == null)\n    _handlers.remove(channel);\n  else\n    _handlers[channel] = handler;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "setMockMessageHandler",
+            "type": "",
+            "desc": "<p>Set a mock callback for intercepting messages from the <code>send*<\/code> methods on\nthis class, on the given channel, without decoding them.<\/p>\n<p>The given callback will replace the currently registered mock callback for\nthat channel, if any. To remove the mock handler, pass null as the\n<code>handler<\/code> argument.<\/p>\n<p>The handler's return value, if non-null, is used as a response, unencoded.<\/p>\n<p>This is intended for testing. Messages intercepted in this manner are not\nsent to platform plugins.<\/p>\n    ",
+            "static": false,
+            "memberOf": "services.BinaryMessages",
+            "sig": "",
+            "params": [
+                {
+                    "name": "channel",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "message",
+                    "type": "dart:typed_data.ByteData",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:async.Future",
+                        "dart:typed_data.ByteData"
+                    ]
+                },
+                {
+                    "name": "message",
+                    "type": "dart:typed_data.ByteData",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "services\/BinaryMessages\/setMockMessageHandler.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static void setMockMessageHandler(String channel, Future&lt;ByteData&gt; handler(ByteData message)) {\n  if (handler == null)\n    _mockHandlers.remove(channel);\n  else\n    _mockHandlers[channel] = handler;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        }
+    ],
+    "props": [],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "services\/BinaryMessages-class.html",
+    "desc": "<p>Sends binary messages to and receives binary messages from platform plugins.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"services\/BasicMessageChannel-class.html\">BasicMessageChannel<\/a>, which provides basic messaging services similar to\n<code>BinaryMessages<\/code>, but with pluggable message codecs in support of sending\nstrings or semi-structured messages.<\/li>\n<li>\n<a href=\"services\/MethodChannel-class.html\">MethodChannel<\/a>, which provides platform communication using asynchronous\nmethod calls.<\/li>\n<li>\n<a href=\"services\/EventChannel-class.html\">EventChannel<\/a>, which provides platform communication using event streams.<\/li>\n<li><a href=\"https:\/\/flutter.io\/platform-channels\/\">flutter.io\/platform-channels\/<\/a><\/li>\n<\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "BinaryMessages"
+}

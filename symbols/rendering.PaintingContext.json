@@ -1,0 +1,666 @@
+{
+    "name": "rendering.PaintingContext",
+    "extends": [
+        "painting.ClipContext",
+        "dart:core.Object"
+    ],
+    "memberOf": "rendering",
+    "events": [],
+    "methods": [
+        {
+            "name": "PaintingContext",
+            "type": "",
+            "desc": "<p>Creates a painting context.<\/p>\n<p>Typically only called by <a href=\"rendering\/PaintingContext\/repaintCompositedChild.html\">PaintingContext.repaintCompositedChild<\/a>\nand <a href=\"rendering\/PaintingContext\/pushLayer.html\">pushLayer<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [
+                {
+                    "name": "_containerLayer",
+                    "type": "rendering.ContainerLayer",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "estimatedBounds",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "rendering\/PaintingContext\/PaintingContext.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nPaintingContext(this._containerLayer, this.estimatedBounds)\n  : assert(_containerLayer != null),\n    assert(estimatedBounds != null);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "addLayer",
+            "type": "",
+            "desc": "<p>Adds a composited leaf layer to the recording.<\/p>\n<p>After calling this function, the <a href=\"rendering\/PaintingContext\/canvas.html\">canvas<\/a> property will change to refer to\na new <a href=\"dart-ui\/Canvas-class.html\">Canvas<\/a> that draws on top of the given layer.<\/p>\n<p>A <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> that uses this function is very likely to require its\n<a href=\"rendering\/RenderObject\/alwaysNeedsCompositing.html\">RenderObject.alwaysNeedsCompositing<\/a> property to return true. That informs\nancestor render objects that this render object will include a composited\nlayer, which, for example, causes them to use composited clips.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/PaintingContext\/pushLayer.html\">pushLayer<\/a>, for adding a layer and using its canvas to paint with that\nlayer.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [
+                {
+                    "name": "layer",
+                    "type": "rendering.Layer",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/addLayer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addLayer(Layer layer) {\n  stopRecordingIfNeeded();\n  appendLayer(layer);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "appendLayer",
+            "type": "",
+            "desc": "<p>Adds a layer to the recording requiring that the recording is already\nstopped.<\/p>\n<p>Do not call this function directly: call <a href=\"rendering\/PaintingContext\/addLayer.html\">addLayer<\/a> or <a href=\"rendering\/PaintingContext\/pushLayer.html\">pushLayer<\/a>\ninstead. This function is called internally when all layers not\ngenerated from the <a href=\"rendering\/PaintingContext\/canvas.html\">canvas<\/a> are added.<\/p>\n<p>Subclasses that need to customize how layers are added should override\nthis method.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [
+                {
+                    "name": "layer",
+                    "type": "rendering.Layer",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/appendLayer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid appendLayer(Layer layer) {\n  assert(!_isRecording);\n  layer.remove();\n  _containerLayer.append(layer);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "createChildContext",
+            "type": "rendering.PaintingContext",
+            "desc": "<p>Creates a compatible painting context to paint onto <code>childLayer<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [
+                {
+                    "name": "childLayer",
+                    "type": "rendering.ContainerLayer",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "bounds",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/createChildContext.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nPaintingContext createChildContext(ContainerLayer childLayer, Rect bounds) {\n  return PaintingContext(childLayer, bounds);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "debugInstrumentRepaintCompositedChild",
+            "type": "",
+            "desc": "<p>In debug mode, repaint the given render object using a custom painting\ncontext that can record the results of the painting operation in addition\nto performing the regular paint of the child.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/PaintingContext\/repaintCompositedChild.html\">repaintCompositedChild<\/a>, for repainting a composited child without\ninstrumentation.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "debugAlsoPaintedParent",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "customContext",
+                    "type": "rendering.PaintingContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/debugInstrumentRepaintCompositedChild.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static void debugInstrumentRepaintCompositedChild(\n  RenderObject child, {\n  bool debugAlsoPaintedParent = false,\n  @required PaintingContext customContext,\n}) {\n  assert(() {\n    _repaintCompositedChild(\n      child,\n      debugAlsoPaintedParent: debugAlsoPaintedParent,\n      childContext: customContext,\n    );\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "paintChild",
+            "type": "",
+            "desc": "<p>Paint a child <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>.<\/p>\n<p>If the child has its own composited layer, the child will be composited\ninto the layer subtree associated with this painting context. Otherwise,\nthe child will be painted into the current PictureLayer for this context.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/paintChild.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void paintChild(RenderObject child, Offset offset) {\n  assert(() {\n    if (debugProfilePaintsEnabled)\n      Timeline.startSync('${child.runtimeType}', arguments: timelineWhitelistArguments);\n    if (debugOnProfilePaint != null)\n      debugOnProfilePaint(child);\n    return true;\n  }());\n\n  if (child.isRepaintBoundary) {\n    stopRecordingIfNeeded();\n    _compositeChild(child, offset);\n  } else {\n    child._paintWithContext(this, offset);\n  }\n\n  assert(() {\n    if (debugProfilePaintsEnabled)\n      Timeline.finishSync();\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "pushClipPath",
+            "type": "",
+            "desc": "<p>Clip further painting using a path.<\/p>\n<ul>\n<li>\n<code>needsCompositing<\/code> is whether the child needs compositing. Typically\nmatches the value of <a href=\"rendering\/RenderObject\/needsCompositing.html\">RenderObject.needsCompositing<\/a> for the caller.<\/li>\n<li>\n<code>offset<\/code> is the offset from the origin of the canvas' coordinate system\nto the origin of the caller's coordinate system.<\/li>\n<li>\n<code>bounds<\/code> is the region of the canvas (in the caller's coordinate system)\ninto which <code>painter<\/code> will paint in.<\/li>\n<li>\n<code>clipPath<\/code> is the path (in the coordinate system of the caller) to use to\nclip the painting done by <code>painter<\/code>.<\/li>\n<li>\n<code>painter<\/code> is a callback that will paint with the <code>clipPath<\/code> applied. This\nfunction calls the <code>painter<\/code> synchronously.<\/li>\n<li>\n<code>clipBehavior<\/code> controls how the rounded rectangle is clipped.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [
+                {
+                    "name": "needsCompositing",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "bounds",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "clipPath",
+                    "type": "dart:ui.Path",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "painter",
+                    "type": "rendering.PaintingContextCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "clipBehavior",
+                    "type": "dart:ui.Clip",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/pushClipPath.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void pushClipPath(bool needsCompositing, Offset offset, Rect bounds, Path clipPath, PaintingContextCallback painter, { Clip clipBehavior = Clip.antiAlias }) {\n  assert(clipBehavior != null);\n  final Rect offsetBounds = bounds.shift(offset);\n  final Path offsetClipPath = clipPath.shift(offset);\n  if (needsCompositing) {\n    pushLayer(ClipPathLayer(clipPath: offsetClipPath, clipBehavior: clipBehavior), painter, offset, childPaintBounds: offsetBounds);\n  } else {\n    clipPathAndPaint(offsetClipPath, clipBehavior, offsetBounds, () =&gt; painter(this, offset));\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "pushClipRRect",
+            "type": "",
+            "desc": "<p>Clip further painting using a rounded rectangle.<\/p>\n<ul>\n<li>\n<code>needsCompositing<\/code> is whether the child needs compositing. Typically\nmatches the value of <a href=\"rendering\/RenderObject\/needsCompositing.html\">RenderObject.needsCompositing<\/a> for the caller.<\/li>\n<li>\n<code>offset<\/code> is the offset from the origin of the canvas' coordinate system\nto the origin of the caller's coordinate system.<\/li>\n<li>\n<code>bounds<\/code> is the region of the canvas (in the caller's coordinate system)\ninto which <code>painter<\/code> will paint in.<\/li>\n<li>\n<code>clipRRect<\/code> is the rounded-rectangle (in the caller's coordinate system)\nto use to clip the painting done by <code>painter<\/code>.<\/li>\n<li>\n<code>painter<\/code> is a callback that will paint with the <code>clipRRect<\/code> applied. This\nfunction calls the <code>painter<\/code> synchronously.<\/li>\n<li>\n<code>clipBehavior<\/code> controls how the path is clipped.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [
+                {
+                    "name": "needsCompositing",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "bounds",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "clipRRect",
+                    "type": "dart:ui.RRect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "painter",
+                    "type": "rendering.PaintingContextCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "clipBehavior",
+                    "type": "dart:ui.Clip",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/pushClipRRect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void pushClipRRect(bool needsCompositing, Offset offset, Rect bounds, RRect clipRRect, PaintingContextCallback painter, { Clip clipBehavior = Clip.antiAlias }) {\n  assert(clipBehavior != null);\n  final Rect offsetBounds = bounds.shift(offset);\n  final RRect offsetClipRRect = clipRRect.shift(offset);\n  if (needsCompositing) {\n    pushLayer(ClipRRectLayer(clipRRect: offsetClipRRect, clipBehavior: clipBehavior), painter, offset, childPaintBounds: offsetBounds);\n  } else {\n    clipRRectAndPaint(offsetClipRRect, clipBehavior, offsetBounds, () =&gt; painter(this, offset));\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "pushClipRect",
+            "type": "",
+            "desc": "<p>Clip further painting using a rectangle.<\/p>\n<ul>\n<li>\n<code>needsCompositing<\/code> is whether the child needs compositing. Typically\nmatches the value of <a href=\"rendering\/RenderObject\/needsCompositing.html\">RenderObject.needsCompositing<\/a> for the caller.<\/li>\n<li>\n<code>offset<\/code> is the offset from the origin of the canvas' coordinate system\nto the origin of the caller's coordinate system.<\/li>\n<li>\n<code>clipRect<\/code> is rectangle (in the caller's coordinate system) to use to\nclip the painting done by <code>painter<\/code>.<\/li>\n<li>\n<code>painter<\/code> is a callback that will paint with the <code>clipRect<\/code> applied. This\nfunction calls the <code>painter<\/code> synchronously.<\/li>\n<li>\n<code>clipBehavior<\/code> controls how the rectangle is clipped.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [
+                {
+                    "name": "needsCompositing",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "clipRect",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "painter",
+                    "type": "rendering.PaintingContextCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "clipBehavior",
+                    "type": "dart:ui.Clip",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/pushClipRect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void pushClipRect(bool needsCompositing, Offset offset, Rect clipRect, PaintingContextCallback painter, { Clip clipBehavior = Clip.hardEdge }) {\n  final Rect offsetClipRect = clipRect.shift(offset);\n  if (needsCompositing) {\n    pushLayer(ClipRectLayer(clipRect: offsetClipRect, clipBehavior: clipBehavior), painter, offset, childPaintBounds: offsetClipRect);\n  } else {\n    clipRectAndPaint(offsetClipRect, clipBehavior, offsetClipRect, () =&gt; painter(this, offset));\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "pushLayer",
+            "type": "",
+            "desc": "<p>Appends the given layer to the recording, and calls the <code>painter<\/code> callback\nwith that layer, providing the <code>childPaintBounds<\/code> as the estimated paint\nbounds of the child. The <code>childPaintBounds<\/code> can be used for debugging but\nhave no effect on painting.<\/p>\n<p>The given layer must be an unattached orphan. (Providing a newly created\nobject, rather than reusing an existing layer, satisfies that\nrequirement.)<\/p>\n<p>The <code>offset<\/code> is the offset to pass to the <code>painter<\/code>.<\/p>\n<p>If the <code>childPaintBounds<\/code> are not specified then the current layer's paint\nbounds are used. This is appropriate if the child layer does not apply any\ntransformation or clipping to its contents. The <code>childPaintBounds<\/code>, if\nspecified, must be in the coordinate system of the new layer, and should\nnot go outside the current layer's paint bounds.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/PaintingContext\/addLayer.html\">addLayer<\/a>, for pushing a leaf layer whose canvas is not used.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [
+                {
+                    "name": "childLayer",
+                    "type": "rendering.ContainerLayer",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "painter",
+                    "type": "rendering.PaintingContextCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "childPaintBounds",
+                    "type": "dart:ui.Rect",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/pushLayer.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void pushLayer(ContainerLayer childLayer, PaintingContextCallback painter, Offset offset, { Rect childPaintBounds }) {\n  assert(!childLayer.attached);\n  assert(childLayer.parent == null);\n  assert(painter != null);\n  stopRecordingIfNeeded();\n  appendLayer(childLayer);\n  final PaintingContext childContext = createChildContext(childLayer, childPaintBounds ?? estimatedBounds);\n  painter(childContext, offset);\n  childContext.stopRecordingIfNeeded();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "pushOpacity",
+            "type": "",
+            "desc": "<p>Blend further painting with an alpha value.<\/p>\n<ul>\n<li>\n<code>offset<\/code> is the offset from the origin of the canvas' coordinate system\nto the origin of the caller's coordinate system.<\/li>\n<li>\n<code>alpha<\/code> is the alpha value to use when blending the painting done by\n<code>painter<\/code>. An alpha value of 0 means the painting is fully transparent\nand an alpha value of 255 means the painting is fully opaque.<\/li>\n<li>\n<code>painter<\/code> is a callback that will paint with the <code>alpha<\/code> applied. This\nfunction calls the <code>painter<\/code> synchronously.<\/li>\n<\/ul>\n<p>A <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> that uses this function is very likely to require its\n<a href=\"rendering\/RenderObject\/alwaysNeedsCompositing.html\">RenderObject.alwaysNeedsCompositing<\/a> property to return true. That informs\nancestor render objects that this render object will include a composited\nlayer, which, for example, causes them to use composited clips.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "alpha",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "painter",
+                    "type": "rendering.PaintingContextCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/pushOpacity.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void pushOpacity(Offset offset, int alpha, PaintingContextCallback painter) {\n  pushLayer(OpacityLayer(alpha: alpha, offset: offset), painter, Offset.zero);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "pushTransform",
+            "type": "",
+            "desc": "<p>Transform further painting using a matrix.<\/p>\n<ul>\n<li>\n<code>needsCompositing<\/code> is whether the child needs compositing. Typically\nmatches the value of <a href=\"rendering\/RenderObject\/needsCompositing.html\">RenderObject.needsCompositing<\/a> for the caller.<\/li>\n<li>\n<code>offset<\/code> is the offset from the origin of the canvas' coordinate system\nto the origin of the caller's coordinate system.<\/li>\n<li>\n<code>transform<\/code> is the matrix to apply to the painting done by <code>painter<\/code>.<\/li>\n<li>\n<code>painter<\/code> is a callback that will paint with the <code>transform<\/code> applied. This\nfunction calls the <code>painter<\/code> synchronously.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [
+                {
+                    "name": "needsCompositing",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "offset",
+                    "type": "dart:ui.Offset",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "transform",
+                    "type": "vector_math_64.Matrix4",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "painter",
+                    "type": "rendering.PaintingContextCallback",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/pushTransform.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void pushTransform(bool needsCompositing, Offset offset, Matrix4 transform, PaintingContextCallback painter) {\n  final Matrix4 effectiveTransform = Matrix4.translationValues(offset.dx, offset.dy, 0.0)\n    ..multiply(transform)..translate(-offset.dx, -offset.dy);\n  if (needsCompositing) {\n    pushLayer(\n      TransformLayer(transform: effectiveTransform),\n      painter,\n      offset,\n      childPaintBounds: MatrixUtils.inverseTransformRect(effectiveTransform, estimatedBounds),\n    );\n  } else {\n    canvas\n      ..save()\n      ..transform(effectiveTransform.storage);\n    painter(this, offset);\n    canvas\n      ..restore();\n  }\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "repaintCompositedChild",
+            "type": "",
+            "desc": "<p>Repaint the given render object.<\/p>\n<p>The render object must be attached to a <a href=\"rendering\/PipelineOwner-class.html\">PipelineOwner<\/a>, must have a\ncomposited layer, and must be in need of painting. The render object's\nlayer, if any, is re-used, along with any layers in the subtree that don't\nneed to be repainted.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/RenderObject\/isRepaintBoundary.html\">RenderObject.isRepaintBoundary<\/a>, which determines if a <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>\nhas a composited layer.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "type": "rendering.RenderObject",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "debugAlsoPaintedParent",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/repaintCompositedChild.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static void repaintCompositedChild(RenderObject child, { bool debugAlsoPaintedParent = false }) {\n  assert(child._needsPaint);\n  _repaintCompositedChild(\n    child,\n    debugAlsoPaintedParent: debugAlsoPaintedParent,\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "setIsComplexHint",
+            "type": "",
+            "desc": "<p>Hints that the painting in the current layer is complex and would benefit\nfrom caching.<\/p>\n<p>If this hint is not set, the compositor will apply its own heuristics to\ndecide whether the current layer is complex enough to benefit from\ncaching.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/setIsComplexHint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setIsComplexHint() {\n  _currentLayer?.isComplexHint = true;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "setWillChangeHint",
+            "type": "",
+            "desc": "<p>Hints that the painting in the current layer is likely to change next frame.<\/p>\n<p>This hint tells the compositor not to cache the current layer because the\ncache will not be used in the future. If this hint is not set, the\ncompositor will apply its own heuristics to decide whether the current\nlayer is likely to be reused in the future.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/setWillChangeHint.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setWillChangeHint() {\n  _currentLayer?.willChangeHint = true;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "stopRecordingIfNeeded",
+            "type": "",
+            "desc": "<p>Stop recording to a canvas if recording has started.<\/p>\n<p>Do not call this function directly: functions in this class will call\nthis method as needed. This function is called internally to ensure that\nrecording is stopped before adding layers or finalizing the results of a\npaint.<\/p>\n<p>Subclasses that need to customize how recording to a canvas is performed\nshould override this method to save the results of the custom canvas\nrecordings.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/stopRecordingIfNeeded.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\n@mustCallSuper\nvoid stopRecordingIfNeeded() {\n  if (!_isRecording)\n    return;\n  assert(() {\n    if (debugRepaintRainbowEnabled) {\n      final Paint paint = Paint()\n        ..style = PaintingStyle.stroke\n        ..strokeWidth = 6.0\n        ..color = debugCurrentRepaintColor.toColor();\n      canvas.drawRect(estimatedBounds.deflate(3.0), paint);\n    }\n    if (debugPaintLayerBordersEnabled) {\n      final Paint paint = Paint()\n        ..style = PaintingStyle.stroke\n        ..strokeWidth = 1.0\n        ..color = const Color(0xFFFF9800);\n      canvas.drawRect(estimatedBounds, paint);\n    }\n    return true;\n  }());\n  _currentLayer.picture = _recorder.endRecording();\n  _currentLayer = null;\n  _recorder = null;\n  _canvas = null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "rendering.PaintingContext",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "rendering\/PaintingContext\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; '$runtimeType#$hashCode(layer: $_containerLayer, canvas bounds: $estimatedBounds)';<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "canvas",
+            "type": "dart:ui.Canvas",
+            "types": [],
+            "desc": "<p>The canvas on which to paint.<\/p>\n<p>The current canvas can change whenever you paint a child using this\ncontext, which means it's fragile to hold a reference to the canvas\nreturned by this getter.<\/p>\n        ",
+            "memberOf": "rendering.PaintingContext",
+            "isConstant": false,
+            "href": "rendering\/PaintingContext\/canvas.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nCanvas get canvas {\n  if (_canvas == null)\n    _startRecording();\n  return _canvas;\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "estimatedBounds",
+            "type": "dart:ui.Rect",
+            "types": [],
+            "desc": "<p>An estimate of the bounds within which the painting context's <a href=\"rendering\/PaintingContext\/canvas.html\">canvas<\/a>\nwill record painting commands. This can be useful for debugging.<\/p>\n<p>The canvas will allow painting outside these bounds.<\/p>\n<p>The <a href=\"rendering\/PaintingContext\/estimatedBounds.html\">estimatedBounds<\/a> rectangle is in the <a href=\"rendering\/PaintingContext\/canvas.html\">canvas<\/a> coordinate system.<\/p>\n        ",
+            "memberOf": "rendering.PaintingContext",
+            "isConstant": false,
+            "href": "rendering\/PaintingContext\/estimatedBounds.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Rect estimatedBounds\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "rendering\/PaintingContext-class.html",
+    "desc": "<p>A place to paint.<\/p>\n<p>Rather than holding a canvas directly, <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s paint using a painting\ncontext. The painting context has a <a href=\"dart-ui\/Canvas-class.html\">Canvas<\/a>, which receives the\nindividual draw operations, and also has functions for painting child\nrender objects.<\/p>\n<p>When painting a child render object, the canvas held by the painting context\ncan change because the draw operations issued before and after painting the\nchild might be recorded in separate compositing layers. For this reason, do\nnot hold a reference to the canvas across operations that might paint\nchild render objects.<\/p>\n<p>New <a href=\"rendering\/PaintingContext-class.html\">PaintingContext<\/a> objects are created automatically when using\n<a href=\"rendering\/PaintingContext\/repaintCompositedChild.html\">PaintingContext.repaintCompositedChild<\/a> and <a href=\"rendering\/PaintingContext\/pushLayer.html\">pushLayer<\/a>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "PaintingContext"
+}

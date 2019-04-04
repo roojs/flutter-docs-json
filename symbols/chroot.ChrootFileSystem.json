@@ -1,0 +1,383 @@
+{
+    "name": "chroot.ChrootFileSystem",
+    "extends": [
+        "file.FileSystem",
+        "dart:core.Object"
+    ],
+    "memberOf": "chroot",
+    "events": [],
+    "methods": [
+        {
+            "name": "ChrootFileSystem",
+            "type": "",
+            "desc": "<p>Creates a new file system backed by <code>root<\/code> path in <code>delegate<\/code> file system.<\/p>\n<p><strong>NOTE<\/strong>: <code>root<\/code> must be a <em>canonicalized<\/em> path; see <a href=\"package-path_path\/canonicalize.html\">p.canonicalize<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "chroot.ChrootFileSystem",
+            "sig": "",
+            "params": [
+                {
+                    "name": "delegate",
+                    "type": "file.FileSystem",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "root",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-file_chroot\/ChrootFileSystem\/ChrootFileSystem.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ChrootFileSystem(this.delegate, this.root) {\n  if (root != delegate.path.canonicalize(root)) {\n    throw new ArgumentError.value(root, 'root', 'Must be canonical path');\n  }\n  _cwd = _localRoot;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "directory",
+            "type": "file.Directory",
+            "desc": "<p>Returns a reference to a <a href=\"package-file_file\/Directory-class.html\">Directory<\/a> at <code>path<\/code>.<\/p>\n<p><code>path<\/code> can be either a <code>`String`<\/code>, a <code>`Uri`<\/code>, or a <code>`FileSystemEntity`<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "chroot.ChrootFileSystem",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/directory.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nDirectory directory(dynamic path) =&gt;\n    new _ChrootDirectory(this, getPath(path));<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "file",
+            "type": "file.File",
+            "desc": "<p>Returns a reference to a <a href=\"package-file_file\/File-class.html\">File<\/a> at <code>path<\/code>.<\/p>\n<p><code>path<\/code> can be either a <code>`String`<\/code>, a <code>`Uri`<\/code>, or a <code>`FileSystemEntity`<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "chroot.ChrootFileSystem",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/file.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFile file(dynamic path) =&gt; new _ChrootFile(this, getPath(path));<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "identical",
+            "type": "dart:async.Future<dart:core.bool>",
+            "desc": "<p>Checks whether two paths refer to the same object in the\nfile system. Returns a <a href=\"dart-async\/Future-class.html\">Future&lt;bool&gt;<\/a> that completes with the result.<\/p>\n<p>Comparing a link to its target returns false, as does comparing two links\nthat point to the same target.  To check the target of a link, use\nLink.target explicitly to fetch it.  Directory links appearing\ninside a path are followed, though, to find the file system object.<\/p>\n<p>Completes the returned Future with an error if one of the paths points\nto an object that does not exist.<\/p>\n    ",
+            "static": false,
+            "memberOf": "chroot.ChrootFileSystem",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path1",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "path2",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/identical.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;bool&gt; identical(String path1, String path2) =&gt; delegate.identical(\n      _real(_resolve(path1, followLinks: false)),\n      _real(_resolve(path2, followLinks: false)),\n    );<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:core.bool"
+            ]
+        },
+        {
+            "name": "identicalSync",
+            "type": "dart:core.bool",
+            "desc": "<p>Synchronously checks whether two paths refer to the same object in the\nfile system.<\/p>\n<p>Comparing a link to its target returns false, as does comparing two links\nthat point to the same target.  To check the target of a link, use\nLink.target explicitly to fetch it.  Directory links appearing\ninside a path are followed, though, to find the file system object.<\/p>\n<p>Throws an error if one of the paths points to an object that does not\nexist.<\/p>\n    ",
+            "static": false,
+            "memberOf": "chroot.ChrootFileSystem",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path1",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "path2",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/identicalSync.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool identicalSync(String path1, String path2) =&gt; delegate.identicalSync(\n      _real(_resolve(path1, followLinks: false)),\n      _real(_resolve(path2, followLinks: false)),\n    );<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "link",
+            "type": "file.Link",
+            "desc": "<p>Returns a reference to a <a href=\"package-file_file\/Link-class.html\">Link<\/a> at <code>path<\/code>.<\/p>\n<p><code>path<\/code> can be either a <code>`String`<\/code>, a <code>`Uri`<\/code>, or a <code>`FileSystemEntity`<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "chroot.ChrootFileSystem",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/link.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nLink link(dynamic path) =&gt; new _ChrootLink(this, getPath(path));<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "stat",
+            "type": "dart:async.Future<dart:io.FileStat>",
+            "desc": "<p>Asynchronously calls the operating system's stat() function on <code>path<\/code>.\nReturns a Future which completes with a <a href=\"dart-io\/FileStat-class.html\">FileStat<\/a> object containing\nthe data returned by stat().\nIf the call fails, completes the future with a <a href=\"dart-io\/FileStat-class.html\">FileStat<\/a> object with\n.type set to FileSystemEntityType.NOT_FOUND and the other fields invalid.<\/p>\n    ",
+            "static": false,
+            "memberOf": "chroot.ChrootFileSystem",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/stat.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;FileStat&gt; stat(String path) {\n  try {\n    path = _resolve(path);\n  } on FileSystemException {\n    return new Future&lt;FileStat&gt;.value(const _NotFoundFileStat());\n  }\n  return delegate.stat(_real(path, resolve: false));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:io.FileStat"
+            ]
+        },
+        {
+            "name": "statSync",
+            "type": "dart:io.FileStat",
+            "desc": "<p>Calls the operating system's stat() function on <code>path<\/code>.\nReturns a <a href=\"dart-io\/FileStat-class.html\">FileStat<\/a> object containing the data returned by stat().\nIf the call fails, returns a <a href=\"dart-io\/FileStat-class.html\">FileStat<\/a> object with .type set to\nFileSystemEntityType.NOT_FOUND and the other fields invalid.<\/p>\n    ",
+            "static": false,
+            "memberOf": "chroot.ChrootFileSystem",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/statSync.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFileStat statSync(String path) {\n  try {\n    path = _resolve(path);\n  } on FileSystemException {\n    return const _NotFoundFileStat();\n  }\n  return delegate.statSync(_real(path, resolve: false));\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "type",
+            "type": "dart:async.Future<dart:io.FileSystemEntityType>",
+            "desc": "<p>Finds the type of file system object that a <code>path<\/code> points to. Returns\na Future<filesystementitytype> that completes with the result.<\/filesystementitytype><\/p>\n<p><a class=\"deprecated\" href=\"dart-io\/FileSystemEntityType\/LINK-constant.html\">io.FileSystemEntityType.LINK<\/a> will only be returned if <code>followLinks<\/code> is\n<code>false<\/code>, and <code>path<\/code> points to a link<\/p>\n<p>If the <code>path<\/code> does not point to a file system object or an error occurs\nthen <a class=\"deprecated\" href=\"dart-io\/FileSystemEntityType\/NOT_FOUND-constant.html\">io.FileSystemEntityType.NOT_FOUND<\/a> is returned.<\/p>\n    ",
+            "static": false,
+            "memberOf": "chroot.ChrootFileSystem",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "followLinks",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/type.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;FileSystemEntityType&gt; type(String path, {bool followLinks: true}) {\n  String realPath;\n  try {\n    realPath = _real(path, followLinks: followLinks);\n  } on FileSystemException {\n    return new Future&lt;FileSystemEntityType&gt;.value(\n        FileSystemEntityType.notFound);\n  }\n  return delegate.type(realPath, followLinks: false);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": [
+                "dart:async.Future",
+                "dart:io.FileSystemEntityType"
+            ]
+        },
+        {
+            "name": "typeSync",
+            "type": "dart:io.FileSystemEntityType",
+            "desc": "<p>Syncronously finds the type of file system object that a <code>path<\/code> points\nto. Returns a <a href=\"dart-io\/FileSystemEntityType-class.html\">FileSystemEntityType<\/a>.<\/p>\n<p><a class=\"deprecated\" href=\"dart-io\/FileSystemEntityType\/LINK-constant.html\">io.FileSystemEntityType.LINK<\/a> will only be returned if <code>followLinks<\/code> is\n<code>false<\/code>, and <code>path<\/code> points to a link<\/p>\n<p>If the <code>path<\/code> does not point to a file system object or an error occurs\nthen <a class=\"deprecated\" href=\"dart-io\/FileSystemEntityType\/NOT_FOUND-constant.html\">io.FileSystemEntityType.NOT_FOUND<\/a> is returned.<\/p>\n    ",
+            "static": false,
+            "memberOf": "chroot.ChrootFileSystem",
+            "sig": "",
+            "params": [
+                {
+                    "name": "path",
+                    "type": "dart:core.String",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "followLinks",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/typeSync.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFileSystemEntityType typeSync(String path, {bool followLinks: true}) {\n  String realPath;\n  try {\n    realPath = _real(path, followLinks: followLinks);\n  } on FileSystemException {\n    return FileSystemEntityType.notFound;\n  }\n  return delegate.typeSync(realPath, followLinks: false);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "currentDirectory",
+            "type": "file.Directory",
+            "types": [],
+            "desc": "<p>Creates a directory object pointing to the current working directory.<\/p>\n<p><strong>NOTE<\/strong> This does <em>not<\/em> proxy to the underlying file system's current\ndirectory in any way; the state of this file system's current directory\nis local to this file system.<\/p>\n        ",
+            "memberOf": "chroot.ChrootFileSystem",
+            "isConstant": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/currentDirectory.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nDirectory get currentDirectory =&gt; directory(_cwd);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "delegate",
+            "type": "file.FileSystem",
+            "types": [],
+            "desc": "<p>Underlying file system.<\/p>\n        ",
+            "memberOf": "chroot.ChrootFileSystem",
+            "isConstant": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/delegate.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final FileSystem delegate\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isWatchSupported",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Tests if <a href=\"dart-io\/FileSystemEntity\/watch.html\">FileSystemEntity.watch<\/a> is supported on the current system.<\/p>\n        ",
+            "memberOf": "chroot.ChrootFileSystem",
+            "isConstant": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/isWatchSupported.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get isWatchSupported =&gt; false;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "path",
+            "type": "path.Context",
+            "types": [],
+            "desc": "<p>An object for manipulating paths in this file system.<\/p>\n        ",
+            "memberOf": "chroot.ChrootFileSystem",
+            "isConstant": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/path.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\np.Context get path =&gt;\n    new p.Context(style: delegate.path.style, current: _cwd);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "root",
+            "type": "dart:core.String",
+            "types": [],
+            "desc": "<p>Directory in <a href=\"package-file_chroot\/ChrootFileSystem\/delegate.html\">delegate<\/a> file system that is treated as the root here.<\/p>\n        ",
+            "memberOf": "chroot.ChrootFileSystem",
+            "isConstant": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/root.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String root\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "systemTempDirectory",
+            "type": "file.Directory",
+            "types": [],
+            "desc": "<p>Gets the system temp directory. This directory will be created on-demand\nin the local root of the file system. Once created, its location is fixed\nfor the life of the process.<\/p>\n        ",
+            "memberOf": "chroot.ChrootFileSystem",
+            "isConstant": false,
+            "href": "package-file_chroot\/ChrootFileSystem\/systemTempDirectory.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nDirectory get systemTempDirectory {\n  _systemTemp ??= directory(_localRoot).createTempSync('.tmp_').path;\n  return directory(_systemTemp)..createSync();\n}<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-file_chroot\/ChrootFileSystem-class.html",
+    "desc": "<p>File system that provides a view into <em>another<\/em> <a href=\"package-file_file\/FileSystem-class.html\">FileSystem<\/a> via a path.<\/p>\n<p>This is similar in concept to the <code>chroot<\/code> operation in Linux operating\nsystems. Such a modified file system cannot name or access files outside of\nthe designated directory tree.<\/p>\n<h2 id=\"example-use\">Example use:<\/h2>\n<pre class=\"language-dart\"><code class=\"language-dart\">\/\/ Create a \"file system\" where the root directory is \/tmp\/some-dir.\nvar fs = new ChrootFileSystem(existingFileSystem, '\/tmp\/some-dir');\n<\/code><\/pre>\n<p><strong>Notes on usage<\/strong>:<\/p>\n<ul>\n<li>\n<p>This file system maintains its <em>own<\/em> <a href=\"package-file_chroot\/ChrootFileSystem\/currentDirectory.html\">currentDirectory<\/a>, distinct from\nthat of the underlying file system, and new instances automatically start\nat the root (i.e. <code>\/<\/code>).<\/p>\n<\/li>\n<li>\n<p>This file system does <em>not<\/em> leverage any underlying OS system calls (such\nas <code>chroot<\/code> itself), so the developer needs to take care to not assume any\nmore of a secure environment than is actually provided. For instance, the\nunderlying system is available via the <a href=\"package-file_chroot\/ChrootFileSystem\/delegate.html\">delegate<\/a> - which underscores this\nfile system is intended to be a convenient abstraction, not a security\nmeasure.<\/p>\n<\/li>\n<li>\n<p>This file system <em>necessarily<\/em> carries certain performance overhead due\nto the fact that symbolic links are resolved manually (not delegated).<\/p>\n<\/li>\n<\/ul>",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "ChrootFileSystem"
+}

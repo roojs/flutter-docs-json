@@ -1,0 +1,185 @@
+{
+    "name": "async.NullStreamSink",
+    "extends": [],
+    "memberOf": "async",
+    "events": [],
+    "methods": [
+        {
+            "name": "NullStreamSink",
+            "type": "",
+            "desc": "<p>Creates a null sink.<\/p>\n<p>If <code>done<\/code> is passed, it's used as the <a href=\"package-async_async\/NullStreamSink\/done.html\">Sink.done<\/a> future. Otherwise, a\ncompleted future is used.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.NullStreamSink",
+            "sig": "",
+            "params": [
+                {
+                    "name": "done",
+                    "type": "dart:async.Future",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-async_async\/NullStreamSink\/NullStreamSink.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">NullStreamSink({Future done}) : done = done ?? new Future.value();<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "add",
+            "type": "",
+            "desc": "<p>Adds a data <code>event<\/code> to the sink.<\/p>\n<p>Must not be called on a closed sink.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.NullStreamSink",
+            "sig": "",
+            "params": [
+                {
+                    "name": "data",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/NullStreamSink\/add.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void add(T data) {\n  _checkEventAllowed();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addError",
+            "type": "",
+            "desc": "<p>Adds an <code>error<\/code> to the sink.<\/p>\n<p>Must not be called on a closed sink.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.NullStreamSink",
+            "sig": "",
+            "params": [
+                {
+                    "name": "error",
+                    "type": "dart:core.Object",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "stackTrace",
+                    "type": "dart:core.StackTrace",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/NullStreamSink\/addError.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addError(error, [StackTrace stackTrace]) {\n  _checkEventAllowed();\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false,
+            "types": []
+        },
+        {
+            "name": "addStream",
+            "type": "dart:async.Future",
+            "desc": "<p>Consumes the elements of <code>stream<\/code>.<\/p>\n<p>Listens on <code>stream<\/code> and does something for each event.<\/p>\n<p>Returns a future which is completed when the stream is done being added,\nand the consumer is ready to accept a new stream.\nNo further calls to <a href=\"package-async_async\/NullStreamSink\/addStream.html\">addStream<\/a> or <a href=\"package-async_async\/NullStreamSink\/close.html\">close<\/a> should happen before the\nreturned future has completed.<\/p>\n<p>The consumer may stop listening to the stream after an error,\nit may consume all the errors and only stop at a done event,\nor it may be canceled early if the receiver don't want any further events.<\/p>\n<p>If the consumer stops listening because of some error preventing it\nfrom continuing, it may report this error in the returned future,\notherwise it will just complete the future with <code>null<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.NullStreamSink",
+            "sig": "",
+            "params": [
+                {
+                    "name": "stream",
+                    "type": "dart:async.Stream",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-async_async\/NullStreamSink\/addStream.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future addStream(Stream&lt;T&gt; stream) {\n  _checkEventAllowed();\n\n  _addingStream = true;\n  var future = stream.listen(null).cancel() ?? new Future.value();\n  return future.whenComplete(() {\n    _addingStream = false;\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "close",
+            "type": "dart:async.Future",
+            "desc": "<p>Tells the stream sink that no further streams will be added.<\/p>\n<p>This allows the stream sink to complete any remaining work and release\nresources that are no longer needed<\/p>\n<p>Returns a future which is completed when the stream sink has shut down.\nIf cleaning up can fail, the error may be reported in the returned future,\notherwise it completes with <code>null<\/code>.<\/p>\n<p>Returns the same future as <a href=\"package-async_async\/NullStreamSink\/done.html\">done<\/a>.<\/p>\n<p>The stream sink may close before the <a href=\"package-async_async\/NullStreamSink\/close.html\">close<\/a> method is called, either due\nto an error or because it is itself providing events to someone who has\nstopped listening. In that case, the <a href=\"package-async_async\/NullStreamSink\/done.html\">done<\/a> future is completed first,\nand the <code>close<\/code> method will return the <code>done<\/code> future when called.<\/p>\n<p>Unifies <a href=\"package-async_async\/NullStreamSink\/close.html\">StreamConsumer.close<\/a> and <a href=\"package-async_async\/NullStreamSink\/close.html\">EventSink.close<\/a> which both mark their\nobject as not expecting any further events.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.NullStreamSink",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "package-async_async\/NullStreamSink\/close.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future close() {\n  _closed = true;\n  return done;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "NullStreamSink.error",
+            "type": "",
+            "desc": "<p>Creates a null sink whose <a href=\"package-async_async\/NullStreamSink\/done.html\">done<\/a> future emits <code>error<\/code>.<\/p>\n<p>Note that this error will not be considered uncaught.<\/p>\n    ",
+            "static": false,
+            "memberOf": "async.NullStreamSink",
+            "sig": "",
+            "params": [
+                {
+                    "name": "error",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "stackTrace",
+                    "type": "dart:core.StackTrace",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-async_async\/NullStreamSink\/NullStreamSink.error.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">NullStreamSink.error(error, [StackTrace stackTrace])\n    : done = new Future.error(error, stackTrace)\n        \/\/ Don't top-level the error. This gives the user a change to call\n        \/\/ [close] or [done], and matches the behavior of a remote endpoint\n        \/\/ experiencing an error.\n        ..catchError((_) {});<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "done",
+            "type": "dart:async.Future",
+            "types": [],
+            "desc": "<p>Return a future which is completed when the <a href=\"dart-async\/StreamSink-class.html\">StreamSink<\/a> is finished.<\/p>\n<p>If the <code>StreamSink<\/code> fails with an error,\nperhaps in response to adding events using <a href=\"package-async_async\/NullStreamSink\/add.html\">add<\/a>, <a href=\"package-async_async\/NullStreamSink\/addError.html\">addError<\/a> or <a href=\"package-async_async\/NullStreamSink\/close.html\">close<\/a>,\nthe <a href=\"package-async_async\/NullStreamSink\/done.html\">done<\/a> future will complete with that error.<\/p>\n<p>Otherwise, the returned future will complete when either:<\/p>\n<ul>\n<li>all events have been processed and the sink has been closed, or<\/li>\n<li>the sink has otherwise been stopped from handling more events\n(for example by canceling a stream subscription).<\/li>\n<\/ul>",
+            "memberOf": "async.NullStreamSink",
+            "isConstant": false,
+            "href": "package-async_async\/NullStreamSink\/done.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Future done\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-async_async\/NullStreamSink-class.html",
+    "desc": "<p>A <a href=\"dart-async\/StreamSink-class.html\">StreamSink<\/a> that discards all events.<\/p>\n<p>The sink silently drops events until <a href=\"package-async_async\/NullStreamSink\/close.html\">close<\/a> is called, at which point it\nthrows <a href=\"dart-core\/StateError-class.html\">StateError<\/a>s when events are added. This is the same behavior as a\nsink whose remote end has closed, such as when a <a href=\"dart-io\/WebSocket-class.html\">WebSocket<\/a> connection has\nbeen closed.<\/p>\n<p>This can be used when a sink is needed but no events are actually intended\nto be added. The <a href=\"package-async_async\/NullStreamSink\/NullStreamSink.error.html\">new NullStreamSink.error<\/a> constructor can be used to\nrepresent errors when creating a sink, since <a href=\"package-async_async\/NullStreamSink\/done.html\">StreamSink.done<\/a> exposes sink\nerrors. For example:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">StreamSink&lt;List&lt;int&gt;&gt; openForWrite(String filename) {\n  try {\n    return new RandomAccessSink(new File(filename).openSync());\n  } on IOException catch (error, stackTrace) {\n    return new NullStreamSink.error(error, stackTrace);\n  }\n}\n<\/code><\/pre>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "NullStreamSink"
+}

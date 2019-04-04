@@ -1,0 +1,80 @@
+{
+    "name": "gestures.GestureArenaTeam",
+    "extends": [],
+    "memberOf": "gestures",
+    "events": [],
+    "methods": [
+        {
+            "name": "GestureArenaTeam",
+            "type": "",
+            "desc": "",
+            "static": false,
+            "memberOf": "gestures.GestureArenaTeam",
+            "sig": "",
+            "params": [],
+            "isConstructor": true,
+            "href": "gestures\/GestureArenaTeam\/GestureArenaTeam.html",
+            "example": "",
+            "isDeprecated": false
+        },
+        {
+            "name": "add",
+            "type": "gestures.GestureArenaEntry",
+            "desc": "<p>Adds a new member to the arena on behalf of this team.<\/p>\n<p>Used by <a href=\"gestures\/GestureRecognizer-class.html\">GestureRecognizer<\/a> subclasses that wish to compete in the arena\nusing this team.<\/p>\n<p>To assign a gesture recognizer to a team, see\n<a href=\"gestures\/OneSequenceGestureRecognizer\/team.html\">OneSequenceGestureRecognizer.team<\/a>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "gestures.GestureArenaTeam",
+            "sig": "",
+            "params": [
+                {
+                    "name": "pointer",
+                    "type": "dart:core.int",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "member",
+                    "type": "gestures.GestureArenaMember",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "gestures\/GestureArenaTeam\/add.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">GestureArenaEntry add(int pointer, GestureArenaMember member) {\n  final _CombiningGestureArenaMember combiner = _combiners.putIfAbsent(\n      pointer, () =&gt; _CombiningGestureArenaMember(this, pointer));\n  return combiner._add(pointer, member);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "captain",
+            "type": "gestures.GestureArenaMember",
+            "types": [],
+            "desc": "<p>A member that wins on behalf of the entire team.<\/p>\n<p>If not null, when any one of the <a href=\"gestures\/GestureArenaTeam-class.html\">GestureArenaTeam<\/a> members claims victory\nthe captain accepts the gesture.\nIf null, the member that claims a victory accepts the gesture.<\/p>\n        ",
+            "memberOf": "gestures.GestureArenaTeam",
+            "isConstant": false,
+            "href": "gestures\/GestureArenaTeam\/captain.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">GestureArenaMember captain\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "gestures\/GestureArenaTeam-class.html",
+    "desc": "<p>A group of <a href=\"gestures\/GestureArenaMember-class.html\">GestureArenaMember<\/a> objects that are competing as a unit in the\n<a href=\"gestures\/GestureArenaManager-class.html\">GestureArenaManager<\/a>.<\/p>\n<p>Normally, a recognizer competes directly in the <a href=\"gestures\/GestureArenaManager-class.html\">GestureArenaManager<\/a> to\nrecognize a sequence of pointer events as a gesture. With a\n<a href=\"gestures\/GestureArenaTeam-class.html\">GestureArenaTeam<\/a>, recognizers can compete in the arena in a group with\nother recognizers. Arena teams may have a captain which wins the arena on\nbehalf of its team.<\/p>\n<p>When gesture recognizers are in a team together without a captain, then once\nthere are no other competing gestures in the arena, the first gesture to\nhave been added to the team automatically wins, instead of the gestures\ncontinuing to compete against each other.<\/p>\n<p>When gesture recognizers are in a team with a captain, then once one of the\nteam members claims victory or there are no other competing gestures in the\narena, the captain wins the arena, and all other team members lose.<\/p>\n<p>For example, <a href=\"material\/Slider-class.html\">Slider<\/a> uses a team without a captain to support both a\n<a href=\"gestures\/HorizontalDragGestureRecognizer-class.html\">HorizontalDragGestureRecognizer<\/a> and a <a href=\"gestures\/TapGestureRecognizer-class.html\">TapGestureRecognizer<\/a>, but without\nthe drag recognizer having to wait until the user has dragged outside the\nslop region of the tap gesture before triggering. Since they compete as a\nteam, as soon as any other recognizers are out of the arena, the drag\nrecognizer wins, even if the user has not actually dragged yet. On the other\nhand, if the tap can win outright, before the other recognizers are taken\nout of the arena (e.g. if the slider is in a vertical scrolling list and the\nuser places their finger on the touch surface then lifts it, so that neither\nthe horizontal nor vertical drag recognizers can claim victory) the tap\nrecognizer still actually wins, despite being in the team.<\/p>\n<p><a href=\"widgets\/AndroidView-class.html\">AndroidView<\/a> uses a team with a captain to decide which gestures are\nforwarded to the native view. For example if we want to forward taps and\nvertical scrolls to a native Android view, <code>TapGestureRecognizers<\/code> and\n<a href=\"gestures\/VerticalDragGestureRecognizer-class.html\">VerticalDragGestureRecognizer<\/a> are added to a team with a captain(the captain is set to be a\ngesture recognizer that never explicitly claims the gesture).\nThe captain allows <a href=\"widgets\/AndroidView-class.html\">AndroidView<\/a> to know when any gestures in the team has been\nrecognized (or all other arena members are out), once the captain wins the\ngesture is forwarded to the Android view.<\/p>\n<p>To assign a gesture recognizer to a team, set\n<a href=\"gestures\/OneSequenceGestureRecognizer\/team.html\">OneSequenceGestureRecognizer.team<\/a> to an instance of <a href=\"gestures\/GestureArenaTeam-class.html\">GestureArenaTeam<\/a>.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "GestureArenaTeam"
+}

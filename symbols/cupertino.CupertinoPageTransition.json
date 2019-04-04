@@ -1,0 +1,131 @@
+{
+    "name": "cupertino.CupertinoPageTransition",
+    "extends": [
+        "widgets.StatelessWidget",
+        "widgets.Widget",
+        "foundation.DiagnosticableTree",
+        "foundation.Diagnosticable",
+        "dart:core.Object"
+    ],
+    "memberOf": "cupertino",
+    "events": [],
+    "methods": [
+        {
+            "name": "CupertinoPageTransition",
+            "type": "",
+            "desc": "<p>Creates an iOS-style page transition.<\/p>\n<ul>\n<li>\n<code>primaryRouteAnimation<\/code> is a linear route animation from 0.0 to 1.0\nwhen this screen is being pushed.<\/li>\n<li>\n<code>secondaryRouteAnimation<\/code> is a linear route animation from 0.0 to 1.0\nwhen another screen is being pushed on top of this one.<\/li>\n<li>\n<code>linearTransition<\/code> is whether to perform primary transition linearly.\nUsed to precisely track back gesture drags.<\/li>\n<\/ul>",
+            "static": false,
+            "memberOf": "cupertino.CupertinoPageTransition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "key",
+                    "type": "foundation.Key",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "primaryRouteAnimation",
+                    "type": "animation.Animation<dart:core.double>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "animation.Animation",
+                        "dart:core.double"
+                    ]
+                },
+                {
+                    "name": "secondaryRouteAnimation",
+                    "type": "animation.Animation<dart:core.double>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "animation.Animation",
+                        "dart:core.double"
+                    ]
+                },
+                {
+                    "name": "child",
+                    "type": "widgets.Widget",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                },
+                {
+                    "name": "linearTransition",
+                    "type": "dart:core.bool",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "cupertino\/CupertinoPageTransition\/CupertinoPageTransition.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">CupertinoPageTransition({\n  Key key,\n  @required Animation&lt;double&gt; primaryRouteAnimation,\n  @required Animation&lt;double&gt; secondaryRouteAnimation,\n  @required this.child,\n  @required bool linearTransition,\n}) : assert(linearTransition != null),\n     _primaryPositionAnimation = (linearTransition ? primaryRouteAnimation :\n       \/\/ The curves below have been rigorously derived from plots of native\n       \/\/ iOS animation frames. Specifically, a video was taken of a page\n       \/\/ transition animation and the distance in each frame that the page\n       \/\/ moved was measured. A best fit bezier curve was the fitted to the\n       \/\/ point set, which is linearToEaseIn. Conversely, easeInToLinear is the\n       \/\/ reflection over the origin of linearToEaseIn.\n       CurvedAnimation(\n         parent: primaryRouteAnimation,\n         curve: Curves.linearToEaseOut,\n         reverseCurve: Curves.easeInToLinear,\n       )\n     ).drive(_kRightMiddleTween),\n     _secondaryPositionAnimation = CurvedAnimation(\n       parent: secondaryRouteAnimation,\n       curve: Curves.linearToEaseOut,\n       reverseCurve: Curves.easeInToLinear,\n     ).drive(_kMiddleLeftTween),\n     _primaryShadowAnimation = CurvedAnimation(\n       parent: primaryRouteAnimation,\n       curve: Curves.linearToEaseOut,\n     ).drive(_kGradientShadowTween),\n     super(key: key);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "build",
+            "type": "widgets.Widget",
+            "desc": "<p>Describes the part of the user interface represented by this widget.<\/p>\n<p>The framework calls this method when this widget is inserted into the\ntree in a given <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> and when the dependencies of this widget\nchange (e.g., an <a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> referenced by this widget changes).<\/p>\n<p>The framework replaces the subtree below this widget with the widget\nreturned by this method, either by updating the existing subtree or by\nremoving the subtree and inflating a new subtree, depending on whether the\nwidget returned by this method can update the root of the existing\nsubtree, as determined by calling <a href=\"widgets\/Widget\/canUpdate.html\">Widget.canUpdate<\/a>.<\/p>\n<p>Typically implementations return a newly created constellation of widgets\nthat are configured with information from this widget's constructor and\nfrom the given <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a>.<\/p>\n<p>The given <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> contains information about the location in the\ntree at which this widget is being built. For example, the context\nprovides the set of inherited widgets for this location in the tree. A\ngiven widget might be built with multiple different <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a>\narguments over time if the widget is moved around the tree or if the\nwidget is inserted into the tree in multiple places at once.<\/p>\n<p>The implementation of this method must only depend on:<\/p>\n<ul>\n<li>the fields of the widget, which themselves must not change over time,\nand<\/li>\n<li>any ambient state obtained from the <code>context<\/code> using\n<a href=\"widgets\/BuildContext\/inheritFromWidgetOfExactType.html\">BuildContext.inheritFromWidgetOfExactType<\/a>.<\/li>\n<\/ul>\n<p>If a widget's <a href=\"cupertino\/CupertinoPageTransition\/build.html\">build<\/a> method is to depend on anything else, use a\n<a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> instead.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/StatelessWidget-class.html\">StatelessWidget<\/a>, which contains the discussion on performance considerations.<\/li><\/ul>",
+            "static": false,
+            "memberOf": "cupertino.CupertinoPageTransition",
+            "sig": "",
+            "params": [
+                {
+                    "name": "context",
+                    "type": "widgets.BuildContext",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "cupertino\/CupertinoPageTransition\/build.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nWidget build(BuildContext context) {\n  assert(debugCheckHasDirectionality(context));\n  final TextDirection textDirection = Directionality.of(context);\n  return SlideTransition(\n    position: _secondaryPositionAnimation,\n    textDirection: textDirection,\n    transformHitTests: false,\n    child: SlideTransition(\n      position: _primaryPositionAnimation,\n      textDirection: textDirection,\n      child: DecoratedBoxTransition(\n        decoration: _primaryShadowAnimation,\n        child: child,\n      ),\n    ),\n  );\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "child",
+            "type": "widgets.Widget",
+            "types": [],
+            "desc": "<p>The widget below this widget in the tree.<\/p>\n        ",
+            "memberOf": "cupertino.CupertinoPageTransition",
+            "isConstant": false,
+            "href": "cupertino\/CupertinoPageTransition\/child.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Widget child\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "cupertino\/CupertinoPageTransition-class.html",
+    "desc": "<p>Provides an iOS-style page transition animation.<\/p>\n<p>The page slides in from the right and exits in reverse. It also shifts to the left in\na parallax motion when another page enters to cover it.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "CupertinoPageTransition"
+}

@@ -1,0 +1,105 @@
+{
+    "name": "quiver.async.StreamRouter",
+    "extends": [],
+    "memberOf": "quiver.async",
+    "events": [],
+    "methods": [
+        {
+            "name": "StreamRouter",
+            "type": "",
+            "desc": "<p>Create a new StreamRouter that listens to the <code>incoming<\/code> stream.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.async.StreamRouter",
+            "sig": "",
+            "params": [
+                {
+                    "name": "incoming",
+                    "type": "dart:async.Stream",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": true,
+            "href": "quiver.async\/StreamRouter\/StreamRouter.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamRouter(Stream&lt;T&gt; incoming) : _incoming = incoming {\n  _subscription = _incoming.listen(_handle, onDone: close);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "close",
+            "type": "dart:async.Future",
+            "desc": "",
+            "static": false,
+            "memberOf": "quiver.async.StreamRouter",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "quiver.async\/StreamRouter\/close.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future close() {\n  return Future.wait(_routes.map((r) =&gt; r.controller.close())).then((_) {\n    _subscription.cancel();\n  });\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "route",
+            "type": "dart:async.Stream",
+            "desc": "<p>Events that match <code>predicate<\/code> are sent to the stream created by this\nmethod, and not sent to any other router streams.<\/p>\n    ",
+            "static": false,
+            "memberOf": "quiver.async.StreamRouter",
+            "sig": "",
+            "params": [
+                {
+                    "name": "event",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                },
+                {
+                    "name": "event",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "quiver.async\/StreamRouter\/route.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; route(bool predicate(T event)) {\n  var controller = new StreamController&lt;T&gt;.broadcast();\n  _routes.add(new _Route(predicate, controller));\n  return controller.stream;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "defaultStream",
+            "type": "dart:async.Stream",
+            "types": [],
+            "desc": "",
+            "memberOf": "quiver.async.StreamRouter",
+            "isConstant": false,
+            "href": "quiver.async\/StreamRouter\/defaultStream.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; get defaultStream =&gt; _defaultController.stream;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "quiver.async\/StreamRouter-class.html",
+    "desc": "<p>Splits a <a href=\"dart-async\/Stream-class.html\">Stream<\/a> of events into multiple Streams based on a set of\npredicates.<\/p>\n<p>Using StreamRouter differs from <a href=\"dart-async\/Stream\/where.html\">Stream.where<\/a> because events are only sent\nto one Stream. If more than one predicate matches the event, the event is\nsent to the stream created by the earlier call to <a href=\"quiver.async\/StreamRouter\/route.html\">route<\/a>. Events not\nmatched by a call to <a href=\"quiver.async\/StreamRouter\/route.html\">route<\/a> are sent to the <a href=\"quiver.async\/StreamRouter\/defaultStream.html\">defaultStream<\/a>.<\/p>\n<p>Example:<\/p>\n<p>   import 'dart:html';\n   import 'package:quiver\/async.dart';<\/p>\n<p>   var router = new StreamRouter(window.onClick);\n   var onRightClick = router.route((e) =&gt; e.button == 2);\n   var onAltClick = router.route((e) =&gt; e.altKey);\n   var onOtherClick router.defaultStream;<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "StreamRouter"
+}

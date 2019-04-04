@@ -1,0 +1,273 @@
+{
+    "name": "pub_semver.VersionUnion",
+    "extends": [],
+    "memberOf": "pub_semver",
+    "events": [],
+    "methods": [
+        {
+            "name": "operator ==",
+            "type": "dart:core.bool",
+            "desc": "<p>The equality operator.<\/p>\n<p>The default behavior for all <a href=\"dart-core\/Object-class.html\">Object<\/a>s is to return true if and\nonly if <code>this<\/code> and <code>other<\/code> are the same object.<\/p>\n<p>Override this method to specify a different equality relation on\na class. The overriding method must still be an equivalence relation.\nThat is, it must be:<\/p>\n<ul>\n<li>\n<p>Total: It must return a boolean for all arguments. It should never throw\nor return <code>null<\/code>.<\/p>\n<\/li>\n<li>\n<p>Reflexive: For all objects <code>o<\/code>, <code>o == o<\/code> must be true.<\/p>\n<\/li>\n<li>\n<p>Symmetric: For all objects <code>o1<\/code> and <code>o2<\/code>, <code>o1 == o2<\/code> and <code>o2 == o1<\/code> must\neither both be true, or both be false.<\/p>\n<\/li>\n<li>\n<p>Transitive: For all objects <code>o1<\/code>, <code>o2<\/code>, and <code>o3<\/code>, if <code>o1 == o2<\/code> and\n<code>o2 == o3<\/code> are true, then <code>o1 == o3<\/code> must be true.<\/p>\n<\/li>\n<\/ul>\n<p>The method should also be consistent over time,\nso whether two objects are equal should only change\nif at least one of the objects was modified.<\/p>\n<p>If a subclass overrides the equality operator it should override\nthe <a href=\"package-pub_semver_pub_semver\/VersionUnion\/hashCode.html\">hashCode<\/a> method as well to maintain consistency.<\/p>\n    ",
+            "static": false,
+            "memberOf": "pub_semver.VersionUnion",
+            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "type": "",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": []
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-pub_semver_pub_semver\/VersionUnion\/operator_equals.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool operator ==(other) {\n  if (other is! VersionUnion) return false;\n  return const ListEquality().equals(ranges, other.ranges);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "allows",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns <code>true<\/code> if this constraint allows <code>version<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "pub_semver.VersionUnion",
+            "sig": "",
+            "params": [
+                {
+                    "name": "version",
+                    "type": "pub_semver.Version",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-pub_semver_pub_semver\/VersionUnion\/allows.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool allows(Version version) =&gt;\n    ranges.any((constraint) =&gt; constraint.allows(version));<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "allowsAll",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns <code>true<\/code> if this constraint allows all the versions that <code>other<\/code>\nallows.<\/p>\n    ",
+            "static": false,
+            "memberOf": "pub_semver.VersionUnion",
+            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "type": "pub_semver.VersionConstraint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-pub_semver_pub_semver\/VersionUnion\/allowsAll.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool allowsAll(VersionConstraint other) {\n  var ourRanges = ranges.iterator;\n  var theirRanges = _rangesFor(other).iterator;\n\n  \/\/ Because both lists of ranges are ordered by minimum version, we can\n  \/\/ safely move through them linearly here.\n  ourRanges.moveNext();\n  theirRanges.moveNext();\n  while (ourRanges.current != null &amp;&amp; theirRanges.current != null) {\n    if (ourRanges.current.allowsAll(theirRanges.current)) {\n      theirRanges.moveNext();\n    } else {\n      ourRanges.moveNext();\n    }\n  }\n\n  \/\/ If our ranges have allowed all of their ranges, we'll have consumed all\n  \/\/ of them.\n  return theirRanges.current == null;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "allowsAny",
+            "type": "dart:core.bool",
+            "desc": "<p>Returns <code>true<\/code> if this constraint allows any of the versions that <code>other<\/code>\nallows.<\/p>\n    ",
+            "static": false,
+            "memberOf": "pub_semver.VersionUnion",
+            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "type": "pub_semver.VersionConstraint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-pub_semver_pub_semver\/VersionUnion\/allowsAny.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool allowsAny(VersionConstraint other) {\n  var ourRanges = ranges.iterator;\n  var theirRanges = _rangesFor(other).iterator;\n\n  \/\/ Because both lists of ranges are ordered by minimum version, we can\n  \/\/ safely move through them linearly here.\n  ourRanges.moveNext();\n  theirRanges.moveNext();\n  while (ourRanges.current != null &amp;&amp; theirRanges.current != null) {\n    if (ourRanges.current.allowsAny(theirRanges.current)) {\n      return true;\n    }\n\n    \/\/ Move the constraint with the lower max value forward. This ensures that\n    \/\/ we keep both lists in sync as much as possible.\n    if (allowsHigher(theirRanges.current, ourRanges.current)) {\n      ourRanges.moveNext();\n    } else {\n      theirRanges.moveNext();\n    }\n  }\n\n  return false;\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "difference",
+            "type": "pub_semver.VersionConstraint",
+            "desc": "<p>Returns a <a href=\"package-pub_semver_pub_semver\/VersionConstraint-class.html\">VersionConstraint<\/a> that allows <a href=\"package-pub_semver_pub_semver\/Version-class.html\">Version<\/a>s allowed by this but\nnot <code>other<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "pub_semver.VersionUnion",
+            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "type": "pub_semver.VersionConstraint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-pub_semver_pub_semver\/VersionUnion\/difference.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">VersionConstraint difference(VersionConstraint other) {\n  var ourRanges = ranges.iterator;\n  var theirRanges = _rangesFor(other).iterator;\n\n  var newRanges = &lt;VersionRange&gt;[];\n  ourRanges.moveNext();\n  theirRanges.moveNext();\n  var current = ourRanges.current;\n\n  theirNextRange() {\n    if (theirRanges.moveNext()) return true;\n\n    \/\/ If there are no more of their ranges, none of the rest of our ranges\n    \/\/ need to be subtracted so we can add them as-is.\n    newRanges.add(current);\n    while (ourRanges.moveNext()) {\n      newRanges.add(ourRanges.current);\n    }\n    return false;\n  }\n\n  ourNextRange({bool includeCurrent: true}) {\n    if (includeCurrent) newRanges.add(current);\n    if (!ourRanges.moveNext()) return false;\n    current = ourRanges.current;\n    return true;\n  }\n\n  while (true) {\n    \/\/ If the current ranges are disjoint, move the lowest one forward.\n    if (strictlyLower(theirRanges.current, current)) {\n      if (!theirNextRange()) break;\n      continue;\n    }\n\n    if (strictlyHigher(theirRanges.current, current)) {\n      if (!ourNextRange()) break;\n      continue;\n    }\n\n    \/\/ If we're here, we know [theirRanges.current] overlaps [current].\n    var difference = current.difference(theirRanges.current);\n    if (difference is VersionUnion) {\n      \/\/ If their range split [current] in half, we only need to continue\n      \/\/ checking future ranges against the latter half.\n      assert(difference.ranges.length == 2);\n      newRanges.add(difference.ranges.first);\n      current = difference.ranges.last;\n\n      \/\/ Since their range split [current], it definitely doesn't allow higher\n      \/\/ versions, so we should move their ranges forward.\n      if (!theirNextRange()) break;\n    } else if (difference.isEmpty) {\n      if (!ourNextRange(includeCurrent: false)) break;\n    } else {\n      current = difference as VersionRange;\n\n      \/\/ Move the constraint with the lower max value forward. This ensures\n      \/\/ that we keep both lists in sync as much as possible, and that large\n      \/\/ ranges have a chance to subtract or be subtracted by multiple small\n      \/\/ ranges that they contain.\n      if (allowsHigher(current, theirRanges.current)) {\n        if (!theirNextRange()) break;\n      } else {\n        if (!ourNextRange()) break;\n      }\n    }\n  }\n\n  if (newRanges.isEmpty) return VersionConstraint.empty;\n  if (newRanges.length == 1) return newRanges.single;\n  return new VersionUnion.fromRanges(newRanges);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "VersionUnion.fromRanges",
+            "type": "",
+            "desc": "<p>Creates a union from a list of ranges with no pre-processing.<\/p>\n<p>It's up to the caller to ensure that the invariants described in <code>ranges<\/code>\nare maintained. They are not verified by this constructor. To\nautomatically ensure that they're maintained, use <a href=\"package-pub_semver_pub_semver\/VersionConstraint\/VersionConstraint.unionOf.html\">new\nVersionConstraint.unionOf<\/a> instead.<\/p>\n    ",
+            "static": false,
+            "memberOf": "pub_semver.VersionUnion",
+            "sig": "",
+            "params": [
+                {
+                    "name": "ranges",
+                    "type": "dart:core.List<pub_semver.VersionRange>",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false,
+                    "types": [
+                        "dart:core.List",
+                        "pub_semver.VersionRange"
+                    ]
+                }
+            ],
+            "isConstructor": true,
+            "href": "package-pub_semver_pub_semver\/VersionUnion\/VersionUnion.fromRanges.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">VersionUnion.fromRanges(this.ranges);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "intersect",
+            "type": "pub_semver.VersionConstraint",
+            "desc": "<p>Returns a <a href=\"package-pub_semver_pub_semver\/VersionConstraint-class.html\">VersionConstraint<\/a> that only allows <a href=\"package-pub_semver_pub_semver\/Version-class.html\">Version<\/a>s allowed by both\nthis and <code>other<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "pub_semver.VersionUnion",
+            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "type": "pub_semver.VersionConstraint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-pub_semver_pub_semver\/VersionUnion\/intersect.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">VersionConstraint intersect(VersionConstraint other) {\n  var ourRanges = ranges.iterator;\n  var theirRanges = _rangesFor(other).iterator;\n\n  \/\/ Because both lists of ranges are ordered by minimum version, we can\n  \/\/ safely move through them linearly here.\n  var newRanges = &lt;VersionRange&gt;[];\n  ourRanges.moveNext();\n  theirRanges.moveNext();\n  while (ourRanges.current != null &amp;&amp; theirRanges.current != null) {\n    var intersection = ourRanges.current.intersect(theirRanges.current);\n\n    if (!intersection.isEmpty) newRanges.add(intersection);\n\n    \/\/ Move the constraint with the lower max value forward. This ensures that\n    \/\/ we keep both lists in sync as much as possible, and that large ranges\n    \/\/ have a chance to match multiple small ranges that they contain.\n    if (allowsHigher(theirRanges.current, ourRanges.current)) {\n      ourRanges.moveNext();\n    } else {\n      theirRanges.moveNext();\n    }\n  }\n\n  if (newRanges.isEmpty) return VersionConstraint.empty;\n  if (newRanges.length == 1) return newRanges.single;\n\n  return new VersionUnion.fromRanges(newRanges);\n}<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "toString",
+            "type": "dart:core.String",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "static": false,
+            "memberOf": "pub_semver.VersionUnion",
+            "sig": "",
+            "params": [],
+            "isConstructor": false,
+            "href": "package-pub_semver_pub_semver\/VersionUnion\/toString.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() =&gt; ranges.join(\" or \");<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        },
+        {
+            "name": "union",
+            "type": "pub_semver.VersionConstraint",
+            "desc": "<p>Returns a <a href=\"package-pub_semver_pub_semver\/VersionConstraint-class.html\">VersionConstraint<\/a> that allows <a href=\"dart-ui\/Versions-class.html\">Versions<\/a>s allowed by either\nthis or <code>other<\/code>.<\/p>\n    ",
+            "static": false,
+            "memberOf": "pub_semver.VersionUnion",
+            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "type": "pub_semver.VersionConstraint",
+                    "desc": "",
+                    "isOptional": true,
+                    "href": "",
+                    "example": "",
+                    "isDeprecated": false
+                }
+            ],
+            "isConstructor": false,
+            "href": "package-pub_semver_pub_semver\/VersionUnion\/union.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">VersionConstraint union(VersionConstraint other) =&gt;\n    new VersionConstraint.unionOf([this, other]);<\/code><\/pre>\n    ",
+            "isDeprecated": false
+        }
+    ],
+    "props": [
+        {
+            "name": "hashCode",
+            "type": "dart:core.int",
+            "types": [],
+            "desc": "<p>The hash code for this object.<\/p>\n<p>A hash code is a single integer which represents the state of the object\nthat affects <a href=\"package-pub_semver_pub_semver\/VersionUnion\/operator_equals.html\">operator ==<\/a> comparisons.<\/p>\n<p>All objects have hash codes.\nThe default hash code represents only the identity of the object,\nthe same way as the default <a href=\"package-pub_semver_pub_semver\/VersionUnion\/operator_equals.html\">operator ==<\/a> implementation only considers objects\nequal if they are identical (see <a href=\"dart-core\/identityHashCode.html\">identityHashCode<\/a>).<\/p>\n<p>If <a href=\"package-pub_semver_pub_semver\/VersionUnion\/operator_equals.html\">operator ==<\/a> is overridden to use the object state instead,\nthe hash code must also be changed to represent that state.<\/p>\n<p>Hash codes must be the same for objects that are equal to each other\naccording to <a href=\"package-pub_semver_pub_semver\/VersionUnion\/operator_equals.html\">operator ==<\/a>.\nThe hash code of an object should only change if the object changes\nin a way that affects equality.\nThere are no further requirements for the hash codes.\nThey need not be consistent between executions of the same program\nand there are no distribution guarantees.<\/p>\n<p>Objects that are not equal are allowed to have the same hash code,\nit is even technically allowed that all instances have the same hash code,\nbut if clashes happen too often, it may reduce the efficiency of hash-based\ndata structures like <a href=\"dart-collection\/HashSet-class.html\">HashSet<\/a> or <a href=\"dart-collection\/HashMap-class.html\">HashMap<\/a>.<\/p>\n<p>If a subclass overrides <a href=\"package-pub_semver_pub_semver\/VersionUnion\/hashCode.html\">hashCode<\/a>, it should override the\n<a href=\"package-pub_semver_pub_semver\/VersionUnion\/operator_equals.html\">operator ==<\/a> operator as well to maintain consistency.<\/p>\n        ",
+            "memberOf": "pub_semver.VersionUnion",
+            "isConstant": false,
+            "href": "package-pub_semver_pub_semver\/VersionUnion\/hashCode.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get hashCode =&gt; const ListEquality().hash(ranges);<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isAny",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Returns <code>true<\/code> if this constraint allows all versions.<\/p>\n        ",
+            "memberOf": "pub_semver.VersionUnion",
+            "isConstant": false,
+            "href": "package-pub_semver_pub_semver\/VersionUnion\/isAny.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isAny =&gt; false;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "isEmpty",
+            "type": "dart:core.bool",
+            "types": [],
+            "desc": "<p>Returns <code>true<\/code> if this constraint allows no versions.<\/p>\n        ",
+            "memberOf": "pub_semver.VersionUnion",
+            "isConstant": false,
+            "href": "package-pub_semver_pub_semver\/VersionUnion\/isEmpty.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isEmpty =&gt; false;<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        },
+        {
+            "name": "ranges",
+            "type": "dart:core.List<pub_semver.VersionRange>",
+            "types": [
+                "dart:core.List",
+                "pub_semver.VersionRange"
+            ],
+            "desc": "<p>The constraints that compose this union.<\/p>\n<p>This list has two invariants:<\/p>\n<ul>\n<li>Its contents are sorted using the standard ordering of <a href=\"package-pub_semver_pub_semver\/VersionRange-class.html\">VersionRange<\/a>s.<\/li>\n<li>Its contents are disjoint and non-adjacent. In other words, for any two\nconstraints next to each other in the list, there's some version between\nthose constraints that they don't match.<\/li>\n<\/ul>",
+            "memberOf": "pub_semver.VersionUnion",
+            "isConstant": false,
+            "href": "package-pub_semver_pub_semver\/VersionUnion\/ranges.html",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final List&lt;VersionRange&gt; ranges\n\n<\/code><\/pre>\n        ",
+            "isDeprecated": false
+        }
+    ],
+    "isMixin": false,
+    "isEnum": false,
+    "isTypedef": false,
+    "isConstant": false,
+    "isAbstract": false,
+    "implementors": [],
+    "realImplementors": [],
+    "cn": [],
+    "href": "package-pub_semver_pub_semver\/VersionUnion-class.html",
+    "desc": "<p>A version constraint representing a union of multiple disjoint version\nranges.<\/p>\n<p>An instance of this will only be created if the version can't be represented\nas a non-compound value.<\/p>\n    ",
+    "example": "",
+    "isDeprecated": false,
+    "dtype": "class",
+    "shortname": "VersionUnion"
+}
