@@ -1,392 +1,351 @@
 {
-    "name": "record_replay.ReplayProcessManager",
-    "extends": [],
+    "desc": "<p>Fakes all process invocations by replaying a previously-recorded series\nof invocations.<\/p>\n<p>Recordings exist as opaque directories that are produced by\n<a href=\"package-process_record_replay\/RecordingProcessManager-class.html\">RecordingProcessManager<\/a>.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-process_record_replay\/ReplayProcessManager-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "record_replay",
+    "name": "record_replay.ReplayProcessManager",
+    "shortname": "ReplayProcessManager",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "canRun",
-            "type": "dart:core.bool",
             "desc": "<p>Returns <code>true<\/code> if the <code>executable<\/code> exists and if it can be executed.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool canRun(dynamic executable, {String workingDirectory}) {\n  CanRunManifestEntry entry = _manifest.findPendingCanRunEntry(\n    executable: executable.toString(),\n  );\n  if (entry == null) {\n    throw new ArgumentError('No matching invocation found for $executable');\n  }\n  entry.setInvoked();\n  return entry.result;\n}<\/code><\/pre>\n    ",
+            "href": "package-process_record_replay\/ReplayProcessManager\/canRun.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "record_replay.ReplayProcessManager",
-            "sig": "",
             "params": [
                 {
                     "name": "executable",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 },
                 {
                     "name": "workingDirectory",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-process_record_replay\/ReplayProcessManager\/canRun.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool canRun(dynamic executable, {String workingDirectory}) {\n  CanRunManifestEntry entry = _manifest.findPendingCanRunEntry(\n    executable: executable.toString(),\n  );\n  if (entry == null) {\n    throw new ArgumentError('No matching invocation found for $executable');\n  }\n  entry.setInvoked();\n  return entry.result;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "create",
-            "type": "dart:async.Future<record_replay.ReplayProcessManager>",
             "desc": "<p>Creates a new <code>ReplayProcessManager<\/code> capable of replaying a recording that\nwas serialized to the specified <code>location<\/code> by <a href=\"package-process_record_replay\/RecordingProcessManager-class.html\">RecordingProcessManager<\/a>.<\/p>\n<p>If <code>location<\/code> does not exist, or if it does not represent a valid\nrecording (as determined by <a href=\"package-process_record_replay\/RecordingProcessManager-class.html\">RecordingProcessManager<\/a>), an <a href=\"dart-core\/ArgumentError-class.html\">ArgumentError<\/a>\nwill be thrown.<\/p>\n<p>If <code>streamDelay<\/code> is specified, processes spawned by this manager will\ndelay their <code>stdout<\/code> and <code>stderr<\/code> stream production by the specified\namount. This is useful in cases where the real process invocation had\na necessary delay in stream production, and you need to mirror that\nbehavior. e.g. you spawn a <code>tail<\/code> process to tail a log file, then in a\nfollow-on event loop, you invoke a <code>startServer<\/code> process, which starts\nproducing log output. In this case, you may need to delay the <code>tail<\/code>\noutput to prevent its stream from flushing all its content before you\nstart listening.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;ReplayProcessManager&gt; create(\n  Directory location, {\n  Duration streamDelay: Duration.zero,\n}) async {\n  assert(streamDelay != null);\n\n  if (!location.existsSync()) {\n    throw new ArgumentError.value(location.path, 'location', \"Doesn't exist\");\n  }\n\n  FileSystem fs = location.fileSystem;\n  File manifestFile = fs.file(path.join(location.path, kManifestName));\n  if (!manifestFile.existsSync()) {\n    throw new ArgumentError.value(\n        location, 'location', 'Does not represent a valid recording');\n  }\n\n  String content = await manifestFile.readAsString();\n  try {\n    \/\/ We don't validate the existence of all stdout and stderr files\n    \/\/ referenced in the manifest.\n    Manifest manifest = new Manifest.fromJson(content);\n    return new ReplayProcessManager._(manifest, location, streamDelay);\n  } on FormatException catch (e) {\n    throw new ArgumentError('$kManifestName is not a valid JSON file: $e');\n  }\n}<\/code><\/pre>\n    ",
+            "href": "package-process_record_replay\/ReplayProcessManager\/create.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<record_replay.ReplayProcessManager>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "record_replay.ReplayProcessManager",
-            "sig": "",
             "params": [
                 {
                     "name": "location",
-                    "type": "file.Directory",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "file.Directory"
                 },
                 {
                     "name": "streamDelay",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Duration"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-process_record_replay\/ReplayProcessManager\/create.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;ReplayProcessManager&gt; create(\n  Directory location, {\n  Duration streamDelay: Duration.zero,\n}) async {\n  assert(streamDelay != null);\n\n  if (!location.existsSync()) {\n    throw new ArgumentError.value(location.path, 'location', \"Doesn't exist\");\n  }\n\n  FileSystem fs = location.fileSystem;\n  File manifestFile = fs.file(path.join(location.path, kManifestName));\n  if (!manifestFile.existsSync()) {\n    throw new ArgumentError.value(\n        location, 'location', 'Does not represent a valid recording');\n  }\n\n  String content = await manifestFile.readAsString();\n  try {\n    \/\/ We don't validate the existence of all stdout and stderr files\n    \/\/ referenced in the manifest.\n    Manifest manifest = new Manifest.fromJson(content);\n    return new ReplayProcessManager._(manifest, location, streamDelay);\n  } on FormatException catch (e) {\n    throw new ArgumentError('$kManifestName is not a valid JSON file: $e');\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "record_replay.ReplayProcessManager"
             ]
         },
         {
-            "name": "killPid",
-            "type": "dart:core.bool",
             "desc": "<p>Kills the process with id <code>pid<\/code>.<\/p>\n<p>Where possible, sends the <code>signal<\/code> to the process with id\n<code>pid<\/code>. This includes Linux and OS X. The default signal is\n<a href=\"dart-io\/ProcessSignal\/sigterm-constant.html\">ProcessSignal.sigterm<\/a> which will normally terminate the\nprocess.<\/p>\n<p>On platforms without signal support, including Windows, the call\njust terminates the process with id <code>pid<\/code> in a platform specific\nway, and the <code>signal<\/code> parameter is ignored.<\/p>\n<p>Returns <code>true<\/code> if the signal is successfully delivered to the\nprocess. Otherwise the signal could not be sent, usually meaning\nthat the process is already dead.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool killPid(int pid, [io.ProcessSignal signal = io.ProcessSignal.sigterm]) {\n  throw new UnsupportedError(\n      \"$runtimeType.killPid() has not been implemented because at the time \"\n      \"of its writing, it wasn't needed. If you're hitting this error, you \"\n      \"should implement it.\");\n}<\/code><\/pre>\n    ",
+            "href": "package-process_record_replay\/ReplayProcessManager\/killPid.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "record_replay.ReplayProcessManager",
-            "sig": "",
             "params": [
                 {
                     "name": "pid",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 },
                 {
                     "name": "signal",
-                    "type": "dart:io.ProcessSignal",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:io.ProcessSignal"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-process_record_replay\/ReplayProcessManager\/killPid.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool killPid(int pid, [io.ProcessSignal signal = io.ProcessSignal.sigterm]) {\n  throw new UnsupportedError(\n      \"$runtimeType.killPid() has not been implemented because at the time \"\n      \"of its writing, it wasn't needed. If you're hitting this error, you \"\n      \"should implement it.\");\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "run",
-            "type": "dart:async.Future<dart:io.ProcessResult>",
-            "desc": "<p>Starts a process and runs it non-interactively to completion.<\/p>\n<p>The first element in <code>command<\/code> will be treated as the executable to run,\nwith subsequent elements being passed as arguments to the executable. It\nis left to implementations to decide what element types they support in\nthe <code>command<\/code> list.<\/p>\n<p>Use <code>workingDirectory<\/code> to set the working directory for the process. Note\nthat the change of directory occurs before executing the process on some\nplatforms, which may have impact when using relative paths for the\nexecutable and the arguments.<\/p>\n<p>Use <code>environment<\/code> to set the environment variables for the process. If not\nset the environment of the parent process is inherited. Currently, only\nUS-ASCII environment variables are supported and errors are likely to occur\nif an environment variable with code-points outside the US-ASCII range is\npassed in.<\/p>\n<p>If <code>includeParentEnvironment<\/code> is <code>true<\/code>, the process's environment will\ninclude the parent process's environment, with <code>environment<\/code> taking\nprecedence. Default is <code>true<\/code>.<\/p>\n<p>If <code>runInShell<\/code> is true, the process will be spawned through a system\nshell. On Linux and OS X, <code>\/bin\/sh<\/code> is used, while\n<code>%WINDIR%\\system32\\cmd.exe<\/code> is used on Windows.<\/p>\n<p>The encoding used for decoding <code>stdout<\/code> and <code>stderr<\/code> into text is\ncontrolled through <code>stdoutEncoding<\/code> and <code>stderrEncoding<\/code>. The\ndefault encoding is <a href=\"dart-io\/systemEncoding-constant.html\">systemEncoding<\/a>. If <code>null<\/code> is used no\ndecoding will happen and the <a href=\"dart-io\/ProcessResult-class.html\">ProcessResult<\/a> will hold binary\ndata.<\/p>\n<p>Returns a <code>Future&lt;ProcessResult&gt;<\/code> that completes with the\nresult of running the process, i.e., exit code, standard out and\nstandard in.<\/p>\n<p>The following code uses <code>run<\/code> to grep for <code>main<\/code> in the\nfile <code>test.dart<\/code> on Linux.<\/p>\n<pre class=\"language-dart\"><code>ProcessManager mgr = new LocalProcessManager();\nmgr.run('grep', ['-i', 'main', 'test.dart']).then((result) {\n  stdout.write(result.stdout);\n  stderr.write(result.stderr);\n});\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "record_replay.ReplayProcessManager",
-            "sig": "",
-            "params": [
-                {
-                    "name": "command",
-                    "type": "dart:core.List",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "workingDirectory",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "environment",
-                    "type": "dart:core.Map<dart:core.String<dart:core.String>>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Map",
-                        "dart:core.String",
-                        "dart:core.String"
-                    ]
-                },
-                {
-                    "name": "includeParentEnvironment",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "runInShell",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "stdoutEncoding",
-                    "type": "dart:convert.Encoding",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "stderrEncoding",
-                    "type": "dart:convert.Encoding",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-process_record_replay\/ReplayProcessManager\/run.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;io.ProcessResult&gt; run(\n  List&lt;dynamic&gt; command, {\n  String workingDirectory,\n  Map&lt;String, String&gt; environment,\n  bool includeParentEnvironment: true,\n  bool runInShell: false,\n  Encoding stdoutEncoding: io.systemEncoding,\n  Encoding stderrEncoding: io.systemEncoding,\n}) async {\n  RunManifestEntry entry = _popRunEntry(command,\n      stdoutEncoding: stdoutEncoding, stderrEncoding: stderrEncoding);\n  return await _ReplayResult.create(this, entry);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:io.ProcessResult"
             ]
         },
         {
-            "name": "runSync",
-            "type": "dart:io.ProcessResult",
-            "desc": "<p>Starts a process and runs it to completion. This is a synchronous\ncall and will block until the child process terminates.<\/p>\n<p>The arguments are the same as for <a href=\"package-process_record_replay\/ReplayProcessManager\/run.html\">run<\/a>`.<\/p>\n<p>Returns a <code>ProcessResult<\/code> with the result of running the process,\ni.e., exit code, standard out and standard in.<\/p>\n    ",
+            "desc": "<p>Starts a process and runs it non-interactively to completion.<\/p>\n<p>The first element in <code>command<\/code> will be treated as the executable to run,\nwith subsequent elements being passed as arguments to the executable. It\nis left to implementations to decide what element types they support in\nthe <code>command<\/code> list.<\/p>\n<p>Use <code>workingDirectory<\/code> to set the working directory for the process. Note\nthat the change of directory occurs before executing the process on some\nplatforms, which may have impact when using relative paths for the\nexecutable and the arguments.<\/p>\n<p>Use <code>environment<\/code> to set the environment variables for the process. If not\nset the environment of the parent process is inherited. Currently, only\nUS-ASCII environment variables are supported and errors are likely to occur\nif an environment variable with code-points outside the US-ASCII range is\npassed in.<\/p>\n<p>If <code>includeParentEnvironment<\/code> is <code>true<\/code>, the process's environment will\ninclude the parent process's environment, with <code>environment<\/code> taking\nprecedence. Default is <code>true<\/code>.<\/p>\n<p>If <code>runInShell<\/code> is true, the process will be spawned through a system\nshell. On Linux and OS X, <code>\/bin\/sh<\/code> is used, while\n<code>%WINDIR%\\system32\\cmd.exe<\/code> is used on Windows.<\/p>\n<p>The encoding used for decoding <code>stdout<\/code> and <code>stderr<\/code> into text is\ncontrolled through <code>stdoutEncoding<\/code> and <code>stderrEncoding<\/code>. The\ndefault encoding is <a href=\"dart-io\/systemEncoding-constant.html\">systemEncoding<\/a>. If <code>null<\/code> is used no\ndecoding will happen and the <a href=\"dart-io\/ProcessResult-class.html\">ProcessResult<\/a> will hold binary\ndata.<\/p>\n<p>Returns a <code>Future&lt;ProcessResult&gt;<\/code> that completes with the\nresult of running the process, i.e., exit code, standard out and\nstandard in.<\/p>\n<p>The following code uses <code>run<\/code> to grep for <code>main<\/code> in the\nfile <code>test.dart<\/code> on Linux.<\/p>\n<pre class=\"language-dart\"><code>ProcessManager mgr = new LocalProcessManager();\nmgr.run('grep', ['-i', 'main', 'test.dart']).then((result) {\n  stdout.write(result.stdout);\n  stderr.write(result.stderr);\n});\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;io.ProcessResult&gt; run(\n  List&lt;dynamic&gt; command, {\n  String workingDirectory,\n  Map&lt;String, String&gt; environment,\n  bool includeParentEnvironment: true,\n  bool runInShell: false,\n  Encoding stdoutEncoding: io.systemEncoding,\n  Encoding stderrEncoding: io.systemEncoding,\n}) async {\n  RunManifestEntry entry = _popRunEntry(command,\n      stdoutEncoding: stdoutEncoding, stderrEncoding: stderrEncoding);\n  return await _ReplayResult.create(this, entry);\n}<\/code><\/pre>\n    ",
+            "href": "package-process_record_replay\/ReplayProcessManager\/run.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:io.ProcessResult>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "record_replay.ReplayProcessManager",
-            "sig": "",
             "params": [
                 {
                     "name": "command",
-                    "type": "dart:core.List",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "workingDirectory",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.List"
                 },
                 {
                     "name": "environment",
-                    "type": "dart:core.Map<dart:core.String<dart:core.String>>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Map",
-                        "dart:core.String",
-                        "dart:core.String"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Map<dart:core.String<dart:core.String>>"
                 },
                 {
                     "name": "includeParentEnvironment",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "runInShell",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "stdoutEncoding",
-                    "type": "dart:convert.Encoding",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "stderrEncoding",
-                    "type": "dart:convert.Encoding",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-process_record_replay\/ReplayProcessManager\/runSync.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nio.ProcessResult runSync(\n  List&lt;dynamic&gt; command, {\n  String workingDirectory,\n  Map&lt;String, String&gt; environment,\n  bool includeParentEnvironment: true,\n  bool runInShell: false,\n  Encoding stdoutEncoding: io.systemEncoding,\n  Encoding stderrEncoding: io.systemEncoding,\n}) {\n  RunManifestEntry entry = _popRunEntry(command,\n      stdoutEncoding: stdoutEncoding, stderrEncoding: stderrEncoding);\n  return _ReplayResult.createSync(this, entry);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "start",
-            "type": "dart:async.Future<dart:io.Process>",
-            "desc": "<p>Starts a process by running the specified <code>command<\/code>.<\/p>\n<p>The first element in <code>command<\/code> will be treated as the executable to run,\nwith subsequent elements being passed as arguments to the executable. It\nis left to implementations to decide what element types they support in\nthe <code>command<\/code> list.<\/p>\n<p>Returns a <code>Future&lt;Process&gt;<\/code> that completes with a Process instance when\nthe process has been successfully started. That <a href=\"dart-io\/Process-class.html\">Process<\/a> object can be\nused to interact with the process. If the process cannot be started, the\nreturned <a href=\"dart-async\/Future-class.html\">Future<\/a> completes with an exception.<\/p>\n<p>Use <code>workingDirectory<\/code> to set the working directory for the process. Note\nthat the change of directory occurs before executing the process on some\nplatforms, which may have impact when using relative paths for the\nexecutable and the arguments.<\/p>\n<p>Use <code>environment<\/code> to set the environment variables for the process. If not\nset, the environment of the parent process is inherited. Currently, only\nUS-ASCII environment variables are supported and errors are likely to occur\nif an environment variable with code-points outside the US-ASCII range is\npassed in.<\/p>\n<p>If <code>includeParentEnvironment<\/code> is <code>true<\/code>, the process's environment will\ninclude the parent process's environment, with <code>environment<\/code> taking\nprecedence. Default is <code>true<\/code>.<\/p>\n<p>If <code>runInShell<\/code> is <code>true<\/code>, the process will be spawned through a system\nshell. On Linux and OS X, <code>\/bin\/sh<\/code> is used, while\n<code>%WINDIR%\\system32\\cmd.exe<\/code> is used on Windows.<\/p>\n<p>Users must read all data coming on the <code>stdout<\/code> and <code>stderr<\/code>\nstreams of processes started with <a href=\"package-process_record_replay\/ReplayProcessManager\/start.html\">start<\/a>. If the user\ndoes not read all data on the streams the underlying system\nresources will not be released since there is still pending data.<\/p>\n<p>The following code uses <code>start<\/code> to grep for <code>main<\/code> in the\nfile <code>test.dart<\/code> on Linux.<\/p>\n<pre class=\"language-dart\"><code>ProcessManager mgr = new LocalProcessManager();\nmgr.start('grep', ['-i', 'main', 'test.dart']).then((process) {\n  stdout.addStream(process.stdout);\n  stderr.addStream(process.stderr);\n});\n<\/code><\/pre>\n<p>If <code>mode<\/code> is <a href=\"dart-io\/ProcessStartMode\/normal-constant.html\">ProcessStartMode.normal<\/a> (the default) a child\nprocess will be started with <code>stdin<\/code>, <code>stdout<\/code> and <code>stderr<\/code>\nconnected.<\/p>\n<p>If <code>mode<\/code> is <a href=\"dart-io\/ProcessStartMode\/detached-constant.html\">ProcessStartMode.detached<\/a> a detached process will\nbe created. A detached process has no connection to its parent,\nand can keep running on its own when the parent dies. The only\ninformation available from a detached process is its <code>pid<\/code>. There\nis no connection to its <code>stdin<\/code>, <code>stdout<\/code> or <code>stderr<\/code>, nor will\nthe process' exit code become available when it terminates.<\/p>\n<p>If <code>mode<\/code> is <a href=\"dart-io\/ProcessStartMode\/detachedWithStdio-constant.html\">ProcessStartMode.detachedWithStdio<\/a> a detached\nprocess will be created where the <code>stdin<\/code>, <code>stdout<\/code> and <code>stderr<\/code>\nare connected. The creator can communicate with the child through\nthese. The detached process will keep running even if these\ncommunication channels are closed. The process' exit code will\nnot become available when it terminated.<\/p>\n<p>The default value for <code>mode<\/code> is <code>ProcessStartMode.NORMAL<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "record_replay.ReplayProcessManager",
-            "sig": "",
-            "params": [
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:convert.Encoding"
+                },
                 {
-                    "name": "command",
-                    "type": "dart:core.List",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "stdoutEncoding",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:convert.Encoding"
                 },
                 {
                     "name": "workingDirectory",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Starts a process and runs it to completion. This is a synchronous\ncall and will block until the child process terminates.<\/p>\n<p>The arguments are the same as for <a href=\"package-process_record_replay\/ReplayProcessManager\/run.html\">run<\/a>`.<\/p>\n<p>Returns a <code>ProcessResult<\/code> with the result of running the process,\ni.e., exit code, standard out and standard in.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nio.ProcessResult runSync(\n  List&lt;dynamic&gt; command, {\n  String workingDirectory,\n  Map&lt;String, String&gt; environment,\n  bool includeParentEnvironment: true,\n  bool runInShell: false,\n  Encoding stdoutEncoding: io.systemEncoding,\n  Encoding stderrEncoding: io.systemEncoding,\n}) {\n  RunManifestEntry entry = _popRunEntry(command,\n      stdoutEncoding: stdoutEncoding, stderrEncoding: stderrEncoding);\n  return _ReplayResult.createSync(this, entry);\n}<\/code><\/pre>\n    ",
+            "href": "package-process_record_replay\/ReplayProcessManager\/runSync.html",
+            "isDeprecated": "0",
+            "type": "dart:io.ProcessResult",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "record_replay.ReplayProcessManager",
+            "params": [
+                {
+                    "name": "command",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.List"
                 },
                 {
                     "name": "environment",
-                    "type": "dart:core.Map<dart:core.String<dart:core.String>>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Map",
-                        "dart:core.String",
-                        "dart:core.String"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Map<dart:core.String<dart:core.String>>"
                 },
                 {
                     "name": "includeParentEnvironment",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "runInShell",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "stderrEncoding",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:convert.Encoding"
+                },
+                {
+                    "name": "stdoutEncoding",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:convert.Encoding"
+                },
+                {
+                    "name": "workingDirectory",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Starts a process by running the specified <code>command<\/code>.<\/p>\n<p>The first element in <code>command<\/code> will be treated as the executable to run,\nwith subsequent elements being passed as arguments to the executable. It\nis left to implementations to decide what element types they support in\nthe <code>command<\/code> list.<\/p>\n<p>Returns a <code>Future&lt;Process&gt;<\/code> that completes with a Process instance when\nthe process has been successfully started. That <a href=\"dart-io\/Process-class.html\">Process<\/a> object can be\nused to interact with the process. If the process cannot be started, the\nreturned <a href=\"dart-async\/Future-class.html\">Future<\/a> completes with an exception.<\/p>\n<p>Use <code>workingDirectory<\/code> to set the working directory for the process. Note\nthat the change of directory occurs before executing the process on some\nplatforms, which may have impact when using relative paths for the\nexecutable and the arguments.<\/p>\n<p>Use <code>environment<\/code> to set the environment variables for the process. If not\nset, the environment of the parent process is inherited. Currently, only\nUS-ASCII environment variables are supported and errors are likely to occur\nif an environment variable with code-points outside the US-ASCII range is\npassed in.<\/p>\n<p>If <code>includeParentEnvironment<\/code> is <code>true<\/code>, the process's environment will\ninclude the parent process's environment, with <code>environment<\/code> taking\nprecedence. Default is <code>true<\/code>.<\/p>\n<p>If <code>runInShell<\/code> is <code>true<\/code>, the process will be spawned through a system\nshell. On Linux and OS X, <code>\/bin\/sh<\/code> is used, while\n<code>%WINDIR%\\system32\\cmd.exe<\/code> is used on Windows.<\/p>\n<p>Users must read all data coming on the <code>stdout<\/code> and <code>stderr<\/code>\nstreams of processes started with <a href=\"package-process_record_replay\/ReplayProcessManager\/start.html\">start<\/a>. If the user\ndoes not read all data on the streams the underlying system\nresources will not be released since there is still pending data.<\/p>\n<p>The following code uses <code>start<\/code> to grep for <code>main<\/code> in the\nfile <code>test.dart<\/code> on Linux.<\/p>\n<pre class=\"language-dart\"><code>ProcessManager mgr = new LocalProcessManager();\nmgr.start('grep', ['-i', 'main', 'test.dart']).then((process) {\n  stdout.addStream(process.stdout);\n  stderr.addStream(process.stderr);\n});\n<\/code><\/pre>\n<p>If <code>mode<\/code> is <a href=\"dart-io\/ProcessStartMode\/normal-constant.html\">ProcessStartMode.normal<\/a> (the default) a child\nprocess will be started with <code>stdin<\/code>, <code>stdout<\/code> and <code>stderr<\/code>\nconnected.<\/p>\n<p>If <code>mode<\/code> is <a href=\"dart-io\/ProcessStartMode\/detached-constant.html\">ProcessStartMode.detached<\/a> a detached process will\nbe created. A detached process has no connection to its parent,\nand can keep running on its own when the parent dies. The only\ninformation available from a detached process is its <code>pid<\/code>. There\nis no connection to its <code>stdin<\/code>, <code>stdout<\/code> or <code>stderr<\/code>, nor will\nthe process' exit code become available when it terminates.<\/p>\n<p>If <code>mode<\/code> is <a href=\"dart-io\/ProcessStartMode\/detachedWithStdio-constant.html\">ProcessStartMode.detachedWithStdio<\/a> a detached\nprocess will be created where the <code>stdin<\/code>, <code>stdout<\/code> and <code>stderr<\/code>\nare connected. The creator can communicate with the child through\nthese. The detached process will keep running even if these\ncommunication channels are closed. The process' exit code will\nnot become available when it terminated.<\/p>\n<p>The default value for <code>mode<\/code> is <code>ProcessStartMode.NORMAL<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;io.Process&gt; start(\n  List&lt;dynamic&gt; command, {\n  String workingDirectory,\n  Map&lt;String, String&gt; environment,\n  bool includeParentEnvironment: true,\n  bool runInShell: false,\n  io.ProcessStartMode mode: io.ProcessStartMode.normal,\n}) async {\n  RunManifestEntry entry = _popRunEntry(command, mode: mode);\n  _ReplayResult result = await _ReplayResult.create(this, entry);\n  return result.asProcess(entry.daemon);\n}<\/code><\/pre>\n    ",
+            "href": "package-process_record_replay\/ReplayProcessManager\/start.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:io.Process>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "record_replay.ReplayProcessManager",
+            "params": [
+                {
+                    "name": "command",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.List"
+                },
+                {
+                    "name": "environment",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Map<dart:core.String<dart:core.String>>"
+                },
+                {
+                    "name": "includeParentEnvironment",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "mode",
-                    "type": "dart:io.ProcessStartMode",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:io.ProcessStartMode"
+                },
+                {
+                    "name": "runInShell",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "workingDirectory",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-process_record_replay\/ReplayProcessManager\/start.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;io.Process&gt; start(\n  List&lt;dynamic&gt; command, {\n  String workingDirectory,\n  Map&lt;String, String&gt; environment,\n  bool includeParentEnvironment: true,\n  bool runInShell: false,\n  io.ProcessStartMode mode: io.ProcessStartMode.normal,\n}) async {\n  RunManifestEntry entry = _popRunEntry(command, mode: mode);\n  _ReplayResult result = await _ReplayResult.create(this, entry);\n  return result.asProcess(entry.daemon);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:io.Process"
             ]
         }
     ],
     "props": [
         {
-            "name": "location",
-            "type": "file.Directory",
-            "types": [],
             "desc": "<p>The location of the serialized recording that's driving this manager.<\/p>\n        ",
-            "memberOf": "record_replay.ReplayProcessManager",
-            "isConstant": false,
-            "href": "package-process_record_replay\/ReplayProcessManager\/location.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Directory location\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-process_record_replay\/ReplayProcessManager\/location.html",
+            "isDeprecated": "0",
+            "type": "file.Directory",
+            "memberOf": "record_replay.ReplayProcessManager",
+            "params": []
         },
         {
-            "name": "streamDelay",
-            "type": "dart:core.Duration",
-            "types": [],
             "desc": "<p>If non-null, processes spawned by this manager will delay their\n<code>stdout<\/code> and <code>stderr<\/code> stream production by the this amount. See\ndescription of the associated parameter in <a href=\"package-process_record_replay\/ReplayProcessManager\/create.html\">create<\/a>.<\/p>\n        ",
-            "memberOf": "record_replay.ReplayProcessManager",
-            "isConstant": false,
-            "href": "package-process_record_replay\/ReplayProcessManager\/streamDelay.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Duration streamDelay\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-process_record_replay\/ReplayProcessManager\/streamDelay.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Duration",
+            "memberOf": "record_replay.ReplayProcessManager",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-process_record_replay\/ReplayProcessManager-class.html",
-    "desc": "<p>Fakes all process invocations by replaying a previously-recorded series\nof invocations.<\/p>\n<p>Recordings exist as opaque directories that are produced by\n<a href=\"package-process_record_replay\/RecordingProcessManager-class.html\">RecordingProcessManager<\/a>.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "ReplayProcessManager"
+    ]
 }

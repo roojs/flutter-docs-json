@@ -1,71 +1,66 @@
 {
+    "desc": "<p>A rectangle with a smooth circular notch.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"painting\/CircleBorder-class.html\">CircleBorder<\/a>, a <a href=\"painting\/ShapeBorder-class.html\">ShapeBorder<\/a> that describes a circle.<\/li><\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "painting\/CircularNotchedRectangle-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "painting",
     "name": "painting.CircularNotchedRectangle",
+    "shortname": "CircularNotchedRectangle",
     "extends": [
         "painting.NotchedShape",
         "dart:core.Object"
     ],
-    "memberOf": "painting",
     "events": [],
     "methods": [
         {
-            "name": "CircularNotchedRectangle",
-            "type": "",
             "desc": "<p>Creates a <a href=\"painting\/CircularNotchedRectangle-class.html\">CircularNotchedRectangle<\/a>.<\/p>\n<p>The same object can be used to create multiple shapes.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const CircularNotchedRectangle();<\/code><\/pre>\n    ",
+            "href": "painting\/CircularNotchedRectangle\/CircularNotchedRectangle.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "painting.CircularNotchedRectangle",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "painting\/CircularNotchedRectangle\/CircularNotchedRectangle.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const CircularNotchedRectangle();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "getOuterPath",
-            "type": "dart:ui.Path",
             "desc": "<p>Creates a <a href=\"dart-ui\/Path-class.html\">Path<\/a> that describes a rectangle with a smooth circular notch.<\/p>\n<p><code>host<\/code> is the bounding box for the returned shape. Conceptually this is\nthe rectangle to which the notch will be applied.<\/p>\n<p><code>guest<\/code> is the bounding box of a circle that the notch accommodates. All\npoints in the circle bounded by <code>guest<\/code> will be outside of the returned\npath.<\/p>\n<p>The notch is curve that smoothly connects the host's top edge and\nthe guest circle.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/ TODO(amirh): add an example diagram here.\n@override\nPath getOuterPath(Rect host, Rect guest) {\n  if (guest == null || !host.overlaps(guest))\n    return Path()..addRect(host);\n\n  \/\/ The guest's shape is a circle bounded by the guest rectangle.\n  \/\/ So the guest's radius is half the guest width.\n  final double notchRadius = guest.width \/ 2.0;\n\n  \/\/ We build a path for the notch from 3 segments:\n  \/\/ Segment A - a Bezier curve from the host's top edge to segment B.\n  \/\/ Segment B - an arc with radius notchRadius.\n  \/\/ Segment C - a Bezier curve from segment B back to the host's top edge.\n  \/\/\n  \/\/ A detailed explanation and the derivation of the formulas below is\n  \/\/ available at: https:\/\/goo.gl\/Ufzrqn\n\n  const double s1 = 15.0;\n  const double s2 = 1.0;\n\n  final double r = notchRadius;\n  final double a = -1.0 * r - s2;\n  final double b = host.top - guest.center.dy;\n\n  final double n2 = math.sqrt(b * b * r * r * (a * a + b * b - r * r));\n  final double p2xA = ((a * r * r) - n2) \/ (a * a + b * b);\n  final double p2xB = ((a * r * r) + n2) \/ (a * a + b * b);\n  final double p2yA = math.sqrt(r * r - p2xA * p2xA);\n  final double p2yB = math.sqrt(r * r - p2xB * p2xB);\n\n  final List&lt;Offset&gt; p = List&lt;Offset&gt;(6);\n\n  \/\/ p0, p1, and p2 are the control points for segment A.\n  p[0] = Offset(a - s1, b);\n  p[1] = Offset(a, b);\n  final double cmp = b &lt; 0 ? -1.0 : 1.0;\n  p[2] = cmp * p2yA &gt; cmp * p2yB ? Offset(p2xA, p2yA) : Offset(p2xB, p2yB);\n\n  \/\/ p3, p4, and p5 are the control points for segment B, which is a mirror\n  \/\/ of segment A around the y axis.\n  p[3] = Offset(-1.0 * p[2].dx, p[2].dy);\n  p[4] = Offset(-1.0 * p[1].dx, p[1].dy);\n  p[5] = Offset(-1.0 * p[0].dx, p[0].dy);\n\n  \/\/ translate all points back to the absolute coordinate system.\n  for (int i = 0; i &lt; p.length; i += 1)\n    p[i] += guest.center;\n\n  return Path()\n    ..moveTo(host.left, host.top)\n    ..lineTo(p[0].dx, p[0].dy)\n    ..quadraticBezierTo(p[1].dx, p[1].dy, p[2].dx, p[2].dy)\n    ..arcToPoint(\n      p[3],\n      radius: Radius.circular(notchRadius),\n      clockwise: false,\n    )\n    ..quadraticBezierTo(p[4].dx, p[4].dy, p[5].dx, p[5].dy)\n    ..lineTo(host.right, host.top)\n    ..lineTo(host.right, host.bottom)\n    ..lineTo(host.left, host.bottom)\n    ..close();\n}<\/code><\/pre>\n    ",
+            "href": "painting\/CircularNotchedRectangle\/getOuterPath.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Path",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.CircularNotchedRectangle",
-            "sig": "",
             "params": [
                 {
-                    "name": "host",
-                    "type": "dart:ui.Rect",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "guest",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Rect"
                 },
                 {
-                    "name": "guest",
-                    "type": "dart:ui.Rect",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "host",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Rect"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/CircularNotchedRectangle\/getOuterPath.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/ TODO(amirh): add an example diagram here.\n@override\nPath getOuterPath(Rect host, Rect guest) {\n  if (guest == null || !host.overlaps(guest))\n    return Path()..addRect(host);\n\n  \/\/ The guest's shape is a circle bounded by the guest rectangle.\n  \/\/ So the guest's radius is half the guest width.\n  final double notchRadius = guest.width \/ 2.0;\n\n  \/\/ We build a path for the notch from 3 segments:\n  \/\/ Segment A - a Bezier curve from the host's top edge to segment B.\n  \/\/ Segment B - an arc with radius notchRadius.\n  \/\/ Segment C - a Bezier curve from segment B back to the host's top edge.\n  \/\/\n  \/\/ A detailed explanation and the derivation of the formulas below is\n  \/\/ available at: https:\/\/goo.gl\/Ufzrqn\n\n  const double s1 = 15.0;\n  const double s2 = 1.0;\n\n  final double r = notchRadius;\n  final double a = -1.0 * r - s2;\n  final double b = host.top - guest.center.dy;\n\n  final double n2 = math.sqrt(b * b * r * r * (a * a + b * b - r * r));\n  final double p2xA = ((a * r * r) - n2) \/ (a * a + b * b);\n  final double p2xB = ((a * r * r) + n2) \/ (a * a + b * b);\n  final double p2yA = math.sqrt(r * r - p2xA * p2xA);\n  final double p2yB = math.sqrt(r * r - p2xB * p2xB);\n\n  final List&lt;Offset&gt; p = List&lt;Offset&gt;(6);\n\n  \/\/ p0, p1, and p2 are the control points for segment A.\n  p[0] = Offset(a - s1, b);\n  p[1] = Offset(a, b);\n  final double cmp = b &lt; 0 ? -1.0 : 1.0;\n  p[2] = cmp * p2yA &gt; cmp * p2yB ? Offset(p2xA, p2yA) : Offset(p2xB, p2yB);\n\n  \/\/ p3, p4, and p5 are the control points for segment B, which is a mirror\n  \/\/ of segment A around the y axis.\n  p[3] = Offset(-1.0 * p[2].dx, p[2].dy);\n  p[4] = Offset(-1.0 * p[1].dx, p[1].dy);\n  p[5] = Offset(-1.0 * p[0].dx, p[0].dy);\n\n  \/\/ translate all points back to the absolute coordinate system.\n  for (int i = 0; i &lt; p.length; i += 1)\n    p[i] += guest.center;\n\n  return Path()\n    ..moveTo(host.left, host.top)\n    ..lineTo(p[0].dx, p[0].dy)\n    ..quadraticBezierTo(p[1].dx, p[1].dy, p[2].dx, p[2].dy)\n    ..arcToPoint(\n      p[3],\n      radius: Radius.circular(notchRadius),\n      clockwise: false,\n    )\n    ..quadraticBezierTo(p[4].dx, p[4].dy, p[5].dx, p[5].dy)\n    ..lineTo(host.right, host.top)\n    ..lineTo(host.right, host.bottom)\n    ..lineTo(host.left, host.bottom)\n    ..close();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
-    "props": [],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "painting\/CircularNotchedRectangle-class.html",
-    "desc": "<p>A rectangle with a smooth circular notch.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"painting\/CircleBorder-class.html\">CircleBorder<\/a>, a <a href=\"painting\/ShapeBorder-class.html\">ShapeBorder<\/a> that describes a circle.<\/li><\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "CircularNotchedRectangle"
+    "props": []
 }

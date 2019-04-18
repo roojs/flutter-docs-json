@@ -1,406 +1,369 @@
 {
-    "name": "string_scanner.StringScanner",
-    "extends": [],
+    "desc": "<p>A class that scans through a string using <a href=\"dart-core\/Pattern-class.html\">Pattern<\/a>s.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-string_scanner_string_scanner\/StringScanner-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "string_scanner",
+    "name": "string_scanner.StringScanner",
+    "shortname": "StringScanner",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "StringScanner",
-            "type": "",
             "desc": "<p>Creates a new <a href=\"package-string_scanner_string_scanner\/StringScanner-class.html\">StringScanner<\/a> that starts scanning from <code>position<\/code>.<\/p>\n<p><code>position<\/code> defaults to 0, the beginning of the string. <code>sourceUrl<\/code> is the\nURL of the source of the string being scanned, if available. It can be\na <a href=\"dart-core\/String-class.html\">String<\/a>, a <a href=\"dart-core\/Uri-class.html\">Uri<\/a>, or <code>null<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StringScanner(this.string, {sourceUrl, int position})\n    : sourceUrl = sourceUrl is String ? Uri.parse(sourceUrl) : sourceUrl {\n  if (position != null) this.position = position;\n}<\/code><\/pre>\n    ",
+            "href": "package-string_scanner_string_scanner\/StringScanner\/StringScanner.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "string_scanner.StringScanner",
-            "sig": "",
             "params": [
                 {
-                    "name": "string",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "position",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.int"
                 },
                 {
                     "name": "sourceUrl",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "<dynamic>"
                 },
                 {
-                    "name": "position",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "string",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": true,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/StringScanner.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StringScanner(this.string, {sourceUrl, int position})\n    : sourceUrl = sourceUrl is String ? Uri.parse(sourceUrl) : sourceUrl {\n  if (position != null) this.position = position;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "error",
-            "type": "",
             "desc": "<p>Throws a <a href=\"dart-core\/FormatException-class.html\">FormatException<\/a> with <code>message<\/code> as well as a detailed\ndescription of the location of the error in the string.<\/p>\n<p><code>match<\/code> is the match information for the span of the string with which the\nerror is associated. This should be a match returned by this scanner's\n<a href=\"package-string_scanner_string_scanner\/StringScanner\/lastMatch.html\">lastMatch<\/a> property. By default, the error is associated with the last\nmatch.<\/p>\n<p>If <code>position<\/code> and\/or <code>length<\/code> are passed, they are used as the error span\ninstead. If only <code>length<\/code> is passed, <code>position<\/code> defaults to the current\nposition; if only <code>position<\/code> is passed, <code>length<\/code> defaults to 0.<\/p>\n<p>It's an error to pass <code>match<\/code> at the same time as <code>position<\/code> or <code>length<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@alwaysThrows\nvoid error(String message, {Match match, int position, int length}) {\n  validateErrorArgs(string, match, position, length);\n\n  if (match == null &amp;&amp; position == null &amp;&amp; length == null) match = lastMatch;\n  if (position == null) {\n    position = match == null ? this.position : match.start;\n  }\n  if (length == null) length = match == null ? 0 : match.end - match.start;\n\n  var sourceFile = new SourceFile.fromString(string, url: sourceUrl);\n  var span = sourceFile.span(position, position + length);\n  throw new StringScannerException(message, span, string);\n}<\/code><\/pre>\n    ",
+            "href": "package-string_scanner_string_scanner\/StringScanner\/error.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "string_scanner.StringScanner",
-            "sig": "",
             "params": [
                 {
-                    "name": "message",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "length",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 },
                 {
                     "name": "match",
-                    "type": "dart:core.Match",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Match"
+                },
+                {
+                    "name": "message",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 },
                 {
                     "name": "position",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "length",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/error.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@alwaysThrows\nvoid error(String message, {Match match, int position, int length}) {\n  validateErrorArgs(string, match, position, length);\n\n  if (match == null &amp;&amp; position == null &amp;&amp; length == null) match = lastMatch;\n  if (position == null) {\n    position = match == null ? this.position : match.start;\n  }\n  if (length == null) length = match == null ? 0 : match.end - match.start;\n\n  var sourceFile = new SourceFile.fromString(string, url: sourceUrl);\n  var span = sourceFile.span(position, position + length);\n  throw new StringScannerException(message, span, string);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "expect",
-            "type": "",
             "desc": "<p>If <code>pattern<\/code> matches at the current position of the string, scans forward\nuntil the end of the match.<\/p>\n<p>If <code>pattern<\/code> did not match, throws a <a href=\"dart-core\/FormatException-class.html\">FormatException<\/a> describing the\nposition of the failure. <code>name<\/code> is used in this error as the expected name\nof the pattern being matched; if it's <code>null<\/code>, the pattern itself is used\ninstead.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void expect(Pattern pattern, {String name}) {\n  if (scan(pattern)) return;\n\n  if (name == null) {\n    if (pattern is RegExp) {\n      var source = pattern.pattern;\n      if (!_slashAutoEscape) source = source.replaceAll(\"\/\", \"\\\\\/\");\n      name = \"\/$source\/\";\n    } else {\n      name =\n          pattern.toString().replaceAll(\"\\\\\", \"\\\\\\\\\").replaceAll('\"', '\\\\\"');\n      name = '\"$name\"';\n    }\n  }\n  _fail(name);\n}<\/code><\/pre>\n    ",
+            "href": "package-string_scanner_string_scanner\/StringScanner\/expect.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "string_scanner.StringScanner",
-            "sig": "",
             "params": [
                 {
-                    "name": "pattern",
-                    "type": "dart:core.Pattern",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "name",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 },
                 {
-                    "name": "name",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "pattern",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Pattern"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/expect.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void expect(Pattern pattern, {String name}) {\n  if (scan(pattern)) return;\n\n  if (name == null) {\n    if (pattern is RegExp) {\n      var source = pattern.pattern;\n      if (!_slashAutoEscape) source = source.replaceAll(\"\/\", \"\\\\\/\");\n      name = \"\/$source\/\";\n    } else {\n      name =\n          pattern.toString().replaceAll(\"\\\\\", \"\\\\\\\\\").replaceAll('\"', '\\\\\"');\n      name = '\"$name\"';\n    }\n  }\n  _fail(name);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "expectChar",
-            "type": "",
             "desc": "<p>If the next character in the string is <code>character<\/code>, consumes it.<\/p>\n<p>If <code>character<\/code> could not be consumed, throws a <a href=\"dart-core\/FormatException-class.html\">FormatException<\/a>\ndescribing the position of the failure. <code>name<\/code> is used in this error as\nthe expected name of the character being matched; if it's <code>null<\/code>, the\ncharacter itself is used instead.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void expectChar(int character, {String name}) {\n  if (scanChar(character)) return;\n\n  if (name == null) {\n    if (character == $backslash) {\n      name = r'\"\\\"';\n    } else if (character == $double_quote) {\n      name = r'\"\\\"\"';\n    } else {\n      name = '\"${new String.fromCharCode(character)}\"';\n    }\n  }\n\n  _fail(name);\n}<\/code><\/pre>\n    ",
+            "href": "package-string_scanner_string_scanner\/StringScanner\/expectChar.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "string_scanner.StringScanner",
-            "sig": "",
             "params": [
                 {
                     "name": "character",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 },
                 {
                     "name": "name",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/expectChar.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void expectChar(int character, {String name}) {\n  if (scanChar(character)) return;\n\n  if (name == null) {\n    if (character == $backslash) {\n      name = r'\"\\\"';\n    } else if (character == $double_quote) {\n      name = r'\"\\\"\"';\n    } else {\n      name = '\"${new String.fromCharCode(character)}\"';\n    }\n  }\n\n  _fail(name);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "expectDone",
-            "type": "",
             "desc": "<p>If the string has not been fully consumed, this throws a\n<a href=\"dart-core\/FormatException-class.html\">FormatException<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void expectDone() {\n  if (isDone) return;\n  _fail(\"no more input\");\n}<\/code><\/pre>\n    ",
+            "href": "package-string_scanner_string_scanner\/StringScanner\/expectDone.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "string_scanner.StringScanner",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/expectDone.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void expectDone() {\n  if (isDone) return;\n  _fail(\"no more input\");\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "params": []
         },
         {
-            "name": "matches",
-            "type": "dart:core.bool",
             "desc": "<p>Returns whether or not <code>pattern<\/code> matches at the current position of the\nstring.<\/p>\n<p>This doesn't move the scan pointer forward.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool matches(Pattern pattern) {\n  _lastMatch = pattern.matchAsPrefix(string, position);\n  _lastMatchPosition = _position;\n  return _lastMatch != null;\n}<\/code><\/pre>\n    ",
+            "href": "package-string_scanner_string_scanner\/StringScanner\/matches.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "string_scanner.StringScanner",
-            "sig": "",
             "params": [
                 {
                     "name": "pattern",
-                    "type": "dart:core.Pattern",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Pattern"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/matches.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool matches(Pattern pattern) {\n  _lastMatch = pattern.matchAsPrefix(string, position);\n  _lastMatchPosition = _position;\n  return _lastMatch != null;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "peekChar",
-            "type": "dart:core.int",
             "desc": "<p>Returns the character code of the character <code>offset<\/code> away from <a href=\"package-string_scanner_string_scanner\/StringScanner\/position.html\">position<\/a>.<\/p>\n<p><code>offset<\/code> defaults to zero, and may be negative to inspect already-consumed\ncharacters.<\/p>\n<p>This returns <code>null<\/code> if <code>offset<\/code> points outside the string. It doesn't\naffect <a href=\"package-string_scanner_string_scanner\/StringScanner\/lastMatch.html\">lastMatch<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int peekChar([int offset]) {\n  if (offset == null) offset = 0;\n  var index = position + offset;\n  if (index &lt; 0 || index &gt;= string.length) return null;\n  return string.codeUnitAt(index);\n}<\/code><\/pre>\n    ",
+            "href": "package-string_scanner_string_scanner\/StringScanner\/peekChar.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "string_scanner.StringScanner",
-            "sig": "",
             "params": [
                 {
                     "name": "offset",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/peekChar.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int peekChar([int offset]) {\n  if (offset == null) offset = 0;\n  var index = position + offset;\n  if (index &lt; 0 || index &gt;= string.length) return null;\n  return string.codeUnitAt(index);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "readChar",
-            "type": "dart:core.int",
             "desc": "<p>Consumes a single character and returns its character code.<\/p>\n<p>This throws a <a href=\"dart-core\/FormatException-class.html\">FormatException<\/a> if the string has been fully consumed. It\ndoesn't affect <a href=\"package-string_scanner_string_scanner\/StringScanner\/lastMatch.html\">lastMatch<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int readChar() {\n  if (isDone) _fail(\"more input\");\n  return string.codeUnitAt(_position++);\n}<\/code><\/pre>\n    ",
+            "href": "package-string_scanner_string_scanner\/StringScanner\/readChar.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "string_scanner.StringScanner",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/readChar.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int readChar() {\n  if (isDone) _fail(\"more input\");\n  return string.codeUnitAt(_position++);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "scan",
-            "type": "dart:core.bool",
             "desc": "<p>If <code>pattern<\/code> matches at the current position of the string, scans forward\nuntil the end of the match.<\/p>\n<p>Returns whether or not <code>pattern<\/code> matched.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool scan(Pattern pattern) {\n  var success = matches(pattern);\n  if (success) {\n    _position = _lastMatch.end;\n    _lastMatchPosition = _position;\n  }\n  return success;\n}<\/code><\/pre>\n    ",
+            "href": "package-string_scanner_string_scanner\/StringScanner\/scan.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "string_scanner.StringScanner",
-            "sig": "",
             "params": [
                 {
                     "name": "pattern",
-                    "type": "dart:core.Pattern",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Pattern"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/scan.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool scan(Pattern pattern) {\n  var success = matches(pattern);\n  if (success) {\n    _position = _lastMatch.end;\n    _lastMatchPosition = _position;\n  }\n  return success;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "scanChar",
-            "type": "dart:core.bool",
             "desc": "<p>If the next character in the string is <code>character<\/code>, consumes it.<\/p>\n<p>Returns whether or not <code>character<\/code> was consumed.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool scanChar(int character) {\n  if (isDone) return false;\n  if (string.codeUnitAt(_position) != character) return false;\n  _position++;\n  return true;\n}<\/code><\/pre>\n    ",
+            "href": "package-string_scanner_string_scanner\/StringScanner\/scanChar.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "string_scanner.StringScanner",
-            "sig": "",
             "params": [
                 {
                     "name": "character",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/scanChar.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool scanChar(int character) {\n  if (isDone) return false;\n  if (string.codeUnitAt(_position) != character) return false;\n  _position++;\n  return true;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "substring",
-            "type": "dart:core.String",
             "desc": "<p>Returns the substring of <a href=\"package-string_scanner_string_scanner\/StringScanner\/string.html\">string<\/a> between <code>start<\/code> and <code>end<\/code>.<\/p>\n<p>Unlike <a href=\"package-string_scanner_string_scanner\/StringScanner\/substring.html\">String.substring<\/a>, <code>end<\/code> defaults to <a href=\"package-string_scanner_string_scanner\/StringScanner\/position.html\">position<\/a> rather than the\nend of the string.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String substring(int start, [int end]) {\n  if (end == null) end = position;\n  return string.substring(start, end);\n}<\/code><\/pre>\n    ",
+            "href": "package-string_scanner_string_scanner\/StringScanner\/substring.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "string_scanner.StringScanner",
-            "sig": "",
             "params": [
                 {
-                    "name": "start",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "end",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 },
                 {
-                    "name": "end",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "start",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/substring.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String substring(int start, [int end]) {\n  if (end == null) end = position;\n  return string.substring(start, end);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "isDone",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether the scanner has completely consumed <a href=\"package-string_scanner_string_scanner\/StringScanner\/string.html\">string<\/a>.<\/p>\n        ",
-            "memberOf": "string_scanner.StringScanner",
-            "isConstant": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/isDone.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isDone =&gt; position == string.length;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-string_scanner_string_scanner\/StringScanner\/isDone.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "string_scanner.StringScanner",
+            "params": []
         },
         {
-            "name": "lastMatch",
-            "type": "dart:core.Match",
-            "types": [],
             "desc": "<p>The data about the previous match made by the scanner.<\/p>\n<p>If the last match failed, this will be <code>null<\/code>.<\/p>\n        ",
-            "memberOf": "string_scanner.StringScanner",
-            "isConstant": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/lastMatch.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Match get lastMatch {\n  \/\/ Lazily unset [_lastMatch] so that we avoid extra assignments in\n  \/\/ character-by-character methods that are used in core loops.\n  if (_position != _lastMatchPosition) _lastMatch = null;\n  return _lastMatch;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-string_scanner_string_scanner\/StringScanner\/lastMatch.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Match",
+            "memberOf": "string_scanner.StringScanner",
+            "params": []
         },
         {
-            "name": "position",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The current position of the scanner in the string, in characters.<\/p>\n        ",
-            "memberOf": "string_scanner.StringScanner",
-            "isConstant": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/position.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get position =&gt; _position;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-string_scanner_string_scanner\/StringScanner\/position.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "string_scanner.StringScanner",
+            "params": []
         },
         {
-            "name": "rest",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>The portion of the string that hasn't yet been scanned.<\/p>\n        ",
-            "memberOf": "string_scanner.StringScanner",
-            "isConstant": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/rest.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get rest =&gt; string.substring(position);<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "sourceUrl",
-            "type": "dart:core.Uri",
-            "types": [],
-            "desc": "<p>The URL of the source of the string being scanned.<\/p>\n<p>This is used for error reporting. It may be <code>null<\/code>, indicating that the\nsource URL is unknown or unavailable.<\/p>\n        ",
-            "memberOf": "string_scanner.StringScanner",
-            "isConstant": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/sourceUrl.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Uri sourceUrl\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "string",
+            "href": "package-string_scanner_string_scanner\/StringScanner\/rest.html",
+            "isDeprecated": "0",
             "type": "dart:core.String",
-            "types": [],
-            "desc": "<p>The string being scanned through.<\/p>\n        ",
             "memberOf": "string_scanner.StringScanner",
-            "isConstant": false,
-            "href": "package-string_scanner_string_scanner\/StringScanner\/string.html",
+            "params": []
+        },
+        {
+            "desc": "<p>The URL of the source of the string being scanned.<\/p>\n<p>This is used for error reporting. It may be <code>null<\/code>, indicating that the\nsource URL is unknown or unavailable.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Uri sourceUrl\n\n<\/code><\/pre>\n        ",
+            "href": "package-string_scanner_string_scanner\/StringScanner\/sourceUrl.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Uri",
+            "memberOf": "string_scanner.StringScanner",
+            "params": []
+        },
+        {
+            "desc": "<p>The string being scanned through.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String string\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-string_scanner_string_scanner\/StringScanner\/string.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "string_scanner.StringScanner",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [
-        "string_scanner.LineScanner",
-        "string_scanner.SpanScanner"
-    ],
-    "realImplementors": [
-        "string_scanner.LineScanner",
-        "string_scanner.SpanScanner"
-    ],
-    "cn": [],
-    "href": "package-string_scanner_string_scanner\/StringScanner-class.html",
-    "desc": "<p>A class that scans through a string using <a href=\"dart-core\/Pattern-class.html\">Pattern<\/a>s.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "StringScanner"
+    ]
 }

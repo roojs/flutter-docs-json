@@ -1,5 +1,17 @@
 {
+    "desc": "<p>A sliver that places multiple box children with the same main axis extent in\na linear array.<\/p>\n<p><a href=\"widgets\/SliverFixedExtentList-class.html\">SliverFixedExtentList<\/a> places its children in a linear array along the main\naxis starting at offset zero and without gaps. Each child is forced to have\nthe <a href=\"widgets\/SliverFixedExtentList\/itemExtent.html\">itemExtent<\/a> in the main axis and the\n<a href=\"rendering\/SliverConstraints\/crossAxisExtent.html\">SliverConstraints.crossAxisExtent<\/a> in the cross axis.<\/p>\n<p><a href=\"widgets\/SliverFixedExtentList-class.html\">SliverFixedExtentList<\/a> is more efficient than <a href=\"widgets\/SliverList-class.html\">SliverList<\/a> because\n<a href=\"widgets\/SliverFixedExtentList-class.html\">SliverFixedExtentList<\/a> does not need to perform layout on its children to\nobtain their extent in the main axis.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example, which would be inserted into a <a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a>\nlist, shows an infinite number of items in varying shades of blue:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">SliverFixedExtentList(\n  itemExtent: 50.0,\n  delegate: SliverChildBuilderDelegate(\n    (BuildContext context, int index) {\n      return Container(\n        alignment: Alignment.center,\n        color: Colors.lightBlue[100 * (index % 9)],\n        child: Text('list item $index'),\n      );\n    },\n  ),\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<h2 id=\"child-elements-lifecycle\">Child elements' lifecycle<\/h2>\n<h3 id=\"creation\">Creation<\/h3>\n<p>While laying out the list, visible children's elements, states and render\nobjects will be created lazily based on existing widgets (such as in the\ncase of <a href=\"widgets\/SliverChildListDelegate-class.html\">SliverChildListDelegate<\/a>) or lazily provided ones (such as in the\ncase of <a href=\"widgets\/SliverChildBuilderDelegate-class.html\">SliverChildBuilderDelegate<\/a>).<\/p>\n<h3 id=\"destruction\">Destruction<\/h3>\n<p>When a child is scrolled out of view, the associated element subtree, states\nand render objects are destroyed. A new child at the same position in the\nsliver will be lazily recreated along with new elements, states and render\nobjects when it is scrolled back.<\/p>\n<h3 id=\"destruction-mitigation\">Destruction mitigation<\/h3>\n<p>In order to preserve state as child elements are scrolled in and out of\nview, the following options are possible:<\/p>\n<ul>\n<li>\n<p>Moving the ownership of non-trivial UI-state-driving business logic\nout of the sliver child subtree. For instance, if a list contains posts\nwith their number of upvotes coming from a cached network response, store\nthe list of posts and upvote number in a data model outside the list. Let\nthe sliver child UI subtree be easily recreate-able from the\nsource-of-truth model object. Use <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>s in the child widget\nsubtree to store instantaneous UI state only.<\/p>\n<\/li>\n<li>\n<p>Letting <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a> be the root widget of the sliver child widget subtree\nthat needs to be preserved. The <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a> widget marks the child\nsubtree's top render object child for keep-alive. When the associated top\nrender object is scrolled out of view, the sliver keeps the child's\nrender object (and by extension, its associated elements and states) in a\ncache list instead of destroying them. When scrolled back into view, the\nrender object is repainted as-is (if it wasn't marked dirty in the\ninterim).<\/p>\n<p>This only works if the <a href=\"widgets\/SliverChildDelegate-class.html\">SliverChildDelegate<\/a> subclasses don't wrap the\nchild widget subtree with other widgets such as <a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> and\n<a href=\"widgets\/RepaintBoundary-class.html\">RepaintBoundary<\/a> via <code>addAutomaticKeepAlives<\/code> and\n<code>addRepaintBoundaries<\/code>.<\/p>\n<\/li>\n<li>\n<p>Using <a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> widgets (inserted by default in\n<a href=\"widgets\/SliverChildListDelegate-class.html\">SliverChildListDelegate<\/a> or <a href=\"widgets\/SliverChildListDelegate-class.html\">SliverChildListDelegate<\/a>). Instead of\nunconditionally caching the child element subtree when scrolling\noff-screen like <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a>, <a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> can let whether to\ncache the subtree be determined by descendant logic in the subtree.<\/p>\n<p>As an example, the <a href=\"widgets\/EditableText-class.html\">EditableText<\/a> widget signals its sliver child element\nsubtree to stay alive while its text field has input focus. If it doesn't\nhave focus and no other descendants signaled for keep-alive via a\n<a href=\"widgets\/KeepAliveNotification-class.html\">KeepAliveNotification<\/a>, the sliver child element subtree will be\ndestroyed when scrolled away.<\/p>\n<p><a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> descendants typically signal it to be kept alive by\nusing the <a href=\"widgets\/AutomaticKeepAliveClientMixin-mixin.html\">AutomaticKeepAliveClientMixin<\/a>, then implementing the\n<code>wantKeepAlive<\/code> getter and calling <code>updateKeepAlive<\/code>.<\/p>\n<\/li>\n<\/ul>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/SliverPrototypeExtentList-class.html\">SliverPrototypeExtentList<\/a>, which is similar to <a href=\"widgets\/SliverFixedExtentList-class.html\">SliverFixedExtentList<\/a>\nexcept that it uses a prototype list item instead of a pixel value to define\nthe main axis extent of each item.<\/li>\n<li>\n<a href=\"widgets\/SliverFillViewport-class.html\">SliverFillViewport<\/a>, which determines the <a href=\"widgets\/SliverFixedExtentList\/itemExtent.html\">itemExtent<\/a> based on\n<a href=\"rendering\/SliverConstraints\/viewportMainAxisExtent.html\">SliverConstraints.viewportMainAxisExtent<\/a>.<\/li>\n<li>\n<a href=\"widgets\/SliverList-class.html\">SliverList<\/a>, which does not require its children to have the same\nextent in the main axis.<\/li>\n<\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "widgets\/SliverFixedExtentList-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "widgets",
     "name": "widgets.SliverFixedExtentList",
+    "shortname": "SliverFixedExtentList",
     "extends": [
         "widgets.SliverMultiBoxAdaptorWidget",
         "widgets.SliverWithKeepAliveWidget",
@@ -9,132 +21,111 @@
         "foundation.Diagnosticable",
         "dart:core.Object"
     ],
-    "memberOf": "widgets",
     "events": [],
     "methods": [
         {
-            "name": "SliverFixedExtentList",
-            "type": "",
             "desc": "<p>Creates a sliver that places box children with the same main axis extent\nin a linear array.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const SliverFixedExtentList({\n  Key key,\n  @required SliverChildDelegate delegate,\n  @required this.itemExtent,\n}) : super(key: key, delegate: delegate);<\/code><\/pre>\n    ",
+            "href": "widgets\/SliverFixedExtentList\/SliverFixedExtentList.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "widgets.SliverFixedExtentList",
-            "sig": "",
             "params": [
                 {
-                    "name": "key",
-                    "type": "foundation.Key",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
                     "name": "delegate",
-                    "type": "widgets.SliverChildDelegate",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.SliverChildDelegate"
                 },
                 {
                     "name": "itemExtent",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
+                },
+                {
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "foundation.Key"
                 }
-            ],
-            "isConstructor": true,
-            "href": "widgets\/SliverFixedExtentList\/SliverFixedExtentList.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const SliverFixedExtentList({\n  Key key,\n  @required SliverChildDelegate delegate,\n  @required this.itemExtent,\n}) : super(key: key, delegate: delegate);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "createRenderObject",
-            "type": "rendering.RenderSliverFixedExtentList",
             "desc": "<p>Creates an instance of the <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> class that this\n<a href=\"widgets\/RenderObjectWidget-class.html\">RenderObjectWidget<\/a> represents, using the configuration described by this\n<a href=\"widgets\/RenderObjectWidget-class.html\">RenderObjectWidget<\/a>.<\/p>\n<p>This method should not do anything with the children of the render object.\nThat should instead be handled by the method that overrides\n<a href=\"widgets\/RenderObjectElement\/mount.html\">RenderObjectElement.mount<\/a> in the object rendered by this object's\n<a href=\"widgets\/SliverMultiBoxAdaptorWidget\/createElement.html\">createElement<\/a> method. See, for example,\n<a href=\"widgets\/SingleChildRenderObjectElement\/mount.html\">SingleChildRenderObjectElement.mount<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nRenderSliverFixedExtentList createRenderObject(BuildContext context) {\n  final SliverMultiBoxAdaptorElement element = context;\n  return RenderSliverFixedExtentList(childManager: element, itemExtent: itemExtent);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/SliverFixedExtentList\/createRenderObject.html",
+            "isDeprecated": "0",
+            "type": "rendering.RenderSliverFixedExtentList",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.SliverFixedExtentList",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/SliverFixedExtentList\/createRenderObject.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nRenderSliverFixedExtentList createRenderObject(BuildContext context) {\n  final SliverMultiBoxAdaptorElement element = context;\n  return RenderSliverFixedExtentList(childManager: element, itemExtent: itemExtent);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "updateRenderObject",
-            "type": "",
             "desc": "<p>Copies the configuration described by this <a href=\"widgets\/RenderObjectWidget-class.html\">RenderObjectWidget<\/a> to the\ngiven <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>, which will be of the same type as returned by this\nobject's <a href=\"widgets\/SliverFixedExtentList\/createRenderObject.html\">createRenderObject<\/a>.<\/p>\n<p>This method should not do anything to update the children of the render\nobject. That should instead be handled by the method that overrides\n<a href=\"widgets\/RenderObjectElement\/update.html\">RenderObjectElement.update<\/a> in the object rendered by this object's\n<a href=\"widgets\/SliverMultiBoxAdaptorWidget\/createElement.html\">createElement<\/a> method. See, for example,\n<a href=\"widgets\/SingleChildRenderObjectElement\/update.html\">SingleChildRenderObjectElement.update<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid updateRenderObject(BuildContext context, RenderSliverFixedExtentList renderObject) {\n  renderObject.itemExtent = itemExtent;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/SliverFixedExtentList\/updateRenderObject.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.SliverFixedExtentList",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
                     "name": "renderObject",
-                    "type": "rendering.RenderSliverFixedExtentList",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "rendering.RenderSliverFixedExtentList"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/SliverFixedExtentList\/updateRenderObject.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid updateRenderObject(BuildContext context, RenderSliverFixedExtentList renderObject) {\n  renderObject.itemExtent = itemExtent;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "name": "itemExtent",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The extent the children are forced to have in the main axis.<\/p>\n        ",
-            "memberOf": "widgets.SliverFixedExtentList",
-            "isConstant": false,
-            "href": "widgets\/SliverFixedExtentList\/itemExtent.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double itemExtent\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/SliverFixedExtentList\/itemExtent.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "widgets.SliverFixedExtentList",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "widgets\/SliverFixedExtentList-class.html",
-    "desc": "<p>A sliver that places multiple box children with the same main axis extent in\na linear array.<\/p>\n<p><a href=\"widgets\/SliverFixedExtentList-class.html\">SliverFixedExtentList<\/a> places its children in a linear array along the main\naxis starting at offset zero and without gaps. Each child is forced to have\nthe <a href=\"widgets\/SliverFixedExtentList\/itemExtent.html\">itemExtent<\/a> in the main axis and the\n<a href=\"rendering\/SliverConstraints\/crossAxisExtent.html\">SliverConstraints.crossAxisExtent<\/a> in the cross axis.<\/p>\n<p><a href=\"widgets\/SliverFixedExtentList-class.html\">SliverFixedExtentList<\/a> is more efficient than <a href=\"widgets\/SliverList-class.html\">SliverList<\/a> because\n<a href=\"widgets\/SliverFixedExtentList-class.html\">SliverFixedExtentList<\/a> does not need to perform layout on its children to\nobtain their extent in the main axis.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example, which would be inserted into a <a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a>\nlist, shows an infinite number of items in varying shades of blue:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">SliverFixedExtentList(\n  itemExtent: 50.0,\n  delegate: SliverChildBuilderDelegate(\n    (BuildContext context, int index) {\n      return Container(\n        alignment: Alignment.center,\n        color: Colors.lightBlue[100 * (index % 9)],\n        child: Text('list item $index'),\n      );\n    },\n  ),\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<h2 id=\"child-elements-lifecycle\">Child elements' lifecycle<\/h2>\n<h3 id=\"creation\">Creation<\/h3>\n<p>While laying out the list, visible children's elements, states and render\nobjects will be created lazily based on existing widgets (such as in the\ncase of <a href=\"widgets\/SliverChildListDelegate-class.html\">SliverChildListDelegate<\/a>) or lazily provided ones (such as in the\ncase of <a href=\"widgets\/SliverChildBuilderDelegate-class.html\">SliverChildBuilderDelegate<\/a>).<\/p>\n<h3 id=\"destruction\">Destruction<\/h3>\n<p>When a child is scrolled out of view, the associated element subtree, states\nand render objects are destroyed. A new child at the same position in the\nsliver will be lazily recreated along with new elements, states and render\nobjects when it is scrolled back.<\/p>\n<h3 id=\"destruction-mitigation\">Destruction mitigation<\/h3>\n<p>In order to preserve state as child elements are scrolled in and out of\nview, the following options are possible:<\/p>\n<ul>\n<li>\n<p>Moving the ownership of non-trivial UI-state-driving business logic\nout of the sliver child subtree. For instance, if a list contains posts\nwith their number of upvotes coming from a cached network response, store\nthe list of posts and upvote number in a data model outside the list. Let\nthe sliver child UI subtree be easily recreate-able from the\nsource-of-truth model object. Use <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>s in the child widget\nsubtree to store instantaneous UI state only.<\/p>\n<\/li>\n<li>\n<p>Letting <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a> be the root widget of the sliver child widget subtree\nthat needs to be preserved. The <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a> widget marks the child\nsubtree's top render object child for keep-alive. When the associated top\nrender object is scrolled out of view, the sliver keeps the child's\nrender object (and by extension, its associated elements and states) in a\ncache list instead of destroying them. When scrolled back into view, the\nrender object is repainted as-is (if it wasn't marked dirty in the\ninterim).<\/p>\n<p>This only works if the <a href=\"widgets\/SliverChildDelegate-class.html\">SliverChildDelegate<\/a> subclasses don't wrap the\nchild widget subtree with other widgets such as <a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> and\n<a href=\"widgets\/RepaintBoundary-class.html\">RepaintBoundary<\/a> via <code>addAutomaticKeepAlives<\/code> and\n<code>addRepaintBoundaries<\/code>.<\/p>\n<\/li>\n<li>\n<p>Using <a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> widgets (inserted by default in\n<a href=\"widgets\/SliverChildListDelegate-class.html\">SliverChildListDelegate<\/a> or <a href=\"widgets\/SliverChildListDelegate-class.html\">SliverChildListDelegate<\/a>). Instead of\nunconditionally caching the child element subtree when scrolling\noff-screen like <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a>, <a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> can let whether to\ncache the subtree be determined by descendant logic in the subtree.<\/p>\n<p>As an example, the <a href=\"widgets\/EditableText-class.html\">EditableText<\/a> widget signals its sliver child element\nsubtree to stay alive while its text field has input focus. If it doesn't\nhave focus and no other descendants signaled for keep-alive via a\n<a href=\"widgets\/KeepAliveNotification-class.html\">KeepAliveNotification<\/a>, the sliver child element subtree will be\ndestroyed when scrolled away.<\/p>\n<p><a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> descendants typically signal it to be kept alive by\nusing the <a href=\"widgets\/AutomaticKeepAliveClientMixin-mixin.html\">AutomaticKeepAliveClientMixin<\/a>, then implementing the\n<code>wantKeepAlive<\/code> getter and calling <code>updateKeepAlive<\/code>.<\/p>\n<\/li>\n<\/ul>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/SliverPrototypeExtentList-class.html\">SliverPrototypeExtentList<\/a>, which is similar to <a href=\"widgets\/SliverFixedExtentList-class.html\">SliverFixedExtentList<\/a>\nexcept that it uses a prototype list item instead of a pixel value to define\nthe main axis extent of each item.<\/li>\n<li>\n<a href=\"widgets\/SliverFillViewport-class.html\">SliverFillViewport<\/a>, which determines the <a href=\"widgets\/SliverFixedExtentList\/itemExtent.html\">itemExtent<\/a> based on\n<a href=\"rendering\/SliverConstraints\/viewportMainAxisExtent.html\">SliverConstraints.viewportMainAxisExtent<\/a>.<\/li>\n<li>\n<a href=\"widgets\/SliverList-class.html\">SliverList<\/a>, which does not require its children to have the same\nextent in the main axis.<\/li>\n<\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "SliverFixedExtentList"
+    ]
 }

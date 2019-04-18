@@ -1,115 +1,94 @@
 {
-    "name": "async.FutureGroup",
-    "extends": [],
+    "desc": "<p>A collection of futures waits until all added <a href=\"dart-async\/Future-class.html\">Future<\/a>s complete.<\/p>\n<p>Futures are added to the group with <a href=\"package-async_async\/FutureGroup\/add.html\">add<\/a>. Once you're finished adding\nfutures, signal that by calling <a href=\"package-async_async\/FutureGroup\/close.html\">close<\/a>. Then, once all added futures have\ncompleted, <a href=\"package-async_async\/FutureGroup\/future.html\">future<\/a> will complete with a list of values from the futures in\nthe group, in the order they were added.<\/p>\n<p>If any added future completes with an error, <a href=\"package-async_async\/FutureGroup\/future.html\">future<\/a> will emit that error\nand the group will be closed, regardless of the state of other futures in\nthe group.<\/p>\n<p>This is similar to <a href=\"dart-async\/Future\/wait.html\">Future.wait<\/a> with <code>eagerError<\/code> set to <code>true<\/code>, except\nthat a <a href=\"package-async_async\/FutureGroup-class.html\">FutureGroup<\/a> can have futures added gradually over time rather than\nneeding them all at once.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-async_async\/FutureGroup-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "async",
-    "events": [
-        {
-            "name": "onIdle",
-            "type": "dart:async.Stream",
-            "desc": "<p>A broadcast stream that emits a <code>null<\/code> event whenever the last pending\nfuture in this group completes.<\/p>\n<p>Once this group isn't waiting on any futures <em>and<\/em> <a href=\"package-async_async\/FutureGroup\/close.html\">close<\/a> has been\ncalled, this stream will close.<\/p>\n        ",
-            "static": false,
-            "memberOf": "",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-async_async\/FutureGroup\/onIdle.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Stream get onIdle {\n  if (_onIdleController == null) {\n    _onIdleController = new StreamController.broadcast(sync: true);\n  }\n  return _onIdleController.stream;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false,
-            "isConstant": false
-        }
-    ],
+    "name": "async.FutureGroup",
+    "shortname": "FutureGroup",
+    "extends": [],
+    "events": [],
     "methods": [
         {
-            "name": "FutureGroup",
+            "desc": null,
+            "example": null,
+            "href": "package-async_async\/FutureGroup\/FutureGroup.html",
+            "isDeprecated": "0",
             "type": "",
-            "desc": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "async.FutureGroup",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "package-async_async\/FutureGroup\/FutureGroup.html",
-            "example": "",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "add",
-            "type": "",
             "desc": "<p>Wait for <code>task<\/code> to complete.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void add(Future&lt;T&gt; task) {\n  if (_closed) throw new StateError(\"The FutureGroup is closed.\");\n\n  \/\/ Ensure that future values are put into [values] in the same order they're\n  \/\/ added to the group by pre-allocating a slot for them and recording its\n  \/\/ index.\n  var index = _values.length;\n  _values.add(null);\n\n  _pending++;\n  task.then((value) {\n    if (_completer.isCompleted) return null;\n\n    _pending--;\n    _values[index] = value;\n\n    if (_pending != 0) return null;\n    if (_onIdleController != null) _onIdleController.add(null);\n\n    if (!_closed) return null;\n    if (_onIdleController != null) _onIdleController.close();\n    _completer.complete(_values);\n  }).catchError((error, stackTrace) {\n    if (_completer.isCompleted) return null;\n    _completer.completeError(error, stackTrace);\n  });\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/FutureGroup\/add.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.FutureGroup",
-            "sig": "",
             "params": [
                 {
                     "name": "task",
-                    "type": "dart:async.Future",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:async.Future"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/FutureGroup\/add.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void add(Future&lt;T&gt; task) {\n  if (_closed) throw new StateError(\"The FutureGroup is closed.\");\n\n  \/\/ Ensure that future values are put into [values] in the same order they're\n  \/\/ added to the group by pre-allocating a slot for them and recording its\n  \/\/ index.\n  var index = _values.length;\n  _values.add(null);\n\n  _pending++;\n  task.then((value) {\n    if (_completer.isCompleted) return null;\n\n    _pending--;\n    _values[index] = value;\n\n    if (_pending != 0) return null;\n    if (_onIdleController != null) _onIdleController.add(null);\n\n    if (!_closed) return null;\n    if (_onIdleController != null) _onIdleController.close();\n    _completer.complete(_values);\n  }).catchError((error, stackTrace) {\n    if (_completer.isCompleted) return null;\n    _completer.completeError(error, stackTrace);\n  });\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "close",
-            "type": "",
             "desc": "<p>Signals to the group that the caller is done adding futures, and so\n<a href=\"package-async_async\/FutureGroup\/future.html\">future<\/a> should fire once all added futures have completed.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void close() {\n  _closed = true;\n  if (_pending != 0) return;\n  if (_completer.isCompleted) return;\n  _completer.complete(_values);\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/FutureGroup\/close.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.FutureGroup",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-async_async\/FutureGroup\/close.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void close() {\n  _closed = true;\n  if (_pending != 0) return;\n  if (_completer.isCompleted) return;\n  _completer.complete(_values);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "future",
-            "type": "dart:async.Future<dart:core.List>",
-            "types": [
-                "dart:async.Future",
-                "dart:core.List"
-            ],
             "desc": "<p>The future that fires once <a href=\"package-async_async\/FutureGroup\/close.html\">close<\/a> has been called and all futures in the\ngroup have completed.<\/p>\n<p>This will also complete with an error if any of the futures in the group\nfails, regardless of whether <a href=\"package-async_async\/FutureGroup\/close.html\">close<\/a> was called.<\/p>\n        ",
-            "memberOf": "async.FutureGroup",
-            "isConstant": false,
-            "href": "package-async_async\/FutureGroup\/future.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;List&lt;T&gt;&gt; get future =&gt; _completer.future;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-async_async\/FutureGroup\/future.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:core.List>",
+            "memberOf": "async.FutureGroup",
+            "params": []
         },
         {
-            "name": "isIdle",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether this group has no pending futures.<\/p>\n        ",
-            "memberOf": "async.FutureGroup",
-            "isConstant": false,
-            "href": "package-async_async\/FutureGroup\/isIdle.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isIdle =&gt; _pending == 0;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-async_async\/FutureGroup\/isIdle.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "async.FutureGroup",
+            "params": []
+        },
+        {
+            "desc": "<p>A broadcast stream that emits a <code>null<\/code> event whenever the last pending\nfuture in this group completes.<\/p>\n<p>Once this group isn't waiting on any futures <em>and<\/em> <a href=\"package-async_async\/FutureGroup\/close.html\">close<\/a> has been\ncalled, this stream will close.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Stream get onIdle {\n  if (_onIdleController == null) {\n    _onIdleController = new StreamController.broadcast(sync: true);\n  }\n  return _onIdleController.stream;\n}<\/code><\/pre>\n        ",
+            "href": "package-async_async\/FutureGroup\/onIdle.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Stream",
+            "memberOf": "async.FutureGroup",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-async_async\/FutureGroup-class.html",
-    "desc": "<p>A collection of futures waits until all added <a href=\"dart-async\/Future-class.html\">Future<\/a>s complete.<\/p>\n<p>Futures are added to the group with <a href=\"package-async_async\/FutureGroup\/add.html\">add<\/a>. Once you're finished adding\nfutures, signal that by calling <a href=\"package-async_async\/FutureGroup\/close.html\">close<\/a>. Then, once all added futures have\ncompleted, <a href=\"package-async_async\/FutureGroup\/future.html\">future<\/a> will complete with a list of values from the futures in\nthe group, in the order they were added.<\/p>\n<p>If any added future completes with an error, <a href=\"package-async_async\/FutureGroup\/future.html\">future<\/a> will emit that error\nand the group will be closed, regardless of the state of other futures in\nthe group.<\/p>\n<p>This is similar to <a href=\"dart-async\/Future\/wait.html\">Future.wait<\/a> with <code>eagerError<\/code> set to <code>true<\/code>, except\nthat a <a href=\"package-async_async\/FutureGroup-class.html\">FutureGroup<\/a> can have futures added gradually over time rather than\nneeding them all at once.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "FutureGroup"
+    ]
 }

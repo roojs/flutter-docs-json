@@ -1,133 +1,117 @@
 {
-    "name": "async.StreamSinkCompleter",
-    "extends": [],
+    "desc": "<p>A <a href=\"package-async_async\/StreamSinkCompleter\/sink.html\">sink<\/a> where the destination is provided later.<\/p>\n<p>The <a href=\"package-async_async\/StreamSinkCompleter\/sink.html\">sink<\/a> is a normal sink that you can add events to to immediately, but\nuntil <a href=\"package-async_async\/StreamSinkCompleter\/setDestinationSink.html\">setDestinationSink<\/a> is called, the events will be buffered.<\/p>\n<p>The same effect can be achieved by using a <a href=\"dart-async\/StreamController-class.html\">StreamController<\/a> and adding it\nto the sink using <code>Sink.addStream<\/code> when the destination sink is ready. This\nclass attempts to shortcut some of the overhead when possible. For example,\nif the <a href=\"package-async_async\/StreamSinkCompleter\/sink.html\">sink<\/a> only has events added after the destination sink has been set,\nthose events are added directly to the sink.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-async_async\/StreamSinkCompleter-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "async",
+    "name": "async.StreamSinkCompleter",
+    "shortname": "StreamSinkCompleter",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "StreamSinkCompleter",
+            "desc": null,
+            "example": null,
+            "href": "package-async_async\/StreamSinkCompleter\/StreamSinkCompleter.html",
+            "isDeprecated": "0",
             "type": "",
-            "desc": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "async.StreamSinkCompleter",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "package-async_async\/StreamSinkCompleter\/StreamSinkCompleter.html",
-            "example": "",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "fromFuture",
-            "type": "dart:async.StreamSink",
             "desc": "<p>Convert a <code>Future&lt;StreamSink&gt;<\/code> to a <code>StreamSink<\/code>.<\/p>\n<p>This creates a sink using a sink completer, and sets the destination sink\nto the result of the future when the future completes.<\/p>\n<p>If the future completes with an error, the returned sink will instead\nbe closed. Its <code>Sink.done<\/code> future will contain the error.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static StreamSink&lt;T&gt; fromFuture&lt;T&gt;(Future&lt;StreamSink&lt;T&gt;&gt; sinkFuture) {\n  var completer = new StreamSinkCompleter&lt;T&gt;();\n  sinkFuture.then(completer.setDestinationSink, onError: completer.setError);\n  return completer.sink;\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamSinkCompleter\/fromFuture.html",
+            "isDeprecated": "0",
+            "type": "dart:async.StreamSink",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.StreamSinkCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "sinkFuture",
-                    "type": "dart:async.Future<dart:async.StreamSink>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:async.Future",
-                        "dart:async.StreamSink"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:async.Future<dart:async.StreamSink>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamSinkCompleter\/fromFuture.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static StreamSink&lt;T&gt; fromFuture&lt;T&gt;(Future&lt;StreamSink&lt;T&gt;&gt; sinkFuture) {\n  var completer = new StreamSinkCompleter&lt;T&gt;();\n  sinkFuture.then(completer.setDestinationSink, onError: completer.setError);\n  return completer.sink;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "setDestinationSink",
-            "type": "",
             "desc": "<p>Sets a sink as the destination for events from the <a href=\"package-async_async\/StreamSinkCompleter-class.html\">StreamSinkCompleter<\/a>'s\n<a href=\"package-async_async\/StreamSinkCompleter\/sink.html\">sink<\/a>.<\/p>\n<p>The completer's <a href=\"package-async_async\/StreamSinkCompleter\/sink.html\">sink<\/a> will act exactly as <code>destinationSink<\/code>.<\/p>\n<p>If the destination sink is set before events are added to <a href=\"package-async_async\/StreamSinkCompleter\/sink.html\">sink<\/a>, further\nevents are forwarded directly to <code>destinationSink<\/code>.<\/p>\n<p>If events are added to <a href=\"package-async_async\/StreamSinkCompleter\/sink.html\">sink<\/a> before setting the destination sink, they're\nbuffered until the destination is available.<\/p>\n<p>A destination sink may be set at most once.<\/p>\n<p>Either of <a href=\"package-async_async\/StreamSinkCompleter\/setDestinationSink.html\">setDestinationSink<\/a> or <a href=\"package-async_async\/StreamSinkCompleter\/setError.html\">setError<\/a> may be called at most once.\nTrying to call either of them again will fail.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setDestinationSink(StreamSink&lt;T&gt; destinationSink) {\n  if (_sink._destinationSink != null) {\n    throw new StateError(\"Destination sink already set\");\n  }\n  _sink._setDestinationSink(destinationSink);\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamSinkCompleter\/setDestinationSink.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.StreamSinkCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "destinationSink",
-                    "type": "dart:async.StreamSink",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:async.StreamSink"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamSinkCompleter\/setDestinationSink.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setDestinationSink(StreamSink&lt;T&gt; destinationSink) {\n  if (_sink._destinationSink != null) {\n    throw new StateError(\"Destination sink already set\");\n  }\n  _sink._setDestinationSink(destinationSink);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "setError",
-            "type": "",
             "desc": "<p>Completes this to a closed sink whose <code>Sink.done<\/code> future emits <code>error<\/code>.<\/p>\n<p>This is useful when the process of loading the sink fails.<\/p>\n<p>Either of <a href=\"package-async_async\/StreamSinkCompleter\/setDestinationSink.html\">setDestinationSink<\/a> or <a href=\"package-async_async\/StreamSinkCompleter\/setError.html\">setError<\/a> may be called at most once.\nTrying to call either of them again will fail.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setError(error, [StackTrace stackTrace]) {\n  setDestinationSink(new NullStreamSink.error(error, stackTrace));\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamSinkCompleter\/setError.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.StreamSinkCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "error",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 },
                 {
                     "name": "stackTrace",
-                    "type": "dart:core.StackTrace",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.StackTrace"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamSinkCompleter\/setError.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setError(error, [StackTrace stackTrace]) {\n  setDestinationSink(new NullStreamSink.error(error, stackTrace));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "name": "sink",
-            "type": "dart:async.StreamSink",
-            "types": [],
             "desc": "<p>The sink for this completer.<\/p>\n<p>When a destination sink is provided, events that have been passed to the\nsink will be forwarded to the destination.<\/p>\n<p>Events can be added to the sink either before or after a destination sink\nis set.<\/p>\n        ",
-            "memberOf": "async.StreamSinkCompleter",
-            "isConstant": false,
-            "href": "package-async_async\/StreamSinkCompleter\/sink.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final StreamSink&lt;T&gt; sink = new _CompleterSink&lt;T&gt;()\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-async_async\/StreamSinkCompleter\/sink.html",
+            "isDeprecated": "0",
+            "type": "dart:async.StreamSink",
+            "memberOf": "async.StreamSinkCompleter",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-async_async\/StreamSinkCompleter-class.html",
-    "desc": "<p>A <a href=\"package-async_async\/StreamSinkCompleter\/sink.html\">sink<\/a> where the destination is provided later.<\/p>\n<p>The <a href=\"package-async_async\/StreamSinkCompleter\/sink.html\">sink<\/a> is a normal sink that you can add events to to immediately, but\nuntil <a href=\"package-async_async\/StreamSinkCompleter\/setDestinationSink.html\">setDestinationSink<\/a> is called, the events will be buffered.<\/p>\n<p>The same effect can be achieved by using a <a href=\"dart-async\/StreamController-class.html\">StreamController<\/a> and adding it\nto the sink using <code>Sink.addStream<\/code> when the destination sink is ready. This\nclass attempts to shortcut some of the overhead when possible. For example,\nif the <a href=\"package-async_async\/StreamSinkCompleter\/sink.html\">sink<\/a> only has events added after the destination sink has been set,\nthose events are added directly to the sink.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "StreamSinkCompleter"
+    ]
 }

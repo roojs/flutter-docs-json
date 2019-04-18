@@ -1,159 +1,143 @@
 {
-    "name": "painting.ImageCache",
-    "extends": [],
+    "desc": "<p>Class for the <a href=\"painting\/imageCache.html\">imageCache<\/a> object.<\/p>\n<p>Implements a least-recently-used cache of up to 1000 images, and up to 100\nMB. The maximum size can be adjusted using <a href=\"painting\/ImageCache\/maximumSize.html\">maximumSize<\/a> and\n<a href=\"painting\/ImageCache\/maximumSizeBytes.html\">maximumSizeBytes<\/a>. Images that are actively in use (i.e. to which the\napplication is holding references, either via <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a> objects,\n<a href=\"painting\/ImageStreamCompleter-class.html\">ImageStreamCompleter<\/a> objects, <a href=\"painting\/ImageInfo-class.html\">ImageInfo<\/a> objects, or raw <a href=\"dart-ui\/Image-class.html\">dart:ui.Image<\/a>\nobjects) may get evicted from the cache (and thus need to be refetched from\nthe network if they are referenced in the <a href=\"painting\/ImageCache\/putIfAbsent.html\">putIfAbsent<\/a> method), but the raw\nbits are kept in memory for as long as the application is using them.<\/p>\n<p>The <a href=\"painting\/ImageCache\/putIfAbsent.html\">putIfAbsent<\/a> method is the main entry-point to the cache API. It\nreturns the previously cached <a href=\"painting\/ImageStreamCompleter-class.html\">ImageStreamCompleter<\/a> for the given key, if\navailable; if not, it calls the given callback to obtain it first. In either\ncase, the key is moved to the \"most recently used\" position.<\/p>\n<p>Generally this class is not used directly. The <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> class and its\nsubclasses automatically handle the caching of images.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "painting\/ImageCache-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "painting",
+    "name": "painting.ImageCache",
+    "shortname": "ImageCache",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "ImageCache",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "painting.ImageCache",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
+            "desc": null,
+            "example": null,
             "href": "painting\/ImageCache\/ImageCache.html",
-            "example": "",
-            "isDeprecated": false
-        },
-        {
-            "name": "clear",
+            "isDeprecated": "0",
             "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
+            "static": false,
+            "memberOf": "painting.ImageCache",
+            "params": []
+        },
+        {
             "desc": "<p>Evicts all entries from the cache.<\/p>\n<p>This is useful if, for instance, the root asset bundle has been updated\nand therefore new images must be obtained.<\/p>\n<p>Images which have not finished loading yet will not be removed from the\ncache, and when they complete they will be inserted as normal.<\/p>\n    ",
-            "static": false,
-            "memberOf": "painting.ImageCache",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "painting\/ImageCache\/clear.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void clear() {\n  _cache.clear();\n  _pendingImages.clear();\n  _currentSizeBytes = 0;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "evict",
-            "type": "dart:core.bool",
-            "desc": "<p>Evicts a single entry from the cache, returning true if successful.\nPending images waiting for completion are removed as well, returning true if successful.<\/p>\n<p>When a pending image is removed the listener on it is removed as well to prevent\nit from adding itself to the cache if it eventually completes.<\/p>\n<p>The <code>key<\/code> must be equal to an object used to cache an image in\n<a href=\"painting\/ImageCache\/putIfAbsent.html\">ImageCache.putIfAbsent<\/a>.<\/p>\n<p>If the key is not immediately available, as is common, consider using\n<a href=\"painting\/ImageCache\/evict.html\">ImageProvider.evict<\/a> to call this method indirectly instead.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a>, for providing images to the <a href=\"widgets\/Image-class.html\">Image<\/a> widget.<\/li><\/ul>",
-            "static": false,
-            "memberOf": "painting.ImageCache",
-            "sig": "",
-            "params": [
-                {
-                    "name": "key",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
+            "href": "painting\/ImageCache\/clear.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "painting\/ImageCache\/evict.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool evict(Object key) {\n  final _PendingImage pendingImage = _pendingImages.remove(key);\n  if (pendingImage != null) {\n    pendingImage.removeListener();\n    return true;\n  }\n  final _CachedImage image = _cache.remove(key);\n  if (image != null) {\n    _currentSizeBytes -= image.sizeBytes;\n    return true;\n  }\n  return false;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "putIfAbsent",
-            "type": "painting.ImageStreamCompleter",
-            "desc": "<p>Returns the previously cached <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a> for the given key, if available;\nif not, calls the given callback to obtain it first. In either case, the\nkey is moved to the \"most recently used\" position.<\/p>\n<p>The arguments must not be null. The <code>loader<\/code> cannot return null.<\/p>\n<p>In the event that the loader throws an exception, it will be caught only if\n<code>onError<\/code> is also provided. When an exception is caught resolving an image,\nno completers are cached and <code>null<\/code> is returned instead of a new\ncompleter.<\/p>\n    ",
             "static": false,
             "memberOf": "painting.ImageCache",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>Evicts a single entry from the cache, returning true if successful.\nPending images waiting for completion are removed as well, returning true if successful.<\/p>\n<p>When a pending image is removed the listener on it is removed as well to prevent\nit from adding itself to the cache if it eventually completes.<\/p>\n<p>The <code>key<\/code> must be equal to an object used to cache an image in\n<a href=\"painting\/ImageCache\/putIfAbsent.html\">ImageCache.putIfAbsent<\/a>.<\/p>\n<p>If the key is not immediately available, as is common, consider using\n<a href=\"painting\/ImageCache\/evict.html\">ImageProvider.evict<\/a> to call this method indirectly instead.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a>, for providing images to the <a href=\"widgets\/Image-class.html\">Image<\/a> widget.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool evict(Object key) {\n  final _PendingImage pendingImage = _pendingImages.remove(key);\n  if (pendingImage != null) {\n    pendingImage.removeListener();\n    return true;\n  }\n  final _CachedImage image = _cache.remove(key);\n  if (image != null) {\n    _currentSizeBytes -= image.sizeBytes;\n    return true;\n  }\n  return false;\n}<\/code><\/pre>\n    ",
+            "href": "painting\/ImageCache\/evict.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "painting.ImageCache",
             "params": [
                 {
                     "name": "key",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns the previously cached <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a> for the given key, if available;\nif not, calls the given callback to obtain it first. In either case, the\nkey is moved to the \"most recently used\" position.<\/p>\n<p>The arguments must not be null. The <code>loader<\/code> cannot return null.<\/p>\n<p>In the event that the loader throws an exception, it will be caught only if\n<code>onError<\/code> is also provided. When an exception is caught resolving an image,\nno completers are cached and <code>null<\/code> is returned instead of a new\ncompleter.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ImageStreamCompleter putIfAbsent(Object key, ImageStreamCompleter loader(), { ImageErrorListener onError }) {\n  assert(key != null);\n  assert(loader != null);\n  ImageStreamCompleter result = _pendingImages[key]?.completer;\n  \/\/ Nothing needs to be done because the image hasn't loaded yet.\n  if (result != null)\n    return result;\n  \/\/ Remove the provider from the list so that we can move it to the\n  \/\/ recently used position below.\n  final _CachedImage image = _cache.remove(key);\n  if (image != null) {\n    _cache[key] = image;\n    return image.completer;\n  }\n  try {\n    result = loader();\n  } catch (error, stackTrace) {\n    if (onError != null) {\n      onError(error, stackTrace);\n      return null;\n    } else {\n      rethrow;\n    }\n  }\n  void listener(ImageInfo info, bool syncCall) {\n    \/\/ Images that fail to load don't contribute to cache size.\n    final int imageSize = info?.image == null ? 0 : info.image.height * info.image.width * 4;\n    final _CachedImage image = _CachedImage(result, imageSize);\n    \/\/ If the image is bigger than the maximum cache size, and the cache size\n    \/\/ is not zero, then increase the cache size to the size of the image plus\n    \/\/ some change.\n    if (maximumSizeBytes &gt; 0 &amp;&amp; imageSize &gt; maximumSizeBytes) {\n      _maximumSizeBytes = imageSize + 1000;\n    }\n    _currentSizeBytes += imageSize;\n    final _PendingImage pendingImage = _pendingImages.remove(key);\n    if (pendingImage != null) {\n      pendingImage.removeListener();\n    }\n\n    _cache[key] = image;\n    _checkCacheSize();\n  }\n  if (maximumSize &gt; 0 &amp;&amp; maximumSizeBytes &gt; 0) {\n    _pendingImages[key] = _PendingImage(result, listener);\n    result.addListener(listener);\n  }\n  return result;\n}<\/code><\/pre>\n    ",
+            "href": "painting\/ImageCache\/putIfAbsent.html",
+            "isDeprecated": "0",
+            "type": "painting.ImageStreamCompleter",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "painting.ImageCache",
+            "params": [
+                {
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
                 },
                 {
                     "name": "loader",
-                    "type": "painting.ImageStreamCompleter",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageStreamCompleter"
                 },
                 {
                     "name": "onError",
-                    "type": "painting.ImageErrorListener",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageErrorListener"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/ImageCache\/putIfAbsent.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ImageStreamCompleter putIfAbsent(Object key, ImageStreamCompleter loader(), { ImageErrorListener onError }) {\n  assert(key != null);\n  assert(loader != null);\n  ImageStreamCompleter result = _pendingImages[key]?.completer;\n  \/\/ Nothing needs to be done because the image hasn't loaded yet.\n  if (result != null)\n    return result;\n  \/\/ Remove the provider from the list so that we can move it to the\n  \/\/ recently used position below.\n  final _CachedImage image = _cache.remove(key);\n  if (image != null) {\n    _cache[key] = image;\n    return image.completer;\n  }\n  try {\n    result = loader();\n  } catch (error, stackTrace) {\n    if (onError != null) {\n      onError(error, stackTrace);\n      return null;\n    } else {\n      rethrow;\n    }\n  }\n  void listener(ImageInfo info, bool syncCall) {\n    \/\/ Images that fail to load don't contribute to cache size.\n    final int imageSize = info?.image == null ? 0 : info.image.height * info.image.width * 4;\n    final _CachedImage image = _CachedImage(result, imageSize);\n    \/\/ If the image is bigger than the maximum cache size, and the cache size\n    \/\/ is not zero, then increase the cache size to the size of the image plus\n    \/\/ some change.\n    if (maximumSizeBytes &gt; 0 &amp;&amp; imageSize &gt; maximumSizeBytes) {\n      _maximumSizeBytes = imageSize + 1000;\n    }\n    _currentSizeBytes += imageSize;\n    final _PendingImage pendingImage = _pendingImages.remove(key);\n    if (pendingImage != null) {\n      pendingImage.removeListener();\n    }\n\n    _cache[key] = image;\n    _checkCacheSize();\n  }\n  if (maximumSize &gt; 0 &amp;&amp; maximumSizeBytes &gt; 0) {\n    _pendingImages[key] = _PendingImage(result, listener);\n    result.addListener(listener);\n  }\n  return result;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "currentSize",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The current number of cached entries.<\/p>\n        ",
-            "memberOf": "painting.ImageCache",
-            "isConstant": false,
-            "href": "painting\/ImageCache\/currentSize.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get currentSize =&gt; _cache.length;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "painting\/ImageCache\/currentSize.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "painting.ImageCache",
+            "params": []
         },
         {
-            "name": "currentSizeBytes",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The current size of cached entries in bytes.<\/p>\n        ",
-            "memberOf": "painting.ImageCache",
-            "isConstant": false,
-            "href": "painting\/ImageCache\/currentSizeBytes.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get currentSizeBytes =&gt; _currentSizeBytes;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "painting\/ImageCache\/currentSizeBytes.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "painting.ImageCache",
+            "params": []
         },
         {
-            "name": "maximumSize",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>Maximum number of entries to store in the cache.<\/p>\n<p>Once this many entries have been cached, the least-recently-used entry is\nevicted when adding a new entry.<\/p>\n        ",
-            "memberOf": "painting.ImageCache",
-            "isConstant": false,
-            "href": "painting\/ImageCache\/maximumSize.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get maximumSize =&gt; _maximumSize;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "painting\/ImageCache\/maximumSize.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "painting.ImageCache",
+            "params": []
         },
         {
-            "name": "maximumSizeBytes",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>Maximum size of entries to store in the cache in bytes.<\/p>\n<p>Once more than this amount of bytes have been cached, the\nleast-recently-used entry is evicted until there are fewer than the\nmaximum bytes.<\/p>\n        ",
-            "memberOf": "painting.ImageCache",
-            "isConstant": false,
-            "href": "painting\/ImageCache\/maximumSizeBytes.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get maximumSizeBytes =&gt; _maximumSizeBytes;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "painting\/ImageCache\/maximumSizeBytes.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "painting.ImageCache",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "painting\/ImageCache-class.html",
-    "desc": "<p>Class for the <a href=\"painting\/imageCache.html\">imageCache<\/a> object.<\/p>\n<p>Implements a least-recently-used cache of up to 1000 images, and up to 100\nMB. The maximum size can be adjusted using <a href=\"painting\/ImageCache\/maximumSize.html\">maximumSize<\/a> and\n<a href=\"painting\/ImageCache\/maximumSizeBytes.html\">maximumSizeBytes<\/a>. Images that are actively in use (i.e. to which the\napplication is holding references, either via <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a> objects,\n<a href=\"painting\/ImageStreamCompleter-class.html\">ImageStreamCompleter<\/a> objects, <a href=\"painting\/ImageInfo-class.html\">ImageInfo<\/a> objects, or raw <a href=\"dart-ui\/Image-class.html\">dart:ui.Image<\/a>\nobjects) may get evicted from the cache (and thus need to be refetched from\nthe network if they are referenced in the <a href=\"painting\/ImageCache\/putIfAbsent.html\">putIfAbsent<\/a> method), but the raw\nbits are kept in memory for as long as the application is using them.<\/p>\n<p>The <a href=\"painting\/ImageCache\/putIfAbsent.html\">putIfAbsent<\/a> method is the main entry-point to the cache API. It\nreturns the previously cached <a href=\"painting\/ImageStreamCompleter-class.html\">ImageStreamCompleter<\/a> for the given key, if\navailable; if not, it calls the given callback to obtain it first. In either\ncase, the key is moved to the \"most recently used\" position.<\/p>\n<p>Generally this class is not used directly. The <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> class and its\nsubclasses automatically handle the caching of images.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "ImageCache"
+    ]
 }

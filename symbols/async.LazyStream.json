@@ -1,115 +1,94 @@
 {
+    "desc": "<p>A <a href=\"dart-async\/Stream-class.html\">Stream<\/a> wrapper that forwards to another <a href=\"dart-async\/Stream-class.html\">Stream<\/a> that's initialized\nlazily.<\/p>\n<p>This class allows a concrete <code>Stream<\/code> to be created only once it has a\nlistener. It's useful to wrapping APIs that do expensive computation to\nproduce a <code>Stream<\/code>.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-async_async\/LazyStream-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "async",
     "name": "async.LazyStream",
+    "shortname": "LazyStream",
     "extends": [
         "dart:async.Stream",
         "dart:core.Object"
     ],
-    "memberOf": "async",
     "events": [],
     "methods": [
         {
-            "name": "LazyStream",
-            "type": "",
             "desc": "<p>Creates a single-subscription <code>Stream<\/code> that calls <code>callback<\/code> when it gets\na listener and forwards to the returned stream.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">LazyStream(FutureOr&lt;Stream&lt;T&gt;&gt; callback()) : _callback = callback {\n  \/\/ Explicitly check for null because we null out [_callback] internally.\n  if (_callback == null) throw new ArgumentError.notNull('callback');\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/LazyStream\/LazyStream.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "async.LazyStream",
-            "sig": "",
             "params": [
                 {
                     "name": "callback",
-                    "type": "dart:async.FutureOr<dart:async.Stream>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:async.FutureOr",
-                        "dart:async.Stream"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:async.FutureOr<dart:async.Stream>"
                 }
-            ],
-            "isConstructor": true,
-            "href": "package-async_async\/LazyStream\/LazyStream.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">LazyStream(FutureOr&lt;Stream&lt;T&gt;&gt; callback()) : _callback = callback {\n  \/\/ Explicitly check for null because we null out [_callback] internally.\n  if (_callback == null) throw new ArgumentError.notNull('callback');\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "listen",
-            "type": "dart:async.StreamSubscription",
             "desc": "<p>Adds a subscription to this stream.<\/p>\n<p>Returns a <a href=\"dart-async\/StreamSubscription-class.html\">StreamSubscription<\/a> which handles events from this stream using\nthe provided <code>onData<\/code>, <code>onError<\/code> and <code>onDone<\/code> handlers.\nThe handlers can be changed on the subscription, but they start out\nas the provided functions.<\/p>\n<p>On each data event from this stream, the subscriber's <code>onData<\/code> handler\nis called. If <code>onData<\/code> is <code>null<\/code>, nothing happens.<\/p>\n<p>On errors from this stream, the <code>onError<\/code> handler is called with the\nerror object and possibly a stack trace.<\/p>\n<p>The <code>onError<\/code> callback must be of type <code>void onError(error)<\/code> or\n<code>void onError(error, StackTrace stackTrace)<\/code>. If <code>onError<\/code> accepts\ntwo arguments it is called with the error object and the stack trace\n(which could be <code>null<\/code> if this stream itself received an error without\nstack trace).\nOtherwise it is called with just the error object.\nIf <code>onError<\/code> is omitted, any errors on this stream are considered unhandled,\nand will be passed to the current <a href=\"dart-async\/Zone-class.html\">Zone<\/a>'s error handler.\nBy default unhandled async errors are treated\nas if they were uncaught top-level errors.<\/p>\n<p>If this stream closes and sends a done event, the <code>onDone<\/code> handler is\ncalled. If <code>onDone<\/code> is <code>null<\/code>, nothing happens.<\/p>\n<p>If <code>cancelOnError<\/code> is true, the subscription is automatically canceled\nwhen the first error event is delivered. The default is <code>false<\/code>.<\/p>\n<p>While a subscription is paused, or when it has been canceled,\nthe subscription doesn't receive events and none of the\nevent handler functions are called.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamSubscription&lt;T&gt; listen(void onData(T event),\n    {Function onError, void onDone(), bool cancelOnError}) {\n  if (_callback == null) {\n    throw new StateError(\"Stream has already been listened to.\");\n  }\n\n  \/\/ Null out the callback before we invoke it to ensure that even while\n  \/\/ running it, this can't be called twice.\n  var callback = _callback;\n  _callback = null;\n  var result = callback();\n\n  Stream&lt;T&gt; stream;\n  if (result is Future&lt;Stream&lt;T&gt;&gt;) {\n    stream = StreamCompleter.fromFuture(result.then((stream) {\n      return DelegatingStream.typed&lt;T&gt;(stream);\n    }));\n  } else {\n    stream = DelegatingStream.typed&lt;T&gt;(result as Stream);\n  }\n\n  return stream.listen(onData,\n      onError: onError, onDone: onDone, cancelOnError: cancelOnError);\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/LazyStream\/listen.html",
+            "isDeprecated": "0",
+            "type": "dart:async.StreamSubscription",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.LazyStream",
-            "sig": "",
             "params": [
                 {
-                    "name": "event",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "cancelOnError",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "event",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "onError",
-                    "type": "dart:core.Function",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
                 },
                 {
                     "name": "onDone",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<void>"
                 },
                 {
-                    "name": "cancelOnError",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "onError",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Function"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/LazyStream\/listen.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamSubscription&lt;T&gt; listen(void onData(T event),\n    {Function onError, void onDone(), bool cancelOnError}) {\n  if (_callback == null) {\n    throw new StateError(\"Stream has already been listened to.\");\n  }\n\n  \/\/ Null out the callback before we invoke it to ensure that even while\n  \/\/ running it, this can't be called twice.\n  var callback = _callback;\n  _callback = null;\n  var result = callback();\n\n  Stream&lt;T&gt; stream;\n  if (result is Future&lt;Stream&lt;T&gt;&gt;) {\n    stream = StreamCompleter.fromFuture(result.then((stream) {\n      return DelegatingStream.typed&lt;T&gt;(stream);\n    }));\n  } else {\n    stream = DelegatingStream.typed&lt;T&gt;(result as Stream);\n  }\n\n  return stream.listen(onData,\n      onError: onError, onDone: onDone, cancelOnError: cancelOnError);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
-    "props": [],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-async_async\/LazyStream-class.html",
-    "desc": "<p>A <a href=\"dart-async\/Stream-class.html\">Stream<\/a> wrapper that forwards to another <a href=\"dart-async\/Stream-class.html\">Stream<\/a> that's initialized\nlazily.<\/p>\n<p>This class allows a concrete <code>Stream<\/code> to be created only once it has a\nlistener. It's useful to wrapping APIs that do expensive computation to\nproduce a <code>Stream<\/code>.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "LazyStream"
+    "props": []
 }

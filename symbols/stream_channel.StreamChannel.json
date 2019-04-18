@@ -1,321 +1,214 @@
 {
-    "name": "stream_channel.StreamChannel",
-    "extends": [],
+    "desc": "<p>An abstract class representing a two-way communication channel.<\/p>\n<p>Users should consider the <a href=\"package-stream_channel_stream_channel\/StreamChannel\/stream.html\">stream<\/a> emitting a \"done\" event to be the\ncanonical indicator that the channel has closed. If they wish to close the\nchannel, they should close the <a href=\"package-stream_channel_stream_channel\/StreamChannel\/sink.html\">sink<\/a>\u2014canceling the stream subscription is\nnot sufficient. Protocol errors may be emitted through the stream or through\n<a href=\"package-stream_channel_stream_channel\/StreamChannel\/sink.html\">sink<\/a>.done, depending on their underlying cause. Note that the sink may\nsilently drop events if the channel closes before <a href=\"package-stream_channel_stream_channel\/StreamChannel\/sink.html\">sink<\/a>.close is called.<\/p>\n<p>Implementations are strongly encouraged to mix in or extend\n<a href=\"package-stream_channel_stream_channel\/StreamChannelMixin-class.html\">StreamChannelMixin<\/a> to get default implementations of the various instance\nmethods. Adding new methods to this interface will not be considered a\nbreaking change if implementations are also added to <a href=\"package-stream_channel_stream_channel\/StreamChannelMixin-class.html\">StreamChannelMixin<\/a>.<\/p>\n<p>Implementations must provide the following guarantees:<\/p>\n<ul>\n<li>\n<p>The stream is single-subscription, and must follow all the guarantees of\nsingle-subscription streams.<\/p>\n<\/li>\n<li>\n<p>Closing the sink causes the stream to close before it emits any more\nevents.<\/p>\n<\/li>\n<li>\n<p>After the stream closes, the sink is automatically closed. If this\nhappens, sink methods should silently drop their arguments until\n<a href=\"package-stream_channel_stream_channel\/StreamChannel\/sink.html\">sink<\/a>.close is called.<\/p>\n<\/li>\n<li>\n<p>If the stream closes before it has a listener, the sink should silently\ndrop events if possible.<\/p>\n<\/li>\n<li>\n<p>Canceling the stream's subscription has no effect on the sink. The channel\nmust still be able to respond to the other endpoint closing the channel\neven after the subscription has been canceled.<\/p>\n<\/li>\n<li>\n<p>The sink <em>either<\/em> forwards errors to the other endpoint <em>or<\/em> closes as\nsoon as an error is added and forwards that error to the <a href=\"package-stream_channel_stream_channel\/StreamChannel\/sink.html\">sink<\/a>.done\nfuture.<\/p>\n<\/li>\n<\/ul>\n<p>These guarantees allow users to interact uniformly with all implementations,\nand ensure that either endpoint closing the stream produces consistent\nbehavior.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-stream_channel_stream_channel\/StreamChannel-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "stream_channel",
+    "name": "stream_channel.StreamChannel",
+    "shortname": "StreamChannel",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "StreamChannel",
-            "type": "",
             "desc": "<p>Creates a new <a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a> that communicates over <code>stream<\/code> and <code>sink<\/code>.<\/p>\n<p>Note that this stream\/sink pair must provide the guarantees listed in the\n<a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a> documentation. If they don't do so natively,\n<a href=\"package-stream_channel_stream_channel\/StreamChannel\/StreamChannel.withGuarantees.html\">StreamChannel.withGuarantees<\/a> should be used instead.<\/p>\n    ",
-            "static": false,
-            "memberOf": "stream_channel.StreamChannel",
-            "sig": "",
-            "params": [
-                {
-                    "name": "stream",
-                    "type": "dart:async.Stream",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "sink",
-                    "type": "dart:async.StreamSink",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "package-stream_channel_stream_channel\/StreamChannel\/StreamChannel.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory StreamChannel(Stream&lt;T&gt; stream, StreamSink&lt;T&gt; sink) =&gt;\n    new _StreamChannel&lt;T&gt;(stream, sink);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "cast",
-            "type": "stream_channel.StreamChannel",
-            "desc": "<p>Returns a copy of this with the generic type coerced to <code>S<\/code>.<\/p>\n<p>If any events emitted by <a href=\"package-stream_channel_stream_channel\/StreamChannel\/stream.html\">stream<\/a> aren't of type <code>S<\/code>, they're converted\ninto <a href=\"dart-core\/CastError-class.html\">CastError<\/a> events. Similarly, if any events are added to <a href=\"package-stream_channel_stream_channel\/StreamChannel\/sink.html\">sink<\/a> that\naren't of type <code>S<\/code>, a <a href=\"dart-core\/CastError-class.html\">CastError<\/a> is thrown.<\/p>\n    ",
-            "static": false,
-            "memberOf": "stream_channel.StreamChannel",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-stream_channel_stream_channel\/StreamChannel\/cast.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;S&gt; cast&lt;S&gt;();<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "changeSink",
-            "type": "stream_channel.StreamChannel",
-            "desc": "<p>Returns a copy of this with <code>sink<\/code> replaced by <code>change<\/code>'s return\nvalue.<\/p>\n    ",
-            "static": false,
-            "memberOf": "stream_channel.StreamChannel",
-            "sig": "",
-            "params": [
-                {
-                    "name": "sink",
-                    "type": "dart:async.StreamSink",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "sink",
-                    "type": "dart:async.StreamSink",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-stream_channel_stream_channel\/StreamChannel\/changeSink.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;T&gt; changeSink(StreamSink&lt;T&gt; change(StreamSink&lt;T&gt; sink));<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "changeStream",
-            "type": "stream_channel.StreamChannel",
-            "desc": "<p>Returns a copy of this with <code>stream<\/code> replaced by <code>change<\/code>'s return\nvalue.<\/p>\n    ",
-            "static": false,
-            "memberOf": "stream_channel.StreamChannel",
-            "sig": "",
-            "params": [
-                {
-                    "name": "stream",
-                    "type": "dart:async.Stream",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "stream",
-                    "type": "dart:async.Stream",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-stream_channel_stream_channel\/StreamChannel\/changeStream.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;T&gt; changeStream(Stream&lt;T&gt; change(Stream&lt;T&gt; stream));<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "pipe",
+            "href": "package-stream_channel_stream_channel\/StreamChannel\/StreamChannel.html",
+            "isDeprecated": "0",
             "type": "",
-            "desc": "<p>Connects this to <code>other<\/code>, so that any values emitted by either are sent\ndirectly to the other.<\/p>\n    ",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "stream_channel.StreamChannel",
-            "sig": "",
+            "params": [
+                {
+                    "name": "sink",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:async.StreamSink"
+                },
+                {
+                    "name": "stream",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:async.Stream"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns a copy of this with the generic type coerced to <code>S<\/code>.<\/p>\n<p>If any events emitted by <a href=\"package-stream_channel_stream_channel\/StreamChannel\/stream.html\">stream<\/a> aren't of type <code>S<\/code>, they're converted\ninto <a href=\"dart-core\/CastError-class.html\">CastError<\/a> events. Similarly, if any events are added to <a href=\"package-stream_channel_stream_channel\/StreamChannel\/sink.html\">sink<\/a> that\naren't of type <code>S<\/code>, a <a href=\"dart-core\/CastError-class.html\">CastError<\/a> is thrown.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;S&gt; cast&lt;S&gt;();<\/code><\/pre>\n    ",
+            "href": "package-stream_channel_stream_channel\/StreamChannel\/cast.html",
+            "isDeprecated": "0",
+            "type": "stream_channel.StreamChannel",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "stream_channel.StreamChannel",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns a copy of this with <code>sink<\/code> replaced by <code>change<\/code>'s return\nvalue.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;T&gt; changeSink(StreamSink&lt;T&gt; change(StreamSink&lt;T&gt; sink));<\/code><\/pre>\n    ",
+            "href": "package-stream_channel_stream_channel\/StreamChannel\/changeSink.html",
+            "isDeprecated": "0",
+            "type": "stream_channel.StreamChannel",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "stream_channel.StreamChannel",
+            "params": [
+                {
+                    "name": "sink",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:async.StreamSink"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns a copy of this with <code>stream<\/code> replaced by <code>change<\/code>'s return\nvalue.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;T&gt; changeStream(Stream&lt;T&gt; change(Stream&lt;T&gt; stream));<\/code><\/pre>\n    ",
+            "href": "package-stream_channel_stream_channel\/StreamChannel\/changeStream.html",
+            "isDeprecated": "0",
+            "type": "stream_channel.StreamChannel",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "stream_channel.StreamChannel",
+            "params": [
+                {
+                    "name": "stream",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:async.Stream"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Connects this to <code>other<\/code>, so that any values emitted by either are sent\ndirectly to the other.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void pipe(StreamChannel&lt;T&gt; other);<\/code><\/pre>\n    ",
+            "href": "package-stream_channel_stream_channel\/StreamChannel\/pipe.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "stream_channel.StreamChannel",
             "params": [
                 {
                     "name": "other",
-                    "type": "stream_channel.StreamChannel",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "stream_channel.StreamChannel"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-stream_channel_stream_channel\/StreamChannel\/pipe.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void pipe(StreamChannel&lt;T&gt; other);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "transform",
-            "type": "stream_channel.StreamChannel",
             "desc": "<p>Transforms this using <code>transformer<\/code>.<\/p>\n<p>This is identical to calling <code>transformer.bind(channel)<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "stream_channel.StreamChannel",
-            "sig": "",
-            "params": [
-                {
-                    "name": "transformer",
-                    "type": "stream_channel.StreamChannelTransformer",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-stream_channel_stream_channel\/StreamChannel\/transform.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;S&gt; transform&lt;S&gt;(StreamChannelTransformer&lt;S, T&gt; transformer);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "package-stream_channel_stream_channel\/StreamChannel\/transform.html",
+            "isDeprecated": "0",
+            "type": "stream_channel.StreamChannel",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "stream_channel.StreamChannel",
+            "params": [
+                {
+                    "name": "transformer",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "stream_channel.StreamChannelTransformer"
+                }
+            ]
         },
         {
-            "name": "transformSink",
-            "type": "stream_channel.StreamChannel",
             "desc": "<p>Transforms only the <a href=\"package-stream_channel_stream_channel\/StreamChannel\/sink.html\">sink<\/a> component of this using <code>transformer<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "stream_channel.StreamChannel",
-            "sig": "",
-            "params": [
-                {
-                    "name": "transformer",
-                    "type": "async.StreamSinkTransformer",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-stream_channel_stream_channel\/StreamChannel\/transformSink.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;T&gt; transformSink(StreamSinkTransformer&lt;T, T&gt; transformer);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "transformStream",
+            "href": "package-stream_channel_stream_channel\/StreamChannel\/transformSink.html",
+            "isDeprecated": "0",
             "type": "stream_channel.StreamChannel",
-            "desc": "<p>Transforms only the <a href=\"package-stream_channel_stream_channel\/StreamChannel\/stream.html\">stream<\/a> component of this using <code>transformer<\/code>.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "stream_channel.StreamChannel",
-            "sig": "",
             "params": [
                 {
                     "name": "transformer",
-                    "type": "dart:async.StreamTransformer",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "async.StreamSinkTransformer"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-stream_channel_stream_channel\/StreamChannel\/transformStream.html",
+            ]
+        },
+        {
+            "desc": "<p>Transforms only the <a href=\"package-stream_channel_stream_channel\/StreamChannel\/stream.html\">stream<\/a> component of this using <code>transformer<\/code>.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;T&gt; transformStream(StreamTransformer&lt;T, T&gt; transformer);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "StreamChannel.withCloseGuarantee",
-            "type": "",
-            "desc": "<p>Creates a new <a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a> that communicates over <code>stream<\/code> and <code>sink<\/code>.<\/p>\n<p>This specifically enforces the second guarantee: closing the sink causes\nthe stream to close before it emits any more events. This guarantee is\ninvalidated when an asynchronous gap is added between the original\nstream's event dispatch and the returned stream's, for example by\ntransforming it with a <a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a>. This is a lighter-weight way\nof preserving that guarantee in particular than\n<a href=\"package-stream_channel_stream_channel\/StreamChannel\/StreamChannel.withGuarantees.html\">StreamChannel.withGuarantees<\/a>.<\/p>\n    ",
+            "href": "package-stream_channel_stream_channel\/StreamChannel\/transformStream.html",
+            "isDeprecated": "0",
+            "type": "stream_channel.StreamChannel",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "stream_channel.StreamChannel",
-            "sig": "",
             "params": [
                 {
-                    "name": "stream",
-                    "type": "dart:async.Stream",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "transformer",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "sink",
-                    "type": "dart:async.StreamSink",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:async.StreamTransformer"
                 }
-            ],
-            "isConstructor": true,
-            "href": "package-stream_channel_stream_channel\/StreamChannel\/StreamChannel.withCloseGuarantee.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory StreamChannel.withCloseGuarantee(\n        Stream&lt;T&gt; stream, StreamSink&lt;T&gt; sink) =&gt;\n    new CloseGuaranteeChannel(stream, sink);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "StreamChannel.withGuarantees",
-            "type": "",
-            "desc": "<p>Creates a new <a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a> that communicates over <code>stream<\/code> and <code>sink<\/code>.<\/p>\n<p>Unlike <a href=\"package-stream_channel_stream_channel\/StreamChannel\/StreamChannel.html\">new StreamChannel<\/a>, this enforces the guarantees listed in the\n<a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a> documentation. This makes it somewhat less efficient than\njust wrapping a stream and a sink directly, so <a href=\"package-stream_channel_stream_channel\/StreamChannel\/StreamChannel.html\">new StreamChannel<\/a> should\nbe used when the guarantees are provided natively.<\/p>\n<p>If <code>allowSinkErrors<\/code> is <code>false<\/code>, errors are not allowed to be passed to\n<code>sink<\/code>. If any are, the connection will close and the error will be\nforwarded to <code>sink<\/code>.done.<\/p>\n    ",
-            "static": false,
-            "memberOf": "stream_channel.StreamChannel",
-            "sig": "",
-            "params": [
-                {
-                    "name": "stream",
-                    "type": "dart:async.Stream",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "sink",
-                    "type": "dart:async.StreamSink",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "allowSinkErrors",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "package-stream_channel_stream_channel\/StreamChannel\/StreamChannel.withGuarantees.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory StreamChannel.withGuarantees(Stream&lt;T&gt; stream, StreamSink&lt;T&gt; sink,\n        {bool allowSinkErrors: true}) =&gt;\n    new GuaranteeChannel(stream, sink, allowSinkErrors: allowSinkErrors);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "sink",
-            "type": "dart:async.StreamSink",
-            "types": [],
             "desc": "<p>The sink for sending values to the other endpoint.<\/p>\n        ",
-            "memberOf": "stream_channel.StreamChannel",
-            "isConstant": false,
-            "href": "package-stream_channel_stream_channel\/StreamChannel\/sink.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">StreamSink&lt;T&gt; get sink;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-stream_channel_stream_channel\/StreamChannel\/sink.html",
+            "isDeprecated": "0",
+            "type": "dart:async.StreamSink",
+            "memberOf": "stream_channel.StreamChannel",
+            "params": []
         },
         {
-            "name": "stream",
-            "type": "dart:async.Stream",
-            "types": [],
             "desc": "<p>The single-subscription stream that emits values from the other endpoint.<\/p>\n        ",
-            "memberOf": "stream_channel.StreamChannel",
-            "isConstant": false,
-            "href": "package-stream_channel_stream_channel\/StreamChannel\/stream.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; get stream;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-stream_channel_stream_channel\/StreamChannel\/stream.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Stream",
+            "memberOf": "stream_channel.StreamChannel",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-stream_channel_stream_channel\/StreamChannel-class.html",
-    "desc": "<p>An abstract class representing a two-way communication channel.<\/p>\n<p>Users should consider the <a href=\"package-stream_channel_stream_channel\/StreamChannel\/stream.html\">stream<\/a> emitting a \"done\" event to be the\ncanonical indicator that the channel has closed. If they wish to close the\nchannel, they should close the <a href=\"package-stream_channel_stream_channel\/StreamChannel\/sink.html\">sink<\/a>\u2014canceling the stream subscription is\nnot sufficient. Protocol errors may be emitted through the stream or through\n<a href=\"package-stream_channel_stream_channel\/StreamChannel\/sink.html\">sink<\/a>.done, depending on their underlying cause. Note that the sink may\nsilently drop events if the channel closes before <a href=\"package-stream_channel_stream_channel\/StreamChannel\/sink.html\">sink<\/a>.close is called.<\/p>\n<p>Implementations are strongly encouraged to mix in or extend\n<a href=\"package-stream_channel_stream_channel\/StreamChannelMixin-class.html\">StreamChannelMixin<\/a> to get default implementations of the various instance\nmethods. Adding new methods to this interface will not be considered a\nbreaking change if implementations are also added to <a href=\"package-stream_channel_stream_channel\/StreamChannelMixin-class.html\">StreamChannelMixin<\/a>.<\/p>\n<p>Implementations must provide the following guarantees:<\/p>\n<ul>\n<li>\n<p>The stream is single-subscription, and must follow all the guarantees of\nsingle-subscription streams.<\/p>\n<\/li>\n<li>\n<p>Closing the sink causes the stream to close before it emits any more\nevents.<\/p>\n<\/li>\n<li>\n<p>After the stream closes, the sink is automatically closed. If this\nhappens, sink methods should silently drop their arguments until\n<a href=\"package-stream_channel_stream_channel\/StreamChannel\/sink.html\">sink<\/a>.close is called.<\/p>\n<\/li>\n<li>\n<p>If the stream closes before it has a listener, the sink should silently\ndrop events if possible.<\/p>\n<\/li>\n<li>\n<p>Canceling the stream's subscription has no effect on the sink. The channel\nmust still be able to respond to the other endpoint closing the channel\neven after the subscription has been canceled.<\/p>\n<\/li>\n<li>\n<p>The sink <em>either<\/em> forwards errors to the other endpoint <em>or<\/em> closes as\nsoon as an error is added and forwards that error to the <a href=\"package-stream_channel_stream_channel\/StreamChannel\/sink.html\">sink<\/a>.done\nfuture.<\/p>\n<\/li>\n<\/ul>\n<p>These guarantees allow users to interact uniformly with all implementations,\nand ensure that either endpoint closing the stream produces consistent\nbehavior.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "StreamChannel"
+    ]
 }

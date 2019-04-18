@@ -1,308 +1,273 @@
 {
-    "name": "vector_math_geometry.GeometryGenerator",
-    "extends": [],
+    "desc": null,
+    "dtype": "class",
+    "example": null,
+    "href": "vector_math_geometry\/GeometryGenerator-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "vector_math_geometry",
+    "name": "vector_math_geometry.GeometryGenerator",
+    "shortname": "GeometryGenerator",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "GeometryGenerator",
+            "desc": null,
+            "example": null,
+            "href": "vector_math_geometry\/GeometryGenerator\/GeometryGenerator.html",
+            "isDeprecated": "0",
             "type": "",
-            "desc": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "vector_math_geometry.GeometryGenerator",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "vector_math_geometry\/GeometryGenerator\/GeometryGenerator.html",
-            "example": "",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "createGeometry",
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">MeshGeometry createGeometry(\n    {GeometryGeneratorFlags flags, List&lt;GeometryFilter&gt; filters}) {\n  flags ??= new GeometryGeneratorFlags();\n\n  VertexAttrib positionAttrib;\n  VertexAttrib texCoordAttrib;\n  VertexAttrib normalAttrib;\n  VertexAttrib tangentAttrib;\n\n  Vector2List texCoordView;\n  Vector3List positionView;\n  Vector3List normalView;\n  Vector4List tangentView;\n\n  final List&lt;VertexAttrib&gt; attribs = &lt;VertexAttrib&gt;[];\n\n  positionAttrib = new VertexAttrib('POSITION', 3, 'float');\n  attribs.add(positionAttrib);\n\n  if (flags.texCoords || flags.tangents) {\n    texCoordAttrib = new VertexAttrib('TEXCOORD0', 2, 'float');\n    attribs.add(texCoordAttrib);\n  }\n\n  if (flags.normals || flags.tangents) {\n    normalAttrib = new VertexAttrib('NORMAL', 3, 'float');\n    attribs.add(normalAttrib);\n  }\n\n  if (flags.tangents) {\n    tangentAttrib = new VertexAttrib('TANGENT', 4, 'float');\n    attribs.add(tangentAttrib);\n  }\n\n  MeshGeometry mesh = new MeshGeometry(vertexCount, attribs)\n    ..indices = new Uint16List(indexCount);\n  generateIndices(mesh.indices);\n\n  VectorList&lt;Vector&gt; view = mesh.getViewForAttrib('POSITION');\n  if (view is Vector3List) {\n    positionView = view;\n    generateVertexPositions(positionView, mesh.indices);\n  }\n\n  if (flags.texCoords || flags.tangents) {\n    view = mesh.getViewForAttrib('TEXCOORD0');\n    if (view is Vector2List) {\n      texCoordView = view;\n      generateVertexTexCoords(texCoordView, positionView, mesh.indices);\n    }\n  }\n\n  if (flags.normals || flags.tangents) {\n    view = mesh.getViewForAttrib('NORMAL');\n    if (view is Vector3List) {\n      normalView = view;\n      generateVertexNormals(normalView, positionView, mesh.indices);\n    }\n  }\n\n  if (flags.tangents) {\n    view = mesh.getViewForAttrib('TANGENT');\n    if (view is Vector4List) {\n      tangentView = view;\n      generateVertexTangents(\n          tangentView, positionView, normalView, texCoordView, mesh.indices);\n    }\n  }\n\n  if (filters != null) {\n    for (GeometryFilter filter in filters) {\n      if (filter.inplace &amp;&amp; filter is InplaceGeometryFilter) {\n        filter.filterInplace(mesh);\n      } else {\n        mesh = filter.filter(mesh);\n      }\n    }\n  }\n\n  return mesh;\n}<\/code><\/pre>\n    ",
+            "href": "vector_math_geometry\/GeometryGenerator\/createGeometry.html",
+            "isDeprecated": "0",
             "type": "vector_math_geometry.MeshGeometry",
-            "desc": "",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "vector_math_geometry.GeometryGenerator",
-            "sig": "",
             "params": [
-                {
-                    "name": "flags",
-                    "type": "vector_math_geometry.GeometryGeneratorFlags",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
                 {
                     "name": "filters",
-                    "type": "dart:core.List<vector_math_geometry.GeometryFilter>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.List",
-                        "vector_math_geometry.GeometryFilter"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.List<vector_math_geometry.GeometryFilter>"
+                },
+                {
+                    "name": "flags",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_geometry.GeometryGeneratorFlags"
                 }
-            ],
-            "isConstructor": false,
-            "href": "vector_math_geometry\/GeometryGenerator\/createGeometry.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">MeshGeometry createGeometry(\n    {GeometryGeneratorFlags flags, List&lt;GeometryFilter&gt; filters}) {\n  flags ??= new GeometryGeneratorFlags();\n\n  VertexAttrib positionAttrib;\n  VertexAttrib texCoordAttrib;\n  VertexAttrib normalAttrib;\n  VertexAttrib tangentAttrib;\n\n  Vector2List texCoordView;\n  Vector3List positionView;\n  Vector3List normalView;\n  Vector4List tangentView;\n\n  final List&lt;VertexAttrib&gt; attribs = &lt;VertexAttrib&gt;[];\n\n  positionAttrib = new VertexAttrib('POSITION', 3, 'float');\n  attribs.add(positionAttrib);\n\n  if (flags.texCoords || flags.tangents) {\n    texCoordAttrib = new VertexAttrib('TEXCOORD0', 2, 'float');\n    attribs.add(texCoordAttrib);\n  }\n\n  if (flags.normals || flags.tangents) {\n    normalAttrib = new VertexAttrib('NORMAL', 3, 'float');\n    attribs.add(normalAttrib);\n  }\n\n  if (flags.tangents) {\n    tangentAttrib = new VertexAttrib('TANGENT', 4, 'float');\n    attribs.add(tangentAttrib);\n  }\n\n  MeshGeometry mesh = new MeshGeometry(vertexCount, attribs)\n    ..indices = new Uint16List(indexCount);\n  generateIndices(mesh.indices);\n\n  VectorList&lt;Vector&gt; view = mesh.getViewForAttrib('POSITION');\n  if (view is Vector3List) {\n    positionView = view;\n    generateVertexPositions(positionView, mesh.indices);\n  }\n\n  if (flags.texCoords || flags.tangents) {\n    view = mesh.getViewForAttrib('TEXCOORD0');\n    if (view is Vector2List) {\n      texCoordView = view;\n      generateVertexTexCoords(texCoordView, positionView, mesh.indices);\n    }\n  }\n\n  if (flags.normals || flags.tangents) {\n    view = mesh.getViewForAttrib('NORMAL');\n    if (view is Vector3List) {\n      normalView = view;\n      generateVertexNormals(normalView, positionView, mesh.indices);\n    }\n  }\n\n  if (flags.tangents) {\n    view = mesh.getViewForAttrib('TANGENT');\n    if (view is Vector4List) {\n      tangentView = view;\n      generateVertexTangents(\n          tangentView, positionView, normalView, texCoordView, mesh.indices);\n    }\n  }\n\n  if (filters != null) {\n    for (GeometryFilter filter in filters) {\n      if (filter.inplace &amp;&amp; filter is InplaceGeometryFilter) {\n        filter.filterInplace(mesh);\n      } else {\n        mesh = filter.filter(mesh);\n      }\n    }\n  }\n\n  return mesh;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "generateIndices",
-            "type": "",
-            "desc": "",
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void generateIndices(Uint16List indices);<\/code><\/pre>\n    ",
+            "href": "vector_math_geometry\/GeometryGenerator\/generateIndices.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "vector_math_geometry.GeometryGenerator",
-            "sig": "",
             "params": [
                 {
                     "name": "indices",
-                    "type": "dart:typed_data.Uint16List",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:typed_data.Uint16List"
                 }
-            ],
-            "isConstructor": false,
-            "href": "vector_math_geometry\/GeometryGenerator\/generateIndices.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void generateIndices(Uint16List indices);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "generateVertexNormals",
-            "type": "",
-            "desc": "",
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void generateVertexNormals(\n    Vector3List normals, Vector3List positions, Uint16List indices) {\n  generateNormals(normals, positions, indices);\n}<\/code><\/pre>\n    ",
+            "href": "vector_math_geometry\/GeometryGenerator\/generateVertexNormals.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "vector_math_geometry.GeometryGenerator",
-            "sig": "",
             "params": [
+                {
+                    "name": "indices",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:typed_data.Uint16List"
+                },
                 {
                     "name": "normals",
-                    "type": "vector_math_lists.Vector3List",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_lists.Vector3List"
                 },
                 {
                     "name": "positions",
-                    "type": "vector_math_lists.Vector3List",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "indices",
-                    "type": "dart:typed_data.Uint16List",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_lists.Vector3List"
                 }
-            ],
-            "isConstructor": false,
-            "href": "vector_math_geometry\/GeometryGenerator\/generateVertexNormals.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void generateVertexNormals(\n    Vector3List normals, Vector3List positions, Uint16List indices) {\n  generateNormals(normals, positions, indices);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "generateVertexPositions",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "vector_math_geometry.GeometryGenerator",
-            "sig": "",
-            "params": [
-                {
-                    "name": "positions",
-                    "type": "vector_math_lists.Vector3List",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "indices",
-                    "type": "dart:typed_data.Uint16List",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "vector_math_geometry\/GeometryGenerator\/generateVertexPositions.html",
+            "desc": null,
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void generateVertexPositions(Vector3List positions, Uint16List indices);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "generateVertexTangents",
-            "type": "",
-            "desc": "",
+            "href": "vector_math_geometry\/GeometryGenerator\/generateVertexPositions.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "vector_math_geometry.GeometryGenerator",
-            "sig": "",
             "params": [
+                {
+                    "name": "indices",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:typed_data.Uint16List"
+                },
+                {
+                    "name": "positions",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_lists.Vector3List"
+                }
+            ]
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void generateVertexTangents(Vector4List tangents, Vector3List positions,\n    Vector3List normals, Vector2List texCoords, Uint16List indices) {\n  generateTangents(tangents, positions, normals, texCoords, indices);\n}<\/code><\/pre>\n    ",
+            "href": "vector_math_geometry\/GeometryGenerator\/generateVertexTangents.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "vector_math_geometry.GeometryGenerator",
+            "params": [
+                {
+                    "name": "indices",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:typed_data.Uint16List"
+                },
+                {
+                    "name": "normals",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_lists.Vector3List"
+                },
+                {
+                    "name": "positions",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_lists.Vector3List"
+                },
                 {
                     "name": "tangents",
-                    "type": "vector_math_lists.Vector4List",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "positions",
-                    "type": "vector_math_lists.Vector3List",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "normals",
-                    "type": "vector_math_lists.Vector3List",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_lists.Vector4List"
                 },
                 {
                     "name": "texCoords",
-                    "type": "vector_math_lists.Vector2List",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "indices",
-                    "type": "dart:typed_data.Uint16List",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_lists.Vector2List"
                 }
-            ],
-            "isConstructor": false,
-            "href": "vector_math_geometry\/GeometryGenerator\/generateVertexTangents.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void generateVertexTangents(Vector4List tangents, Vector3List positions,\n    Vector3List normals, Vector2List texCoords, Uint16List indices) {\n  generateTangents(tangents, positions, normals, texCoords, indices);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "generateVertexTexCoords",
-            "type": "",
-            "desc": "",
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void generateVertexTexCoords(\n    Vector2List texCoords, Vector3List positions, Uint16List indices) {\n  for (int i = 0; i &lt; positions.length; ++i) {\n    final Vector3 p = positions[i];\n\n    \/\/ These are TERRIBLE texture coords, but it's better than nothing.\n    \/\/ Override this function and put better ones in place!\n    texCoords[i] = new Vector2(p.x + p.z, p.y + p.z);\n  }\n}<\/code><\/pre>\n    ",
+            "href": "vector_math_geometry\/GeometryGenerator\/generateVertexTexCoords.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "vector_math_geometry.GeometryGenerator",
-            "sig": "",
             "params": [
                 {
-                    "name": "texCoords",
-                    "type": "vector_math_lists.Vector2List",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "indices",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:typed_data.Uint16List"
                 },
                 {
                     "name": "positions",
-                    "type": "vector_math_lists.Vector3List",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_lists.Vector3List"
                 },
                 {
-                    "name": "indices",
-                    "type": "dart:typed_data.Uint16List",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "texCoords",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_lists.Vector2List"
                 }
-            ],
-            "isConstructor": false,
-            "href": "vector_math_geometry\/GeometryGenerator\/generateVertexTexCoords.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void generateVertexTexCoords(\n    Vector2List texCoords, Vector3List positions, Uint16List indices) {\n  for (int i = 0; i &lt; positions.length; ++i) {\n    final Vector3 p = positions[i];\n\n    \/\/ These are TERRIBLE texture coords, but it's better than nothing.\n    \/\/ Override this function and put better ones in place!\n    texCoords[i] = new Vector2(p.x + p.z, p.y + p.z);\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "name": "indexCount",
-            "type": "dart:core.int",
-            "types": [],
-            "desc": "",
-            "memberOf": "vector_math_geometry.GeometryGenerator",
-            "isConstant": false,
-            "href": "vector_math_geometry\/GeometryGenerator\/indexCount.html",
+            "desc": null,
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get indexCount;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "vector_math_geometry\/GeometryGenerator\/indexCount.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "vector_math_geometry.GeometryGenerator",
+            "params": []
         },
         {
-            "name": "vertexCount",
-            "type": "dart:core.int",
-            "types": [],
-            "desc": "",
-            "memberOf": "vector_math_geometry.GeometryGenerator",
-            "isConstant": false,
-            "href": "vector_math_geometry\/GeometryGenerator\/vertexCount.html",
+            "desc": null,
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get vertexCount;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "vector_math_geometry\/GeometryGenerator\/vertexCount.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "vector_math_geometry.GeometryGenerator",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [
-        "vector_math_geometry.CircleGenerator",
-        "vector_math_geometry.CubeGenerator",
-        "vector_math_geometry.CylinderGenerator",
-        "vector_math_geometry.RingGenerator",
-        "vector_math_geometry.SphereGenerator"
-    ],
-    "realImplementors": [
-        "vector_math_geometry.CircleGenerator",
-        "vector_math_geometry.CubeGenerator",
-        "vector_math_geometry.CylinderGenerator",
-        "vector_math_geometry.RingGenerator",
-        "vector_math_geometry.SphereGenerator"
-    ],
-    "cn": [],
-    "href": "vector_math_geometry\/GeometryGenerator-class.html",
-    "desc": "",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "GeometryGenerator"
+    ]
 }

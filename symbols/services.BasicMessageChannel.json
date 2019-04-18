@@ -1,172 +1,136 @@
 {
-    "name": "services.BasicMessageChannel",
-    "extends": [],
+    "desc": "<p>A named channel for communicating with platform plugins using asynchronous\nmessage passing.<\/p>\n<p>Messages are encoded into binary before being sent, and binary messages\nreceived are decoded into Dart values. The <a href=\"services\/MessageCodec-class.html\">MessageCodec<\/a> used must be\ncompatible with the one used by the platform plugin. This can be achieved\nby creating a basic message channel counterpart of this channel on the\nplatform side. The Dart type of messages sent and received is <code>T<\/code>,\nbut only the values supported by the specified <a href=\"services\/MessageCodec-class.html\">MessageCodec<\/a> can be used.\nThe use of unsupported values should be considered programming errors, and\nwill result in exceptions being thrown. The null message is supported\nfor all codecs.<\/p>\n<p>The logical identity of the channel is given by its name. Identically named\nchannels will interfere with each other's communication.<\/p>\n<p>See: <a href=\"https:\/\/flutter.io\/platform-channels\/\">flutter.io\/platform-channels\/<\/a><\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "services\/BasicMessageChannel-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "services",
+    "name": "services.BasicMessageChannel",
+    "shortname": "BasicMessageChannel",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "BasicMessageChannel",
-            "type": "",
             "desc": "<p>Creates a <a href=\"services\/BasicMessageChannel-class.html\">BasicMessageChannel<\/a> with the specified <code>name<\/code> and <code>codec<\/code>.<\/p>\n<p>Neither <code>name<\/code> nor <code>codec<\/code> may be null.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const BasicMessageChannel(this.name, this.codec);<\/code><\/pre>\n    ",
+            "href": "services\/BasicMessageChannel\/BasicMessageChannel.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "services.BasicMessageChannel",
-            "sig": "",
             "params": [
-                {
-                    "name": "name",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
                 {
                     "name": "codec",
-                    "type": "services.MessageCodec",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "services.MessageCodec"
+                },
+                {
+                    "name": "name",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": true,
-            "href": "services\/BasicMessageChannel\/BasicMessageChannel.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const BasicMessageChannel(this.name, this.codec);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "send",
-            "type": "dart:async.Future",
             "desc": "<p>Sends the specified <code>message<\/code> to the platform plugins on this channel.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> which completes to the received response, which may\nbe null.<\/p>\n    ",
-            "static": false,
-            "memberOf": "services.BasicMessageChannel",
-            "sig": "",
-            "params": [
-                {
-                    "name": "message",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "services\/BasicMessageChannel\/send.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; send(T message) async {\n  return codec.decodeMessage(await BinaryMessages.send(name, codec.encodeMessage(message)));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "services\/BasicMessageChannel\/send.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "services.BasicMessageChannel",
+            "params": [
+                {
+                    "name": "message",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
+                }
+            ]
         },
         {
-            "name": "setMessageHandler",
-            "type": "",
             "desc": "<p>Sets a callback for receiving messages from the platform plugins on this\nchannel. Messages may be null.<\/p>\n<p>The given callback will replace the currently registered callback for this\nchannel, if any. To remove the handler, pass null as the <code>handler<\/code>\nargument.<\/p>\n<p>The handler's return value is sent back to the platform plugins as a\nmessage reply. It may be null.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setMessageHandler(Future&lt;T&gt; handler(T message)) {\n  if (handler == null) {\n    BinaryMessages.setMessageHandler(name, null);\n  } else {\n    BinaryMessages.setMessageHandler(name, (ByteData message) async {\n      return codec.encodeMessage(await handler(codec.decodeMessage(message)));\n    });\n  }\n}<\/code><\/pre>\n    ",
+            "href": "services\/BasicMessageChannel\/setMessageHandler.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "services.BasicMessageChannel",
-            "sig": "",
             "params": [
                 {
                     "name": "message",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "message",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "services\/BasicMessageChannel\/setMessageHandler.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setMessageHandler(Future&lt;T&gt; handler(T message)) {\n  if (handler == null) {\n    BinaryMessages.setMessageHandler(name, null);\n  } else {\n    BinaryMessages.setMessageHandler(name, (ByteData message) async {\n      return codec.encodeMessage(await handler(codec.decodeMessage(message)));\n    });\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "setMockMessageHandler",
-            "type": "",
             "desc": "<p>Sets a mock callback for intercepting messages sent on this channel.\nMessages may be null.<\/p>\n<p>The given callback will replace the currently registered mock callback for\nthis channel, if any. To remove the mock handler, pass null as the\n<code>handler<\/code> argument.<\/p>\n<p>The handler's return value is used as a message reply. It may be null.<\/p>\n<p>This is intended for testing. Messages intercepted in this manner are not\nsent to platform plugins.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setMockMessageHandler(Future&lt;T&gt; handler(T message)) {\n  if (handler == null) {\n    BinaryMessages.setMockMessageHandler(name, null);\n  } else {\n    BinaryMessages.setMockMessageHandler(name, (ByteData message) async {\n      return codec.encodeMessage(await handler(codec.decodeMessage(message)));\n    });\n  }\n}<\/code><\/pre>\n    ",
+            "href": "services\/BasicMessageChannel\/setMockMessageHandler.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "services.BasicMessageChannel",
-            "sig": "",
             "params": [
                 {
                     "name": "message",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "message",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "services\/BasicMessageChannel\/setMockMessageHandler.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setMockMessageHandler(Future&lt;T&gt; handler(T message)) {\n  if (handler == null) {\n    BinaryMessages.setMockMessageHandler(name, null);\n  } else {\n    BinaryMessages.setMockMessageHandler(name, (ByteData message) async {\n      return codec.encodeMessage(await handler(codec.decodeMessage(message)));\n    });\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "name": "codec",
-            "type": "services.MessageCodec",
-            "types": [],
             "desc": "<p>The message codec used by this channel, not null.<\/p>\n        ",
-            "memberOf": "services.BasicMessageChannel",
-            "isConstant": false,
-            "href": "services\/BasicMessageChannel\/codec.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final MessageCodec&lt;T&gt; codec\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "services\/BasicMessageChannel\/codec.html",
+            "isDeprecated": "0",
+            "type": "services.MessageCodec",
+            "memberOf": "services.BasicMessageChannel",
+            "params": []
         },
         {
-            "name": "name",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>The logical channel on which communication happens, not null.<\/p>\n        ",
-            "memberOf": "services.BasicMessageChannel",
-            "isConstant": false,
-            "href": "services\/BasicMessageChannel\/name.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String name\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "services\/BasicMessageChannel\/name.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "services.BasicMessageChannel",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "services\/BasicMessageChannel-class.html",
-    "desc": "<p>A named channel for communicating with platform plugins using asynchronous\nmessage passing.<\/p>\n<p>Messages are encoded into binary before being sent, and binary messages\nreceived are decoded into Dart values. The <a href=\"services\/MessageCodec-class.html\">MessageCodec<\/a> used must be\ncompatible with the one used by the platform plugin. This can be achieved\nby creating a basic message channel counterpart of this channel on the\nplatform side. The Dart type of messages sent and received is <code>T<\/code>,\nbut only the values supported by the specified <a href=\"services\/MessageCodec-class.html\">MessageCodec<\/a> can be used.\nThe use of unsupported values should be considered programming errors, and\nwill result in exceptions being thrown. The null message is supported\nfor all codecs.<\/p>\n<p>The logical identity of the channel is given by its name. Identically named\nchannels will interfere with each other's communication.<\/p>\n<p>See: <a href=\"https:\/\/flutter.io\/platform-channels\/\">flutter.io\/platform-channels\/<\/a><\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "BasicMessageChannel"
+    ]
 }

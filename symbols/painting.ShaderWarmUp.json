@@ -1,88 +1,76 @@
 {
-    "name": "painting.ShaderWarmUp",
-    "extends": [],
+    "desc": "<p>Interface for drawing an image to warm up Skia shader compilations.<\/p>\n<p>When Skia first sees a certain type of draw operation on the GPU, it needs\nto compile the corresponding shader. The compilation can be slow (20ms-\n200ms). Having that time as startup latency is often better than having\njank in the middle of an animation.<\/p>\n<p>Therefore, we use this during the <a href=\"painting\/PaintingBinding\/initInstances.html\">PaintingBinding.initInstances<\/a> call to\nmove common shader compilations from animation time to startup time. By\ndefault, a <a href=\"painting\/DefaultShaderWarmUp-class.html\">DefaultShaderWarmUp<\/a> is used. If needed, app developers can\ncreate a custom <a href=\"painting\/ShaderWarmUp-class.html\">ShaderWarmUp<\/a> subclass and hand it to\n<a href=\"painting\/PaintingBinding\/shaderWarmUp.html\">PaintingBinding.shaderWarmUp<\/a> (so it replaces <a href=\"painting\/DefaultShaderWarmUp-class.html\">DefaultShaderWarmUp<\/a>)\nbefore <a href=\"painting\/PaintingBinding\/initInstances.html\">PaintingBinding.initInstances<\/a> is called. Usually, that can be\ndone before calling <a href=\"widgets\/runApp.html\">runApp<\/a>.<\/p>\n<p>To determine whether a draw operation is useful for warming up shaders,\ncheck whether it improves the slowest GPU frame. Also, tracing with\n<code>flutter run --profile --trace-skia<\/code> may reveal whether there is shader-\ncompilation-related jank. If there is such jank, some long\n<code>GrGLProgramBuilder::finalize<\/code> calls would appear in the middle of an\nanimation. Their parent calls, which look like <code>XyzOp<\/code> (e.g., <code>FillRecOp<\/code>,\n<code>CircularRRectOp<\/code>) would suggest Xyz draw operations are causing the\nshaders to be compiled. A useful shader warm-up draw operation would\neliminate such long compilation calls in the animation. To double-check\nthe warm-up, trace with <code>flutter run --profile --trace-skia --start-\npaused<\/code>. The <code>GrGLProgramBuilder<\/code> with the associated <code>XyzOp<\/code> should\nappear during startup rather than in the middle of a later animation.<\/p>\n<p>This warm-up needs to be run on each individual device because the shader\ncompilation depends on the specific GPU hardware and driver a device has. It\ncan't be pre-computed during the Flutter engine compilation as the engine is\ndevice-agnostic.<\/p>\n<p>If no warm-up is desired (e.g., when the startup latency is crucial), set\n<a href=\"painting\/PaintingBinding\/shaderWarmUp.html\">PaintingBinding.shaderWarmUp<\/a> either to a custom ShaderWarmUp with an empty\n<a href=\"painting\/ShaderWarmUp\/warmUpOnCanvas.html\">warmUpOnCanvas<\/a> or null.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"painting\/PaintingBinding\/shaderWarmUp.html\">PaintingBinding.shaderWarmUp<\/a>, the actual instance of <a href=\"painting\/ShaderWarmUp-class.html\">ShaderWarmUp<\/a>\nthat's used to warm up the shaders.<\/li><\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "painting\/ShaderWarmUp-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "painting",
+    "name": "painting.ShaderWarmUp",
+    "shortname": "ShaderWarmUp",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "ShaderWarmUp",
-            "type": "",
             "desc": "<p>Allow const constructors for subclasses.<\/p>\n    ",
-            "static": false,
-            "memberOf": "painting.ShaderWarmUp",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "painting\/ShaderWarmUp\/ShaderWarmUp.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const ShaderWarmUp();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "painting\/ShaderWarmUp\/ShaderWarmUp.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
+            "static": false,
+            "memberOf": "painting.ShaderWarmUp",
+            "params": []
         },
         {
-            "name": "execute",
-            "type": "dart:async.Future",
             "desc": "<p>Construct an offscreen image of <a href=\"painting\/ShaderWarmUp\/size.html\">size<\/a>, and execute <a href=\"painting\/ShaderWarmUp\/warmUpOnCanvas.html\">warmUpOnCanvas<\/a> on a\ncanvas associated with that image.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; execute() async {\n  final ui.PictureRecorder recorder = ui.PictureRecorder();\n  final ui.Canvas canvas = ui.Canvas(recorder);\n\n  await warmUpOnCanvas(canvas);\n\n  final ui.Picture picture = recorder.endRecording();\n  final TimelineTask shaderWarmUpTask = TimelineTask();\n  shaderWarmUpTask.start('Warm-up shader');\n  picture.toImage(size.width.ceil(), size.height.ceil()).then((ui.Image image) {\n    shaderWarmUpTask.finish();\n  });\n}<\/code><\/pre>\n    ",
+            "href": "painting\/ShaderWarmUp\/execute.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.ShaderWarmUp",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "painting\/ShaderWarmUp\/execute.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;void&gt; execute() async {\n  final ui.PictureRecorder recorder = ui.PictureRecorder();\n  final ui.Canvas canvas = ui.Canvas(recorder);\n\n  await warmUpOnCanvas(canvas);\n\n  final ui.Picture picture = recorder.endRecording();\n  final TimelineTask shaderWarmUpTask = TimelineTask();\n  shaderWarmUpTask.start('Warm-up shader');\n  picture.toImage(size.width.ceil(), size.height.ceil()).then((ui.Image image) {\n    shaderWarmUpTask.finish();\n  });\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "warmUpOnCanvas",
-            "type": "dart:async.Future",
             "desc": "<p>Trigger draw operations on a given canvas to warm up GPU shader\ncompilation cache.<\/p>\n<p>To decide which draw operations to be added to your custom warm up\nprocess, try capture an skp using <code>flutter screenshot --observatory-\nport=&lt;port&gt; --type=skia<\/code> and analyze it with <a href=\"https:\/\/debugger.skia.org\">https:\/\/debugger.skia.org<\/a>.\nAlternatively, one may run the app with <code>flutter run --trace-skia<\/code> and\nthen examine the GPU thread in the observatory timeline to see which\nSkia draw operations are commonly used, and which shader compilations\nare causing janks.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nFuture&lt;void&gt; warmUpOnCanvas(ui.Canvas canvas);<\/code><\/pre>\n    ",
+            "href": "painting\/ShaderWarmUp\/warmUpOnCanvas.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.ShaderWarmUp",
-            "sig": "",
             "params": [
                 {
                     "name": "canvas",
-                    "type": "dart:ui.Canvas",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Canvas"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/ShaderWarmUp\/warmUpOnCanvas.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nFuture&lt;void&gt; warmUpOnCanvas(ui.Canvas canvas);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "size",
-            "type": "dart:ui.Size",
-            "types": [],
             "desc": "<p>The size of the warm up image.<\/p>\n<p>The exact size shouldn't matter much as long as it's not too far away from\nthe target device's screen. 1024x1024 is a good choice as it is within an\norder of magnitude of most devices.<\/p>\n<p>A custom shader warm up can override this based on targeted devices.<\/p>\n        ",
-            "memberOf": "painting.ShaderWarmUp",
-            "isConstant": false,
-            "href": "painting\/ShaderWarmUp\/size.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">ui.Size get size =&gt; const ui.Size(1024.0, 1024.0);<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "painting\/ShaderWarmUp\/size.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Size",
+            "memberOf": "painting.ShaderWarmUp",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [
-        "painting.DefaultShaderWarmUp"
-    ],
-    "realImplementors": [
-        "painting.DefaultShaderWarmUp"
-    ],
-    "cn": [],
-    "href": "painting\/ShaderWarmUp-class.html",
-    "desc": "<p>Interface for drawing an image to warm up Skia shader compilations.<\/p>\n<p>When Skia first sees a certain type of draw operation on the GPU, it needs\nto compile the corresponding shader. The compilation can be slow (20ms-\n200ms). Having that time as startup latency is often better than having\njank in the middle of an animation.<\/p>\n<p>Therefore, we use this during the <a href=\"painting\/PaintingBinding\/initInstances.html\">PaintingBinding.initInstances<\/a> call to\nmove common shader compilations from animation time to startup time. By\ndefault, a <a href=\"painting\/DefaultShaderWarmUp-class.html\">DefaultShaderWarmUp<\/a> is used. If needed, app developers can\ncreate a custom <a href=\"painting\/ShaderWarmUp-class.html\">ShaderWarmUp<\/a> subclass and hand it to\n<a href=\"painting\/PaintingBinding\/shaderWarmUp.html\">PaintingBinding.shaderWarmUp<\/a> (so it replaces <a href=\"painting\/DefaultShaderWarmUp-class.html\">DefaultShaderWarmUp<\/a>)\nbefore <a href=\"painting\/PaintingBinding\/initInstances.html\">PaintingBinding.initInstances<\/a> is called. Usually, that can be\ndone before calling <a href=\"widgets\/runApp.html\">runApp<\/a>.<\/p>\n<p>To determine whether a draw operation is useful for warming up shaders,\ncheck whether it improves the slowest GPU frame. Also, tracing with\n<code>flutter run --profile --trace-skia<\/code> may reveal whether there is shader-\ncompilation-related jank. If there is such jank, some long\n<code>GrGLProgramBuilder::finalize<\/code> calls would appear in the middle of an\nanimation. Their parent calls, which look like <code>XyzOp<\/code> (e.g., <code>FillRecOp<\/code>,\n<code>CircularRRectOp<\/code>) would suggest Xyz draw operations are causing the\nshaders to be compiled. A useful shader warm-up draw operation would\neliminate such long compilation calls in the animation. To double-check\nthe warm-up, trace with <code>flutter run --profile --trace-skia --start-\npaused<\/code>. The <code>GrGLProgramBuilder<\/code> with the associated <code>XyzOp<\/code> should\nappear during startup rather than in the middle of a later animation.<\/p>\n<p>This warm-up needs to be run on each individual device because the shader\ncompilation depends on the specific GPU hardware and driver a device has. It\ncan't be pre-computed during the Flutter engine compilation as the engine is\ndevice-agnostic.<\/p>\n<p>If no warm-up is desired (e.g., when the startup latency is crucial), set\n<a href=\"painting\/PaintingBinding\/shaderWarmUp.html\">PaintingBinding.shaderWarmUp<\/a> either to a custom ShaderWarmUp with an empty\n<a href=\"painting\/ShaderWarmUp\/warmUpOnCanvas.html\">warmUpOnCanvas<\/a> or null.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"painting\/PaintingBinding\/shaderWarmUp.html\">PaintingBinding.shaderWarmUp<\/a>, the actual instance of <a href=\"painting\/ShaderWarmUp-class.html\">ShaderWarmUp<\/a>\nthat's used to warm up the shaders.<\/li><\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "ShaderWarmUp"
+    ]
 }

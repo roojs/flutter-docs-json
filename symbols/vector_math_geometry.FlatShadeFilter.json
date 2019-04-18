@@ -1,91 +1,76 @@
 {
+    "desc": null,
+    "dtype": "class",
+    "example": null,
+    "href": "vector_math_geometry\/FlatShadeFilter-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "vector_math_geometry",
     "name": "vector_math_geometry.FlatShadeFilter",
+    "shortname": "FlatShadeFilter",
     "extends": [
         "vector_math_geometry.GeometryFilter",
         "dart:core.Object"
     ],
-    "memberOf": "vector_math_geometry",
     "events": [],
     "methods": [
         {
-            "name": "FlatShadeFilter",
+            "desc": null,
+            "example": null,
+            "href": "vector_math_geometry\/FlatShadeFilter\/FlatShadeFilter.html",
+            "isDeprecated": "0",
             "type": "",
-            "desc": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "vector_math_geometry.FlatShadeFilter",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "vector_math_geometry\/FlatShadeFilter\/FlatShadeFilter.html",
-            "example": "",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "filter",
-            "type": "vector_math_geometry.MeshGeometry",
             "desc": "<p>Returns a copy of the mesh with any filter transforms applied.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nMeshGeometry filter(MeshGeometry mesh) {\n  final List&lt;VertexAttrib&gt; newAttribs =\n      new List&lt;VertexAttrib&gt;.from(mesh.attribs, growable: true);\n\n  if (mesh.getAttrib('NORMAL') == null) {\n    newAttribs.add(new VertexAttrib('NORMAL', 3, 'float'));\n  }\n\n  final MeshGeometry output =\n      new MeshGeometry(mesh.triangleVertexCount, newAttribs);\n\n  final Vector3 p0 = new Vector3.zero(),\n      p1 = new Vector3.zero(),\n      p2 = new Vector3.zero();\n\n  final VectorList&lt;Vector&gt; srcPosition = mesh.getViewForAttrib('POSITION');\n  final VectorList&lt;Vector&gt; destPosition = output.getViewForAttrib('POSITION');\n  final VectorList&lt;Vector&gt; normals = output.getViewForAttrib('NORMAL');\n\n  if (srcPosition is! Vector3List ||\n      destPosition is! Vector3List ||\n      normals is! Vector3List) {\n    return null;\n  }\n\n  final List&lt;VectorList&lt;Vector&gt;&gt; srcAttribs = &lt;VectorList&lt;Vector&gt;&gt;[];\n  final List&lt;VectorList&lt;Vector&gt;&gt; destAttribs = &lt;VectorList&lt;Vector&gt;&gt;[];\n  for (VertexAttrib attrib in mesh.attribs) {\n    if (attrib.name == 'POSITION' || attrib.name == 'NORMAL') {\n      continue;\n    }\n\n    srcAttribs.add(mesh.getViewForAttrib(attrib.name));\n    destAttribs.add(output.getViewForAttrib(attrib.name));\n  }\n\n  for (int i = 0; i &lt; output.length; i += 3) {\n    final int i0 = mesh.indices[i];\n    final int i1 = mesh.indices[i + 1];\n    final int i2 = mesh.indices[i + 2];\n\n    srcPosition..load(i0, p0)..load(i1, p1)..load(i2, p2);\n\n    destPosition[i] = p0;\n    destPosition[i + 1] = p1;\n    destPosition[i + 2] = p2;\n\n    \/\/ Store the normalized cross product of p1 and p2 in p0.\n    p1.sub(p0);\n    p2.sub(p0);\n    p1.crossInto(p2, p0).normalize();\n\n    normals[i] = p0;\n    normals[i + 1] = p0;\n    normals[i + 2] = p0;\n\n    \/\/ Copy the remaining attributes over\n    for (int j = 0; j &lt; srcAttribs.length; ++j) {\n      destAttribs[j][i] = srcAttribs[j][i0];\n      destAttribs[j][i + 1] = srcAttribs[j][i1];\n      destAttribs[j][i + 2] = srcAttribs[j][i2];\n    }\n  }\n\n  return output;\n}<\/code><\/pre>\n    ",
+            "href": "vector_math_geometry\/FlatShadeFilter\/filter.html",
+            "isDeprecated": "0",
+            "type": "vector_math_geometry.MeshGeometry",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "vector_math_geometry.FlatShadeFilter",
-            "sig": "",
             "params": [
                 {
                     "name": "mesh",
-                    "type": "vector_math_geometry.MeshGeometry",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_geometry.MeshGeometry"
                 }
-            ],
-            "isConstructor": false,
-            "href": "vector_math_geometry\/FlatShadeFilter\/filter.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nMeshGeometry filter(MeshGeometry mesh) {\n  final List&lt;VertexAttrib&gt; newAttribs =\n      new List&lt;VertexAttrib&gt;.from(mesh.attribs, growable: true);\n\n  if (mesh.getAttrib('NORMAL') == null) {\n    newAttribs.add(new VertexAttrib('NORMAL', 3, 'float'));\n  }\n\n  final MeshGeometry output =\n      new MeshGeometry(mesh.triangleVertexCount, newAttribs);\n\n  final Vector3 p0 = new Vector3.zero(),\n      p1 = new Vector3.zero(),\n      p2 = new Vector3.zero();\n\n  final VectorList&lt;Vector&gt; srcPosition = mesh.getViewForAttrib('POSITION');\n  final VectorList&lt;Vector&gt; destPosition = output.getViewForAttrib('POSITION');\n  final VectorList&lt;Vector&gt; normals = output.getViewForAttrib('NORMAL');\n\n  if (srcPosition is! Vector3List ||\n      destPosition is! Vector3List ||\n      normals is! Vector3List) {\n    return null;\n  }\n\n  final List&lt;VectorList&lt;Vector&gt;&gt; srcAttribs = &lt;VectorList&lt;Vector&gt;&gt;[];\n  final List&lt;VectorList&lt;Vector&gt;&gt; destAttribs = &lt;VectorList&lt;Vector&gt;&gt;[];\n  for (VertexAttrib attrib in mesh.attribs) {\n    if (attrib.name == 'POSITION' || attrib.name == 'NORMAL') {\n      continue;\n    }\n\n    srcAttribs.add(mesh.getViewForAttrib(attrib.name));\n    destAttribs.add(output.getViewForAttrib(attrib.name));\n  }\n\n  for (int i = 0; i &lt; output.length; i += 3) {\n    final int i0 = mesh.indices[i];\n    final int i1 = mesh.indices[i + 1];\n    final int i2 = mesh.indices[i + 2];\n\n    srcPosition..load(i0, p0)..load(i1, p1)..load(i2, p2);\n\n    destPosition[i] = p0;\n    destPosition[i + 1] = p1;\n    destPosition[i + 2] = p2;\n\n    \/\/ Store the normalized cross product of p1 and p2 in p0.\n    p1.sub(p0);\n    p2.sub(p0);\n    p1.crossInto(p2, p0).normalize();\n\n    normals[i] = p0;\n    normals[i + 1] = p0;\n    normals[i + 2] = p0;\n\n    \/\/ Copy the remaining attributes over\n    for (int j = 0; j &lt; srcAttribs.length; ++j) {\n      destAttribs[j][i] = srcAttribs[j][i0];\n      destAttribs[j][i + 1] = srcAttribs[j][i1];\n      destAttribs[j][i + 2] = srcAttribs[j][i2];\n    }\n  }\n\n  return output;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "generates",
-            "type": "dart:core.List<vector_math_geometry.VertexAttrib>",
-            "types": [
-                "dart:core.List",
-                "vector_math_geometry.VertexAttrib"
-            ],
-            "desc": "",
-            "memberOf": "vector_math_geometry.FlatShadeFilter",
-            "isConstant": false,
-            "href": "vector_math_geometry\/FlatShadeFilter\/generates.html",
+            "desc": null,
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nList&lt;VertexAttrib&gt; get generates =&gt;\n    &lt;VertexAttrib&gt;[new VertexAttrib('NORMAL', 3, 'float')];<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "vector_math_geometry\/FlatShadeFilter\/generates.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<vector_math_geometry.VertexAttrib>",
+            "memberOf": "vector_math_geometry.FlatShadeFilter",
+            "params": []
         },
         {
-            "name": "requires",
-            "type": "dart:core.List<vector_math_geometry.VertexAttrib>",
-            "types": [
-                "dart:core.List",
-                "vector_math_geometry.VertexAttrib"
-            ],
-            "desc": "",
-            "memberOf": "vector_math_geometry.FlatShadeFilter",
-            "isConstant": false,
-            "href": "vector_math_geometry\/FlatShadeFilter\/requires.html",
+            "desc": null,
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nList&lt;VertexAttrib&gt; get requires =&gt;\n    &lt;VertexAttrib&gt;[new VertexAttrib('POSITION', 3, 'float')];<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "vector_math_geometry\/FlatShadeFilter\/requires.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<vector_math_geometry.VertexAttrib>",
+            "memberOf": "vector_math_geometry.FlatShadeFilter",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "vector_math_geometry\/FlatShadeFilter-class.html",
-    "desc": "",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "FlatShadeFilter"
+    ]
 }

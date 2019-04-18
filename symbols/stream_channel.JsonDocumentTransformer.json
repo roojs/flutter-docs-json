@@ -1,118 +1,82 @@
 {
-    "name": "stream_channel.JsonDocumentTransformer",
-    "extends": [],
+    "desc": "<p>A <a href=\"package-stream_channel_stream_channel\/StreamChannelTransformer-class.html\">StreamChannelTransformer<\/a> that transforms JSON documents\u2014strings that\ncontain individual objects encoded as JSON\u2014into decoded Dart objects.<\/p>\n<p>This decodes JSON that's emitted by the transformed channel's stream, and\nencodes objects so that JSON is passed to the transformed channel's sink.<\/p>\n<p>If the transformed channel emits invalid JSON, this emits a\n<a href=\"dart-core\/FormatException-class.html\">FormatException<\/a>. If an unencodable object is added to the sink, it\nsynchronously throws a <a href=\"dart-convert\/JsonUnsupportedObjectError-class.html\">JsonUnsupportedObjectError<\/a>.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-stream_channel_stream_channel\/JsonDocumentTransformer-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "stream_channel",
+    "name": "stream_channel.JsonDocumentTransformer",
+    "shortname": "JsonDocumentTransformer",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "JsonDocumentTransformer",
-            "type": "",
             "desc": "<p>Creates a new transformer.<\/p>\n<p>The <code>reviver<\/code> and <code>toEncodable<\/code> arguments work the same way as the\ncorresponding arguments to <a href=\"dart-convert\/JsonCodec\/JsonCodec.html\">new JsonCodec<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">JsonDocumentTransformer({reviver(key, value), toEncodable(object)})\n    : _codec = new JsonCodec(reviver: reviver, toEncodable: toEncodable);<\/code><\/pre>\n    ",
+            "href": "package-stream_channel_stream_channel\/JsonDocumentTransformer\/JsonDocumentTransformer.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "stream_channel.JsonDocumentTransformer",
-            "sig": "",
             "params": [
                 {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
                     "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "<dynamic>"
+                },
+                {
+                    "name": "object",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "<dynamic>"
                 },
                 {
                     "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "object",
-                    "type": "",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "object",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "type": "<dynamic>"
                 }
-            ],
-            "isConstructor": true,
-            "href": "package-stream_channel_stream_channel\/JsonDocumentTransformer\/JsonDocumentTransformer.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">JsonDocumentTransformer({reviver(key, value), toEncodable(object)})\n    : _codec = new JsonCodec(reviver: reviver, toEncodable: toEncodable);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "bind",
-            "type": "stream_channel.StreamChannel<dart:core.Object>",
             "desc": "<p>Transforms the events sent to and emitted by <code>channel<\/code>.<\/p>\n<p>Creates a new channel. When events are passed to the returned channel's\nsink, the transformer will transform them and pass the transformed\nversions to <code>channel.sink<\/code>. When events are emitted from the\n<code>channel.straem<\/code>, the transformer will transform them and pass the\ntransformed versions to the returned channel's stream.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;Object&gt; bind(StreamChannel&lt;String&gt; channel) {\n  var stream = channel.stream.map(_codec.decode);\n  var sink = new StreamSinkTransformer&lt;Object, String&gt;.fromHandlers(\n      handleData: (data, sink) {\n    sink.add(_codec.encode(data));\n  }).bind(channel.sink);\n  return new StreamChannel.withCloseGuarantee(stream, sink);\n}<\/code><\/pre>\n    ",
+            "href": "package-stream_channel_stream_channel\/JsonDocumentTransformer\/bind.html",
+            "isDeprecated": "0",
+            "type": "stream_channel.StreamChannel<dart:core.Object>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "stream_channel.JsonDocumentTransformer",
-            "sig": "",
             "params": [
                 {
                     "name": "channel",
-                    "type": "stream_channel.StreamChannel<dart:core.String>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "stream_channel.StreamChannel",
-                        "dart:core.String"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "stream_channel.StreamChannel<dart:core.String>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-stream_channel_stream_channel\/JsonDocumentTransformer\/bind.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;Object&gt; bind(StreamChannel&lt;String&gt; channel) {\n  var stream = channel.stream.map(_codec.decode);\n  var sink = new StreamSinkTransformer&lt;Object, String&gt;.fromHandlers(\n      handleData: (data, sink) {\n    sink.add(_codec.encode(data));\n  }).bind(channel.sink);\n  return new StreamChannel.withCloseGuarantee(stream, sink);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "stream_channel.StreamChannel",
-                "dart:core.Object"
             ]
         }
     ],
-    "props": [],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-stream_channel_stream_channel\/JsonDocumentTransformer-class.html",
-    "desc": "<p>A <a href=\"package-stream_channel_stream_channel\/StreamChannelTransformer-class.html\">StreamChannelTransformer<\/a> that transforms JSON documents\u2014strings that\ncontain individual objects encoded as JSON\u2014into decoded Dart objects.<\/p>\n<p>This decodes JSON that's emitted by the transformed channel's stream, and\nencodes objects so that JSON is passed to the transformed channel's sink.<\/p>\n<p>If the transformed channel emits invalid JSON, this emits a\n<a href=\"dart-core\/FormatException-class.html\">FormatException<\/a>. If an unencodable object is added to the sink, it\nsynchronously throws a <a href=\"dart-convert\/JsonUnsupportedObjectError-class.html\">JsonUnsupportedObjectError<\/a>.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "JsonDocumentTransformer"
+    "props": []
 }

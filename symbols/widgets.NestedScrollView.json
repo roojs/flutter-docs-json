@@ -1,5 +1,17 @@
 {
+    "desc": "<p>A scrolling view inside of which can be nested other scrolling views, with\ntheir scroll positions being intrinsically linked.<\/p>\n<p>The most common use case for this widget is a scrollable view with a\nflexible <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a> containing a <a href=\"material\/TabBar-class.html\">TabBar<\/a> in the header (build by\n<a href=\"widgets\/NestedScrollView\/headerSliverBuilder.html\">headerSliverBuilder<\/a>, and with a <a href=\"material\/TabBarView-class.html\">TabBarView<\/a> in the <a href=\"widgets\/NestedScrollView\/body.html\">body<\/a>, such that the\nscrollable view's contents vary based on which tab is visible.<\/p>\n<h2 id=\"motivation\">Motivation<\/h2>\n<p>In a normal <a href=\"widgets\/ScrollView-class.html\">ScrollView<\/a>, there is one set of slivers (the components of the\nscrolling view). If one of those slivers hosted a <a href=\"material\/TabBarView-class.html\">TabBarView<\/a> which scrolls\nin the opposite direction (e.g. allowing the user to swipe horizontally\nbetween the pages represented by the tabs, while the list scrolls\nvertically), then any list inside that <a href=\"material\/TabBarView-class.html\">TabBarView<\/a> would not interact with\nthe outer <a href=\"widgets\/ScrollView-class.html\">ScrollView<\/a>. For example, flinging the inner list to scroll to\nthe top would not cause a collapsed <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a> in the outer <a href=\"widgets\/ScrollView-class.html\">ScrollView<\/a>\nto expand.<\/p>\n<p><a href=\"widgets\/NestedScrollView-class.html\">NestedScrollView<\/a> solves this problem by providing custom\n<a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a>s for the outer <a href=\"widgets\/ScrollView-class.html\">ScrollView<\/a> and the inner <a href=\"widgets\/ScrollView-class.html\">ScrollView<\/a>s\n(those inside the <a href=\"material\/TabBarView-class.html\">TabBarView<\/a>, hooking them together so that they appear,\nto the user, as one coherent scroll view.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows a <a href=\"widgets\/NestedScrollView-class.html\">NestedScrollView<\/a> whose header is the combination of a\n<a href=\"material\/TabBar-class.html\">TabBar<\/a> in a <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a> and whose body is a <a href=\"material\/TabBarView-class.html\">TabBarView<\/a>. It uses a\n<a href=\"widgets\/SliverOverlapAbsorber-class.html\">SliverOverlapAbsorber<\/a>\/<a href=\"widgets\/SliverOverlapInjector-class.html\">SliverOverlapInjector<\/a> pair to make the inner lists\nalign correctly, and it uses <a href=\"widgets\/SafeArea-class.html\">SafeArea<\/a> to avoid any horizontal disturbances\n(e.g. the \"notch\" on iOS when the phone is horizontal). In addition,\n<a href=\"widgets\/PageStorageKey-class.html\">PageStorageKey<\/a>s are used to remember the scroll position of each tab's\nlist.\n<p>In the example below, <code>_tabs<\/code> is a list of strings, one for each tab, giving\nthe tab labels. In a real application, it would be replaced by the actual\ndata model being represented.\n<\/p>\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">DefaultTabController(\n  length: _tabs.length, \/\/ This is the number of tabs.\n  child: NestedScrollView(\n    headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {\n      \/\/ These are the slivers that show up in the \"outer\" scroll view.\n      return &lt;Widget&gt;[\n        SliverOverlapAbsorber(\n          \/\/ This widget takes the overlapping behavior of the SliverAppBar,\n          \/\/ and redirects it to the SliverOverlapInjector below. If it is\n          \/\/ missing, then it is possible for the nested \"inner\" scroll view\n          \/\/ below to end up under the SliverAppBar even when the inner\n          \/\/ scroll view thinks it has not been scrolled.\n          \/\/ This is not necessary if the \"headerSliverBuilder\" only builds\n          \/\/ widgets that do not overlap the next sliver.\n          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),\n          child: SliverAppBar(\n            title: const Text('Books'), \/\/ This is the title in the app bar.\n            pinned: true,\n            expandedHeight: 150.0,\n            \/\/ The \"forceElevated\" property causes the SliverAppBar to show\n            \/\/ a shadow. The \"innerBoxIsScrolled\" parameter is true when the\n            \/\/ inner scroll view is scrolled beyond its \"zero\" point, i.e.\n            \/\/ when it appears to be scrolled below the SliverAppBar.\n            \/\/ Without this, there are cases where the shadow would appear\n            \/\/ or not appear inappropriately, because the SliverAppBar is\n            \/\/ not actually aware of the precise position of the inner\n            \/\/ scroll views.\n            forceElevated: innerBoxIsScrolled,\n            bottom: TabBar(\n              \/\/ These are the widgets to put in each tab in the tab bar.\n              tabs: _tabs.map((String name) =&gt; Tab(text: name)).toList(),\n            ),\n          ),\n        ),\n      ];\n    },\n    body: TabBarView(\n      \/\/ These are the contents of the tab views, below the tabs.\n      children: _tabs.map((String name) {\n        return SafeArea(\n          top: false,\n          bottom: false,\n          child: Builder(\n            \/\/ This Builder is needed to provide a BuildContext that is \"inside\"\n            \/\/ the NestedScrollView, so that sliverOverlapAbsorberHandleFor() can\n            \/\/ find the NestedScrollView.\n            builder: (BuildContext context) {\n              return CustomScrollView(\n                \/\/ The \"controller\" and \"primary\" members should be left\n                \/\/ unset, so that the NestedScrollView can control this\n                \/\/ inner scroll view.\n                \/\/ If the \"controller\" property is set, then this scroll\n                \/\/ view will not be associated with the NestedScrollView.\n                \/\/ The PageStorageKey should be unique to this ScrollView;\n                \/\/ it allows the list to remember its scroll position when\n                \/\/ the tab view is not on the screen.\n                key: PageStorageKey&lt;String&gt;(name),\n                slivers: &lt;Widget&gt;[\n                  SliverOverlapInjector(\n                    \/\/ This is the flip side of the SliverOverlapAbsorber above.\n                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),\n                  ),\n                  SliverPadding(\n                    padding: const EdgeInsets.all(8.0),\n                    \/\/ In this example, the inner scroll view has\n                    \/\/ fixed-height list items, hence the use of\n                    \/\/ SliverFixedExtentList. However, one could use any\n                    \/\/ sliver widget here, e.g. SliverList or SliverGrid.\n                    sliver: SliverFixedExtentList(\n                      \/\/ The items in this example are fixed to 48 pixels\n                      \/\/ high. This matches the Material Design spec for\n                      \/\/ ListTile widgets.\n                      itemExtent: 48.0,\n                      delegate: SliverChildBuilderDelegate(\n                        (BuildContext context, int index) {\n                          \/\/ This builder is called for each child.\n                          \/\/ In this example, we just number each list item.\n                          return ListTile(\n                            title: Text('Item $index'),\n                          );\n                        },\n                        \/\/ The childCount of the SliverChildBuilderDelegate\n                        \/\/ specifies how many children this inner list\n                        \/\/ has. In this example, each tab has a list of\n                        \/\/ exactly 30 items, but this is arbitrary.\n                        childCount: 30,\n                      ),\n                    ),\n                  ),\n                ],\n              );\n            },\n          ),\n        );\n      }).toList(),\n    ),\n  ),\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "widgets\/NestedScrollView-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "widgets",
     "name": "widgets.NestedScrollView",
+    "shortname": "NestedScrollView",
     "extends": [
         "widgets.StatefulWidget",
         "widgets.Widget",
@@ -7,224 +19,192 @@
         "foundation.Diagnosticable",
         "dart:core.Object"
     ],
-    "memberOf": "widgets",
-    "events": [],
+    "events": [
+        {
+            "desc": "<p>A builder for any widgets that are to precede the inner scroll views (as\ngiven by <a href=\"widgets\/NestedScrollView\/body.html\">body<\/a>).<\/p>\n<p>Typically this is used to create a <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a> with a <a href=\"material\/TabBar-class.html\">TabBar<\/a>.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final NestedScrollViewHeaderSliversBuilder headerSliverBuilder\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/NestedScrollView\/headerSliverBuilder.html",
+            "isDeprecated": "0",
+            "type": "widgets.NestedScrollViewHeaderSliversBuilder",
+            "memberOf": "widgets.NestedScrollView",
+            "params": []
+        }
+    ],
     "methods": [
         {
-            "name": "NestedScrollView",
-            "type": "",
             "desc": "<p>Creates a nested scroll view.<\/p>\n<p>The <code>reverse<\/code>, <code>headerSliverBuilder<\/code>, and <code>body<\/code> arguments must not be\nnull.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const NestedScrollView({\n  Key key,\n  this.controller,\n  this.scrollDirection = Axis.vertical,\n  this.reverse = false,\n  this.physics,\n  @required this.headerSliverBuilder,\n  @required this.body,\n  this.dragStartBehavior = DragStartBehavior.start,\n}) : assert(scrollDirection != null),\n     assert(reverse != null),\n     assert(headerSliverBuilder != null),\n     assert(body != null),\n     super(key: key);<\/code><\/pre>\n    ",
+            "href": "widgets\/NestedScrollView\/NestedScrollView.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "widgets.NestedScrollView",
-            "sig": "",
             "params": [
                 {
-                    "name": "key",
-                    "type": "foundation.Key",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "body",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.Widget"
                 },
                 {
                     "name": "controller",
-                    "type": "widgets.ScrollController",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "scrollDirection",
-                    "type": "painting.Axis",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "reverse",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "physics",
-                    "type": "widgets.ScrollPhysics",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "headerSliverBuilder",
-                    "type": "widgets.NestedScrollViewHeaderSliversBuilder",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "body",
-                    "type": "widgets.Widget",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "widgets.ScrollController"
                 },
                 {
                     "name": "dragStartBehavior",
-                    "type": "gestures.DragStartBehavior",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "gestures.DragStartBehavior"
+                },
+                {
+                    "name": "headerSliverBuilder",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.NestedScrollViewHeaderSliversBuilder"
+                },
+                {
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "foundation.Key"
+                },
+                {
+                    "name": "physics",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.ScrollPhysics"
+                },
+                {
+                    "name": "reverse",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "scrollDirection",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "painting.Axis"
                 }
-            ],
-            "isConstructor": true,
-            "href": "widgets\/NestedScrollView\/NestedScrollView.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const NestedScrollView({\n  Key key,\n  this.controller,\n  this.scrollDirection = Axis.vertical,\n  this.reverse = false,\n  this.physics,\n  @required this.headerSliverBuilder,\n  @required this.body,\n  this.dragStartBehavior = DragStartBehavior.start,\n}) : assert(scrollDirection != null),\n     assert(reverse != null),\n     assert(headerSliverBuilder != null),\n     assert(body != null),\n     super(key: key);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "createState",
-            "type": "",
             "desc": "<p>Creates the mutable state for this widget at a given location in the tree.<\/p>\n<p>Subclasses should override this method to return a newly created\ninstance of their associated <a href=\"widgets\/State-class.html\">State<\/a> subclass:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">@override\n_MyState createState() =&gt; _MyState();\n<\/code><\/pre>\n<p>The framework can call this method multiple times over the lifetime of\na <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>. For example, if the widget is inserted into the tree\nin multiple locations, the framework will create a separate <a href=\"widgets\/State-class.html\">State<\/a> object\nfor each location. Similarly, if the widget is removed from the tree and\nlater inserted into the tree again, the framework will call <a href=\"widgets\/NestedScrollView\/createState.html\">createState<\/a>\nagain to create a fresh <a href=\"widgets\/State-class.html\">State<\/a> object, simplifying the lifecycle of\n<a href=\"widgets\/State-class.html\">State<\/a> objects.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\n_NestedScrollViewState createState() =&gt; _NestedScrollViewState();<\/code><\/pre>\n    ",
+            "href": "widgets\/NestedScrollView\/createState.html",
+            "isDeprecated": "0",
+            "type": "<_NestedScrollViewState>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.NestedScrollView",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/NestedScrollView\/createState.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\n_NestedScrollViewState createState() =&gt; _NestedScrollViewState();<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "params": []
         },
         {
-            "name": "sliverOverlapAbsorberHandleFor",
-            "type": "widgets.SliverOverlapAbsorberHandle",
             "desc": "<p>Returns the <a href=\"widgets\/SliverOverlapAbsorberHandle-class.html\">SliverOverlapAbsorberHandle<\/a> of the nearest ancestor\n<a href=\"widgets\/NestedScrollView-class.html\">NestedScrollView<\/a>.<\/p>\n<p>This is necessary to configure the <a href=\"widgets\/SliverOverlapAbsorber-class.html\">SliverOverlapAbsorber<\/a> and\n<a href=\"widgets\/SliverOverlapInjector-class.html\">SliverOverlapInjector<\/a> widgets.<\/p>\n<p>For sample code showing how to use this method, see the <a href=\"widgets\/NestedScrollView-class.html\">NestedScrollView<\/a>\ndocumentation.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static SliverOverlapAbsorberHandle sliverOverlapAbsorberHandleFor(BuildContext context) {\n  final _InheritedNestedScrollView target = context.inheritFromWidgetOfExactType(_InheritedNestedScrollView);\n  assert(target != null, 'NestedScrollView.sliverOverlapAbsorberHandleFor must be called with a context that contains a NestedScrollView.');\n  return target.state._absorberHandle;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/NestedScrollView\/sliverOverlapAbsorberHandleFor.html",
+            "isDeprecated": "0",
+            "type": "widgets.SliverOverlapAbsorberHandle",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.NestedScrollView",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/NestedScrollView\/sliverOverlapAbsorberHandleFor.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static SliverOverlapAbsorberHandle sliverOverlapAbsorberHandleFor(BuildContext context) {\n  final _InheritedNestedScrollView target = context.inheritFromWidgetOfExactType(_InheritedNestedScrollView);\n  assert(target != null, 'NestedScrollView.sliverOverlapAbsorberHandleFor must be called with a context that contains a NestedScrollView.');\n  return target.state._absorberHandle;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "body",
-            "type": "widgets.Widget",
-            "types": [],
             "desc": "<p>The widget to show inside the <a href=\"widgets\/NestedScrollView-class.html\">NestedScrollView<\/a>.<\/p>\n<p>Typically this will be <a href=\"material\/TabBarView-class.html\">TabBarView<\/a>.<\/p>\n<p>The <a href=\"widgets\/NestedScrollView\/body.html\">body<\/a> is built in a context that provides a <a href=\"widgets\/PrimaryScrollController-class.html\">PrimaryScrollController<\/a>\nthat interacts with the <a href=\"widgets\/NestedScrollView-class.html\">NestedScrollView<\/a>'s scroll controller. Any\n<a href=\"widgets\/ListView-class.html\">ListView<\/a> or other <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a>-based widget inside the <a href=\"widgets\/NestedScrollView\/body.html\">body<\/a> that is\nintended to scroll with the <a href=\"widgets\/NestedScrollView-class.html\">NestedScrollView<\/a> should therefore not be\ngiven an explicit <a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a>, instead allowing it to default to\nthe <a href=\"widgets\/PrimaryScrollController-class.html\">PrimaryScrollController<\/a> provided by the <a href=\"widgets\/NestedScrollView-class.html\">NestedScrollView<\/a>.<\/p>\n        ",
-            "memberOf": "widgets.NestedScrollView",
-            "isConstant": false,
-            "href": "widgets\/NestedScrollView\/body.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Widget body\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/NestedScrollView\/body.html",
+            "isDeprecated": "0",
+            "type": "widgets.Widget",
+            "memberOf": "widgets.NestedScrollView",
+            "params": []
         },
         {
-            "name": "controller",
-            "type": "widgets.ScrollController",
-            "types": [],
             "desc": "<p>An object that can be used to control the position to which the outer\nscroll view is scrolled.<\/p>\n        ",
-            "memberOf": "widgets.NestedScrollView",
-            "isConstant": false,
-            "href": "widgets\/NestedScrollView\/controller.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final ScrollController controller\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/NestedScrollView\/controller.html",
+            "isDeprecated": "0",
+            "type": "widgets.ScrollController",
+            "memberOf": "widgets.NestedScrollView",
+            "params": []
         },
         {
-            "name": "dragStartBehavior",
-            "type": "gestures.DragStartBehavior",
-            "types": [],
             "desc": "<p>Determines the way that drag start behavior is handled.<\/p>\n<p>If set to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a>, scrolling drag behavior will\nbegin upon the detection of a drag gesture. If set to\n<a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.down<\/a> it will begin when a down event is first detected.<\/p>\n<p>In general, setting this to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a> will make drag\nanimation smoother and setting it to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.down<\/a> will make\ndrag behavior feel slightly more reactive.<\/p>\n<p>By default, the drag start behavior is <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/NestedScrollView\/dragStartBehavior.html\">DragGestureRecognizer.dragStartBehavior<\/a>, which gives an example for the different behaviors.<\/li><\/ul>",
-            "memberOf": "widgets.NestedScrollView",
-            "isConstant": false,
-            "href": "widgets\/NestedScrollView\/dragStartBehavior.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final DragStartBehavior dragStartBehavior\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "headerSliverBuilder",
-            "type": "widgets.NestedScrollViewHeaderSliversBuilder",
-            "types": [],
-            "desc": "<p>A builder for any widgets that are to precede the inner scroll views (as\ngiven by <a href=\"widgets\/NestedScrollView\/body.html\">body<\/a>).<\/p>\n<p>Typically this is used to create a <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a> with a <a href=\"material\/TabBar-class.html\">TabBar<\/a>.<\/p>\n        ",
+            "href": "widgets\/NestedScrollView\/dragStartBehavior.html",
+            "isDeprecated": "0",
+            "type": "gestures.DragStartBehavior",
             "memberOf": "widgets.NestedScrollView",
-            "isConstant": false,
-            "href": "widgets\/NestedScrollView\/headerSliverBuilder.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final NestedScrollViewHeaderSliversBuilder headerSliverBuilder\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "physics",
-            "type": "widgets.ScrollPhysics",
-            "types": [],
             "desc": "<p>How the scroll view should respond to user input.<\/p>\n<p>For example, determines how the scroll view continues to animate after the\nuser stops dragging the scroll view (providing a custom implementation of\n<a href=\"widgets\/ScrollPhysics\/createBallisticSimulation.html\">ScrollPhysics.createBallisticSimulation<\/a> allows this particular aspect of\nthe physics to be overridden).<\/p>\n<p>Defaults to matching platform conventions.<\/p>\n<p>The <a href=\"widgets\/ScrollPhysics\/applyBoundaryConditions.html\">ScrollPhysics.applyBoundaryConditions<\/a> implementation of the provided\nobject should not allow scrolling outside the scroll extent range\ndescribed by the <a href=\"widgets\/ScrollMetrics\/minScrollExtent.html\">ScrollMetrics.minScrollExtent<\/a> and\n<a href=\"widgets\/ScrollMetrics\/maxScrollExtent.html\">ScrollMetrics.maxScrollExtent<\/a> properties passed to that method. If that\ninvariant is not maintained, the nested scroll view may respond to user\nscrolling erratically.<\/p>\n        ",
-            "memberOf": "widgets.NestedScrollView",
-            "isConstant": false,
-            "href": "widgets\/NestedScrollView\/physics.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final ScrollPhysics physics\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/NestedScrollView\/physics.html",
+            "isDeprecated": "0",
+            "type": "widgets.ScrollPhysics",
+            "memberOf": "widgets.NestedScrollView",
+            "params": []
         },
         {
-            "name": "reverse",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether the scroll view scrolls in the reading direction.<\/p>\n<p>For example, if the reading direction is left-to-right and\n<a href=\"widgets\/NestedScrollView\/scrollDirection.html\">scrollDirection<\/a> is <a href=\"painting\/Axis-class.html\">Axis.horizontal<\/a>, then the scroll view scrolls from\nleft to right when <a href=\"widgets\/NestedScrollView\/reverse.html\">reverse<\/a> is false and from right to left when\n<a href=\"widgets\/NestedScrollView\/reverse.html\">reverse<\/a> is true.<\/p>\n<p>Similarly, if <a href=\"widgets\/NestedScrollView\/scrollDirection.html\">scrollDirection<\/a> is <a href=\"painting\/Axis-class.html\">Axis.vertical<\/a>, then the scroll view\nscrolls from top to bottom when <a href=\"widgets\/NestedScrollView\/reverse.html\">reverse<\/a> is false and from bottom to top\nwhen <a href=\"widgets\/NestedScrollView\/reverse.html\">reverse<\/a> is true.<\/p>\n<p>Defaults to false.<\/p>\n        ",
-            "memberOf": "widgets.NestedScrollView",
-            "isConstant": false,
-            "href": "widgets\/NestedScrollView\/reverse.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool reverse\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/NestedScrollView\/reverse.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.NestedScrollView",
+            "params": []
         },
         {
-            "name": "scrollDirection",
-            "type": "painting.Axis",
-            "types": [],
             "desc": "<p>The axis along which the scroll view scrolls.<\/p>\n<p>Defaults to <a href=\"painting\/Axis-class.html\">Axis.vertical<\/a>.<\/p>\n        ",
-            "memberOf": "widgets.NestedScrollView",
-            "isConstant": false,
-            "href": "widgets\/NestedScrollView\/scrollDirection.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Axis scrollDirection\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/NestedScrollView\/scrollDirection.html",
+            "isDeprecated": "0",
+            "type": "painting.Axis",
+            "memberOf": "widgets.NestedScrollView",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "widgets\/NestedScrollView-class.html",
-    "desc": "<p>A scrolling view inside of which can be nested other scrolling views, with\ntheir scroll positions being intrinsically linked.<\/p>\n<p>The most common use case for this widget is a scrollable view with a\nflexible <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a> containing a <a href=\"material\/TabBar-class.html\">TabBar<\/a> in the header (build by\n<a href=\"widgets\/NestedScrollView\/headerSliverBuilder.html\">headerSliverBuilder<\/a>, and with a <a href=\"material\/TabBarView-class.html\">TabBarView<\/a> in the <a href=\"widgets\/NestedScrollView\/body.html\">body<\/a>, such that the\nscrollable view's contents vary based on which tab is visible.<\/p>\n<h2 id=\"motivation\">Motivation<\/h2>\n<p>In a normal <a href=\"widgets\/ScrollView-class.html\">ScrollView<\/a>, there is one set of slivers (the components of the\nscrolling view). If one of those slivers hosted a <a href=\"material\/TabBarView-class.html\">TabBarView<\/a> which scrolls\nin the opposite direction (e.g. allowing the user to swipe horizontally\nbetween the pages represented by the tabs, while the list scrolls\nvertically), then any list inside that <a href=\"material\/TabBarView-class.html\">TabBarView<\/a> would not interact with\nthe outer <a href=\"widgets\/ScrollView-class.html\">ScrollView<\/a>. For example, flinging the inner list to scroll to\nthe top would not cause a collapsed <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a> in the outer <a href=\"widgets\/ScrollView-class.html\">ScrollView<\/a>\nto expand.<\/p>\n<p><a href=\"widgets\/NestedScrollView-class.html\">NestedScrollView<\/a> solves this problem by providing custom\n<a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a>s for the outer <a href=\"widgets\/ScrollView-class.html\">ScrollView<\/a> and the inner <a href=\"widgets\/ScrollView-class.html\">ScrollView<\/a>s\n(those inside the <a href=\"material\/TabBarView-class.html\">TabBarView<\/a>, hooking them together so that they appear,\nto the user, as one coherent scroll view.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows a <a href=\"widgets\/NestedScrollView-class.html\">NestedScrollView<\/a> whose header is the combination of a\n<a href=\"material\/TabBar-class.html\">TabBar<\/a> in a <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a> and whose body is a <a href=\"material\/TabBarView-class.html\">TabBarView<\/a>. It uses a\n<a href=\"widgets\/SliverOverlapAbsorber-class.html\">SliverOverlapAbsorber<\/a>\/<a href=\"widgets\/SliverOverlapInjector-class.html\">SliverOverlapInjector<\/a> pair to make the inner lists\nalign correctly, and it uses <a href=\"widgets\/SafeArea-class.html\">SafeArea<\/a> to avoid any horizontal disturbances\n(e.g. the \"notch\" on iOS when the phone is horizontal). In addition,\n<a href=\"widgets\/PageStorageKey-class.html\">PageStorageKey<\/a>s are used to remember the scroll position of each tab's\nlist.\n<p>In the example below, <code>_tabs<\/code> is a list of strings, one for each tab, giving\nthe tab labels. In a real application, it would be replaced by the actual\ndata model being represented.\n<\/p>\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">DefaultTabController(\n  length: _tabs.length, \/\/ This is the number of tabs.\n  child: NestedScrollView(\n    headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {\n      \/\/ These are the slivers that show up in the \"outer\" scroll view.\n      return &lt;Widget&gt;[\n        SliverOverlapAbsorber(\n          \/\/ This widget takes the overlapping behavior of the SliverAppBar,\n          \/\/ and redirects it to the SliverOverlapInjector below. If it is\n          \/\/ missing, then it is possible for the nested \"inner\" scroll view\n          \/\/ below to end up under the SliverAppBar even when the inner\n          \/\/ scroll view thinks it has not been scrolled.\n          \/\/ This is not necessary if the \"headerSliverBuilder\" only builds\n          \/\/ widgets that do not overlap the next sliver.\n          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),\n          child: SliverAppBar(\n            title: const Text('Books'), \/\/ This is the title in the app bar.\n            pinned: true,\n            expandedHeight: 150.0,\n            \/\/ The \"forceElevated\" property causes the SliverAppBar to show\n            \/\/ a shadow. The \"innerBoxIsScrolled\" parameter is true when the\n            \/\/ inner scroll view is scrolled beyond its \"zero\" point, i.e.\n            \/\/ when it appears to be scrolled below the SliverAppBar.\n            \/\/ Without this, there are cases where the shadow would appear\n            \/\/ or not appear inappropriately, because the SliverAppBar is\n            \/\/ not actually aware of the precise position of the inner\n            \/\/ scroll views.\n            forceElevated: innerBoxIsScrolled,\n            bottom: TabBar(\n              \/\/ These are the widgets to put in each tab in the tab bar.\n              tabs: _tabs.map((String name) =&gt; Tab(text: name)).toList(),\n            ),\n          ),\n        ),\n      ];\n    },\n    body: TabBarView(\n      \/\/ These are the contents of the tab views, below the tabs.\n      children: _tabs.map((String name) {\n        return SafeArea(\n          top: false,\n          bottom: false,\n          child: Builder(\n            \/\/ This Builder is needed to provide a BuildContext that is \"inside\"\n            \/\/ the NestedScrollView, so that sliverOverlapAbsorberHandleFor() can\n            \/\/ find the NestedScrollView.\n            builder: (BuildContext context) {\n              return CustomScrollView(\n                \/\/ The \"controller\" and \"primary\" members should be left\n                \/\/ unset, so that the NestedScrollView can control this\n                \/\/ inner scroll view.\n                \/\/ If the \"controller\" property is set, then this scroll\n                \/\/ view will not be associated with the NestedScrollView.\n                \/\/ The PageStorageKey should be unique to this ScrollView;\n                \/\/ it allows the list to remember its scroll position when\n                \/\/ the tab view is not on the screen.\n                key: PageStorageKey&lt;String&gt;(name),\n                slivers: &lt;Widget&gt;[\n                  SliverOverlapInjector(\n                    \/\/ This is the flip side of the SliverOverlapAbsorber above.\n                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),\n                  ),\n                  SliverPadding(\n                    padding: const EdgeInsets.all(8.0),\n                    \/\/ In this example, the inner scroll view has\n                    \/\/ fixed-height list items, hence the use of\n                    \/\/ SliverFixedExtentList. However, one could use any\n                    \/\/ sliver widget here, e.g. SliverList or SliverGrid.\n                    sliver: SliverFixedExtentList(\n                      \/\/ The items in this example are fixed to 48 pixels\n                      \/\/ high. This matches the Material Design spec for\n                      \/\/ ListTile widgets.\n                      itemExtent: 48.0,\n                      delegate: SliverChildBuilderDelegate(\n                        (BuildContext context, int index) {\n                          \/\/ This builder is called for each child.\n                          \/\/ In this example, we just number each list item.\n                          return ListTile(\n                            title: Text('Item $index'),\n                          );\n                        },\n                        \/\/ The childCount of the SliverChildBuilderDelegate\n                        \/\/ specifies how many children this inner list\n                        \/\/ has. In this example, each tab has a list of\n                        \/\/ exactly 30 items, but this is arbitrary.\n                        childCount: 30,\n                      ),\n                    ),\n                  ),\n                ],\n              );\n            },\n          ),\n        );\n      }).toList(),\n    ),\n  ),\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "NestedScrollView"
+    ]
 }

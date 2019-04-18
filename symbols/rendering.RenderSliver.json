@@ -1,560 +1,502 @@
 {
+    "desc": "<p>Base class for the render objects that implement scroll effects in viewports.<\/p>\n<p>A <a href=\"rendering\/RenderViewport-class.html\">RenderViewport<\/a> has a list of child slivers. Each sliver \u2014 literally a\nslice of the viewport's contents \u2014 is laid out in turn, covering the\nviewport in the process. (Every sliver is laid out each time, including\nthose that have zero extent because they are \"scrolled off\" or are beyond\nthe end of the viewport.)<\/p>\n<p>Slivers participate in the <em>sliver protocol<\/em>, wherein during <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> each\nsliver receives a <a href=\"rendering\/SliverConstraints-class.html\">SliverConstraints<\/a> object and computes a corresponding\n<a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a> that describes where it fits in the viewport. This is\nanalogous to the box protocol used by <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, which gets a\n<a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> as input and computes a <a href=\"dart-ui\/Size-class.html\">Size<\/a>.<\/p>\n<p>Slivers have a leading edge, which is where the position described by\n<a href=\"rendering\/SliverConstraints\/scrollOffset.html\">SliverConstraints.scrollOffset<\/a> for this sliver begins. Slivers have\nseveral dimensions, the primary of which is <a href=\"rendering\/SliverGeometry\/paintExtent.html\">SliverGeometry.paintExtent<\/a>,\nwhich describes the extent of the sliver along the main axis, starting from\nthe leading edge, reaching either the end of the viewport or the end of the\nsliver, whichever comes first.<\/p>\n<p>Slivers can change dimensions based on the changing constraints in a\nnon-linear fashion, to achieve various scroll effects. For example, the\nvarious <a href=\"rendering\/RenderSliverPersistentHeader-class.html\">RenderSliverPersistentHeader<\/a> subclasses, on which <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a>\nis based, achieve effects such as staying visible despite the scroll offset,\nor reappearing at different offsets based on the user's scroll direction\n(<a href=\"rendering\/SliverConstraints\/userScrollDirection.html\">SliverConstraints.userScrollDirection<\/a>).<\/p>\n<h2 id=\"writing-a-rendersliver-subclass\">Writing a RenderSliver subclass<\/h2>\n<p>Slivers can have sliver children, or children from another coordinate\nsystem, typically box children. (For details on the box protocol, see\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>.) Slivers can also have different child models, typically having\neither one child, or a list of children.<\/p>\n<h3 id=\"examples-of-slivers\">Examples of slivers<\/h3>\n<p>A good example of a sliver with a single child that is also itself a sliver\nis <a href=\"rendering\/RenderSliverPadding-class.html\">RenderSliverPadding<\/a>, which indents its child. A sliver-to-sliver render\nobject such as this must construct a <a href=\"rendering\/SliverConstraints-class.html\">SliverConstraints<\/a> object for its\nchild, then must take its child's <a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a> and use it to form its\nown <a href=\"rendering\/RenderSliver\/geometry.html\">geometry<\/a>.<\/p>\n<p>The other common kind of one-child sliver is a sliver that has a single\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> child. An example of that would be <a href=\"rendering\/RenderSliverToBoxAdapter-class.html\">RenderSliverToBoxAdapter<\/a>,\nwhich lays out a single box and sizes itself around the box. Such a sliver\nmust use its <a href=\"rendering\/SliverConstraints-class.html\">SliverConstraints<\/a> to create a <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> for the\nchild, lay the child out (using the child's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> method), and then use\nthe child's <a href=\"rendering\/RenderBox\/size.html\">RenderBox.size<\/a> to generate the sliver's <a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a>.<\/p>\n<p>The most common kind of sliver though is one with multiple children. The\nmost straight-forward example of this is <a href=\"rendering\/RenderSliverList-class.html\">RenderSliverList<\/a>, which arranges\nits children one after the other in the main axis direction. As with the\none-box-child sliver case, it uses its <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> to create a\n<a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> for the children, and then it uses the aggregate\ninformation from all its children to generate its <a href=\"rendering\/RenderSliver\/geometry.html\">geometry<\/a>. Unlike the\none-child cases, however, it is judicious in which children it actually lays\nout (and later paints). If the scroll offset is 1000 pixels, and it\npreviously determined that the first three children are each 400 pixels\ntall, then it will skip the first two and start the layout with its third\nchild.<\/p>\n<h3 id=\"layout\">Layout<\/h3>\n<p>As they are laid out, slivers decide their <a href=\"rendering\/RenderSliver\/geometry.html\">geometry<\/a>, which includes their\nsize (<a href=\"rendering\/SliverGeometry\/paintExtent.html\">SliverGeometry.paintExtent<\/a>) and the position of the next sliver\n(<a href=\"rendering\/SliverGeometry\/layoutExtent.html\">SliverGeometry.layoutExtent<\/a>), as well as the position of each of their\nchildren, based on the input <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> from the viewport such as the\nscroll offset (<a href=\"rendering\/SliverConstraints\/scrollOffset.html\">SliverConstraints.scrollOffset<\/a>).<\/p>\n<p>For example, a sliver that just paints a box 100 pixels high would say its\n<a href=\"rendering\/SliverGeometry\/paintExtent.html\">SliverGeometry.paintExtent<\/a> was 100 pixels when the scroll offset was zero,\nbut would say its <a href=\"rendering\/SliverGeometry\/paintExtent.html\">SliverGeometry.paintExtent<\/a> was 25 pixels when the scroll\noffset was 75 pixels, and would say it was zero when the scroll offset was\n100 pixels or more. (This is assuming that\n<a href=\"rendering\/SliverConstraints\/remainingPaintExtent.html\">SliverConstraints.remainingPaintExtent<\/a> was more than 100 pixels.)<\/p>\n<p>The various dimensions that are provided as input to this system are in the\n<a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a>. They are described in detail in the documentation for the\n<a href=\"rendering\/SliverConstraints-class.html\">SliverConstraints<\/a> class.<\/p>\n<p>The <a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a> function must take these <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> and create a\n<a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a> object that it must then assign to the <a href=\"rendering\/RenderSliver\/geometry.html\">geometry<\/a> property.\nThe different dimensions of the geometry that can be configured are\ndescribed in detail in the documentation for the <a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a> class.<\/p>\n<h3 id=\"painting\">Painting<\/h3>\n<p>In addition to implementing layout, a sliver must also implement painting.\nThis is achieved by overriding the <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method.<\/p>\n<p>The <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method is called with an <a href=\"dart-ui\/Offset-class.html\">Offset<\/a> from the <a href=\"dart-ui\/Canvas-class.html\">Canvas<\/a> origin to\nthe top-left corner of the sliver, <em>regardless of the axis direction<\/em>.<\/p>\n<p>Subclasses should also override <a href=\"rendering\/RenderSliver\/applyPaintTransform.html\">applyPaintTransform<\/a> to provide the\n<a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a> describing the position of each child relative to the sliver.\n(This is used by, among other things, the accessibility layer, to determine\nthe bounds of the child.)<\/p>\n<h3 id=\"hit-testing\">Hit testing<\/h3>\n<p>To implement hit testing, either override the <a href=\"rendering\/RenderSliver\/hitTestSelf.html\">hitTestSelf<\/a> and\n<a href=\"rendering\/RenderSliver\/hitTestChildren.html\">hitTestChildren<\/a> methods, or, for more complex cases, instead override the\n<a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a> method directly.<\/p>\n<p>To actually react to pointer events, the <a href=\"rendering\/RenderSliver\/handleEvent.html\">handleEvent<\/a> method may be\nimplemented. By default it does nothing. (Typically gestures are handled by\nwidgets in the box protocol, not by slivers directly.)<\/p>\n<h3 id=\"helper-methods\">Helper methods<\/h3>\n<p>There are a number of methods that a sliver should implement which will make\nthe other methods easier to implement. Each method listed below has detailed\ndocumentation. In addition, the <a href=\"rendering\/RenderSliverHelpers-class.html\">RenderSliverHelpers<\/a> class can be used to\nmix in some helpful methods.<\/p>\n<h4 id=\"childscrolloffset\">childScrollOffset<\/h4>\n<p>If the subclass positions children anywhere other than at scroll offset\nzero, it should override <a href=\"rendering\/RenderSliver\/childScrollOffset.html\">childScrollOffset<\/a>. For example,\n<a href=\"rendering\/RenderSliverList-class.html\">RenderSliverList<\/a> and <a href=\"rendering\/RenderSliverGrid-class.html\">RenderSliverGrid<\/a> override this method, but\n<a href=\"rendering\/RenderSliverToBoxAdapter-class.html\">RenderSliverToBoxAdapter<\/a> does not.<\/p>\n<p>This is used by, among other things, <a href=\"widgets\/Scrollable\/ensureVisible.html\">Scrollable.ensureVisible<\/a>.<\/p>\n<h4 id=\"childmainaxisposition\">childMainAxisPosition<\/h4>\n<p>Subclasses should implement <a href=\"rendering\/RenderSliver\/childMainAxisPosition.html\">childMainAxisPosition<\/a> to describe where their\nchildren are positioned.<\/p>\n<h4 id=\"childcrossaxisposition\">childCrossAxisPosition<\/h4>\n<p>If the subclass positions children in the cross-axis at a position other\nthan zero, then it should override <a href=\"rendering\/RenderSliver\/childCrossAxisPosition.html\">childCrossAxisPosition<\/a>. For example\n<a href=\"rendering\/RenderSliverGrid-class.html\">RenderSliverGrid<\/a> overrides this method.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "rendering\/RenderSliver-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "rendering",
     "name": "rendering.RenderSliver",
+    "shortname": "RenderSliver",
     "extends": [
         "rendering.RenderObject",
         "foundation.AbstractNode",
         "dart:core.Object"
     ],
-    "memberOf": "rendering",
     "events": [],
     "methods": [
         {
-            "name": "RenderSliver",
+            "desc": null,
+            "example": null,
+            "href": "rendering\/RenderSliver\/RenderSliver.html",
+            "isDeprecated": "0",
             "type": "",
-            "desc": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "rendering.RenderSliver",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "rendering\/RenderSliver\/RenderSliver.html",
-            "example": "",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "applyPaintTransform",
-            "type": "",
             "desc": "<p>Applies the transform that would be applied when painting the given child\nto the given matrix.<\/p>\n<p>Used by coordinate conversion functions to translate coordinates local to\none render object into coordinates local to another render object.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid applyPaintTransform(RenderObject child, Matrix4 transform) {\n  assert(() {\n    throw FlutterError('$runtimeType does not implement applyPaintTransform.');\n  }());\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/RenderSliver\/applyPaintTransform.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.RenderSliver",
-            "sig": "",
             "params": [
                 {
                     "name": "child",
-                    "type": "rendering.RenderObject",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "rendering.RenderObject"
                 },
                 {
                     "name": "transform",
-                    "type": "vector_math_64.Matrix4",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_64.Matrix4"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/applyPaintTransform.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid applyPaintTransform(RenderObject child, Matrix4 transform) {\n  assert(() {\n    throw FlutterError('$runtimeType does not implement applyPaintTransform.');\n  }());\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "calculateCacheOffset",
-            "type": "dart:core.double",
             "desc": "<p>Computes the portion of the region from <code>from<\/code> to <code>to<\/code> that is within\nthe cache extent of the viewport, assuming that only the region from the\n<a href=\"rendering\/SliverConstraints\/cacheOrigin.html\">SliverConstraints.cacheOrigin<\/a> that is\n<a href=\"rendering\/SliverConstraints\/remainingCacheExtent.html\">SliverConstraints.remainingCacheExtent<\/a> high is visible, and that\nthe relationship between scroll offsets and paint offsets is linear.<\/p>\n<p>This method is not useful if there is not a 1:1 relationship between\nconsumed scroll offset and consumed cache extent.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.RenderSliver",
-            "sig": "",
-            "params": [
-                {
-                    "name": "constraints",
-                    "type": "rendering.SliverConstraints",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "from",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "to",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/calculateCacheOffset.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double calculateCacheOffset(SliverConstraints constraints, { @required double from, @required double to }) {\n  assert(from &lt;= to);\n  final double a = constraints.scrollOffset + constraints.cacheOrigin;\n  final double b = constraints.scrollOffset + constraints.remainingCacheExtent;\n  \/\/ the clamp on the next line is to avoid floating point rounding errors\n  return (to.clamp(a, b) - from.clamp(a, b)).clamp(0.0, constraints.remainingCacheExtent);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "calculatePaintOffset",
+            "href": "rendering\/RenderSliver\/calculateCacheOffset.html",
+            "isDeprecated": "0",
             "type": "dart:core.double",
-            "desc": "<p>Computes the portion of the region from <code>from<\/code> to <code>to<\/code> that is visible,\nassuming that only the region from the <a href=\"rendering\/SliverConstraints\/scrollOffset.html\">SliverConstraints.scrollOffset<\/a>\nthat is <a href=\"rendering\/SliverConstraints\/remainingPaintExtent.html\">SliverConstraints.remainingPaintExtent<\/a> high is visible, and that\nthe relationship between scroll offsets and paint offsets is linear.<\/p>\n<p>For example, if the constraints have a scroll offset of 100 and a\nremaining paint extent of 100, and the arguments to this method describe\nthe region 50..150, then the returned value would be 50 (from scroll\noffset 100 to scroll offset 150).<\/p>\n<p>This method is not useful if there is not a 1:1 relationship between\nconsumed scroll offset and consumed paint extent. For example, if the\nsliver always paints the same amount but consumes a scroll offset extent\nthat is proportional to the <a href=\"rendering\/SliverConstraints\/scrollOffset.html\">SliverConstraints.scrollOffset<\/a>, then this\nfunction's results will not be consistent.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.RenderSliver",
-            "sig": "",
             "params": [
                 {
                     "name": "constraints",
-                    "type": "rendering.SliverConstraints",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "rendering.SliverConstraints"
                 },
                 {
                     "name": "from",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 },
                 {
                     "name": "to",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/calculatePaintOffset.html",
+            ]
+        },
+        {
+            "desc": "<p>Computes the portion of the region from <code>from<\/code> to <code>to<\/code> that is visible,\nassuming that only the region from the <a href=\"rendering\/SliverConstraints\/scrollOffset.html\">SliverConstraints.scrollOffset<\/a>\nthat is <a href=\"rendering\/SliverConstraints\/remainingPaintExtent.html\">SliverConstraints.remainingPaintExtent<\/a> high is visible, and that\nthe relationship between scroll offsets and paint offsets is linear.<\/p>\n<p>For example, if the constraints have a scroll offset of 100 and a\nremaining paint extent of 100, and the arguments to this method describe\nthe region 50..150, then the returned value would be 50 (from scroll\noffset 100 to scroll offset 150).<\/p>\n<p>This method is not useful if there is not a 1:1 relationship between\nconsumed scroll offset and consumed paint extent. For example, if the\nsliver always paints the same amount but consumes a scroll offset extent\nthat is proportional to the <a href=\"rendering\/SliverConstraints\/scrollOffset.html\">SliverConstraints.scrollOffset<\/a>, then this\nfunction's results will not be consistent.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/ This could be a static method but isn't, because it would be less convenient\n\/\/ to call it from subclasses if it was.\ndouble calculatePaintOffset(SliverConstraints constraints, { @required double from, @required double to }) {\n  assert(from &lt;= to);\n  final double a = constraints.scrollOffset;\n  final double b = constraints.scrollOffset + constraints.remainingPaintExtent;\n  \/\/ the clamp on the next line is to avoid floating point rounding errors\n  return (to.clamp(a, b) - from.clamp(a, b)).clamp(0.0, constraints.remainingPaintExtent);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "rendering\/RenderSliver\/calculatePaintOffset.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.RenderSliver",
+            "params": [
+                {
+                    "name": "constraints",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "rendering.SliverConstraints"
+                },
+                {
+                    "name": "from",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                },
+                {
+                    "name": "to",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                }
+            ]
         },
         {
-            "name": "childCrossAxisPosition",
-            "type": "dart:core.double",
             "desc": "<p>Returns the distance along the cross axis from the zero of the cross axis\nin this sliver's <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> coordinate space to the nearest side of the given\nchild.<\/p>\n<p>For example, if the <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> describe this sliver as having an axis\ndirection of <a href=\"painting\/AxisDirection-class.html\">AxisDirection.down<\/a>, then this is the distance from the left\nof the sliver to the left of the child. Similarly, if the <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a>\ndescribe this sliver as having an axis direction of <a href=\"painting\/AxisDirection-class.html\">AxisDirection.up<\/a>,\nthen this is value is the same. If the axis direction is\n<a href=\"painting\/AxisDirection-class.html\">AxisDirection.left<\/a> or <a href=\"painting\/AxisDirection-class.html\">AxisDirection.right<\/a>, then it is the distance\nfrom the top of the sliver to the top of the child.<\/p>\n<p>Calling this for a child that is not visible is not valid.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.RenderSliver",
-            "sig": "",
-            "params": [
-                {
-                    "name": "child",
-                    "type": "rendering.RenderObject",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/childCrossAxisPosition.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\ndouble childCrossAxisPosition(covariant RenderObject child) =&gt; 0.0;<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "rendering\/RenderSliver\/childCrossAxisPosition.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.RenderSliver",
+            "params": [
+                {
+                    "name": "child",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "rendering.RenderObject"
+                }
+            ]
         },
         {
-            "name": "childMainAxisPosition",
-            "type": "dart:core.double",
             "desc": "<p>Returns the distance from the leading <em>visible<\/em> edge of the sliver to the\nside of the given child closest to that edge.<\/p>\n<p>For example, if the <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> describe this sliver as having an axis\ndirection of <a href=\"painting\/AxisDirection-class.html\">AxisDirection.down<\/a>, then this is the distance from the top\nof the visible portion of the sliver to the top of the child. On the other\nhand, if the <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> describe this sliver as having an axis\ndirection of <a href=\"painting\/AxisDirection-class.html\">AxisDirection.up<\/a>, then this is the distance from the bottom\nof the visible portion of the sliver to the bottom of the child. In both\ncases, this is the direction of increasing\n<a href=\"rendering\/SliverConstraints\/scrollOffset.html\">SliverConstraints.scrollOffset<\/a> and\n<a href=\"rendering\/SliverLogicalParentData\/layoutOffset.html\">SliverLogicalParentData.layoutOffset<\/a>.<\/p>\n<p>For children that are <a href=\"rendering\/RenderSliver-class.html\">RenderSliver<\/a>s, the leading edge of the <em>child<\/em>\nwill be the leading <em>visible<\/em> edge of the child, not the part of the child\nthat would locally be a scroll offset 0.0. For children that are not\n<a href=\"rendering\/RenderSliver-class.html\">RenderSliver<\/a>s, for example a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> child, it's the actual distance\nto the edge of the box, since those boxes do not know how to handle being\nscrolled.<\/p>\n<p>This method differs from <a href=\"rendering\/RenderSliver\/childScrollOffset.html\">childScrollOffset<\/a> in that\n<a href=\"rendering\/RenderSliver\/childMainAxisPosition.html\">childMainAxisPosition<\/a> gives the distance from the leading <em>visible<\/em> edge\nof the sliver whereas <a href=\"rendering\/RenderSliver\/childScrollOffset.html\">childScrollOffset<\/a> gives the distance from the\nsliver's zero scroll offset.<\/p>\n<p>Calling this for a child that is not visible is not valid.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.RenderSliver",
-            "sig": "",
-            "params": [
-                {
-                    "name": "child",
-                    "type": "rendering.RenderObject",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/childMainAxisPosition.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\ndouble childMainAxisPosition(covariant RenderObject child) {\n  assert(() {\n    throw FlutterError('$runtimeType does not implement childPosition.');\n  }());\n  return 0.0;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "childScrollOffset",
+            "href": "rendering\/RenderSliver\/childMainAxisPosition.html",
+            "isDeprecated": "0",
             "type": "dart:core.double",
-            "desc": "<p>Returns the scroll offset for the leading edge of the given child.<\/p>\n<p>The <code>child<\/code> must be a child of this sliver.<\/p>\n<p>This method differs from <a href=\"rendering\/RenderSliver\/childMainAxisPosition.html\">childMainAxisPosition<\/a> in that\n<a href=\"rendering\/RenderSliver\/childMainAxisPosition.html\">childMainAxisPosition<\/a> gives the distance from the leading <em>visible<\/em> edge\nof the sliver whereas <a href=\"rendering\/RenderSliver\/childScrollOffset.html\">childScrollOffset<\/a> gives the distance from sliver's\nzero scroll offset.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.RenderSliver",
-            "sig": "",
             "params": [
                 {
                     "name": "child",
-                    "type": "rendering.RenderObject",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "rendering.RenderObject"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/childScrollOffset.html",
+            ]
+        },
+        {
+            "desc": "<p>Returns the scroll offset for the leading edge of the given child.<\/p>\n<p>The <code>child<\/code> must be a child of this sliver.<\/p>\n<p>This method differs from <a href=\"rendering\/RenderSliver\/childMainAxisPosition.html\">childMainAxisPosition<\/a> in that\n<a href=\"rendering\/RenderSliver\/childMainAxisPosition.html\">childMainAxisPosition<\/a> gives the distance from the leading <em>visible<\/em> edge\nof the sliver whereas <a href=\"rendering\/RenderSliver\/childScrollOffset.html\">childScrollOffset<\/a> gives the distance from sliver's\nzero scroll offset.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double childScrollOffset(covariant RenderObject child) {\n  assert(child.parent == this);\n  return 0.0;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "debugAssertDoesMeetConstraints",
-            "type": "",
-            "desc": "<p>Verify that the object's constraints are being met. Override\nthis function in a subclass to verify that your state matches\nthe constraints object. This function is only called in checked\nmode and only when needsLayout is false. If the constraints are\nnot met, it should assert or throw an exception.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.RenderSliver",
-            "sig": "",
-            "params": [],
+            "href": "rendering\/RenderSliver\/childScrollOffset.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "rendering\/RenderSliver\/debugAssertDoesMeetConstraints.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugAssertDoesMeetConstraints() {\n  assert(geometry.debugAssertIsValid(\n    informationCollector: (StringBuffer information) {\n      information.writeln('The RenderSliver that returned the offending geometry was:');\n      information.writeln('  ${toStringShallow(joiner: '\\n  ')}');\n    },\n  ));\n  assert(() {\n    if (geometry.paintExtent &gt; constraints.remainingPaintExtent) {\n      throw FlutterError(\n        'SliverGeometry has a paintOffset that exceeds the remainingPaintExtent from the constraints.\\n'\n        'The render object whose geometry violates the constraints is the following:\\n'\n        '  ${toStringShallow(joiner: '\\n  ')}\\n' +\n        _debugCompareFloats('remainingPaintExtent', constraints.remainingPaintExtent,\n                            'paintExtent', geometry.paintExtent) +\n        'The paintExtent must cause the child sliver to paint within the viewport, and so '\n        'cannot exceed the remainingPaintExtent.'\n      );\n    }\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "debugFillProperties",
-            "type": "",
-            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"rendering\/RenderSliver\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTreeMixin\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"rendering\/RenderObject\/toString.html\">toString<\/a>.<\/p>\n    ",
             "static": false,
             "memberOf": "rendering.RenderSliver",
-            "sig": "",
+            "params": [
+                {
+                    "name": "child",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "rendering.RenderObject"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Verify that the object's constraints are being met. Override\nthis function in a subclass to verify that your state matches\nthe constraints object. This function is only called in checked\nmode and only when needsLayout is false. If the constraints are\nnot met, it should assert or throw an exception.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugAssertDoesMeetConstraints() {\n  assert(geometry.debugAssertIsValid(\n    informationCollector: (StringBuffer information) {\n      information.writeln('The RenderSliver that returned the offending geometry was:');\n      information.writeln('  ${toStringShallow(joiner: '\\n  ')}');\n    },\n  ));\n  assert(() {\n    if (geometry.paintExtent &gt; constraints.remainingPaintExtent) {\n      throw FlutterError(\n        'SliverGeometry has a paintOffset that exceeds the remainingPaintExtent from the constraints.\\n'\n        'The render object whose geometry violates the constraints is the following:\\n'\n        '  ${toStringShallow(joiner: '\\n  ')}\\n' +\n        _debugCompareFloats('remainingPaintExtent', constraints.remainingPaintExtent,\n                            'paintExtent', geometry.paintExtent) +\n        'The paintExtent must cause the child sliver to paint within the viewport, and so '\n        'cannot exceed the remainingPaintExtent.'\n      );\n    }\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/RenderSliver\/debugAssertDoesMeetConstraints.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.RenderSliver",
+            "params": []
+        },
+        {
+            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"rendering\/RenderSliver\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTreeMixin\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"rendering\/RenderObject\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(DiagnosticsProperty&lt;SliverGeometry&gt;('geometry', geometry));\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/RenderSliver\/debugFillProperties.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.RenderSliver",
             "params": [
                 {
                     "name": "properties",
-                    "type": "foundation.DiagnosticPropertiesBuilder",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "foundation.DiagnosticPropertiesBuilder"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/debugFillProperties.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(DiagnosticsProperty&lt;SliverGeometry&gt;('geometry', geometry));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "debugPaint",
-            "type": "",
             "desc": "<p>Override this method to paint debugging information.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugPaint(PaintingContext context, Offset offset) {\n  assert(() {\n    if (debugPaintSizeEnabled) {\n      final double strokeWidth = math.min(4.0, geometry.paintExtent \/ 30.0);\n      final Paint paint = Paint()\n        ..color = const Color(0xFF33CC33)\n        ..strokeWidth = strokeWidth\n        ..style = PaintingStyle.stroke\n        ..maskFilter = MaskFilter.blur(BlurStyle.solid, strokeWidth);\n      final double arrowExtent = geometry.paintExtent;\n      final double padding = math.max(2.0, strokeWidth);\n      final Canvas canvas = context.canvas;\n      canvas.drawCircle(\n        offset.translate(padding, padding),\n        padding * 0.5,\n        paint,\n      );\n      switch (constraints.axis) {\n        case Axis.vertical:\n          canvas.drawLine(\n            offset,\n            offset.translate(constraints.crossAxisExtent, 0.0),\n            paint,\n          );\n          _debugDrawArrow(\n            canvas,\n            paint,\n            offset.translate(constraints.crossAxisExtent * 1.0 \/ 4.0, padding),\n            offset.translate(constraints.crossAxisExtent * 1.0 \/ 4.0, arrowExtent - padding),\n            constraints.normalizedGrowthDirection,\n          );\n          _debugDrawArrow(\n            canvas,\n            paint,\n            offset.translate(constraints.crossAxisExtent * 3.0 \/ 4.0, padding),\n            offset.translate(constraints.crossAxisExtent * 3.0 \/ 4.0, arrowExtent - padding),\n            constraints.normalizedGrowthDirection,\n          );\n          break;\n        case Axis.horizontal:\n          canvas.drawLine(\n            offset,\n            offset.translate(0.0, constraints.crossAxisExtent),\n            paint,\n          );\n          _debugDrawArrow(\n            canvas,\n            paint,\n            offset.translate(padding, constraints.crossAxisExtent * 1.0 \/ 4.0),\n            offset.translate(arrowExtent - padding, constraints.crossAxisExtent * 1.0 \/ 4.0),\n            constraints.normalizedGrowthDirection,\n          );\n          _debugDrawArrow(\n            canvas,\n            paint,\n            offset.translate(padding, constraints.crossAxisExtent * 3.0 \/ 4.0),\n            offset.translate(arrowExtent - padding, constraints.crossAxisExtent * 3.0 \/ 4.0),\n            constraints.normalizedGrowthDirection,\n          );\n          break;\n      }\n    }\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/RenderSliver\/debugPaint.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.RenderSliver",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "rendering.PaintingContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "rendering.PaintingContext"
                 },
                 {
                     "name": "offset",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Offset"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/debugPaint.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugPaint(PaintingContext context, Offset offset) {\n  assert(() {\n    if (debugPaintSizeEnabled) {\n      final double strokeWidth = math.min(4.0, geometry.paintExtent \/ 30.0);\n      final Paint paint = Paint()\n        ..color = const Color(0xFF33CC33)\n        ..strokeWidth = strokeWidth\n        ..style = PaintingStyle.stroke\n        ..maskFilter = MaskFilter.blur(BlurStyle.solid, strokeWidth);\n      final double arrowExtent = geometry.paintExtent;\n      final double padding = math.max(2.0, strokeWidth);\n      final Canvas canvas = context.canvas;\n      canvas.drawCircle(\n        offset.translate(padding, padding),\n        padding * 0.5,\n        paint,\n      );\n      switch (constraints.axis) {\n        case Axis.vertical:\n          canvas.drawLine(\n            offset,\n            offset.translate(constraints.crossAxisExtent, 0.0),\n            paint,\n          );\n          _debugDrawArrow(\n            canvas,\n            paint,\n            offset.translate(constraints.crossAxisExtent * 1.0 \/ 4.0, padding),\n            offset.translate(constraints.crossAxisExtent * 1.0 \/ 4.0, arrowExtent - padding),\n            constraints.normalizedGrowthDirection,\n          );\n          _debugDrawArrow(\n            canvas,\n            paint,\n            offset.translate(constraints.crossAxisExtent * 3.0 \/ 4.0, padding),\n            offset.translate(constraints.crossAxisExtent * 3.0 \/ 4.0, arrowExtent - padding),\n            constraints.normalizedGrowthDirection,\n          );\n          break;\n        case Axis.horizontal:\n          canvas.drawLine(\n            offset,\n            offset.translate(0.0, constraints.crossAxisExtent),\n            paint,\n          );\n          _debugDrawArrow(\n            canvas,\n            paint,\n            offset.translate(padding, constraints.crossAxisExtent * 1.0 \/ 4.0),\n            offset.translate(arrowExtent - padding, constraints.crossAxisExtent * 1.0 \/ 4.0),\n            constraints.normalizedGrowthDirection,\n          );\n          _debugDrawArrow(\n            canvas,\n            paint,\n            offset.translate(padding, constraints.crossAxisExtent * 3.0 \/ 4.0),\n            offset.translate(arrowExtent - padding, constraints.crossAxisExtent * 3.0 \/ 4.0),\n            constraints.normalizedGrowthDirection,\n          );\n          break;\n      }\n    }\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "debugResetSize",
-            "type": "",
             "desc": "<p>If a subclass has a \"size\" (the state controlled by <code>parentUsesSize<\/code>,\nwhatever it is in the subclass, e.g. the actual <code>size<\/code> property of\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>), and the subclass verifies that in checked mode this \"size\"\nproperty isn't used when <a href=\"rendering\/RenderObject\/debugCanParentUseSize.html\">debugCanParentUseSize<\/a> isn't set, then that\nsubclass should override <a href=\"rendering\/RenderSliver\/debugResetSize.html\">debugResetSize<\/a> to reapply the current values of\n<a href=\"rendering\/RenderObject\/debugCanParentUseSize.html\">debugCanParentUseSize<\/a> to that state.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.RenderSliver",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/debugResetSize.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugResetSize() { }<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "getAbsoluteSizeRelativeToOrigin",
-            "type": "dart:ui.Size",
-            "desc": "<p>This returns a <a href=\"dart-ui\/Size-class.html\">Size<\/a> with dimensions relative to the leading edge of the\nsliver, specifically the same offset that is given to the <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method.\nThis means that the dimensions may be negative.<\/p>\n<p>This is only valid after <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> has completed.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.RenderSliver",
-            "sig": "",
-            "params": [],
+            "href": "rendering\/RenderSliver\/debugResetSize.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "rendering\/RenderSliver\/getAbsoluteSizeRelativeToOrigin.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nSize getAbsoluteSizeRelativeToOrigin() {\n  assert(geometry != null);\n  assert(!debugNeedsLayout);\n  switch (applyGrowthDirectionToAxisDirection(constraints.axisDirection, constraints.growthDirection)) {\n    case AxisDirection.up:\n      return Size(constraints.crossAxisExtent, -geometry.paintExtent);\n    case AxisDirection.right:\n      return Size(geometry.paintExtent, constraints.crossAxisExtent);\n    case AxisDirection.down:\n      return Size(constraints.crossAxisExtent, geometry.paintExtent);\n    case AxisDirection.left:\n      return Size(-geometry.paintExtent, constraints.crossAxisExtent);\n  }\n  return null;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "handleEvent",
-            "type": "",
-            "desc": "<p>Override this method to handle pointer events that hit this render object.<\/p>\n    ",
             "static": false,
             "memberOf": "rendering.RenderSliver",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>This returns a <a href=\"dart-ui\/Size-class.html\">Size<\/a> with dimensions relative to the leading edge of the\nsliver, specifically the same offset that is given to the <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method.\nThis means that the dimensions may be negative.<\/p>\n<p>This is only valid after <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> has completed.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nSize getAbsoluteSizeRelativeToOrigin() {\n  assert(geometry != null);\n  assert(!debugNeedsLayout);\n  switch (applyGrowthDirectionToAxisDirection(constraints.axisDirection, constraints.growthDirection)) {\n    case AxisDirection.up:\n      return Size(constraints.crossAxisExtent, -geometry.paintExtent);\n    case AxisDirection.right:\n      return Size(geometry.paintExtent, constraints.crossAxisExtent);\n    case AxisDirection.down:\n      return Size(constraints.crossAxisExtent, geometry.paintExtent);\n    case AxisDirection.left:\n      return Size(-geometry.paintExtent, constraints.crossAxisExtent);\n  }\n  return null;\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/RenderSliver\/getAbsoluteSizeRelativeToOrigin.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Size",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.RenderSliver",
+            "params": []
+        },
+        {
+            "desc": "<p>Override this method to handle pointer events that hit this render object.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid handleEvent(PointerEvent event, SliverHitTestEntry entry) { }<\/code><\/pre>\n    ",
+            "href": "rendering\/RenderSliver\/handleEvent.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.RenderSliver",
             "params": [
-                {
-                    "name": "event",
-                    "type": "gestures.PointerEvent",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
                 {
                     "name": "entry",
-                    "type": "rendering.SliverHitTestEntry",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "rendering.SliverHitTestEntry"
+                },
+                {
+                    "name": "event",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "gestures.PointerEvent"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/handleEvent.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid handleEvent(PointerEvent event, SliverHitTestEntry entry) { }<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "hitTest",
-            "type": "dart:core.bool",
             "desc": "<p>Determines the set of render objects located at the given position.<\/p>\n<p>Returns true if the given point is contained in this render object or one\nof its descendants. Adds any render objects that contain the point to the\ngiven hit test result.<\/p>\n<p>The caller is responsible for providing the position in the local\ncoordinate space of the callee. The callee is responsible for checking\nwhether the given position is within its bounds.<\/p>\n<p>Hit testing requires layout to be up-to-date but does not require painting\nto be up-to-date. That means a render object can rely upon <a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a>\nhaving been called in <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a> but cannot rely upon <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> having been\ncalled. For example, a render object might be a child of a <a href=\"rendering\/RenderOpacity-class.html\">RenderOpacity<\/a>\nobject, which calls <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a> on its children when its opacity is zero\neven through it does not <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> its children.<\/p>\n<h2 id=\"coordinates-for-rendersliver-objects\">Coordinates for RenderSliver objects<\/h2>\n<p>The <code>mainAxisPosition<\/code> is the distance in the <a href=\"painting\/AxisDirection-class.html\">AxisDirection<\/a> (after\napplying the <a href=\"rendering\/GrowthDirection-class.html\">GrowthDirection<\/a>) from the edge of the sliver's painted\narea. This can be an unusual direction, for example in the\n<a href=\"painting\/AxisDirection-class.html\">AxisDirection.up<\/a> case this is a distance from the <em>bottom<\/em> of the\nsliver's painted area.<\/p>\n<p>The <code>crossAxisPosition<\/code> is the distance in the other axis. If the cross\naxis is horizontal (i.e. the <a href=\"rendering\/SliverConstraints\/axisDirection.html\">SliverConstraints.axisDirection<\/a> is either\n<a href=\"painting\/AxisDirection-class.html\">AxisDirection.down<\/a> or <a href=\"painting\/AxisDirection-class.html\">AxisDirection.up<\/a>), then the <code>crossAxisPosition<\/code>\nis a distance from the left edge of the sliver. If the cross axis is\nvertical (i.e. the <a href=\"rendering\/SliverConstraints\/axisDirection.html\">SliverConstraints.axisDirection<\/a> is either\n<a href=\"painting\/AxisDirection-class.html\">AxisDirection.right<\/a> or <a href=\"painting\/AxisDirection-class.html\">AxisDirection.left<\/a>), then the\n<code>crossAxisPosition<\/code> is a distance from the top edge of the sliver.<\/p>\n<h2 id=\"implementing-hit-testing-for-slivers\">Implementing hit testing for slivers<\/h2>\n<p>The most straight-forward way to implement hit testing for a new sliver\nrender object is to override its <a href=\"rendering\/RenderSliver\/hitTestSelf.html\">hitTestSelf<\/a> and <a href=\"rendering\/RenderSliver\/hitTestChildren.html\">hitTestChildren<\/a>\nmethods.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.RenderSliver",
-            "sig": "",
-            "params": [
-                {
-                    "name": "result",
-                    "type": "gestures.HitTestResult",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "mainAxisPosition",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "crossAxisPosition",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/hitTest.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool hitTest(HitTestResult result, { @required double mainAxisPosition, @required double crossAxisPosition }) {\n  if (mainAxisPosition &gt;= 0.0 &amp;&amp; mainAxisPosition &lt; geometry.hitTestExtent &amp;&amp;\n      crossAxisPosition &gt;= 0.0 &amp;&amp; crossAxisPosition &lt; constraints.crossAxisExtent) {\n    if (hitTestChildren(result, mainAxisPosition: mainAxisPosition, crossAxisPosition: crossAxisPosition) ||\n        hitTestSelf(mainAxisPosition: mainAxisPosition, crossAxisPosition: crossAxisPosition)) {\n      result.add(SliverHitTestEntry(\n        this,\n        mainAxisPosition: mainAxisPosition,\n        crossAxisPosition: crossAxisPosition,\n      ));\n      return true;\n    }\n  }\n  return false;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "hitTestChildren",
+            "href": "rendering\/RenderSliver\/hitTest.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "desc": "<p>Override this method to check whether any children are located at the\ngiven position.<\/p>\n<p>Typically children should be hit-tested in reverse paint order so that\nhit tests at locations where children overlap hit the child that is\nvisually \"on top\" (i.e., paints later).<\/p>\n<p>Used by <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a>. If you override <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a> and do not call this\nfunction, then you don't need to implement this function.<\/p>\n<p>For a discussion of the semantics of the arguments, see <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a>.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.RenderSliver",
-            "sig": "",
             "params": [
+                {
+                    "name": "crossAxisPosition",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                },
+                {
+                    "name": "mainAxisPosition",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                },
                 {
                     "name": "result",
-                    "type": "gestures.HitTestResult",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "mainAxisPosition",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "crossAxisPosition",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "gestures.HitTestResult"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/hitTestChildren.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool hitTestChildren(HitTestResult result, { @required double mainAxisPosition, @required double crossAxisPosition }) =&gt; false;<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "hitTestSelf",
+            "desc": "<p>Override this method to check whether any children are located at the\ngiven position.<\/p>\n<p>Typically children should be hit-tested in reverse paint order so that\nhit tests at locations where children overlap hit the child that is\nvisually \"on top\" (i.e., paints later).<\/p>\n<p>Used by <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a>. If you override <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a> and do not call this\nfunction, then you don't need to implement this function.<\/p>\n<p>For a discussion of the semantics of the arguments, see <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool hitTestChildren(HitTestResult result, { @required double mainAxisPosition, @required double crossAxisPosition }) =&gt; false;<\/code><\/pre>\n    ",
+            "href": "rendering\/RenderSliver\/hitTestChildren.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "desc": "<p>Override this method if this render object can be hit even if its\nchildren were not hit.<\/p>\n<p>Used by <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a>. If you override <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a> and do not call this\nfunction, then you don't need to implement this function.<\/p>\n<p>For a discussion of the semantics of the arguments, see <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a>.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.RenderSliver",
-            "sig": "",
             "params": [
                 {
-                    "name": "mainAxisPosition",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "crossAxisPosition",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 },
                 {
-                    "name": "crossAxisPosition",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "mainAxisPosition",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                },
+                {
+                    "name": "result",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "gestures.HitTestResult"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/hitTestSelf.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool hitTestSelf({ @required double mainAxisPosition, @required double crossAxisPosition }) =&gt; false;<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "performResize",
-            "type": "",
-            "desc": "<p>Updates the render objects size using only the constraints.<\/p>\n<p>Do not call this function directly: call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> instead. This function\nis called by <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> when there is actually work to be done by this\nrender object during layout. The layout constraints provided by your\nparent are available via the <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> getter.<\/p>\n<p>Subclasses that set <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> to true should override this method\nto compute their size.<\/p>\n<p>This function is called only if <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is true.<\/p>\n    ",
+            "desc": "<p>Override this method if this render object can be hit even if its\nchildren were not hit.<\/p>\n<p>Used by <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a>. If you override <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a> and do not call this\nfunction, then you don't need to implement this function.<\/p>\n<p>For a discussion of the semantics of the arguments, see <a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool hitTestSelf({ @required double mainAxisPosition, @required double crossAxisPosition }) =&gt; false;<\/code><\/pre>\n    ",
+            "href": "rendering\/RenderSliver\/hitTestSelf.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.RenderSliver",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "rendering\/RenderSliver\/performResize.html",
+            "params": [
+                {
+                    "name": "crossAxisPosition",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                },
+                {
+                    "name": "mainAxisPosition",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Updates the render objects size using only the constraints.<\/p>\n<p>Do not call this function directly: call <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> instead. This function\nis called by <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> when there is actually work to be done by this\nrender object during layout. The layout constraints provided by your\nparent are available via the <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> getter.<\/p>\n<p>Subclasses that set <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> to true should override this method\nto compute their size.<\/p>\n<p>This function is called only if <a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> is true.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid performResize() {\n  assert(false);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "href": "rendering\/RenderSliver\/performResize.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.RenderSliver",
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "centerOffsetAdjustment",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>For a center sliver, the distance before the absolute zero scroll offset\nthat this sliver can cover.<\/p>\n<p>For example, if an <a href=\"painting\/AxisDirection-class.html\">AxisDirection.down<\/a> viewport with an\n<a href=\"rendering\/RenderViewport\/anchor.html\">RenderViewport.anchor<\/a> of 0.5 has a single sliver with a height of 100.0\nand its <a href=\"rendering\/RenderSliver\/centerOffsetAdjustment.html\">centerOffsetAdjustment<\/a> returns 50.0, then the sliver will be\ncentered in the viewport when the scroll offset is 0.0.<\/p>\n<p>The distance here is in the opposite direction of the\n<a href=\"rendering\/RenderViewportBase\/axisDirection.html\">RenderViewport.axisDirection<\/a>, so values will typically be positive.<\/p>\n        ",
-            "memberOf": "rendering.RenderSliver",
-            "isConstant": false,
-            "href": "rendering\/RenderSliver\/centerOffsetAdjustment.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get centerOffsetAdjustment =&gt; 0.0;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/RenderSliver\/centerOffsetAdjustment.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "rendering.RenderSliver",
+            "params": []
         },
         {
-            "name": "constraints",
-            "type": "rendering.SliverConstraints",
-            "types": [],
             "desc": "<p>The layout constraints most recently supplied by the parent.<\/p>\n        ",
-            "memberOf": "rendering.RenderSliver",
-            "isConstant": false,
-            "href": "rendering\/RenderSliver\/constraints.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nSliverConstraints get constraints =&gt; super.constraints;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/RenderSliver\/constraints.html",
+            "isDeprecated": "0",
+            "type": "rendering.SliverConstraints",
+            "memberOf": "rendering.RenderSliver",
+            "params": []
         },
         {
-            "name": "geometry",
-            "type": "rendering.SliverGeometry",
-            "types": [],
             "desc": "<p>The amount of space this sliver occupies.<\/p>\n<p>This value is stale whenever this object is marked as needing layout.\nDuring <a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a>, do not read the <a href=\"rendering\/RenderSliver\/geometry.html\">geometry<\/a> of a child unless you\npass true for parentUsesSize when calling the child's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> function.<\/p>\n<p>The geometry of a sliver should be set only during the sliver's\n<a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a> or <a href=\"rendering\/RenderSliver\/performResize.html\">performResize<\/a> functions. If you wish to change the\ngeometry of a sliver outside of those functions, call <a href=\"rendering\/RenderObject\/markNeedsLayout.html\">markNeedsLayout<\/a>\ninstead to schedule a layout of the sliver.<\/p>\n        ",
-            "memberOf": "rendering.RenderSliver",
-            "isConstant": false,
-            "href": "rendering\/RenderSliver\/geometry.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">SliverGeometry get geometry =&gt; _geometry;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/RenderSliver\/geometry.html",
+            "isDeprecated": "0",
+            "type": "rendering.SliverGeometry",
+            "memberOf": "rendering.RenderSliver",
+            "params": []
         },
         {
-            "name": "paintBounds",
-            "type": "dart:ui.Rect",
-            "types": [],
             "desc": "<p>An estimate of the bounds within which this render object will paint.\nUseful for debugging flags such as <a href=\"rendering\/debugPaintLayerBordersEnabled.html\">debugPaintLayerBordersEnabled<\/a>.<\/p>\n<p>These are also the bounds used by <a href=\"rendering\/RenderObject\/showOnScreen.html\">showOnScreen<\/a> to make a <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>\nvisible on screen.<\/p>\n        ",
-            "memberOf": "rendering.RenderSliver",
-            "isConstant": false,
-            "href": "rendering\/RenderSliver\/paintBounds.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nRect get paintBounds {\n  assert(constraints.axis != null);\n  switch (constraints.axis) {\n    case Axis.horizontal:\n      return Rect.fromLTWH(\n        0.0, 0.0,\n        geometry.paintExtent,\n        constraints.crossAxisExtent,\n      );\n    case Axis.vertical:\n      return Rect.fromLTWH(\n        0.0, 0.0,\n        constraints.crossAxisExtent,\n        geometry.paintExtent,\n      );\n  }\n  return null;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/RenderSliver\/paintBounds.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Rect",
+            "memberOf": "rendering.RenderSliver",
+            "params": []
         },
         {
-            "name": "semanticBounds",
-            "type": "dart:ui.Rect",
-            "types": [],
             "desc": "<p>The bounding box, in the local coordinate system, of this\nobject, for accessibility purposes.<\/p>\n        ",
-            "memberOf": "rendering.RenderSliver",
-            "isConstant": false,
-            "href": "rendering\/RenderSliver\/semanticBounds.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nRect get semanticBounds =&gt; paintBounds;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/RenderSliver\/semanticBounds.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Rect",
+            "memberOf": "rendering.RenderSliver",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [
-        "rendering.RenderSliverFillRemaining",
-        "rendering.RenderSliverFillViewport",
-        "rendering.RenderSliverFixedExtentBoxAdaptor",
-        "rendering.RenderSliverFixedExtentList",
-        "rendering.RenderSliverFloatingPersistentHeader",
-        "rendering.RenderSliverFloatingPinnedPersistentHeader",
-        "rendering.RenderSliverGrid",
-        "rendering.RenderSliverList",
-        "rendering.RenderSliverMultiBoxAdaptor",
-        "rendering.RenderSliverPadding",
-        "rendering.RenderSliverPersistentHeader",
-        "rendering.RenderSliverPinnedPersistentHeader",
-        "rendering.RenderSliverScrollingPersistentHeader",
-        "rendering.RenderSliverSingleBoxAdapter",
-        "rendering.RenderSliverToBoxAdapter",
-        "widgets.RenderSliverOverlapAbsorber",
-        "widgets.RenderSliverOverlapInjector"
-    ],
-    "realImplementors": [
-        "rendering.RenderSliverFillRemaining",
-        "rendering.RenderSliverFillViewport"
-    ],
-    "cn": [],
-    "href": "rendering\/RenderSliver-class.html",
-    "desc": "<p>Base class for the render objects that implement scroll effects in viewports.<\/p>\n<p>A <a href=\"rendering\/RenderViewport-class.html\">RenderViewport<\/a> has a list of child slivers. Each sliver \u2014 literally a\nslice of the viewport's contents \u2014 is laid out in turn, covering the\nviewport in the process. (Every sliver is laid out each time, including\nthose that have zero extent because they are \"scrolled off\" or are beyond\nthe end of the viewport.)<\/p>\n<p>Slivers participate in the <em>sliver protocol<\/em>, wherein during <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> each\nsliver receives a <a href=\"rendering\/SliverConstraints-class.html\">SliverConstraints<\/a> object and computes a corresponding\n<a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a> that describes where it fits in the viewport. This is\nanalogous to the box protocol used by <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, which gets a\n<a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> as input and computes a <a href=\"dart-ui\/Size-class.html\">Size<\/a>.<\/p>\n<p>Slivers have a leading edge, which is where the position described by\n<a href=\"rendering\/SliverConstraints\/scrollOffset.html\">SliverConstraints.scrollOffset<\/a> for this sliver begins. Slivers have\nseveral dimensions, the primary of which is <a href=\"rendering\/SliverGeometry\/paintExtent.html\">SliverGeometry.paintExtent<\/a>,\nwhich describes the extent of the sliver along the main axis, starting from\nthe leading edge, reaching either the end of the viewport or the end of the\nsliver, whichever comes first.<\/p>\n<p>Slivers can change dimensions based on the changing constraints in a\nnon-linear fashion, to achieve various scroll effects. For example, the\nvarious <a href=\"rendering\/RenderSliverPersistentHeader-class.html\">RenderSliverPersistentHeader<\/a> subclasses, on which <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a>\nis based, achieve effects such as staying visible despite the scroll offset,\nor reappearing at different offsets based on the user's scroll direction\n(<a href=\"rendering\/SliverConstraints\/userScrollDirection.html\">SliverConstraints.userScrollDirection<\/a>).<\/p>\n<h2 id=\"writing-a-rendersliver-subclass\">Writing a RenderSliver subclass<\/h2>\n<p>Slivers can have sliver children, or children from another coordinate\nsystem, typically box children. (For details on the box protocol, see\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>.) Slivers can also have different child models, typically having\neither one child, or a list of children.<\/p>\n<h3 id=\"examples-of-slivers\">Examples of slivers<\/h3>\n<p>A good example of a sliver with a single child that is also itself a sliver\nis <a href=\"rendering\/RenderSliverPadding-class.html\">RenderSliverPadding<\/a>, which indents its child. A sliver-to-sliver render\nobject such as this must construct a <a href=\"rendering\/SliverConstraints-class.html\">SliverConstraints<\/a> object for its\nchild, then must take its child's <a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a> and use it to form its\nown <a href=\"rendering\/RenderSliver\/geometry.html\">geometry<\/a>.<\/p>\n<p>The other common kind of one-child sliver is a sliver that has a single\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> child. An example of that would be <a href=\"rendering\/RenderSliverToBoxAdapter-class.html\">RenderSliverToBoxAdapter<\/a>,\nwhich lays out a single box and sizes itself around the box. Such a sliver\nmust use its <a href=\"rendering\/SliverConstraints-class.html\">SliverConstraints<\/a> to create a <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> for the\nchild, lay the child out (using the child's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> method), and then use\nthe child's <a href=\"rendering\/RenderBox\/size.html\">RenderBox.size<\/a> to generate the sliver's <a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a>.<\/p>\n<p>The most common kind of sliver though is one with multiple children. The\nmost straight-forward example of this is <a href=\"rendering\/RenderSliverList-class.html\">RenderSliverList<\/a>, which arranges\nits children one after the other in the main axis direction. As with the\none-box-child sliver case, it uses its <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> to create a\n<a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> for the children, and then it uses the aggregate\ninformation from all its children to generate its <a href=\"rendering\/RenderSliver\/geometry.html\">geometry<\/a>. Unlike the\none-child cases, however, it is judicious in which children it actually lays\nout (and later paints). If the scroll offset is 1000 pixels, and it\npreviously determined that the first three children are each 400 pixels\ntall, then it will skip the first two and start the layout with its third\nchild.<\/p>\n<h3 id=\"layout\">Layout<\/h3>\n<p>As they are laid out, slivers decide their <a href=\"rendering\/RenderSliver\/geometry.html\">geometry<\/a>, which includes their\nsize (<a href=\"rendering\/SliverGeometry\/paintExtent.html\">SliverGeometry.paintExtent<\/a>) and the position of the next sliver\n(<a href=\"rendering\/SliverGeometry\/layoutExtent.html\">SliverGeometry.layoutExtent<\/a>), as well as the position of each of their\nchildren, based on the input <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> from the viewport such as the\nscroll offset (<a href=\"rendering\/SliverConstraints\/scrollOffset.html\">SliverConstraints.scrollOffset<\/a>).<\/p>\n<p>For example, a sliver that just paints a box 100 pixels high would say its\n<a href=\"rendering\/SliverGeometry\/paintExtent.html\">SliverGeometry.paintExtent<\/a> was 100 pixels when the scroll offset was zero,\nbut would say its <a href=\"rendering\/SliverGeometry\/paintExtent.html\">SliverGeometry.paintExtent<\/a> was 25 pixels when the scroll\noffset was 75 pixels, and would say it was zero when the scroll offset was\n100 pixels or more. (This is assuming that\n<a href=\"rendering\/SliverConstraints\/remainingPaintExtent.html\">SliverConstraints.remainingPaintExtent<\/a> was more than 100 pixels.)<\/p>\n<p>The various dimensions that are provided as input to this system are in the\n<a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a>. They are described in detail in the documentation for the\n<a href=\"rendering\/SliverConstraints-class.html\">SliverConstraints<\/a> class.<\/p>\n<p>The <a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a> function must take these <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> and create a\n<a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a> object that it must then assign to the <a href=\"rendering\/RenderSliver\/geometry.html\">geometry<\/a> property.\nThe different dimensions of the geometry that can be configured are\ndescribed in detail in the documentation for the <a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a> class.<\/p>\n<h3 id=\"painting\">Painting<\/h3>\n<p>In addition to implementing layout, a sliver must also implement painting.\nThis is achieved by overriding the <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method.<\/p>\n<p>The <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method is called with an <a href=\"dart-ui\/Offset-class.html\">Offset<\/a> from the <a href=\"dart-ui\/Canvas-class.html\">Canvas<\/a> origin to\nthe top-left corner of the sliver, <em>regardless of the axis direction<\/em>.<\/p>\n<p>Subclasses should also override <a href=\"rendering\/RenderSliver\/applyPaintTransform.html\">applyPaintTransform<\/a> to provide the\n<a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a> describing the position of each child relative to the sliver.\n(This is used by, among other things, the accessibility layer, to determine\nthe bounds of the child.)<\/p>\n<h3 id=\"hit-testing\">Hit testing<\/h3>\n<p>To implement hit testing, either override the <a href=\"rendering\/RenderSliver\/hitTestSelf.html\">hitTestSelf<\/a> and\n<a href=\"rendering\/RenderSliver\/hitTestChildren.html\">hitTestChildren<\/a> methods, or, for more complex cases, instead override the\n<a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a> method directly.<\/p>\n<p>To actually react to pointer events, the <a href=\"rendering\/RenderSliver\/handleEvent.html\">handleEvent<\/a> method may be\nimplemented. By default it does nothing. (Typically gestures are handled by\nwidgets in the box protocol, not by slivers directly.)<\/p>\n<h3 id=\"helper-methods\">Helper methods<\/h3>\n<p>There are a number of methods that a sliver should implement which will make\nthe other methods easier to implement. Each method listed below has detailed\ndocumentation. In addition, the <a href=\"rendering\/RenderSliverHelpers-class.html\">RenderSliverHelpers<\/a> class can be used to\nmix in some helpful methods.<\/p>\n<h4 id=\"childscrolloffset\">childScrollOffset<\/h4>\n<p>If the subclass positions children anywhere other than at scroll offset\nzero, it should override <a href=\"rendering\/RenderSliver\/childScrollOffset.html\">childScrollOffset<\/a>. For example,\n<a href=\"rendering\/RenderSliverList-class.html\">RenderSliverList<\/a> and <a href=\"rendering\/RenderSliverGrid-class.html\">RenderSliverGrid<\/a> override this method, but\n<a href=\"rendering\/RenderSliverToBoxAdapter-class.html\">RenderSliverToBoxAdapter<\/a> does not.<\/p>\n<p>This is used by, among other things, <a href=\"widgets\/Scrollable\/ensureVisible.html\">Scrollable.ensureVisible<\/a>.<\/p>\n<h4 id=\"childmainaxisposition\">childMainAxisPosition<\/h4>\n<p>Subclasses should implement <a href=\"rendering\/RenderSliver\/childMainAxisPosition.html\">childMainAxisPosition<\/a> to describe where their\nchildren are positioned.<\/p>\n<h4 id=\"childcrossaxisposition\">childCrossAxisPosition<\/h4>\n<p>If the subclass positions children in the cross-axis at a position other\nthan zero, then it should override <a href=\"rendering\/RenderSliver\/childCrossAxisPosition.html\">childCrossAxisPosition<\/a>. For example\n<a href=\"rendering\/RenderSliverGrid-class.html\">RenderSliverGrid<\/a> overrides this method.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "RenderSliver"
+    ]
 }

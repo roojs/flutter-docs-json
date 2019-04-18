@@ -1,709 +1,450 @@
 {
-    "name": "collection.CanonicalizedMap",
-    "extends": [],
+    "desc": "<p>A map whose keys are converted to canonical values of type <code>C<\/code>.<\/p>\n<p>This is useful for using case-insensitive String keys, for example. It's\nmore efficient than a <a href=\"dart-collection\/LinkedHashMap-class.html\">LinkedHashMap<\/a> with a custom equality operator\nbecause it only canonicalizes each key once, rather than doing so for each\ncomparison.<\/p>\n<p>By default, <code>null<\/code> is allowed as a key. It can be forbidden via the\n<code>isValidKey<\/code> parameter.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-collection_collection\/CanonicalizedMap-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "collection",
+    "name": "collection.CanonicalizedMap",
+    "shortname": "CanonicalizedMap",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "CanonicalizedMap",
-            "type": "",
             "desc": "<p>Creates an empty canonicalized map.<\/p>\n<p>The <code>canonicalize<\/code> function should return the canonical value for the\ngiven key. Keys with the same canonical value are considered equivalent.<\/p>\n<p>The <code>isValidKey<\/code> function is called before calling <code>canonicalize<\/code> for\nmethods that take arbitrary objects. It can be used to filter out keys\nthat can't be canonicalized.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [
-                {
-                    "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "key",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "key",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "package-collection_collection\/CanonicalizedMap\/CanonicalizedMap.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">CanonicalizedMap(C canonicalize(K key), {bool isValidKey(Object key)})\n    : _canonicalize = canonicalize,\n      _isValidKeyFn = isValidKey;<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "operator []",
+            "href": "package-collection_collection\/CanonicalizedMap\/CanonicalizedMap.html",
+            "isDeprecated": "0",
             "type": "",
-            "desc": "<p>Returns the value for the given <code>key<\/code> or null if <code>key<\/code> is not in the map.<\/p>\n<p>Some maps allow keys to have <code>null<\/code> as a value.\nFor those maps, a lookup using this operator cannot distinguish between a\nkey not being in the map and the key having a <code>null<\/code> value.\nMethods like <a href=\"package-collection_collection\/CanonicalizedMap\/containsKey.html\">containsKey<\/a> or <a href=\"package-collection_collection\/CanonicalizedMap\/putIfAbsent.html\">putIfAbsent<\/a> can be used if the distinction\nis important.<\/p>\n    ",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
             "params": [
                 {
                     "name": "key",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.Object"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/operator_get.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">V operator [](Object key) {\n  if (!_isValidKey(key)) return null;\n  var pair = _base[_canonicalize(key as K)];\n  return pair == null ? null : pair.last;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "operator []=",
-            "type": "",
-            "desc": "<p>Associates the <code>key<\/code> with the given <code>value<\/code>.<\/p>\n<p>If the key was already in the map, its associated value is changed.\nOtherwise the key\/value pair is added to the map.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [
-                {
-                    "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/operator_put.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void operator []=(K key, V value) {\n  if (!_isValidKey(key)) return;\n  _base[_canonicalize(key)] = new Pair(key, value);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "addAll",
-            "type": "",
             "desc": "<p>Adds all key\/value pairs of <code>other<\/code> to this map.<\/p>\n<p>If a key of <code>other<\/code> is already in this map, its value is overwritten.<\/p>\n<p>The operation is equivalent to doing <code>this[key] = value<\/code> for each key\nand associated value in other. It iterates over <code>other<\/code>, which must\ntherefore not change during the iteration.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addAll(Map&lt;K, V&gt; other) {\n  other.forEach((key, value) =&gt; this[key] = value);\n}<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/CanonicalizedMap\/addAll.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
             "params": [
                 {
                     "name": "other",
-                    "type": "dart:core.Map",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Map"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/addAll.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addAll(Map&lt;K, V&gt; other) {\n  other.forEach((key, value) =&gt; this[key] = value);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "addEntries",
-            "type": "",
             "desc": "<p>Adds all key\/value pairs of <code>newEntries<\/code> to this map.<\/p>\n<p>If a key of <code>newEntries<\/code> is already in this map,\nthe corresponding value is overwritten.<\/p>\n<p>The operation is equivalent to doing <code>this[entry.key] = entry.value<\/code>\nfor each <a href=\"dart-core\/MapEntry-class.html\">MapEntry<\/a> of the iterable.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addEntries(Iterable&lt;MapEntry&lt;K, V&gt;&gt; entries) =&gt;\n    _base.addEntries(entries.map(\n        (e) =&gt; new MapEntry(_canonicalize(e.key), new Pair(e.key, e.value))));<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/CanonicalizedMap\/addEntries.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
             "params": [
                 {
                     "name": "entries",
-                    "type": "dart:core.Iterable<dart:core.MapEntry>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Iterable",
-                        "dart:core.MapEntry"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Iterable<dart:core.MapEntry>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/addEntries.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addEntries(Iterable&lt;MapEntry&lt;K, V&gt;&gt; entries) =&gt;\n    _base.addEntries(entries.map(\n        (e) =&gt; new MapEntry(_canonicalize(e.key), new Pair(e.key, e.value))));<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "cast",
-            "type": "dart:core.Map",
             "desc": "<p>Provides a view of this map as having <code>RK<\/code> keys and <code>RV<\/code> instances,\nif necessary.<\/p>\n<p>If this map is already a <code>Map&lt;RK, RV&gt;<\/code>, it is returned unchanged.<\/p>\n<p>If this set contains only keys of type <code>RK<\/code> and values of type <code>RV<\/code>,\nall read operations will work correctly.\nIf any operation exposes a non-<code>RK<\/code> key or non-<code>RV<\/code> value,\nthe operation will throw instead.<\/p>\n<p>Entries added to the map must be valid for both a <code>Map&lt;K, V&gt;<\/code> and a\n<code>Map&lt;RK, RV&gt;<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/cast.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Map&lt;K2, V2&gt; cast&lt;K2, V2&gt;() =&gt; _base.cast&lt;K2, V2&gt;();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "package-collection_collection\/CanonicalizedMap\/cast.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Map",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.CanonicalizedMap",
+            "params": []
         },
         {
-            "name": "clear",
-            "type": "",
             "desc": "<p>Removes all pairs from the map.<\/p>\n<p>After this, the map is empty.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/clear.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void clear() {\n  _base.clear();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "href": "package-collection_collection\/CanonicalizedMap\/clear.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.CanonicalizedMap",
+            "params": []
         },
         {
-            "name": "containsKey",
-            "type": "dart:core.bool",
             "desc": "<p>Returns true if this map contains the given <code>key<\/code>.<\/p>\n<p>Returns true if any of the keys in the map are equal to <code>key<\/code>\naccording to the equality used by the map.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [
-                {
-                    "name": "key",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/containsKey.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool containsKey(Object key) {\n  if (!_isValidKey(key)) return false;\n  return _base.containsKey(_canonicalize(key as K));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "containsValue",
+            "href": "package-collection_collection\/CanonicalizedMap\/containsKey.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.CanonicalizedMap",
+            "params": [
+                {
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
+                }
+            ]
+        },
+        {
             "desc": "<p>Returns true if this map contains the given <code>value<\/code>.<\/p>\n<p>Returns true if any of the values in the map are equal to <code>value<\/code>\naccording to the <code>==<\/code> operator.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/containsValue.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool containsValue(Object value) =&gt;\n    _base.values.any((pair) =&gt; pair.last == value);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "package-collection_collection\/CanonicalizedMap\/containsValue.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.CanonicalizedMap",
+            "params": [
+                {
+                    "name": "value",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
+                }
+            ]
         },
         {
-            "name": "forEach",
-            "type": "",
             "desc": "<p>Applies <code>f<\/code> to each key\/value pair of the map.<\/p>\n<p>Calling <code>f<\/code> must not add or remove keys from the map.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/forEach.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void forEach(void f(K key, V value)) {\n  _base.forEach((key, pair) =&gt; f(pair.first, pair.last));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "CanonicalizedMap.from",
-            "type": "",
-            "desc": "<p>Creates a canonicalized map that is initialized with the key\/value pairs\nof <code>other<\/code>.<\/p>\n<p>The <code>canonicalize<\/code> function should return the canonical value for the\ngiven key. Keys with the same canonical value are considered equivalent.<\/p>\n<p>The <code>isValidKey<\/code> function is called before calling <code>canonicalize<\/code> for\nmethods that take arbitrary objects. It can be used to filter out keys\nthat can't be canonicalized.<\/p>\n    ",
+            "href": "package-collection_collection\/CanonicalizedMap\/forEach.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
             "params": [
                 {
-                    "name": "other",
-                    "type": "dart:core.Map",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<K>"
                 },
                 {
-                    "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "value",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "key",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "key",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<V>"
                 }
-            ],
-            "isConstructor": true,
-            "href": "package-collection_collection\/CanonicalizedMap\/CanonicalizedMap.from.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">CanonicalizedMap.from(Map&lt;K, V&gt; other, C canonicalize(K key),\n    {bool isValidKey(Object key)})\n    : _canonicalize = canonicalize,\n      _isValidKeyFn = isValidKey {\n  addAll(other);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "map",
-            "type": "dart:core.Map",
             "desc": "<p>Returns a new map where all entries of this map are transformed by\nthe given <code>f<\/code> function.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/map.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Map&lt;K2, V2&gt; map&lt;K2, V2&gt;(MapEntry&lt;K2, V2&gt; transform(K key, V value)) =&gt;\n    _base.map((_, pair) =&gt; transform(pair.first, pair.last));<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "putIfAbsent",
-            "type": "",
-            "desc": "<p>Look up the value of <code>key<\/code>, or add a new value if it isn't there.<\/p>\n<p>Returns the value associated to <code>key<\/code>, if there is one.\nOtherwise calls <code>ifAbsent<\/code> to get a new value, associates <code>key<\/code> to\nthat value, and then returns the new value.<\/p>\n<pre class=\"language-dart\"><code>Map&lt;String, int&gt; scores = {'Bob': 36};\nfor (var key in ['Bob', 'Rohan', 'Sophena']) {\n  scores.putIfAbsent(key, () =&gt; key.length);\n}\nscores['Bob'];      \/\/ 36\nscores['Rohan'];    \/\/  5\nscores['Sophena'];  \/\/  7\n<\/code><\/pre>\n<p>Calling <code>ifAbsent<\/code> must not add or remove keys from the map.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [
-                {
-                    "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "ifAbsent",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/putIfAbsent.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">V putIfAbsent(K key, V ifAbsent()) {\n  return _base\n      .putIfAbsent(_canonicalize(key), () =&gt; new Pair(key, ifAbsent()))\n      .last;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "remove",
-            "type": "",
-            "desc": "<p>Removes <code>key<\/code> and its associated value, if present, from the map.<\/p>\n<p>Returns the value associated with <code>key<\/code> before it was removed.\nReturns <code>null<\/code> if <code>key<\/code> was not in the map.<\/p>\n<p>Note that values can be <code>null<\/code> and a returned <code>null<\/code> value doesn't\nalways mean that the key was absent.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [
-                {
-                    "name": "key",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/remove.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">V remove(Object key) {\n  if (!_isValidKey(key)) return null;\n  var pair = _base.remove(_canonicalize(key as K));\n  return pair == null ? null : pair.last;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "removeWhere",
-            "type": "",
-            "desc": "<p>Removes all entries of this map that satisfy the given <a href=\"package-matcher_matcher\/predicate.html\">predicate<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/removeWhere.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeWhere(bool test(K key, V value)) =&gt;\n    _base.removeWhere((_, pair) =&gt; test(pair.first, pair.last));<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "retype",
+            "href": "package-collection_collection\/CanonicalizedMap\/map.html",
+            "isDeprecated": "0",
             "type": "dart:core.Map",
-            "desc": "",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [],
+            "dtype": "method",
             "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/retype.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@deprecated\nMap&lt;K2, V2&gt; retype&lt;K2, V2&gt;() =&gt; cast&lt;K2, V2&gt;();<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "toString",
-            "type": "dart:core.String",
-            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
             "static": false,
             "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/toString.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() {\n  \/\/ Detect toString() cycles.\n  if (_isToStringVisiting(this)) {\n    return '{...}';\n  }\n\n  var result = new StringBuffer();\n  try {\n    _toStringVisiting.add(this);\n    result.write('{');\n    bool first = true;\n    forEach((k, v) {\n      if (!first) {\n        result.write(', ');\n      }\n      first = false;\n      result.write('$k: $v');\n    });\n    result.write('}');\n  } finally {\n    assert(identical(_toStringVisiting.last, this));\n    _toStringVisiting.removeLast();\n  }\n\n  return result.toString();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "update",
-            "type": "",
-            "desc": "<p>Updates the value for the provided <code>key<\/code>.<\/p>\n<p>Returns the new value of the key.<\/p>\n<p>If the key is present, invokes <code>update<\/code> with the current value and stores\nthe new value in the map.<\/p>\n<p>If the key is not present and <code>ifAbsent<\/code> is provided, calls <code>ifAbsent<\/code>\nand adds the key with the returned value to the map.<\/p>\n<p>It's an error if the key is not present and <code>ifAbsent<\/code> is not provided.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
             "params": [
                 {
                     "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<K>"
                 },
                 {
                     "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<V>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Look up the value of <code>key<\/code>, or add a new value if it isn't there.<\/p>\n<p>Returns the value associated to <code>key<\/code>, if there is one.\nOtherwise calls <code>ifAbsent<\/code> to get a new value, associates <code>key<\/code> to\nthat value, and then returns the new value.<\/p>\n<pre class=\"language-dart\"><code>Map&lt;String, int&gt; scores = {'Bob': 36};\nfor (var key in ['Bob', 'Rohan', 'Sophena']) {\n  scores.putIfAbsent(key, () =&gt; key.length);\n}\nscores['Bob'];      \/\/ 36\nscores['Rohan'];    \/\/  5\nscores['Sophena'];  \/\/  7\n<\/code><\/pre>\n<p>Calling <code>ifAbsent<\/code> must not add or remove keys from the map.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">V putIfAbsent(K key, V ifAbsent()) {\n  return _base\n      .putIfAbsent(_canonicalize(key), () =&gt; new Pair(key, ifAbsent()))\n      .last;\n}<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/CanonicalizedMap\/putIfAbsent.html",
+            "isDeprecated": "0",
+            "type": "<V>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.CanonicalizedMap",
+            "params": [
                 {
                     "name": "ifAbsent",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/update.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">V update(K key, V update(V value), {V ifAbsent()}) =&gt; _base\n    .update(_canonicalize(key), (pair) =&gt; new Pair(key, update(pair.last)),\n        ifAbsent: ifAbsent == null ? null : () =&gt; new Pair(key, ifAbsent()))\n    .last;<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "updateAll",
-            "type": "",
-            "desc": "<p>Updates all values.<\/p>\n<p>Iterates over all entries in the map and updates them with the result\nof invoking <code>update<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.CanonicalizedMap",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<V>"
                 },
                 {
                     "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<K>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Removes <code>key<\/code> and its associated value, if present, from the map.<\/p>\n<p>Returns the value associated with <code>key<\/code> before it was removed.\nReturns <code>null<\/code> if <code>key<\/code> was not in the map.<\/p>\n<p>Note that values can be <code>null<\/code> and a returned <code>null<\/code> value doesn't\nalways mean that the key was absent.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">V remove(Object key) {\n  if (!_isValidKey(key)) return null;\n  var pair = _base.remove(_canonicalize(key as K));\n  return pair == null ? null : pair.last;\n}<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/CanonicalizedMap\/remove.html",
+            "isDeprecated": "0",
+            "type": "<V>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.CanonicalizedMap",
+            "params": [
+                {
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Removes all entries of this map that satisfy the given <a href=\"package-matcher_matcher\/predicate.html\">predicate<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeWhere(bool test(K key, V value)) =&gt;\n    _base.removeWhere((_, pair) =&gt; test(pair.first, pair.last));<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/CanonicalizedMap\/removeWhere.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.CanonicalizedMap",
+            "params": [
+                {
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<K>"
                 },
                 {
                     "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<V>"
                 }
-            ],
+            ]
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@deprecated\nMap&lt;K2, V2&gt; retype&lt;K2, V2&gt;() =&gt; cast&lt;K2, V2&gt;();<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/CanonicalizedMap\/retype.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Map",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/updateAll.html",
+            "static": false,
+            "memberOf": "collection.CanonicalizedMap",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() {\n  \/\/ Detect toString() cycles.\n  if (_isToStringVisiting(this)) {\n    return '{...}';\n  }\n\n  var result = new StringBuffer();\n  try {\n    _toStringVisiting.add(this);\n    result.write('{');\n    bool first = true;\n    forEach((k, v) {\n      if (!first) {\n        result.write(', ');\n      }\n      first = false;\n      result.write('$k: $v');\n    });\n    result.write('}');\n  } finally {\n    assert(identical(_toStringVisiting.last, this));\n    _toStringVisiting.removeLast();\n  }\n\n  return result.toString();\n}<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/CanonicalizedMap\/toString.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.CanonicalizedMap",
+            "params": []
+        },
+        {
+            "desc": "<p>Updates the value for the provided <code>key<\/code>.<\/p>\n<p>Returns the new value of the key.<\/p>\n<p>If the key is present, invokes <code>update<\/code> with the current value and stores\nthe new value in the map.<\/p>\n<p>If the key is not present and <code>ifAbsent<\/code> is provided, calls <code>ifAbsent<\/code>\nand adds the key with the returned value to the map.<\/p>\n<p>It's an error if the key is not present and <code>ifAbsent<\/code> is not provided.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">V update(K key, V update(V value), {V ifAbsent()}) =&gt; _base\n    .update(_canonicalize(key), (pair) =&gt; new Pair(key, update(pair.last)),\n        ifAbsent: ifAbsent == null ? null : () =&gt; new Pair(key, ifAbsent()))\n    .last;<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/CanonicalizedMap\/update.html",
+            "isDeprecated": "0",
+            "type": "<V>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.CanonicalizedMap",
+            "params": [
+                {
+                    "name": "ifAbsent",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<V>"
+                },
+                {
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<K>"
+                },
+                {
+                    "name": "value",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<V>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Updates all values.<\/p>\n<p>Iterates over all entries in the map and updates them with the result\nof invoking <code>update<\/code>.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void updateAll(V update(K key, V value)) =&gt; _base.updateAll(\n    (_, pair) =&gt; new Pair(pair.first, update(pair.first, pair.last)));<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "href": "package-collection_collection\/CanonicalizedMap\/updateAll.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.CanonicalizedMap",
+            "params": [
+                {
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<K>"
+                },
+                {
+                    "name": "value",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<V>"
+                }
+            ]
         }
     ],
     "props": [
         {
-            "name": "entries",
-            "type": "dart:core.Iterable<dart:core.MapEntry>",
-            "types": [
-                "dart:core.Iterable",
-                "dart:core.MapEntry"
-            ],
             "desc": "<p>The map entries of <a href=\"package-collection_collection\/CanonicalizedMap-class.html\">this<\/a>.<\/p>\n        ",
-            "memberOf": "collection.CanonicalizedMap",
-            "isConstant": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/entries.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;MapEntry&lt;K, V&gt;&gt; get entries =&gt;\n    _base.entries.map((e) =&gt; new MapEntry(e.value.first, e.value.last));<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-collection_collection\/CanonicalizedMap\/entries.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Iterable<dart:core.MapEntry>",
+            "memberOf": "collection.CanonicalizedMap",
+            "params": []
         },
         {
-            "name": "isEmpty",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Returns true if there is no key\/value pair in the map.<\/p>\n        ",
-            "memberOf": "collection.CanonicalizedMap",
-            "isConstant": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/isEmpty.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isEmpty =&gt; _base.isEmpty;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "isNotEmpty",
+            "href": "package-collection_collection\/CanonicalizedMap\/isEmpty.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "types": [],
+            "memberOf": "collection.CanonicalizedMap",
+            "params": []
+        },
+        {
             "desc": "<p>Returns true if there is at least one key\/value pair in the map.<\/p>\n        ",
-            "memberOf": "collection.CanonicalizedMap",
-            "isConstant": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/isNotEmpty.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isNotEmpty =&gt; _base.isNotEmpty;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-collection_collection\/CanonicalizedMap\/isNotEmpty.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "collection.CanonicalizedMap",
+            "params": []
         },
         {
-            "name": "keys",
-            "type": "dart:core.Iterable",
-            "types": [],
             "desc": "<p>The keys of <a href=\"package-collection_collection\/CanonicalizedMap-class.html\">this<\/a>.<\/p>\n<p>The returned iterable has efficient <code>length<\/code> and <code>contains<\/code> operations,\nbased on <a href=\"package-collection_collection\/CanonicalizedMap\/length.html\">length<\/a> and <a href=\"package-collection_collection\/CanonicalizedMap\/containsKey.html\">containsKey<\/a> of the map.<\/p>\n<p>The order of iteration is defined by the individual <code>Map<\/code> implementation,\nbut must be consistent between changes to the map.<\/p>\n<p>Modifying the map while iterating the keys\nmay break the iteration.<\/p>\n        ",
-            "memberOf": "collection.CanonicalizedMap",
-            "isConstant": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/keys.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;K&gt; get keys =&gt; _base.values.map((pair) =&gt; pair.first);<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "length",
-            "type": "dart:core.int",
-            "types": [],
-            "desc": "<p>The number of key\/value pairs in the map.<\/p>\n        ",
-            "memberOf": "collection.CanonicalizedMap",
-            "isConstant": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/length.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get length =&gt; _base.length;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "values",
+            "href": "package-collection_collection\/CanonicalizedMap\/keys.html",
+            "isDeprecated": "0",
             "type": "dart:core.Iterable",
-            "types": [],
-            "desc": "<p>The values of <a href=\"package-collection_collection\/CanonicalizedMap-class.html\">this<\/a>.<\/p>\n<p>The values are iterated in the order of their corresponding keys.\nThis means that iterating <a href=\"package-collection_collection\/CanonicalizedMap\/keys.html\">keys<\/a> and <a href=\"package-collection_collection\/CanonicalizedMap\/values.html\">values<\/a> in parallel will\nprovide matching pairs of keys and values.<\/p>\n<p>The returned iterable has an efficient <code>length<\/code> method based on the\n<a href=\"package-collection_collection\/CanonicalizedMap\/length.html\">length<\/a> of the map. Its <a href=\"dart-core\/Iterable\/contains.html\">Iterable.contains<\/a> method is based on\n<code>==<\/code> comparison.<\/p>\n<p>Modifying the map while iterating the\nvalues may break the iteration.<\/p>\n        ",
             "memberOf": "collection.CanonicalizedMap",
-            "isConstant": false,
-            "href": "package-collection_collection\/CanonicalizedMap\/values.html",
+            "params": []
+        },
+        {
+            "desc": "<p>The number of key\/value pairs in the map.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get length =&gt; _base.length;<\/code><\/pre>\n        ",
+            "href": "package-collection_collection\/CanonicalizedMap\/length.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "collection.CanonicalizedMap",
+            "params": []
+        },
+        {
+            "desc": "<p>The values of <a href=\"package-collection_collection\/CanonicalizedMap-class.html\">this<\/a>.<\/p>\n<p>The values are iterated in the order of their corresponding keys.\nThis means that iterating <a href=\"package-collection_collection\/CanonicalizedMap\/keys.html\">keys<\/a> and <a href=\"package-collection_collection\/CanonicalizedMap\/values.html\">values<\/a> in parallel will\nprovide matching pairs of keys and values.<\/p>\n<p>The returned iterable has an efficient <code>length<\/code> method based on the\n<a href=\"package-collection_collection\/CanonicalizedMap\/length.html\">length<\/a> of the map. Its <a href=\"dart-core\/Iterable\/contains.html\">Iterable.contains<\/a> method is based on\n<code>==<\/code> comparison.<\/p>\n<p>Modifying the map while iterating the\nvalues may break the iteration.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;V&gt; get values =&gt; _base.values.map((pair) =&gt; pair.last);<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-collection_collection\/CanonicalizedMap\/values.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Iterable",
+            "memberOf": "collection.CanonicalizedMap",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-collection_collection\/CanonicalizedMap-class.html",
-    "desc": "<p>A map whose keys are converted to canonical values of type <code>C<\/code>.<\/p>\n<p>This is useful for using case-insensitive String keys, for example. It's\nmore efficient than a <a href=\"dart-collection\/LinkedHashMap-class.html\">LinkedHashMap<\/a> with a custom equality operator\nbecause it only canonicalizes each key once, rather than doing so for each\ncomparison.<\/p>\n<p>By default, <code>null<\/code> is allowed as a key. It can be forbidden via the\n<code>isValidKey<\/code> parameter.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "CanonicalizedMap"
+    ]
 }

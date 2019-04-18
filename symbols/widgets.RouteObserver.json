@@ -1,163 +1,150 @@
 {
+    "desc": "<p>A <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> observer that notifies <a href=\"widgets\/RouteAware-class.html\">RouteAware<\/a>s of changes to the\nstate of their <a href=\"widgets\/Route-class.html\">Route<\/a>.<\/p>\n<p><a href=\"widgets\/RouteObserver-class.html\">RouteObserver<\/a> informs subscribers whenever a route of type <code>R<\/code> is pushed\non top of their own route of type <code>R<\/code> or popped from it. This is for example\nuseful to keep track of page transitions, e.g. a <code>RouteObserver&lt;PageRoute&gt;<\/code>\nwill inform subscribed <a href=\"widgets\/RouteAware-class.html\">RouteAware<\/a>s whenever the user navigates away from\nthe current page route to another page route.<\/p>\n<p>To be informed about route changes of any type, consider instantiating a\n<code>RouteObserver&lt;Route&gt;<\/code>.<\/p>\n<h2 id=\"type-arguments\">Type arguments<\/h2>\n<p>When using more aggressive\n<a href=\"http:\/\/dart-lang.github.io\/linter\/lints\/\">lints<\/a>, in particular lints such\nas <code>always_specify_types<\/code>, the Dart analyzer will require that certain types\nbe given with their type arguments. Since the <a href=\"widgets\/Route-class.html\">Route<\/a> class and its\nsubclasses have a type argument, this includes the arguments passed to this\nclass. Consider using <code>dynamic<\/code> to specify the entire class of routes rather\nthan only specific subtypes. For example, to watch for all <a href=\"widgets\/PageRoute-class.html\">PageRoute<\/a>\nvariants, the <code>RouteObserver&lt;PageRoute&lt;dynamic&gt;&gt;<\/code> type may be used.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTo make a <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> aware of its current <a href=\"widgets\/Route-class.html\">Route<\/a> state, implement\n<a href=\"widgets\/RouteAware-class.html\">RouteAware<\/a> in its <a href=\"widgets\/State-class.html\">State<\/a> and subscribe it to a <a href=\"widgets\/RouteObserver-class.html\">RouteObserver<\/a>:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">\/\/ Register the RouteObserver as a navigation observer.\nfinal RouteObserver&lt;PageRoute&gt; routeObserver = RouteObserver&lt;PageRoute&gt;();\nvoid main() {\n  runApp(MaterialApp(\n    home: Container(),\n    navigatorObservers: [routeObserver],\n  ));\n}\n\nclass RouteAwareWidget extends StatefulWidget {\n  State&lt;RouteAwareWidget&gt; createState() =&gt; RouteAwareWidgetState();\n}\n\n\/\/ Implement RouteAware in a widget's state and subscribe it to the RouteObserver.\nclass RouteAwareWidgetState extends State&lt;RouteAwareWidget&gt; with RouteAware {\n\n  @override\n  void didChangeDependencies() {\n    super.didChangeDependencies();\n    routeObserver.subscribe(this, ModalRoute.of(context));\n  }\n\n  @override\n  void dispose() {\n    routeObserver.unsubscribe(this);\n    super.dispose();\n  }\n\n  @override\n  void didPush() {\n    \/\/ Route was pushed onto navigator and is now topmost route.\n  }\n\n  @override\n  void didPopNext() {\n    \/\/ Covering route was popped off the navigator.\n  }\n\n  @override\n  Widget build(BuildContext context) =&gt; Container();\n\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "widgets\/RouteObserver-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "widgets",
     "name": "widgets.RouteObserver",
+    "shortname": "RouteObserver",
     "extends": [
         "widgets.NavigatorObserver",
         "dart:core.Object"
     ],
-    "memberOf": "widgets",
     "events": [],
     "methods": [
         {
-            "name": "RouteObserver",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "widgets.RouteObserver",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
+            "desc": null,
+            "example": null,
             "href": "widgets\/RouteObserver\/RouteObserver.html",
-            "example": "",
-            "isDeprecated": false
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
+            "static": false,
+            "memberOf": "widgets.RouteObserver",
+            "params": []
         },
         {
-            "name": "didPop",
-            "type": "",
             "desc": "<p>The <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> popped <code>route<\/code>.<\/p>\n<p>The route immediately below that one, and thus the newly active\nroute, is <code>previousRoute<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.RouteObserver",
-            "sig": "",
-            "params": [
-                {
-                    "name": "route",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "previousRoute",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/RouteObserver\/didPop.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid didPop(Route&lt;dynamic&gt; route, Route&lt;dynamic&gt; previousRoute) {\n  if (route is R &amp;&amp; previousRoute is R) {\n    final List&lt;RouteAware&gt; previousSubscribers = _listeners[previousRoute]?.toList();\n\n    if (previousSubscribers != null) {\n      for (RouteAware routeAware in previousSubscribers) {\n        routeAware.didPopNext();\n      }\n    }\n\n    final List&lt;RouteAware&gt; subscribers = _listeners[route]?.toList();\n\n    if (subscribers != null) {\n      for (RouteAware routeAware in subscribers) {\n        routeAware.didPop();\n      }\n    }\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "didPush",
-            "type": "",
-            "desc": "<p>The <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> pushed <code>route<\/code>.<\/p>\n<p>The route immediately below that one, and thus the previously active\nroute, is <code>previousRoute<\/code>.<\/p>\n    ",
+            "href": "widgets\/RouteObserver\/didPop.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.RouteObserver",
-            "sig": "",
             "params": [
-                {
-                    "name": "route",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
                 {
                     "name": "previousRoute",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/RouteObserver\/didPush.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid didPush(Route&lt;dynamic&gt; route, Route&lt;dynamic&gt; previousRoute) {\n  if (route is R &amp;&amp; previousRoute is R) {\n    final Set&lt;RouteAware&gt; previousSubscribers = _listeners[previousRoute];\n\n    if (previousSubscribers != null) {\n      for (RouteAware routeAware in previousSubscribers) {\n        routeAware.didPushNext();\n      }\n    }\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "subscribe",
-            "type": "",
-            "desc": "<p>Subscribe <code>routeAware<\/code> to be informed about changes to <code>route<\/code>.<\/p>\n<p>Going forward, <code>routeAware<\/code> will be informed about qualifying changes\nto <code>route<\/code>, e.g. when <code>route<\/code> is covered by another route or when <code>route<\/code>\nis popped off the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> stack.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.RouteObserver",
-            "sig": "",
-            "params": [
-                {
-                    "name": "routeAware",
-                    "type": "widgets.RouteAware",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
                 },
                 {
                     "name": "route",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/RouteObserver\/subscribe.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void subscribe(RouteAware routeAware, R route) {\n  assert(routeAware != null);\n  assert(route != null);\n  final Set&lt;RouteAware&gt; subscribers = _listeners.putIfAbsent(route, () =&gt; &lt;RouteAware&gt;{});\n  if (subscribers.add(routeAware)) {\n    routeAware.didPush();\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "unsubscribe",
-            "type": "",
-            "desc": "<p>Unsubscribe <code>routeAware<\/code>.<\/p>\n<p><code>routeAware<\/code> is no longer informed about changes to its route. If the given argument was\nsubscribed to multiple types, this will unregister it (once) from each type.<\/p>\n    ",
+            "desc": "<p>The <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> pushed <code>route<\/code>.<\/p>\n<p>The route immediately below that one, and thus the previously active\nroute, is <code>previousRoute<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid didPush(Route&lt;dynamic&gt; route, Route&lt;dynamic&gt; previousRoute) {\n  if (route is R &amp;&amp; previousRoute is R) {\n    final Set&lt;RouteAware&gt; previousSubscribers = _listeners[previousRoute];\n\n    if (previousSubscribers != null) {\n      for (RouteAware routeAware in previousSubscribers) {\n        routeAware.didPushNext();\n      }\n    }\n  }\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/RouteObserver\/didPush.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.RouteObserver",
-            "sig": "",
+            "params": [
+                {
+                    "name": "previousRoute",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
+                },
+                {
+                    "name": "route",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Subscribe <code>routeAware<\/code> to be informed about changes to <code>route<\/code>.<\/p>\n<p>Going forward, <code>routeAware<\/code> will be informed about qualifying changes\nto <code>route<\/code>, e.g. when <code>route<\/code> is covered by another route or when <code>route<\/code>\nis popped off the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> stack.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void subscribe(RouteAware routeAware, R route) {\n  assert(routeAware != null);\n  assert(route != null);\n  final Set&lt;RouteAware&gt; subscribers = _listeners.putIfAbsent(route, () =&gt; &lt;RouteAware&gt;{});\n  if (subscribers.add(routeAware)) {\n    routeAware.didPush();\n  }\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/RouteObserver\/subscribe.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.RouteObserver",
+            "params": [
+                {
+                    "name": "route",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<R>"
+                },
+                {
+                    "name": "routeAware",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.RouteAware"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Unsubscribe <code>routeAware<\/code>.<\/p>\n<p><code>routeAware<\/code> is no longer informed about changes to its route. If the given argument was\nsubscribed to multiple types, this will unregister it (once) from each type.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void unsubscribe(RouteAware routeAware) {\n  assert(routeAware != null);\n  for (R route in _listeners.keys) {\n    final Set&lt;RouteAware&gt; subscribers = _listeners[route];\n    subscribers?.remove(routeAware);\n  }\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/RouteObserver\/unsubscribe.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.RouteObserver",
             "params": [
                 {
                     "name": "routeAware",
-                    "type": "widgets.RouteAware",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.RouteAware"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/RouteObserver\/unsubscribe.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void unsubscribe(RouteAware routeAware) {\n  assert(routeAware != null);\n  for (R route in _listeners.keys) {\n    final Set&lt;RouteAware&gt; subscribers = _listeners[route];\n    subscribers?.remove(routeAware);\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
-    "props": [],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "widgets\/RouteObserver-class.html",
-    "desc": "<p>A <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> observer that notifies <a href=\"widgets\/RouteAware-class.html\">RouteAware<\/a>s of changes to the\nstate of their <a href=\"widgets\/Route-class.html\">Route<\/a>.<\/p>\n<p><a href=\"widgets\/RouteObserver-class.html\">RouteObserver<\/a> informs subscribers whenever a route of type <code>R<\/code> is pushed\non top of their own route of type <code>R<\/code> or popped from it. This is for example\nuseful to keep track of page transitions, e.g. a <code>RouteObserver&lt;PageRoute&gt;<\/code>\nwill inform subscribed <a href=\"widgets\/RouteAware-class.html\">RouteAware<\/a>s whenever the user navigates away from\nthe current page route to another page route.<\/p>\n<p>To be informed about route changes of any type, consider instantiating a\n<code>RouteObserver&lt;Route&gt;<\/code>.<\/p>\n<h2 id=\"type-arguments\">Type arguments<\/h2>\n<p>When using more aggressive\n<a href=\"http:\/\/dart-lang.github.io\/linter\/lints\/\">lints<\/a>, in particular lints such\nas <code>always_specify_types<\/code>, the Dart analyzer will require that certain types\nbe given with their type arguments. Since the <a href=\"widgets\/Route-class.html\">Route<\/a> class and its\nsubclasses have a type argument, this includes the arguments passed to this\nclass. Consider using <code>dynamic<\/code> to specify the entire class of routes rather\nthan only specific subtypes. For example, to watch for all <a href=\"widgets\/PageRoute-class.html\">PageRoute<\/a>\nvariants, the <code>RouteObserver&lt;PageRoute&lt;dynamic&gt;&gt;<\/code> type may be used.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTo make a <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> aware of its current <a href=\"widgets\/Route-class.html\">Route<\/a> state, implement\n<a href=\"widgets\/RouteAware-class.html\">RouteAware<\/a> in its <a href=\"widgets\/State-class.html\">State<\/a> and subscribe it to a <a href=\"widgets\/RouteObserver-class.html\">RouteObserver<\/a>:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">\/\/ Register the RouteObserver as a navigation observer.\nfinal RouteObserver&lt;PageRoute&gt; routeObserver = RouteObserver&lt;PageRoute&gt;();\nvoid main() {\n  runApp(MaterialApp(\n    home: Container(),\n    navigatorObservers: [routeObserver],\n  ));\n}\n\nclass RouteAwareWidget extends StatefulWidget {\n  State&lt;RouteAwareWidget&gt; createState() =&gt; RouteAwareWidgetState();\n}\n\n\/\/ Implement RouteAware in a widget's state and subscribe it to the RouteObserver.\nclass RouteAwareWidgetState extends State&lt;RouteAwareWidget&gt; with RouteAware {\n\n  @override\n  void didChangeDependencies() {\n    super.didChangeDependencies();\n    routeObserver.subscribe(this, ModalRoute.of(context));\n  }\n\n  @override\n  void dispose() {\n    routeObserver.unsubscribe(this);\n    super.dispose();\n  }\n\n  @override\n  void didPush() {\n    \/\/ Route was pushed onto navigator and is now topmost route.\n  }\n\n  @override\n  void didPopNext() {\n    \/\/ Covering route was popped off the navigator.\n  }\n\n  @override\n  Widget build(BuildContext context) =&gt; Container();\n\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "RouteObserver"
+    "props": []
 }

@@ -1,928 +1,613 @@
 {
+    "desc": "<p>Immutable layout constraints for <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> layout.<\/p>\n<p>A <a href=\"dart-ui\/Size-class.html\">Size<\/a> respects a <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> if, and only if, all of the following\nrelations hold:<\/p>\n<ul>\n<li>\n<a href=\"rendering\/BoxConstraints\/minWidth.html\">minWidth<\/a> &lt;= <a href=\"dart-ui\/Size\/width.html\">Size.width<\/a> &lt;= <a href=\"rendering\/BoxConstraints\/maxWidth.html\">maxWidth<\/a>\n<\/li>\n<li>\n<a href=\"rendering\/BoxConstraints\/minHeight.html\">minHeight<\/a> &lt;= <a href=\"dart-ui\/Size\/height.html\">Size.height<\/a> &lt;= <a href=\"rendering\/BoxConstraints\/maxHeight.html\">maxHeight<\/a>\n<\/li>\n<\/ul>\n<p>The constraints themselves must satisfy these relations:<\/p>\n<ul>\n<li>0.0 &lt;= <a href=\"rendering\/BoxConstraints\/minWidth.html\">minWidth<\/a> &lt;= <a href=\"rendering\/BoxConstraints\/maxWidth.html\">maxWidth<\/a> &lt;= <a href=\"dart-core\/double\/infinity-constant.html\">double.infinity<\/a>\n<\/li>\n<li>0.0 &lt;= <a href=\"rendering\/BoxConstraints\/minHeight.html\">minHeight<\/a> &lt;= <a href=\"rendering\/BoxConstraints\/maxHeight.html\">maxHeight<\/a> &lt;= <a href=\"dart-core\/double\/infinity-constant.html\">double.infinity<\/a>\n<\/li>\n<\/ul>\n<p><a href=\"dart-core\/double\/infinity-constant.html\">double.infinity<\/a> is a legal value for each constraint.<\/p>\n<h2 id=\"the-box-layout-model\">The box layout model<\/h2>\n<p>Render objects in the Flutter framework are laid out by a one-pass layout\nmodel which walks down the render tree passing constraints, then walks back\nup the render tree passing concrete geometry.<\/p>\n<p>For boxes, the constraints are <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a>, which, as described herein,\nconsist of four numbers: a minimum width <a href=\"rendering\/BoxConstraints\/minWidth.html\">minWidth<\/a>, a maximum width\n<a href=\"rendering\/BoxConstraints\/maxWidth.html\">maxWidth<\/a>, a minimum height <a href=\"rendering\/BoxConstraints\/minHeight.html\">minHeight<\/a>, and a maximum height <a href=\"rendering\/BoxConstraints\/maxHeight.html\">maxHeight<\/a>.<\/p>\n<p>The geometry for boxes consists of a <a href=\"dart-ui\/Size-class.html\">Size<\/a>, which must satisfy the\nconstraints described above.<\/p>\n<p>Each <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> (the objects that provide the layout models for box\nwidgets) receives <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> from its parent, then lays out each of\nits children, then picks a <a href=\"dart-ui\/Size-class.html\">Size<\/a> that satisfies the <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a>.<\/p>\n<p>Render objects position their children independently of laying them out.\nFrequently, the parent will use the children's sizes to determine their\nposition. A child does not know its position and will not necessarily be\nlaid out again, or repainted, if its position changes.<\/p>\n<h2 id=\"terminology\">Terminology<\/h2>\n<p>When the minimum constraints and the maximum constraint in an axis are the\nsame, that axis is <em>tightly<\/em> constrained. See: <a href=\"rendering\/BoxConstraints\/BoxConstraints.tightFor.html\">new\nBoxConstraints.tightFor<\/a>, <a href=\"rendering\/BoxConstraints\/BoxConstraints.tightForFinite.html\">new BoxConstraints.tightForFinite<\/a>, <a href=\"rendering\/BoxConstraints\/tighten.html\">tighten<\/a>,\n<a href=\"rendering\/BoxConstraints\/hasTightWidth.html\">hasTightWidth<\/a>, <a href=\"rendering\/BoxConstraints\/hasTightHeight.html\">hasTightHeight<\/a>, <a href=\"rendering\/BoxConstraints\/isTight.html\">isTight<\/a>.<\/p>\n<p>An axis with a minimum constraint of 0.0 is <em>loose<\/em> (regardless of the\nmaximum constraint; if it is also 0.0, then the axis is simultaneously tight\nand loose!). See: <a href=\"rendering\/BoxConstraints\/BoxConstraints.loose.html\">new BoxConstraints.loose<\/a>, <a href=\"rendering\/BoxConstraints\/loosen.html\">loosen<\/a>.<\/p>\n<p>An axis whose maximum constraint is not infinite is <em>bounded<\/em>. See:\n<a href=\"rendering\/BoxConstraints\/hasBoundedWidth.html\">hasBoundedWidth<\/a>, <a href=\"rendering\/BoxConstraints\/hasBoundedHeight.html\">hasBoundedHeight<\/a>.<\/p>\n<p>An axis whose maximum constraint is infinite is <em>unbounded<\/em>. An axis is\n<em>expanding<\/em> if it is tightly infinite (its minimum and maximum constraints\nare both infinite). See: <a href=\"rendering\/BoxConstraints\/BoxConstraints.expand.html\">new BoxConstraints.expand<\/a>.<\/p>\n<p>An axis whose <em>minimum<\/em> constraint is infinite is just said to be <em>infinite<\/em>\n(since by definition the maximum constraint must also be infinite in that\ncase). See: <a href=\"rendering\/BoxConstraints\/hasInfiniteWidth.html\">hasInfiniteWidth<\/a>, <a href=\"rendering\/BoxConstraints\/hasInfiniteHeight.html\">hasInfiniteHeight<\/a>.<\/p>\n<p>A size is <em>constrained<\/em> when it satisfies a <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> description.\nSee: <a href=\"rendering\/BoxConstraints\/constrain.html\">constrain<\/a>, <a href=\"rendering\/BoxConstraints\/constrainWidth.html\">constrainWidth<\/a>, <a href=\"rendering\/BoxConstraints\/constrainHeight.html\">constrainHeight<\/a>,\n<a href=\"rendering\/BoxConstraints\/constrainDimensions.html\">constrainDimensions<\/a>, <a href=\"rendering\/BoxConstraints\/constrainSizeAndAttemptToPreserveAspectRatio.html\">constrainSizeAndAttemptToPreserveAspectRatio<\/a>,\n<a href=\"rendering\/BoxConstraints\/isSatisfiedBy.html\">isSatisfiedBy<\/a>.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "rendering\/BoxConstraints-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "rendering",
     "name": "rendering.BoxConstraints",
+    "shortname": "BoxConstraints",
     "extends": [
         "rendering.Constraints",
         "dart:core.Object"
     ],
-    "memberOf": "rendering",
     "events": [],
     "methods": [
         {
-            "name": "operator %",
-            "type": "rendering.BoxConstraints",
-            "desc": "<p>Computes the remainder of each constraint parameter by the given value.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/operator_modulo.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints operator%(double value) {\n  return BoxConstraints(\n    minWidth: minWidth % value,\n    maxWidth: maxWidth % value,\n    minHeight: minHeight % value,\n    maxHeight: maxHeight % value,\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "operator *",
-            "type": "rendering.BoxConstraints",
-            "desc": "<p>Scales each constraint parameter by the given factor.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "factor",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/operator_multiply.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints operator*(double factor) {\n  return BoxConstraints(\n    minWidth: minWidth * factor,\n    maxWidth: maxWidth * factor,\n    minHeight: minHeight * factor,\n    maxHeight: maxHeight * factor,\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "operator \/",
-            "type": "rendering.BoxConstraints",
-            "desc": "<p>Scales each constraint parameter by the inverse of the given factor.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "factor",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/operator_divide.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints operator\/(double factor) {\n  return BoxConstraints(\n    minWidth: minWidth \/ factor,\n    maxWidth: maxWidth \/ factor,\n    minHeight: minHeight \/ factor,\n    maxHeight: maxHeight \/ factor,\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "operator ==",
-            "type": "dart:core.bool",
-            "desc": "<p>The equality operator.<\/p>\n<p>The default behavior for all <a href=\"dart-core\/Object-class.html\">Object<\/a>s is to return true if and\nonly if <code>this<\/code> and <code>other<\/code> are the same object.<\/p>\n<p>Override this method to specify a different equality relation on\na class. The overriding method must still be an equivalence relation.\nThat is, it must be:<\/p>\n<ul>\n<li>\n<p>Total: It must return a boolean for all arguments. It should never throw\nor return <code>null<\/code>.<\/p>\n<\/li>\n<li>\n<p>Reflexive: For all objects <code>o<\/code>, <code>o == o<\/code> must be true.<\/p>\n<\/li>\n<li>\n<p>Symmetric: For all objects <code>o1<\/code> and <code>o2<\/code>, <code>o1 == o2<\/code> and <code>o2 == o1<\/code> must\neither both be true, or both be false.<\/p>\n<\/li>\n<li>\n<p>Transitive: For all objects <code>o1<\/code>, <code>o2<\/code>, and <code>o3<\/code>, if <code>o1 == o2<\/code> and\n<code>o2 == o3<\/code> are true, then <code>o1 == o3<\/code> must be true.<\/p>\n<\/li>\n<\/ul>\n<p>The method should also be consistent over time,\nso whether two objects are equal should only change\nif at least one of the objects was modified.<\/p>\n<p>If a subclass overrides the equality operator it should override\nthe <a href=\"rendering\/BoxConstraints\/hashCode.html\">hashCode<\/a> method as well to maintain consistency.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/operator_equals.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool operator ==(dynamic other) {\n  assert(debugAssertIsValid());\n  if (identical(this, other))\n    return true;\n  if (runtimeType != other.runtimeType)\n    return false;\n  final BoxConstraints typedOther = other;\n  assert(typedOther.debugAssertIsValid());\n  return minWidth == typedOther.minWidth &amp;&amp;\n         maxWidth == typedOther.maxWidth &amp;&amp;\n         minHeight == typedOther.minHeight &amp;&amp;\n         maxHeight == typedOther.maxHeight;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "BoxConstraints",
-            "type": "",
             "desc": "<p>Creates box constraints with the given constraints.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "minWidth",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "maxWidth",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "minHeight",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "maxHeight",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "rendering\/BoxConstraints\/BoxConstraints.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const BoxConstraints({\n  this.minWidth = 0.0,\n  this.maxWidth = double.infinity,\n  this.minHeight = 0.0,\n  this.maxHeight = double.infinity,\n});<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "constrain",
-            "type": "dart:ui.Size",
-            "desc": "<p>Returns the size that both satisfies the constraints and is as close as\npossible to the given size.<\/p>\n<p>See also <a href=\"rendering\/BoxConstraints\/constrainDimensions.html\">constrainDimensions<\/a>, which applies the same algorithm to\nseparately provided widths and heights.<\/p>\n    ",
+            "href": "rendering\/BoxConstraints\/BoxConstraints.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "rendering.BoxConstraints",
-            "sig": "",
             "params": [
                 {
-                    "name": "size",
-                    "type": "dart:ui.Size",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "maxHeight",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/constrain.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Size constrain(Size size) {\n  Size result = Size(constrainWidth(size.width), constrainHeight(size.height));\n  assert(() { result = _debugPropagateDebugSize(size, result); return true; }());\n  return result;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "constrainDimensions",
-            "type": "dart:ui.Size",
-            "desc": "<p>Returns the size that both satisfies the constraints and is as close as\npossible to the given width and height.<\/p>\n<p>When you already have a <a href=\"dart-ui\/Size-class.html\">Size<\/a>, prefer <a href=\"rendering\/BoxConstraints\/constrain.html\">constrain<\/a>, which applies the same\nalgorithm to a <a href=\"dart-ui\/Size-class.html\">Size<\/a> directly.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "width",
-                    "type": "dart:core.double",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "height",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/constrainDimensions.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Size constrainDimensions(double width, double height) {\n  return Size(constrainWidth(width), constrainHeight(height));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "constrainHeight",
-            "type": "dart:core.double",
-            "desc": "<p>Returns the height that both satisfies the constraints and is as close as\npossible to the given height.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "height",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/constrainHeight.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double constrainHeight([ double height = double.infinity ]) {\n  assert(debugAssertIsValid());\n  return height.clamp(minHeight, maxHeight);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "constrainSizeAndAttemptToPreserveAspectRatio",
-            "type": "dart:ui.Size",
-            "desc": "<p>Returns a size that attempts to meet the following conditions, in order:<\/p>\n<ul>\n<li>The size must satisfy these constraints.<\/li>\n<li>The aspect ratio of the returned size matches the aspect ratio of the\ngiven size.<\/li>\n<li>The returned size as big as possible while still being equal to or\nsmaller than the given size.<\/li>\n<\/ul>",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "size",
-                    "type": "dart:ui.Size",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/constrainSizeAndAttemptToPreserveAspectRatio.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Size constrainSizeAndAttemptToPreserveAspectRatio(Size size) {\n  if (isTight) {\n    Size result = smallest;\n    assert(() { result = _debugPropagateDebugSize(size, result); return true; }());\n    return result;\n  }\n\n  double width = size.width;\n  double height = size.height;\n  assert(width &gt; 0.0);\n  assert(height &gt; 0.0);\n  final double aspectRatio = width \/ height;\n\n  if (width &gt; maxWidth) {\n    width = maxWidth;\n    height = width \/ aspectRatio;\n  }\n\n  if (height &gt; maxHeight) {\n    height = maxHeight;\n    width = height * aspectRatio;\n  }\n\n  if (width &lt; minWidth) {\n    width = minWidth;\n    height = width \/ aspectRatio;\n  }\n\n  if (height &lt; minHeight) {\n    height = minHeight;\n    width = height * aspectRatio;\n  }\n\n  Size result = Size(constrainWidth(width), constrainHeight(height));\n  assert(() { result = _debugPropagateDebugSize(size, result); return true; }());\n  return result;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "constrainWidth",
-            "type": "dart:core.double",
-            "desc": "<p>Returns the width that both satisfies the constraints and is as close as\npossible to the given width.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "width",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/constrainWidth.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double constrainWidth([ double width = double.infinity ]) {\n  assert(debugAssertIsValid());\n  return width.clamp(minWidth, maxWidth);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "copyWith",
-            "type": "rendering.BoxConstraints",
-            "desc": "<p>Creates a copy of this box constraints but with the given fields replaced with the new values.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "minWidth",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "dart:core.double"
                 },
                 {
                     "name": "maxWidth",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
                 },
                 {
                     "name": "minHeight",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
                 },
                 {
-                    "name": "maxHeight",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "minWidth",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/copyWith.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints copyWith({\n  double minWidth,\n  double maxWidth,\n  double minHeight,\n  double maxHeight,\n}) {\n  return BoxConstraints(\n    minWidth: minWidth ?? this.minWidth,\n    maxWidth: maxWidth ?? this.maxWidth,\n    minHeight: minHeight ?? this.minHeight,\n    maxHeight: maxHeight ?? this.maxHeight,\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "debugAssertIsValid",
-            "type": "dart:core.bool",
-            "desc": "<p>Asserts that the constraints are valid.<\/p>\n<p>This might involve checks more detailed than <a href=\"rendering\/BoxConstraints\/isNormalized.html\">isNormalized<\/a>.<\/p>\n<p>For example, the <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> subclass verifies that the constraints\nare not <a href=\"dart-core\/double\/nan-constant.html\">double.nan<\/a>.<\/p>\n<p>If the <code>isAppliedConstraint<\/code> argument is true, then even stricter rules\nare enforced. This argument is set to true when checking constraints that\nare about to be applied to a <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> during layout, as opposed to\nconstraints that may be further affected by other constraints. For\nexample, the asserts for verifying the validity of\n<a href=\"rendering\/RenderConstrainedBox\/additionalConstraints.html\">RenderConstrainedBox.additionalConstraints<\/a> do not set this argument, but\nthe asserts for verifying the argument passed to the <a href=\"rendering\/RenderObject\/layout.html\">RenderObject.layout<\/a>\nmethod do.<\/p>\n<p>The <code>informationCollector<\/code> argument takes an optional callback which is\ncalled when an exception is to be thrown. The collected information is\nthen included in the message after the error line.<\/p>\n<p>Returns the same as <a href=\"rendering\/BoxConstraints\/isNormalized.html\">isNormalized<\/a> if asserts are disabled.<\/p>\n    ",
+            "desc": "<p>Returns the size that both satisfies the constraints and is as close as\npossible to the given size.<\/p>\n<p>See also <a href=\"rendering\/BoxConstraints\/constrainDimensions.html\">constrainDimensions<\/a>, which applies the same algorithm to\nseparately provided widths and heights.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Size constrain(Size size) {\n  Size result = Size(constrainWidth(size.width), constrainHeight(size.height));\n  assert(() { result = _debugPropagateDebugSize(size, result); return true; }());\n  return result;\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/constrain.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Size",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.BoxConstraints",
-            "sig": "",
             "params": [
                 {
-                    "name": "isAppliedConstraint",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "size",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Size"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns the size that both satisfies the constraints and is as close as\npossible to the given width and height.<\/p>\n<p>When you already have a <a href=\"dart-ui\/Size-class.html\">Size<\/a>, prefer <a href=\"rendering\/BoxConstraints\/constrain.html\">constrain<\/a>, which applies the same\nalgorithm to a <a href=\"dart-ui\/Size-class.html\">Size<\/a> directly.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Size constrainDimensions(double width, double height) {\n  return Size(constrainWidth(width), constrainHeight(height));\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/constrainDimensions.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Size",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.BoxConstraints",
+            "params": [
+                {
+                    "name": "height",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 },
+                {
+                    "name": "width",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns the height that both satisfies the constraints and is as close as\npossible to the given height.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double constrainHeight([ double height = double.infinity ]) {\n  assert(debugAssertIsValid());\n  return height.clamp(minHeight, maxHeight);\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/constrainHeight.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.BoxConstraints",
+            "params": [
+                {
+                    "name": "height",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns a size that attempts to meet the following conditions, in order:<\/p>\n<ul>\n<li>The size must satisfy these constraints.<\/li>\n<li>The aspect ratio of the returned size matches the aspect ratio of the\ngiven size.<\/li>\n<li>The returned size as big as possible while still being equal to or\nsmaller than the given size.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Size constrainSizeAndAttemptToPreserveAspectRatio(Size size) {\n  if (isTight) {\n    Size result = smallest;\n    assert(() { result = _debugPropagateDebugSize(size, result); return true; }());\n    return result;\n  }\n\n  double width = size.width;\n  double height = size.height;\n  assert(width &gt; 0.0);\n  assert(height &gt; 0.0);\n  final double aspectRatio = width \/ height;\n\n  if (width &gt; maxWidth) {\n    width = maxWidth;\n    height = width \/ aspectRatio;\n  }\n\n  if (height &gt; maxHeight) {\n    height = maxHeight;\n    width = height * aspectRatio;\n  }\n\n  if (width &lt; minWidth) {\n    width = minWidth;\n    height = width \/ aspectRatio;\n  }\n\n  if (height &lt; minHeight) {\n    height = minHeight;\n    width = height * aspectRatio;\n  }\n\n  Size result = Size(constrainWidth(width), constrainHeight(height));\n  assert(() { result = _debugPropagateDebugSize(size, result); return true; }());\n  return result;\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/constrainSizeAndAttemptToPreserveAspectRatio.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Size",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.BoxConstraints",
+            "params": [
+                {
+                    "name": "size",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Size"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns the width that both satisfies the constraints and is as close as\npossible to the given width.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double constrainWidth([ double width = double.infinity ]) {\n  assert(debugAssertIsValid());\n  return width.clamp(minWidth, maxWidth);\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/constrainWidth.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.BoxConstraints",
+            "params": [
+                {
+                    "name": "width",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Creates a copy of this box constraints but with the given fields replaced with the new values.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints copyWith({\n  double minWidth,\n  double maxWidth,\n  double minHeight,\n  double maxHeight,\n}) {\n  return BoxConstraints(\n    minWidth: minWidth ?? this.minWidth,\n    maxWidth: maxWidth ?? this.maxWidth,\n    minHeight: minHeight ?? this.minHeight,\n    maxHeight: maxHeight ?? this.maxHeight,\n  );\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/copyWith.html",
+            "isDeprecated": "0",
+            "type": "rendering.BoxConstraints",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.BoxConstraints",
+            "params": [
+                {
+                    "name": "maxHeight",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                },
+                {
+                    "name": "maxWidth",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                },
+                {
+                    "name": "minHeight",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                },
+                {
+                    "name": "minWidth",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Asserts that the constraints are valid.<\/p>\n<p>This might involve checks more detailed than <a href=\"rendering\/BoxConstraints\/isNormalized.html\">isNormalized<\/a>.<\/p>\n<p>For example, the <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> subclass verifies that the constraints\nare not <a href=\"dart-core\/double\/nan-constant.html\">double.nan<\/a>.<\/p>\n<p>If the <code>isAppliedConstraint<\/code> argument is true, then even stricter rules\nare enforced. This argument is set to true when checking constraints that\nare about to be applied to a <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> during layout, as opposed to\nconstraints that may be further affected by other constraints. For\nexample, the asserts for verifying the validity of\n<a href=\"rendering\/RenderConstrainedBox\/additionalConstraints.html\">RenderConstrainedBox.additionalConstraints<\/a> do not set this argument, but\nthe asserts for verifying the argument passed to the <a href=\"rendering\/RenderObject\/layout.html\">RenderObject.layout<\/a>\nmethod do.<\/p>\n<p>The <code>informationCollector<\/code> argument takes an optional callback which is\ncalled when an exception is to be thrown. The collected information is\nthen included in the message after the error line.<\/p>\n<p>Returns the same as <a href=\"rendering\/BoxConstraints\/isNormalized.html\">isNormalized<\/a> if asserts are disabled.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool debugAssertIsValid({\n  bool isAppliedConstraint = false,\n  InformationCollector informationCollector,\n}) {\n  assert(() {\n    void throwError(String message) {\n      final StringBuffer information = StringBuffer();\n      if (informationCollector != null)\n        informationCollector(information);\n      throw FlutterError('$message\\n${information}The offending constraints were:\\n  $this');\n    }\n    if (minWidth.isNaN || maxWidth.isNaN || minHeight.isNaN || maxHeight.isNaN) {\n      final List&lt;String&gt; affectedFieldsList = &lt;String&gt;[];\n      if (minWidth.isNaN)\n        affectedFieldsList.add('minWidth');\n      if (maxWidth.isNaN)\n        affectedFieldsList.add('maxWidth');\n      if (minHeight.isNaN)\n        affectedFieldsList.add('minHeight');\n      if (maxHeight.isNaN)\n        affectedFieldsList.add('maxHeight');\n      assert(affectedFieldsList.isNotEmpty);\n      if (affectedFieldsList.length &gt; 1)\n        affectedFieldsList.add('and ${affectedFieldsList.removeLast()}');\n      String whichFields = '';\n      if (affectedFieldsList.length &gt; 2) {\n        whichFields = affectedFieldsList.join(', ');\n      } else if (affectedFieldsList.length == 2) {\n        whichFields = affectedFieldsList.join(' ');\n      } else {\n        whichFields = affectedFieldsList.single;\n      }\n      throwError('BoxConstraints has ${affectedFieldsList.length == 1 ? 'a NaN value' : 'NaN values' } in $whichFields.');\n    }\n    if (minWidth &lt; 0.0 &amp;&amp; minHeight &lt; 0.0)\n      throwError('BoxConstraints has both a negative minimum width and a negative minimum height.');\n    if (minWidth &lt; 0.0)\n      throwError('BoxConstraints has a negative minimum width.');\n    if (minHeight &lt; 0.0)\n      throwError('BoxConstraints has a negative minimum height.');\n    if (maxWidth &lt; minWidth &amp;&amp; maxHeight &lt; minHeight)\n      throwError('BoxConstraints has both width and height constraints non-normalized.');\n    if (maxWidth &lt; minWidth)\n      throwError('BoxConstraints has non-normalized width constraints.');\n    if (maxHeight &lt; minHeight)\n      throwError('BoxConstraints has non-normalized height constraints.');\n    if (isAppliedConstraint) {\n      if (minWidth.isInfinite &amp;&amp; minHeight.isInfinite)\n        throwError('BoxConstraints forces an infinite width and infinite height.');\n      if (minWidth.isInfinite)\n        throwError('BoxConstraints forces an infinite width.');\n      if (minHeight.isInfinite)\n        throwError('BoxConstraints forces an infinite height.');\n    }\n    assert(isNormalized);\n    return true;\n  }());\n  return isNormalized;\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/debugAssertIsValid.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.BoxConstraints",
+            "params": [
                 {
                     "name": "informationCollector",
-                    "type": "foundation.InformationCollector",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "foundation.InformationCollector"
+                },
+                {
+                    "name": "isAppliedConstraint",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/debugAssertIsValid.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool debugAssertIsValid({\n  bool isAppliedConstraint = false,\n  InformationCollector informationCollector,\n}) {\n  assert(() {\n    void throwError(String message) {\n      final StringBuffer information = StringBuffer();\n      if (informationCollector != null)\n        informationCollector(information);\n      throw FlutterError('$message\\n${information}The offending constraints were:\\n  $this');\n    }\n    if (minWidth.isNaN || maxWidth.isNaN || minHeight.isNaN || maxHeight.isNaN) {\n      final List&lt;String&gt; affectedFieldsList = &lt;String&gt;[];\n      if (minWidth.isNaN)\n        affectedFieldsList.add('minWidth');\n      if (maxWidth.isNaN)\n        affectedFieldsList.add('maxWidth');\n      if (minHeight.isNaN)\n        affectedFieldsList.add('minHeight');\n      if (maxHeight.isNaN)\n        affectedFieldsList.add('maxHeight');\n      assert(affectedFieldsList.isNotEmpty);\n      if (affectedFieldsList.length &gt; 1)\n        affectedFieldsList.add('and ${affectedFieldsList.removeLast()}');\n      String whichFields = '';\n      if (affectedFieldsList.length &gt; 2) {\n        whichFields = affectedFieldsList.join(', ');\n      } else if (affectedFieldsList.length == 2) {\n        whichFields = affectedFieldsList.join(' ');\n      } else {\n        whichFields = affectedFieldsList.single;\n      }\n      throwError('BoxConstraints has ${affectedFieldsList.length == 1 ? 'a NaN value' : 'NaN values' } in $whichFields.');\n    }\n    if (minWidth &lt; 0.0 &amp;&amp; minHeight &lt; 0.0)\n      throwError('BoxConstraints has both a negative minimum width and a negative minimum height.');\n    if (minWidth &lt; 0.0)\n      throwError('BoxConstraints has a negative minimum width.');\n    if (minHeight &lt; 0.0)\n      throwError('BoxConstraints has a negative minimum height.');\n    if (maxWidth &lt; minWidth &amp;&amp; maxHeight &lt; minHeight)\n      throwError('BoxConstraints has both width and height constraints non-normalized.');\n    if (maxWidth &lt; minWidth)\n      throwError('BoxConstraints has non-normalized width constraints.');\n    if (maxHeight &lt; minHeight)\n      throwError('BoxConstraints has non-normalized height constraints.');\n    if (isAppliedConstraint) {\n      if (minWidth.isInfinite &amp;&amp; minHeight.isInfinite)\n        throwError('BoxConstraints forces an infinite width and infinite height.');\n      if (minWidth.isInfinite)\n        throwError('BoxConstraints forces an infinite width.');\n      if (minHeight.isInfinite)\n        throwError('BoxConstraints forces an infinite height.');\n    }\n    assert(isNormalized);\n    return true;\n  }());\n  return isNormalized;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "deflate",
-            "type": "rendering.BoxConstraints",
             "desc": "<p>Returns new box constraints that are smaller by the given edge dimensions.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints deflate(EdgeInsets edges) {\n  assert(edges != null);\n  assert(debugAssertIsValid());\n  final double horizontal = edges.horizontal;\n  final double vertical = edges.vertical;\n  final double deflatedMinWidth = math.max(0.0, minWidth - horizontal);\n  final double deflatedMinHeight = math.max(0.0, minHeight - vertical);\n  return BoxConstraints(\n    minWidth: deflatedMinWidth,\n    maxWidth: math.max(deflatedMinWidth, maxWidth - horizontal),\n    minHeight: deflatedMinHeight,\n    maxHeight: math.max(deflatedMinHeight, maxHeight - vertical),\n  );\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/deflate.html",
+            "isDeprecated": "0",
+            "type": "rendering.BoxConstraints",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.BoxConstraints",
-            "sig": "",
             "params": [
                 {
                     "name": "edges",
-                    "type": "painting.EdgeInsets",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.EdgeInsets"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/deflate.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints deflate(EdgeInsets edges) {\n  assert(edges != null);\n  assert(debugAssertIsValid());\n  final double horizontal = edges.horizontal;\n  final double vertical = edges.vertical;\n  final double deflatedMinWidth = math.max(0.0, minWidth - horizontal);\n  final double deflatedMinHeight = math.max(0.0, minHeight - vertical);\n  return BoxConstraints(\n    minWidth: deflatedMinWidth,\n    maxWidth: math.max(deflatedMinWidth, maxWidth - horizontal),\n    minHeight: deflatedMinHeight,\n    maxHeight: math.max(deflatedMinHeight, maxHeight - vertical),\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "enforce",
-            "type": "rendering.BoxConstraints",
             "desc": "<p>Returns new box constraints that respect the given constraints while being\nas close as possible to the original constraints.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints enforce(BoxConstraints constraints) {\n  return BoxConstraints(\n    minWidth: minWidth.clamp(constraints.minWidth, constraints.maxWidth),\n    maxWidth: maxWidth.clamp(constraints.minWidth, constraints.maxWidth),\n    minHeight: minHeight.clamp(constraints.minHeight, constraints.maxHeight),\n    maxHeight: maxHeight.clamp(constraints.minHeight, constraints.maxHeight),\n  );\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/enforce.html",
+            "isDeprecated": "0",
+            "type": "rendering.BoxConstraints",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.BoxConstraints",
-            "sig": "",
             "params": [
                 {
                     "name": "constraints",
-                    "type": "rendering.BoxConstraints",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "rendering.BoxConstraints"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/enforce.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints enforce(BoxConstraints constraints) {\n  return BoxConstraints(\n    minWidth: minWidth.clamp(constraints.minWidth, constraints.maxWidth),\n    maxWidth: maxWidth.clamp(constraints.minWidth, constraints.maxWidth),\n    minHeight: minHeight.clamp(constraints.minHeight, constraints.maxHeight),\n    maxHeight: maxHeight.clamp(constraints.minHeight, constraints.maxHeight),\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "BoxConstraints.expand",
-            "type": "",
-            "desc": "<p>Creates box constraints that expand to fill another box constraints.<\/p>\n<p>If width or height is given, the constraints will require exactly the\ngiven value in the given dimension.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "width",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "height",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "rendering\/BoxConstraints\/BoxConstraints.expand.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const BoxConstraints.expand({\n  double width,\n  double height,\n}) : minWidth = width != null ? width : double.infinity,\n     maxWidth = width != null ? width : double.infinity,\n     minHeight = height != null ? height : double.infinity,\n     maxHeight = height != null ? height : double.infinity;<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "heightConstraints",
-            "type": "rendering.BoxConstraints",
             "desc": "<p>Returns box constraints with the same height constraints but with\nunconstrained width<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints heightConstraints() =&gt; BoxConstraints(minHeight: minHeight, maxHeight: maxHeight);<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/heightConstraints.html",
+            "isDeprecated": "0",
+            "type": "rendering.BoxConstraints",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/heightConstraints.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints heightConstraints() =&gt; BoxConstraints(minHeight: minHeight, maxHeight: maxHeight);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "isSatisfiedBy",
-            "type": "dart:core.bool",
             "desc": "<p>Whether the given size satisfies the constraints.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool isSatisfiedBy(Size size) {\n  assert(debugAssertIsValid());\n  return (minWidth &lt;= size.width) &amp;&amp; (size.width &lt;= maxWidth) &amp;&amp;\n         (minHeight &lt;= size.height) &amp;&amp; (size.height &lt;= maxHeight);\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/isSatisfiedBy.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.BoxConstraints",
-            "sig": "",
             "params": [
                 {
                     "name": "size",
-                    "type": "dart:ui.Size",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Size"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/isSatisfiedBy.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool isSatisfiedBy(Size size) {\n  assert(debugAssertIsValid());\n  return (minWidth &lt;= size.width) &amp;&amp; (size.width &lt;= maxWidth) &amp;&amp;\n         (minHeight &lt;= size.height) &amp;&amp; (size.height &lt;= maxHeight);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "lerp",
-            "type": "rendering.BoxConstraints",
             "desc": "<p>Linearly interpolate between two BoxConstraints.<\/p>\n<p>If either is null, this function interpolates from a <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a>\nobject whose fields are all set to 0.0.<\/p>\n<p>The <code>t<\/code> argument represents position on the timeline, with 0.0 meaning\nthat the interpolation has not started, returning <code>a<\/code> (or something\nequivalent to <code>a<\/code>), 1.0 meaning that the interpolation has finished,\nreturning <code>b<\/code> (or something equivalent to <code>b<\/code>), and values in between\nmeaning that the interpolation is at the relevant point on the timeline\nbetween <code>a<\/code> and <code>b<\/code>. The interpolation can be extrapolated beyond 0.0 and\n1.0, so negative values and values greater than 1.0 are valid (and can\neasily be generated by curves such as <a href=\"animation\/Curves\/elasticInOut-constant.html\">Curves.elasticInOut<\/a>).<\/p>\n<p>Values for <code>t<\/code> are usually obtained from an <a href=\"animation\/Animation-class.html\">Animation&lt;double&gt;<\/a>, such as\nan <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static BoxConstraints lerp(BoxConstraints a, BoxConstraints b, double t) {\n  assert(t != null);\n  if (a == null &amp;&amp; b == null)\n    return null;\n  if (a == null)\n    return b * t;\n  if (b == null)\n    return a * (1.0 - t);\n  assert(a.debugAssertIsValid());\n  assert(b.debugAssertIsValid());\n  assert((a.minWidth.isFinite &amp;&amp; b.minWidth.isFinite) || (a.minWidth == double.infinity &amp;&amp; b.minWidth == double.infinity), 'Cannot interpolate between finite constraints and unbounded constraints.');\n  assert((a.maxWidth.isFinite &amp;&amp; b.maxWidth.isFinite) || (a.maxWidth == double.infinity &amp;&amp; b.maxWidth == double.infinity), 'Cannot interpolate between finite constraints and unbounded constraints.');\n  assert((a.minHeight.isFinite &amp;&amp; b.minHeight.isFinite) || (a.minHeight == double.infinity &amp;&amp; b.minHeight == double.infinity), 'Cannot interpolate between finite constraints and unbounded constraints.');\n  assert((a.maxHeight.isFinite &amp;&amp; b.maxHeight.isFinite) || (a.maxHeight == double.infinity &amp;&amp; b.maxHeight == double.infinity), 'Cannot interpolate between finite constraints and unbounded constraints.');\n  return BoxConstraints(\n    minWidth: a.minWidth.isFinite ? ui.lerpDouble(a.minWidth, b.minWidth, t) : double.infinity,\n    maxWidth: a.maxWidth.isFinite ? ui.lerpDouble(a.maxWidth, b.maxWidth, t) : double.infinity,\n    minHeight: a.minHeight.isFinite ? ui.lerpDouble(a.minHeight, b.minHeight, t) : double.infinity,\n    maxHeight: a.maxHeight.isFinite ? ui.lerpDouble(a.maxHeight, b.maxHeight, t) : double.infinity,\n  );\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/lerp.html",
+            "isDeprecated": "0",
+            "type": "rendering.BoxConstraints",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.BoxConstraints",
-            "sig": "",
             "params": [
                 {
                     "name": "a",
-                    "type": "rendering.BoxConstraints",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "rendering.BoxConstraints"
                 },
                 {
                     "name": "b",
-                    "type": "rendering.BoxConstraints",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "rendering.BoxConstraints"
                 },
                 {
                     "name": "t",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/lerp.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static BoxConstraints lerp(BoxConstraints a, BoxConstraints b, double t) {\n  assert(t != null);\n  if (a == null &amp;&amp; b == null)\n    return null;\n  if (a == null)\n    return b * t;\n  if (b == null)\n    return a * (1.0 - t);\n  assert(a.debugAssertIsValid());\n  assert(b.debugAssertIsValid());\n  assert((a.minWidth.isFinite &amp;&amp; b.minWidth.isFinite) || (a.minWidth == double.infinity &amp;&amp; b.minWidth == double.infinity), 'Cannot interpolate between finite constraints and unbounded constraints.');\n  assert((a.maxWidth.isFinite &amp;&amp; b.maxWidth.isFinite) || (a.maxWidth == double.infinity &amp;&amp; b.maxWidth == double.infinity), 'Cannot interpolate between finite constraints and unbounded constraints.');\n  assert((a.minHeight.isFinite &amp;&amp; b.minHeight.isFinite) || (a.minHeight == double.infinity &amp;&amp; b.minHeight == double.infinity), 'Cannot interpolate between finite constraints and unbounded constraints.');\n  assert((a.maxHeight.isFinite &amp;&amp; b.maxHeight.isFinite) || (a.maxHeight == double.infinity &amp;&amp; b.maxHeight == double.infinity), 'Cannot interpolate between finite constraints and unbounded constraints.');\n  return BoxConstraints(\n    minWidth: a.minWidth.isFinite ? ui.lerpDouble(a.minWidth, b.minWidth, t) : double.infinity,\n    maxWidth: a.maxWidth.isFinite ? ui.lerpDouble(a.maxWidth, b.maxWidth, t) : double.infinity,\n    minHeight: a.minHeight.isFinite ? ui.lerpDouble(a.minHeight, b.minHeight, t) : double.infinity,\n    maxHeight: a.maxHeight.isFinite ? ui.lerpDouble(a.maxHeight, b.maxHeight, t) : double.infinity,\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "BoxConstraints.loose",
-            "type": "",
-            "desc": "<p>Creates box constraints that forbid sizes larger than the given size.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "size",
-                    "type": "dart:ui.Size",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "rendering\/BoxConstraints\/BoxConstraints.loose.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints.loose(Size size)\n  : minWidth = 0.0,\n    maxWidth = size.width,\n    minHeight = 0.0,\n    maxHeight = size.height;<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "loosen",
-            "type": "rendering.BoxConstraints",
             "desc": "<p>Returns new box constraints that remove the minimum width and height requirements.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/loosen.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints loosen() {\n  assert(debugAssertIsValid());\n  return BoxConstraints(\n    minWidth: 0.0,\n    maxWidth: maxWidth,\n    minHeight: 0.0,\n    maxHeight: maxHeight,\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "rendering\/BoxConstraints\/loosen.html",
+            "isDeprecated": "0",
+            "type": "rendering.BoxConstraints",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
         },
         {
-            "name": "normalize",
-            "type": "rendering.BoxConstraints",
             "desc": "<p>Returns a box constraints that <a href=\"rendering\/BoxConstraints\/isNormalized.html\">isNormalized<\/a>.<\/p>\n<p>The returned <a href=\"rendering\/BoxConstraints\/maxWidth.html\">maxWidth<\/a> is at least as large as the <a href=\"rendering\/BoxConstraints\/minWidth.html\">minWidth<\/a>. Similarly,\nthe returned <a href=\"rendering\/BoxConstraints\/maxHeight.html\">maxHeight<\/a> is at least as large as the <a href=\"rendering\/BoxConstraints\/minHeight.html\">minHeight<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/normalize.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints normalize() {\n  if (isNormalized)\n    return this;\n  final double minWidth = this.minWidth &gt;= 0.0 ? this.minWidth : 0.0;\n  final double minHeight = this.minHeight &gt;= 0.0 ? this.minHeight : 0.0;\n  return BoxConstraints(\n    minWidth: minWidth,\n    maxWidth: minWidth &gt; maxWidth ? minWidth : maxWidth,\n    minHeight: minHeight,\n    maxHeight: minHeight &gt; maxHeight ? minHeight : maxHeight,\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "BoxConstraints.tight",
-            "type": "",
-            "desc": "<p>Creates box constraints that is respected only by the given size.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "size",
-                    "type": "dart:ui.Size",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "rendering\/BoxConstraints\/BoxConstraints.tight.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints.tight(Size size)\n  : minWidth = size.width,\n    maxWidth = size.width,\n    minHeight = size.height,\n    maxHeight = size.height;<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "BoxConstraints.tightFor",
-            "type": "",
-            "desc": "<p>Creates box constraints that require the given width or height.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/BoxConstraints\/BoxConstraints.tightForFinite.html\">new BoxConstraints.tightForFinite<\/a>, which is similar but instead of\nbeing tight if the value is non-null, is tight if the value is not\ninfinite.<\/li><\/ul>",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "width",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "height",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "rendering\/BoxConstraints\/BoxConstraints.tightFor.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const BoxConstraints.tightFor({\n  double width,\n  double height,\n}) : minWidth = width != null ? width : 0.0,\n     maxWidth = width != null ? width : double.infinity,\n     minHeight = height != null ? height : 0.0,\n     maxHeight = height != null ? height : double.infinity;<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "BoxConstraints.tightForFinite",
-            "type": "",
-            "desc": "<p>Creates box constraints that require the given width or height, except if\nthey are infinite.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/BoxConstraints\/BoxConstraints.tightFor.html\">new BoxConstraints.tightFor<\/a>, which is similar but instead of being\ntight if the value is not infinite, is tight if the value is non-null.<\/li><\/ul>",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
-                {
-                    "name": "width",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "height",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "rendering\/BoxConstraints\/BoxConstraints.tightForFinite.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const BoxConstraints.tightForFinite({\n  double width = double.infinity,\n  double height = double.infinity,\n}) : minWidth = width != double.infinity ? width : 0.0,\n     maxWidth = width != double.infinity ? width : double.infinity,\n     minHeight = height != double.infinity ? height : 0.0,\n     maxHeight = height != double.infinity ? height : double.infinity;<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "tighten",
+            "href": "rendering\/BoxConstraints\/normalize.html",
+            "isDeprecated": "0",
             "type": "rendering.BoxConstraints",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
             "desc": "<p>Returns new box constraints with a tight width and\/or height as close to\nthe given width and height as possible while still respecting the original\nbox constraints.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints tighten({ double width, double height }) {\n  return BoxConstraints(minWidth: width == null ? minWidth : width.clamp(minWidth, maxWidth),\n                            maxWidth: width == null ? maxWidth : width.clamp(minWidth, maxWidth),\n                            minHeight: height == null ? minHeight : height.clamp(minHeight, maxHeight),\n                            maxHeight: height == null ? maxHeight : height.clamp(minHeight, maxHeight));\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/tighten.html",
+            "isDeprecated": "0",
+            "type": "rendering.BoxConstraints",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.BoxConstraints",
-            "sig": "",
             "params": [
-                {
-                    "name": "width",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
                 {
                     "name": "height",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/tighten.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints tighten({ double width, double height }) {\n  return BoxConstraints(minWidth: width == null ? minWidth : width.clamp(minWidth, maxWidth),\n                            maxWidth: width == null ? maxWidth : width.clamp(minWidth, maxWidth),\n                            minHeight: height == null ? minHeight : height.clamp(minHeight, maxHeight),\n                            maxHeight: height == null ? maxHeight : height.clamp(minHeight, maxHeight));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "toString",
-            "type": "dart:core.String",
-            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/toString.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() {\n  final String annotation = isNormalized ? '' : '; NOT NORMALIZED';\n  if (minWidth == double.infinity &amp;&amp; minHeight == double.infinity)\n    return 'BoxConstraints(biggest$annotation)';\n  if (minWidth == 0 &amp;&amp; maxWidth == double.infinity &amp;&amp;\n      minHeight == 0 &amp;&amp; maxHeight == double.infinity)\n    return 'BoxConstraints(unconstrained$annotation)';\n  String describe(double min, double max, String dim) {\n    if (min == max)\n      return '$dim=${min.toStringAsFixed(1)}';\n    return '${min.toStringAsFixed(1)}&lt;=$dim&lt;=${max.toStringAsFixed(1)}';\n  }\n  final String width = describe(minWidth, maxWidth, 'w');\n  final String height = describe(minHeight, maxHeight, 'h');\n  return 'BoxConstraints($width, $height$annotation)';\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "widthConstraints",
-            "type": "rendering.BoxConstraints",
-            "desc": "<p>Returns box constraints with the same width constraints but with\nunconstrained height.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/widthConstraints.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints widthConstraints() =&gt; BoxConstraints(minWidth: minWidth, maxWidth: maxWidth);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "operator ~\/",
-            "type": "rendering.BoxConstraints",
-            "desc": "<p>Scales each constraint parameter by the inverse of the given factor, rounded to the nearest integer.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.BoxConstraints",
-            "sig": "",
-            "params": [
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                },
                 {
-                    "name": "factor",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "width",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 }
-            ],
+            ]
+        },
+        {
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() {\n  final String annotation = isNormalized ? '' : '; NOT NORMALIZED';\n  if (minWidth == double.infinity &amp;&amp; minHeight == double.infinity)\n    return 'BoxConstraints(biggest$annotation)';\n  if (minWidth == 0 &amp;&amp; maxWidth == double.infinity &amp;&amp;\n      minHeight == 0 &amp;&amp; maxHeight == double.infinity)\n    return 'BoxConstraints(unconstrained$annotation)';\n  String describe(double min, double max, String dim) {\n    if (min == max)\n      return '$dim=${min.toStringAsFixed(1)}';\n    return '${min.toStringAsFixed(1)}&lt;=$dim&lt;=${max.toStringAsFixed(1)}';\n  }\n  final String width = describe(minWidth, maxWidth, 'w');\n  final String height = describe(minHeight, maxHeight, 'h');\n  return 'BoxConstraints($width, $height$annotation)';\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/toString.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "rendering\/BoxConstraints\/operator_truncate_divide.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints operator~\/(double factor) {\n  return BoxConstraints(\n    minWidth: (minWidth ~\/ factor).toDouble(),\n    maxWidth: (maxWidth ~\/ factor).toDouble(),\n    minHeight: (minHeight ~\/ factor).toDouble(),\n    maxHeight: (maxHeight ~\/ factor).toDouble(),\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "static": false,
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns box constraints with the same width constraints but with\nunconstrained height.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints widthConstraints() =&gt; BoxConstraints(minWidth: minWidth, maxWidth: maxWidth);<\/code><\/pre>\n    ",
+            "href": "rendering\/BoxConstraints\/widthConstraints.html",
+            "isDeprecated": "0",
+            "type": "rendering.BoxConstraints",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "biggest",
-            "type": "dart:ui.Size",
-            "types": [],
             "desc": "<p>The biggest size that satisfies the constraints.<\/p>\n        ",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/biggest.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Size get biggest =&gt; Size(constrainWidth(), constrainHeight());<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "flipped",
-            "type": "rendering.BoxConstraints",
-            "types": [],
-            "desc": "<p>A box constraints with the width and height constraints flipped.<\/p>\n        ",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/flipped.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints get flipped {\n  return BoxConstraints(\n    minWidth: minHeight,\n    maxWidth: maxHeight,\n    minHeight: minWidth,\n    maxHeight: maxWidth,\n  );\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "hasBoundedHeight",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether there is an upper bound on the maximum height.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasBoundedWidth.html\">hasBoundedWidth<\/a>, the equivalent for the horizontal axis.<\/li>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasInfiniteHeight.html\">hasInfiniteHeight<\/a>, which describes whether the minimum height\nconstraint is infinite.<\/li>\n<\/ul>",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/hasBoundedHeight.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasBoundedHeight =&gt; maxHeight &lt; double.infinity;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "hasBoundedWidth",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether there is an upper bound on the maximum width.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasBoundedHeight.html\">hasBoundedHeight<\/a>, the equivalent for the vertical axis.<\/li>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasInfiniteWidth.html\">hasInfiniteWidth<\/a>, which describes whether the minimum width\nconstraint is infinite.<\/li>\n<\/ul>",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/hasBoundedWidth.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasBoundedWidth =&gt; maxWidth &lt; double.infinity;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "hasInfiniteHeight",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether the height constraint is infinite.<\/p>\n<p>Such a constraint is used to indicate that a box should grow as large as\nsome other constraint (in this case, vertically). If constraints are\ninfinite, then they must have other (non-infinite) constraints <a href=\"rendering\/BoxConstraints\/enforce.html\">enforce<\/a>d\nupon them, or must be <a href=\"rendering\/BoxConstraints\/tighten.html\">tighten<\/a>ed, before they can be used to derive a\n<a href=\"dart-ui\/Size-class.html\">Size<\/a> for a <a href=\"rendering\/RenderBox\/size.html\">RenderBox.size<\/a>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasInfiniteWidth.html\">hasInfiniteWidth<\/a>, the equivalent for the horizontal axis.<\/li>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasBoundedHeight.html\">hasBoundedHeight<\/a>, which describes whether the maximum height\nconstraint is finite.<\/li>\n<\/ul>",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/hasInfiniteHeight.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasInfiniteHeight =&gt; minHeight &gt;= double.infinity;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "hasInfiniteWidth",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether the width constraint is infinite.<\/p>\n<p>Such a constraint is used to indicate that a box should grow as large as\nsome other constraint (in this case, horizontally). If constraints are\ninfinite, then they must have other (non-infinite) constraints <a href=\"rendering\/BoxConstraints\/enforce.html\">enforce<\/a>d\nupon them, or must be <a href=\"rendering\/BoxConstraints\/tighten.html\">tighten<\/a>ed, before they can be used to derive a\n<a href=\"dart-ui\/Size-class.html\">Size<\/a> for a <a href=\"rendering\/RenderBox\/size.html\">RenderBox.size<\/a>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasInfiniteHeight.html\">hasInfiniteHeight<\/a>, the equivalent for the vertical axis.<\/li>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasBoundedWidth.html\">hasBoundedWidth<\/a>, which describes whether the maximum width\nconstraint is finite.<\/li>\n<\/ul>",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/hasInfiniteWidth.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasInfiniteWidth =&gt; minWidth &gt;= double.infinity;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "hasTightHeight",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether there is exactly one height value that satisfies the constraints.<\/p>\n        ",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/hasTightHeight.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasTightHeight =&gt; minHeight &gt;= maxHeight;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "hasTightWidth",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether there is exactly one width value that satisfies the constraints.<\/p>\n        ",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/hasTightWidth.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasTightWidth =&gt; minWidth &gt;= maxWidth;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "hashCode",
-            "type": "dart:core.int",
-            "types": [],
-            "desc": "<p>The hash code for this object.<\/p>\n<p>A hash code is a single integer which represents the state of the object\nthat affects <a href=\"rendering\/BoxConstraints\/operator_equals.html\">operator ==<\/a> comparisons.<\/p>\n<p>All objects have hash codes.\nThe default hash code represents only the identity of the object,\nthe same way as the default <a href=\"rendering\/BoxConstraints\/operator_equals.html\">operator ==<\/a> implementation only considers objects\nequal if they are identical (see <a href=\"dart-core\/identityHashCode.html\">identityHashCode<\/a>).<\/p>\n<p>If <a href=\"rendering\/BoxConstraints\/operator_equals.html\">operator ==<\/a> is overridden to use the object state instead,\nthe hash code must also be changed to represent that state.<\/p>\n<p>Hash codes must be the same for objects that are equal to each other\naccording to <a href=\"rendering\/BoxConstraints\/operator_equals.html\">operator ==<\/a>.\nThe hash code of an object should only change if the object changes\nin a way that affects equality.\nThere are no further requirements for the hash codes.\nThey need not be consistent between executions of the same program\nand there are no distribution guarantees.<\/p>\n<p>Objects that are not equal are allowed to have the same hash code,\nit is even technically allowed that all instances have the same hash code,\nbut if clashes happen too often, it may reduce the efficiency of hash-based\ndata structures like <a href=\"dart-collection\/HashSet-class.html\">HashSet<\/a> or <a href=\"dart-collection\/HashMap-class.html\">HashMap<\/a>.<\/p>\n<p>If a subclass overrides <a href=\"rendering\/BoxConstraints\/hashCode.html\">hashCode<\/a>, it should override the\n<a href=\"rendering\/BoxConstraints\/operator_equals.html\">operator ==<\/a> operator as well to maintain consistency.<\/p>\n        ",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/hashCode.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get hashCode {\n  assert(debugAssertIsValid());\n  return hashValues(minWidth, maxWidth, minHeight, maxHeight);\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "isNormalized",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Returns whether the object's constraints are normalized.\nConstraints are normalized if the minimums are less than or\nequal to the corresponding maximums.<\/p>\n<p>For example, a BoxConstraints object with a minWidth of 100.0\nand a maxWidth of 90.0 is not normalized.<\/p>\n<p>Most of the APIs on BoxConstraints expect the constraints to be\nnormalized and have undefined behavior when they are not. In\nchecked mode, many of these APIs will assert if the constraints\nare not normalized.<\/p>\n        ",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/isNormalized.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get isNormalized {\n  return minWidth &gt;= 0.0 &amp;&amp;\n         minWidth &lt;= maxWidth &amp;&amp;\n         minHeight &gt;= 0.0 &amp;&amp;\n         minHeight &lt;= maxHeight;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "isTight",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether there is exactly one size that satisfies the constraints.<\/p>\n        ",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/isTight.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get isTight =&gt; hasTightWidth &amp;&amp; hasTightHeight;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "maxHeight",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>The maximum height that satisfies the constraints.<\/p>\n<p>Might be <a href=\"dart-core\/double\/infinity-constant.html\">double.infinity<\/a>.<\/p>\n        ",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/maxHeight.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double maxHeight\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "maxWidth",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>The maximum width that satisfies the constraints.<\/p>\n<p>Might be <a href=\"dart-core\/double\/infinity-constant.html\">double.infinity<\/a>.<\/p>\n        ",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/maxWidth.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double maxWidth\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "minHeight",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>The minimum height that satisfies the constraints.<\/p>\n        ",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/minHeight.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double minHeight\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "minWidth",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>The minimum width that satisfies the constraints.<\/p>\n        ",
-            "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/minWidth.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double minWidth\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "smallest",
+            "href": "rendering\/BoxConstraints\/biggest.html",
+            "isDeprecated": "0",
             "type": "dart:ui.Size",
-            "types": [],
-            "desc": "<p>The smallest size that satisfies the constraints.<\/p>\n        ",
             "memberOf": "rendering.BoxConstraints",
-            "isConstant": false,
-            "href": "rendering\/BoxConstraints\/smallest.html",
+            "params": []
+        },
+        {
+            "desc": "<p>A box constraints with the width and height constraints flipped.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">BoxConstraints get flipped {\n  return BoxConstraints(\n    minWidth: minHeight,\n    maxWidth: maxHeight,\n    minHeight: minWidth,\n    maxHeight: maxWidth,\n  );\n}<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/flipped.html",
+            "isDeprecated": "0",
+            "type": "rendering.BoxConstraints",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether there is an upper bound on the maximum height.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasBoundedWidth.html\">hasBoundedWidth<\/a>, the equivalent for the horizontal axis.<\/li>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasInfiniteHeight.html\">hasInfiniteHeight<\/a>, which describes whether the minimum height\nconstraint is infinite.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasBoundedHeight =&gt; maxHeight &lt; double.infinity;<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/hasBoundedHeight.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether there is an upper bound on the maximum width.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasBoundedHeight.html\">hasBoundedHeight<\/a>, the equivalent for the vertical axis.<\/li>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasInfiniteWidth.html\">hasInfiniteWidth<\/a>, which describes whether the minimum width\nconstraint is infinite.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasBoundedWidth =&gt; maxWidth &lt; double.infinity;<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/hasBoundedWidth.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether the height constraint is infinite.<\/p>\n<p>Such a constraint is used to indicate that a box should grow as large as\nsome other constraint (in this case, vertically). If constraints are\ninfinite, then they must have other (non-infinite) constraints <a href=\"rendering\/BoxConstraints\/enforce.html\">enforce<\/a>d\nupon them, or must be <a href=\"rendering\/BoxConstraints\/tighten.html\">tighten<\/a>ed, before they can be used to derive a\n<a href=\"dart-ui\/Size-class.html\">Size<\/a> for a <a href=\"rendering\/RenderBox\/size.html\">RenderBox.size<\/a>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasInfiniteWidth.html\">hasInfiniteWidth<\/a>, the equivalent for the horizontal axis.<\/li>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasBoundedHeight.html\">hasBoundedHeight<\/a>, which describes whether the maximum height\nconstraint is finite.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasInfiniteHeight =&gt; minHeight &gt;= double.infinity;<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/hasInfiniteHeight.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether the width constraint is infinite.<\/p>\n<p>Such a constraint is used to indicate that a box should grow as large as\nsome other constraint (in this case, horizontally). If constraints are\ninfinite, then they must have other (non-infinite) constraints <a href=\"rendering\/BoxConstraints\/enforce.html\">enforce<\/a>d\nupon them, or must be <a href=\"rendering\/BoxConstraints\/tighten.html\">tighten<\/a>ed, before they can be used to derive a\n<a href=\"dart-ui\/Size-class.html\">Size<\/a> for a <a href=\"rendering\/RenderBox\/size.html\">RenderBox.size<\/a>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasInfiniteHeight.html\">hasInfiniteHeight<\/a>, the equivalent for the vertical axis.<\/li>\n<li>\n<a href=\"rendering\/BoxConstraints\/hasBoundedWidth.html\">hasBoundedWidth<\/a>, which describes whether the maximum width\nconstraint is finite.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasInfiniteWidth =&gt; minWidth &gt;= double.infinity;<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/hasInfiniteWidth.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether there is exactly one height value that satisfies the constraints.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasTightHeight =&gt; minHeight &gt;= maxHeight;<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/hasTightHeight.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether there is exactly one width value that satisfies the constraints.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasTightWidth =&gt; minWidth &gt;= maxWidth;<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/hasTightWidth.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>The hash code for this object.<\/p>\n<p>A hash code is a single integer which represents the state of the object\nthat affects <a href=\"rendering\/BoxConstraints\/operator_equals.html\">operator ==<\/a> comparisons.<\/p>\n<p>All objects have hash codes.\nThe default hash code represents only the identity of the object,\nthe same way as the default <a href=\"rendering\/BoxConstraints\/operator_equals.html\">operator ==<\/a> implementation only considers objects\nequal if they are identical (see <a href=\"dart-core\/identityHashCode.html\">identityHashCode<\/a>).<\/p>\n<p>If <a href=\"rendering\/BoxConstraints\/operator_equals.html\">operator ==<\/a> is overridden to use the object state instead,\nthe hash code must also be changed to represent that state.<\/p>\n<p>Hash codes must be the same for objects that are equal to each other\naccording to <a href=\"rendering\/BoxConstraints\/operator_equals.html\">operator ==<\/a>.\nThe hash code of an object should only change if the object changes\nin a way that affects equality.\nThere are no further requirements for the hash codes.\nThey need not be consistent between executions of the same program\nand there are no distribution guarantees.<\/p>\n<p>Objects that are not equal are allowed to have the same hash code,\nit is even technically allowed that all instances have the same hash code,\nbut if clashes happen too often, it may reduce the efficiency of hash-based\ndata structures like <a href=\"dart-collection\/HashSet-class.html\">HashSet<\/a> or <a href=\"dart-collection\/HashMap-class.html\">HashMap<\/a>.<\/p>\n<p>If a subclass overrides <a href=\"rendering\/BoxConstraints\/hashCode.html\">hashCode<\/a>, it should override the\n<a href=\"rendering\/BoxConstraints\/operator_equals.html\">operator ==<\/a> operator as well to maintain consistency.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get hashCode {\n  assert(debugAssertIsValid());\n  return hashValues(minWidth, maxWidth, minHeight, maxHeight);\n}<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/hashCode.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns whether the object's constraints are normalized.\nConstraints are normalized if the minimums are less than or\nequal to the corresponding maximums.<\/p>\n<p>For example, a BoxConstraints object with a minWidth of 100.0\nand a maxWidth of 90.0 is not normalized.<\/p>\n<p>Most of the APIs on BoxConstraints expect the constraints to be\nnormalized and have undefined behavior when they are not. In\nchecked mode, many of these APIs will assert if the constraints\nare not normalized.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get isNormalized {\n  return minWidth &gt;= 0.0 &amp;&amp;\n         minWidth &lt;= maxWidth &amp;&amp;\n         minHeight &gt;= 0.0 &amp;&amp;\n         minHeight &lt;= maxHeight;\n}<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/isNormalized.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether there is exactly one size that satisfies the constraints.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get isTight =&gt; hasTightWidth &amp;&amp; hasTightHeight;<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/isTight.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>The maximum height that satisfies the constraints.<\/p>\n<p>Might be <a href=\"dart-core\/double\/infinity-constant.html\">double.infinity<\/a>.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double maxHeight\n\n<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/maxHeight.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>The maximum width that satisfies the constraints.<\/p>\n<p>Might be <a href=\"dart-core\/double\/infinity-constant.html\">double.infinity<\/a>.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double maxWidth\n\n<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/maxWidth.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>The minimum height that satisfies the constraints.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double minHeight\n\n<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/minHeight.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>The minimum width that satisfies the constraints.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double minWidth\n\n<\/code><\/pre>\n        ",
+            "href": "rendering\/BoxConstraints\/minWidth.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
+        },
+        {
+            "desc": "<p>The smallest size that satisfies the constraints.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Size get smallest =&gt; Size(constrainWidth(0.0), constrainHeight(0.0));<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/BoxConstraints\/smallest.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Size",
+            "memberOf": "rendering.BoxConstraints",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [
-        "widgets.BoxConstraintsTween"
-    ],
-    "realImplementors": [
-        "widgets.BoxConstraintsTween"
-    ],
-    "cn": [],
-    "href": "rendering\/BoxConstraints-class.html",
-    "desc": "<p>Immutable layout constraints for <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> layout.<\/p>\n<p>A <a href=\"dart-ui\/Size-class.html\">Size<\/a> respects a <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> if, and only if, all of the following\nrelations hold:<\/p>\n<ul>\n<li>\n<a href=\"rendering\/BoxConstraints\/minWidth.html\">minWidth<\/a> &lt;= <a href=\"dart-ui\/Size\/width.html\">Size.width<\/a> &lt;= <a href=\"rendering\/BoxConstraints\/maxWidth.html\">maxWidth<\/a>\n<\/li>\n<li>\n<a href=\"rendering\/BoxConstraints\/minHeight.html\">minHeight<\/a> &lt;= <a href=\"dart-ui\/Size\/height.html\">Size.height<\/a> &lt;= <a href=\"rendering\/BoxConstraints\/maxHeight.html\">maxHeight<\/a>\n<\/li>\n<\/ul>\n<p>The constraints themselves must satisfy these relations:<\/p>\n<ul>\n<li>0.0 &lt;= <a href=\"rendering\/BoxConstraints\/minWidth.html\">minWidth<\/a> &lt;= <a href=\"rendering\/BoxConstraints\/maxWidth.html\">maxWidth<\/a> &lt;= <a href=\"dart-core\/double\/infinity-constant.html\">double.infinity<\/a>\n<\/li>\n<li>0.0 &lt;= <a href=\"rendering\/BoxConstraints\/minHeight.html\">minHeight<\/a> &lt;= <a href=\"rendering\/BoxConstraints\/maxHeight.html\">maxHeight<\/a> &lt;= <a href=\"dart-core\/double\/infinity-constant.html\">double.infinity<\/a>\n<\/li>\n<\/ul>\n<p><a href=\"dart-core\/double\/infinity-constant.html\">double.infinity<\/a> is a legal value for each constraint.<\/p>\n<h2 id=\"the-box-layout-model\">The box layout model<\/h2>\n<p>Render objects in the Flutter framework are laid out by a one-pass layout\nmodel which walks down the render tree passing constraints, then walks back\nup the render tree passing concrete geometry.<\/p>\n<p>For boxes, the constraints are <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a>, which, as described herein,\nconsist of four numbers: a minimum width <a href=\"rendering\/BoxConstraints\/minWidth.html\">minWidth<\/a>, a maximum width\n<a href=\"rendering\/BoxConstraints\/maxWidth.html\">maxWidth<\/a>, a minimum height <a href=\"rendering\/BoxConstraints\/minHeight.html\">minHeight<\/a>, and a maximum height <a href=\"rendering\/BoxConstraints\/maxHeight.html\">maxHeight<\/a>.<\/p>\n<p>The geometry for boxes consists of a <a href=\"dart-ui\/Size-class.html\">Size<\/a>, which must satisfy the\nconstraints described above.<\/p>\n<p>Each <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> (the objects that provide the layout models for box\nwidgets) receives <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> from its parent, then lays out each of\nits children, then picks a <a href=\"dart-ui\/Size-class.html\">Size<\/a> that satisfies the <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a>.<\/p>\n<p>Render objects position their children independently of laying them out.\nFrequently, the parent will use the children's sizes to determine their\nposition. A child does not know its position and will not necessarily be\nlaid out again, or repainted, if its position changes.<\/p>\n<h2 id=\"terminology\">Terminology<\/h2>\n<p>When the minimum constraints and the maximum constraint in an axis are the\nsame, that axis is <em>tightly<\/em> constrained. See: <a href=\"rendering\/BoxConstraints\/BoxConstraints.tightFor.html\">new\nBoxConstraints.tightFor<\/a>, <a href=\"rendering\/BoxConstraints\/BoxConstraints.tightForFinite.html\">new BoxConstraints.tightForFinite<\/a>, <a href=\"rendering\/BoxConstraints\/tighten.html\">tighten<\/a>,\n<a href=\"rendering\/BoxConstraints\/hasTightWidth.html\">hasTightWidth<\/a>, <a href=\"rendering\/BoxConstraints\/hasTightHeight.html\">hasTightHeight<\/a>, <a href=\"rendering\/BoxConstraints\/isTight.html\">isTight<\/a>.<\/p>\n<p>An axis with a minimum constraint of 0.0 is <em>loose<\/em> (regardless of the\nmaximum constraint; if it is also 0.0, then the axis is simultaneously tight\nand loose!). See: <a href=\"rendering\/BoxConstraints\/BoxConstraints.loose.html\">new BoxConstraints.loose<\/a>, <a href=\"rendering\/BoxConstraints\/loosen.html\">loosen<\/a>.<\/p>\n<p>An axis whose maximum constraint is not infinite is <em>bounded<\/em>. See:\n<a href=\"rendering\/BoxConstraints\/hasBoundedWidth.html\">hasBoundedWidth<\/a>, <a href=\"rendering\/BoxConstraints\/hasBoundedHeight.html\">hasBoundedHeight<\/a>.<\/p>\n<p>An axis whose maximum constraint is infinite is <em>unbounded<\/em>. An axis is\n<em>expanding<\/em> if it is tightly infinite (its minimum and maximum constraints\nare both infinite). See: <a href=\"rendering\/BoxConstraints\/BoxConstraints.expand.html\">new BoxConstraints.expand<\/a>.<\/p>\n<p>An axis whose <em>minimum<\/em> constraint is infinite is just said to be <em>infinite<\/em>\n(since by definition the maximum constraint must also be infinite in that\ncase). See: <a href=\"rendering\/BoxConstraints\/hasInfiniteWidth.html\">hasInfiniteWidth<\/a>, <a href=\"rendering\/BoxConstraints\/hasInfiniteHeight.html\">hasInfiniteHeight<\/a>.<\/p>\n<p>A size is <em>constrained<\/em> when it satisfies a <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> description.\nSee: <a href=\"rendering\/BoxConstraints\/constrain.html\">constrain<\/a>, <a href=\"rendering\/BoxConstraints\/constrainWidth.html\">constrainWidth<\/a>, <a href=\"rendering\/BoxConstraints\/constrainHeight.html\">constrainHeight<\/a>,\n<a href=\"rendering\/BoxConstraints\/constrainDimensions.html\">constrainDimensions<\/a>, <a href=\"rendering\/BoxConstraints\/constrainSizeAndAttemptToPreserveAspectRatio.html\">constrainSizeAndAttemptToPreserveAspectRatio<\/a>,\n<a href=\"rendering\/BoxConstraints\/isSatisfiedBy.html\">isSatisfiedBy<\/a>.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "BoxConstraints"
+    ]
 }

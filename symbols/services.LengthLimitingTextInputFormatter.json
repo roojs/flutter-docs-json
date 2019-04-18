@@ -1,93 +1,86 @@
 {
+    "desc": "<p>A <a href=\"services\/TextInputFormatter-class.html\">TextInputFormatter<\/a> that prevents the insertion of more characters\n(currently defined as Unicode scalar values) than allowed.<\/p>\n<p>Since this formatter only prevents new characters from being added to the\ntext, it preserves the existing <a href=\"services\/TextEditingValue\/selection.html\">TextEditingValue.selection<\/a>.<\/p>\n<ul><li>\n<a href=\"services\/LengthLimitingTextInputFormatter\/maxLength.html\">maxLength<\/a>, which discusses the precise meaning of \"number of\ncharacters\" and how it may differ from the intuitive meaning.<\/li><\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "services\/LengthLimitingTextInputFormatter-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "services",
     "name": "services.LengthLimitingTextInputFormatter",
+    "shortname": "LengthLimitingTextInputFormatter",
     "extends": [
         "services.TextInputFormatter",
         "dart:core.Object"
     ],
-    "memberOf": "services",
     "events": [],
     "methods": [
         {
-            "name": "LengthLimitingTextInputFormatter",
-            "type": "",
             "desc": "<p>Creates a formatter that prevents the insertion of more characters than a\nlimit.<\/p>\n<p>The <code>maxLength<\/code> must be null, -1 or greater than zero. If it is null or -1\nthen no limit is enforced.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">LengthLimitingTextInputFormatter(this.maxLength)\n  : assert(maxLength == null || maxLength == -1 || maxLength &gt; 0);<\/code><\/pre>\n    ",
+            "href": "services\/LengthLimitingTextInputFormatter\/LengthLimitingTextInputFormatter.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "services.LengthLimitingTextInputFormatter",
-            "sig": "",
             "params": [
                 {
                     "name": "maxLength",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.int"
                 }
-            ],
-            "isConstructor": true,
-            "href": "services\/LengthLimitingTextInputFormatter\/LengthLimitingTextInputFormatter.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">LengthLimitingTextInputFormatter(this.maxLength)\n  : assert(maxLength == null || maxLength == -1 || maxLength &gt; 0);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "formatEditUpdate",
-            "type": "services.TextEditingValue",
             "desc": "<p>Called when text is being typed or cut\/copy\/pasted in the <a href=\"widgets\/EditableText-class.html\">EditableText<\/a>.<\/p>\n<p>You can override the resulting text based on the previous text value and\nthe incoming new text value.<\/p>\n<p>When formatters are chained, <code>oldValue<\/code> reflects the initial value of\n<a href=\"services\/TextEditingValue-class.html\">TextEditingValue<\/a> at the beginning of the chain.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nTextEditingValue formatEditUpdate(\n  TextEditingValue oldValue, \/\/ unused.\n  TextEditingValue newValue,\n) {\n  if (maxLength != null &amp;&amp; maxLength &gt; 0 &amp;&amp; newValue.text.runes.length &gt; maxLength) {\n    final TextSelection newSelection = newValue.selection.copyWith(\n        baseOffset: math.min(newValue.selection.start, maxLength),\n        extentOffset: math.min(newValue.selection.end, maxLength),\n    );\n    \/\/ This does not count grapheme clusters (i.e. characters visible to the user),\n    \/\/ it counts Unicode runes, which leaves out a number of useful possible\n    \/\/ characters (like many emoji), so this will be inaccurate in the\n    \/\/ presence of those characters. The Dart lang bug\n    \/\/ https:\/\/github.com\/dart-lang\/sdk\/issues\/28404 has been filed to\n    \/\/ address this in Dart.\n    \/\/ TODO(gspencer): convert this to count actual characters when Dart\n    \/\/ supports that.\n    final RuneIterator iterator = RuneIterator(newValue.text);\n    if (iterator.moveNext())\n      for (int count = 0; count &lt; maxLength; ++count)\n        if (!iterator.moveNext())\n          break;\n    final String truncated = newValue.text.substring(0, iterator.rawIndex);\n    return TextEditingValue(\n      text: truncated,\n      selection: newSelection,\n      composing: TextRange.empty,\n    );\n  }\n  return newValue;\n}<\/code><\/pre>\n    ",
+            "href": "services\/LengthLimitingTextInputFormatter\/formatEditUpdate.html",
+            "isDeprecated": "0",
+            "type": "services.TextEditingValue",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "services.LengthLimitingTextInputFormatter",
-            "sig": "",
             "params": [
                 {
-                    "name": "oldValue",
-                    "type": "services.TextEditingValue",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "newValue",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "services.TextEditingValue"
                 },
                 {
-                    "name": "newValue",
-                    "type": "services.TextEditingValue",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "oldValue",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "services.TextEditingValue"
                 }
-            ],
-            "isConstructor": false,
-            "href": "services\/LengthLimitingTextInputFormatter\/formatEditUpdate.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nTextEditingValue formatEditUpdate(\n  TextEditingValue oldValue, \/\/ unused.\n  TextEditingValue newValue,\n) {\n  if (maxLength != null &amp;&amp; maxLength &gt; 0 &amp;&amp; newValue.text.runes.length &gt; maxLength) {\n    final TextSelection newSelection = newValue.selection.copyWith(\n        baseOffset: math.min(newValue.selection.start, maxLength),\n        extentOffset: math.min(newValue.selection.end, maxLength),\n    );\n    \/\/ This does not count grapheme clusters (i.e. characters visible to the user),\n    \/\/ it counts Unicode runes, which leaves out a number of useful possible\n    \/\/ characters (like many emoji), so this will be inaccurate in the\n    \/\/ presence of those characters. The Dart lang bug\n    \/\/ https:\/\/github.com\/dart-lang\/sdk\/issues\/28404 has been filed to\n    \/\/ address this in Dart.\n    \/\/ TODO(gspencer): convert this to count actual characters when Dart\n    \/\/ supports that.\n    final RuneIterator iterator = RuneIterator(newValue.text);\n    if (iterator.moveNext())\n      for (int count = 0; count &lt; maxLength; ++count)\n        if (!iterator.moveNext())\n          break;\n    final String truncated = newValue.text.substring(0, iterator.rawIndex);\n    return TextEditingValue(\n      text: truncated,\n      selection: newSelection,\n      composing: TextRange.empty,\n    );\n  }\n  return newValue;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "maxLength",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The limit on the number of characters (i.e. Unicode scalar values) this formatter\nwill allow.<\/p>\n<p>The value must be null or greater than zero. If it is null, then no limit\nis enforced.<\/p>\n<p>This formatter does not currently count Unicode grapheme clusters (i.e.\ncharacters visible to the user), it counts Unicode scalar values, which leaves\nout a number of useful possible characters (like many emoji and composed\ncharacters), so this will be inaccurate in the presence of those\ncharacters. If you expect to encounter these kinds of characters, be\ngenerous in the maxLength used.<\/p>\n<p>For instance, the character \"\u00f6\" can be represented as '\\u{006F}\\u{0308}',\nwhich is the letter \"o\" followed by a composed diaeresis \"\u00a8\", or it can\nbe represented as '\\u{00F6}', which is the Unicode scalar value \"LATIN\nSMALL LETTER O WITH DIAERESIS\". In the first case, the text field will\ncount two characters, and the second case will be counted as one\ncharacter, even though the user can see no difference in the input.<\/p>\n<p>Similarly, some emoji are represented by multiple scalar values. The\nUnicode \"THUMBS UP SIGN + MEDIUM SKIN TONE MODIFIER\", \"\ud83d\udc4d\ud83c\udffd\", should be\ncounted as a single character, but because it is a combination of two\nUnicode scalar values, '\\u{1F44D}\\u{1F3FD}', it is counted as two\ncharacters.<\/p>\n        ",
-            "memberOf": "services.LengthLimitingTextInputFormatter",
-            "isConstant": false,
-            "href": "services\/LengthLimitingTextInputFormatter\/maxLength.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int maxLength\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "services\/LengthLimitingTextInputFormatter\/maxLength.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "services.LengthLimitingTextInputFormatter",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "services\/LengthLimitingTextInputFormatter-class.html",
-    "desc": "<p>A <a href=\"services\/TextInputFormatter-class.html\">TextInputFormatter<\/a> that prevents the insertion of more characters\n(currently defined as Unicode scalar values) than allowed.<\/p>\n<p>Since this formatter only prevents new characters from being added to the\ntext, it preserves the existing <a href=\"services\/TextEditingValue\/selection.html\">TextEditingValue.selection<\/a>.<\/p>\n<ul><li>\n<a href=\"services\/LengthLimitingTextInputFormatter\/maxLength.html\">maxLength<\/a>, which discusses the precise meaning of \"number of\ncharacters\" and how it may differ from the intuitive meaning.<\/li><\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "LengthLimitingTextInputFormatter"
+    ]
 }

@@ -1,5 +1,17 @@
 {
+    "desc": "<p>A scrollable list of widgets arranged linearly.<\/p>\n<p><a href=\"widgets\/ListView-class.html\">ListView<\/a> is the most commonly used scrolling widget. It displays its\nchildren one after another in the scroll direction. In the cross axis, the\nchildren are required to fill the <a href=\"widgets\/ListView-class.html\">ListView<\/a>.<\/p>\n<p>If non-null, the <a href=\"widgets\/ListView\/itemExtent.html\">itemExtent<\/a> forces the children to have the given extent\nin the scroll direction. Specifying an <a href=\"widgets\/ListView\/itemExtent.html\">itemExtent<\/a> is more efficient than\nletting the children determine their own extent because the scrolling\nmachinery can make use of the foreknowledge of the children's extent to save\nwork, for example when the scroll position changes drastically.<\/p>\n<p>There are four options for constructing a <a href=\"widgets\/ListView-class.html\">ListView<\/a>:<\/p>\n<ol>\n<li>\n<p>The default constructor takes an explicit <a href=\"dart-core\/List-class.html\">List&lt;Widget&gt;<\/a> of children. This\nconstructor is appropriate for list views with a small number of\nchildren because constructing the <a href=\"dart-core\/List-class.html\">List<\/a> requires doing work for every\nchild that could possibly be displayed in the list view instead of just\nthose children that are actually visible.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"widgets\/ListView\/ListView.builder.html\">ListView.builder<\/a> constructor takes an <a href=\"widgets\/IndexedWidgetBuilder.html\">IndexedWidgetBuilder<\/a>, which\nbuilds the children on demand. This constructor is appropriate for list views\nwith a large (or infinite) number of children because the builder is called\nonly for those children that are actually visible.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"widgets\/ListView\/ListView.separated.html\">ListView.separated<\/a> constructor takes two <a href=\"widgets\/IndexedWidgetBuilder.html\">IndexedWidgetBuilder<\/a>s:\n<code>itemBuilder<\/code> builds child items on demand, and <code>separatorBuilder<\/code>\nsimilarly builds separator children which appear in between the child items.\nThis constructor is appropriate for list views with a fixed number of children.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"widgets\/ListView\/ListView.custom.html\">ListView.custom<\/a> constructor takes a <a href=\"widgets\/SliverChildDelegate-class.html\">SliverChildDelegate<\/a>, which provides\nthe ability to customize additional aspects of the child model. For example,\na <a href=\"widgets\/SliverChildDelegate-class.html\">SliverChildDelegate<\/a> can control the algorithm used to estimate the\nsize of children that are not actually visible.<\/p>\n<\/li>\n<\/ol>\n<p>To control the initial scroll offset of the scroll view, provide a\n<a href=\"widgets\/ScrollView\/controller.html\">controller<\/a> with its <a href=\"widgets\/ScrollController\/initialScrollOffset.html\">ScrollController.initialScrollOffset<\/a> property set.<\/p>\n<p>By default, <a href=\"widgets\/ListView-class.html\">ListView<\/a> will automatically pad the list's scrollable\nextremities to avoid partial obstructions indicated by <a href=\"widgets\/MediaQuery-class.html\">MediaQuery<\/a>'s\npadding. To avoid this behavior, override with a zero <a href=\"widgets\/BoxScrollView\/padding.html\">padding<\/a> property.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example uses the default constructor for <a href=\"widgets\/ListView-class.html\">ListView<\/a> which takes an\nexplicit <a href=\"dart-core\/List-class.html\">List&lt;Widget&gt;<\/a> of children. This <a href=\"widgets\/ListView-class.html\">ListView<\/a>'s children are made up\nof <a href=\"widgets\/Container-class.html\">Container<\/a>s with <a href=\"widgets\/Text-class.html\">Text<\/a>.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">ListView(\n  padding: const EdgeInsets.all(8.0),\n  children: &lt;Widget&gt;[\n    Container(\n      height: 50,\n      color: Colors.amber[600],\n      child: const Center(child: Text('Entry A')),\n    ),\n    Container(\n      height: 50,\n      color: Colors.amber[500],\n      child: const Center(child: Text('Entry B')),\n    ),\n    Container(\n      height: 50,\n      color: Colors.amber[100],\n      child: const Center(child: Text('Entry C')),\n    ),\n  ],\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example mirrors the previous one, creating the same list using the\n<a href=\"widgets\/ListView\/ListView.builder.html\">ListView.builder<\/a> constructor. Using the <a href=\"widgets\/IndexedWidgetBuilder.html\">IndexedWidgetBuilder<\/a>, children\nare built lazily and can be infinite in number.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">final List&lt;String&gt; entries = &lt;String&gt;['A', 'B', 'C'];\nfinal List&lt;int&gt; colorCodes = &lt;int&gt;[600, 500, 100];\n\nListView.builder(\n  padding: const EdgeInsets.all(8.0),\n  itemCount: entries.length,\n  itemBuilder: (BuildContext context, int index) {\n    return Container(\n      height: 50,\n      color: Colors.amber[colorCodes[index]],\n      child: Center(child: Text('Entry ${entries[index]}')),\n    );\n  }\n);<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example continues to build from our the previous ones, creating a\nsimilar list using <a href=\"widgets\/ListView\/ListView.separated.html\">ListView.separated<\/a>. Here, a <a href=\"material\/Divider-class.html\">Divider<\/a> is used as a\nseparator.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">final List&lt;String&gt; entries = &lt;String&gt;['A', 'B', 'C'];\nfinal List&lt;int&gt; colorCodes = &lt;int&gt;[600, 500, 100];\n\nListView.separated(\n  padding: const EdgeInsets.all(8.0),\n  itemCount: entries.length,\n  itemBuilder: (BuildContext context, int index) {\n    return Container(\n      height: 50,\n      color: Colors.amber[colorCodes[index]],\n      child: Center(child: Text('Entry ${entries[index]}')),\n    );\n  },\n  separatorBuilder: (BuildContext context, int index) =&gt; const Divider(),\n);<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<h2 id=\"child-elements-lifecycle\">Child elements' lifecycle<\/h2>\n<h3 id=\"creation\">Creation<\/h3>\n<p>While laying out the list, visible children's elements, states and render\nobjects will be created lazily based on existing widgets (such as when using\nthe default constructor) or lazily provided ones (such as when using the\n<a href=\"widgets\/ListView\/ListView.builder.html\">ListView.builder<\/a> constructor).<\/p>\n<h3 id=\"destruction\">Destruction<\/h3>\n<p>When a child is scrolled out of view, the associated element subtree,\nstates and render objects are destroyed. A new child at the same position\nin the list will be lazily recreated along with new elements, states and\nrender objects when it is scrolled back.<\/p>\n<h3 id=\"destruction-mitigation\">Destruction mitigation<\/h3>\n<p>In order to preserve state as child elements are scrolled in and out of\nview, the following options are possible:<\/p>\n<ul>\n<li>\n<p>Moving the ownership of non-trivial UI-state-driving business logic\nout of the list child subtree. For instance, if a list contains posts\nwith their number of upvotes coming from a cached network response, store\nthe list of posts and upvote number in a data model outside the list. Let\nthe list child UI subtree be easily recreate-able from the\nsource-of-truth model object. Use <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>s in the child\nwidget subtree to store instantaneous UI state only.<\/p>\n<\/li>\n<li>\n<p>Letting <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a> be the root widget of the list child widget subtree\nthat needs to be preserved. The <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a> widget marks the child\nsubtree's top render object child for keep-alive. When the associated top\nrender object is scrolled out of view, the list keeps the child's render\nobject (and by extension, its associated elements and states) in a cache\nlist instead of destroying them. When scrolled back into view, the render\nobject is repainted as-is (if it wasn't marked dirty in the interim).<\/p>\n<p>This only works if <code>addAutomaticKeepAlives<\/code> and <code>addRepaintBoundaries<\/code>\nare false since those parameters cause the <a href=\"widgets\/ListView-class.html\">ListView<\/a> to wrap each child\nwidget subtree with other widgets.<\/p>\n<\/li>\n<li>\n<p>Using <a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> widgets (inserted by default when\n<code>addAutomaticKeepAlives<\/code> is true). Instead of unconditionally caching the\nchild element subtree when scrolling off-screen like <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a>,\n<a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> can let whether to cache the subtree be determined\nby descendant logic in the subtree.<\/p>\n<p>As an example, the <a href=\"widgets\/EditableText-class.html\">EditableText<\/a> widget signals its list child element\nsubtree to stay alive while its text field has input focus. If it doesn't\nhave focus and no other descendants signaled for keep-alive via a\n<a href=\"widgets\/KeepAliveNotification-class.html\">KeepAliveNotification<\/a>, the list child element subtree will be destroyed\nwhen scrolled away.<\/p>\n<p><a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> descendants typically signal it to be kept alive\nby using the <a href=\"widgets\/AutomaticKeepAliveClientMixin-mixin.html\">AutomaticKeepAliveClientMixin<\/a>, then implementing the\n<code>wantKeepAlive<\/code> getter and calling <code>updateKeepAlive<\/code>.<\/p>\n<\/li>\n<\/ul>\n<h2 id=\"transitioning-to-customscrollview\">Transitioning to <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>\n<\/h2>\n<p>A <a href=\"widgets\/ListView-class.html\">ListView<\/a> is basically a <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a> with a single <a href=\"widgets\/SliverList-class.html\">SliverList<\/a> in\nits <a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a> property.<\/p>\n<p>If <a href=\"widgets\/ListView-class.html\">ListView<\/a> is no longer sufficient, for example because the scroll view\nis to have both a list and a grid, or because the list is to be combined\nwith a <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a>, etc, it is straight-forward to port code from using\n<a href=\"widgets\/ListView-class.html\">ListView<\/a> to using <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a> directly.<\/p>\n<p>The <a href=\"widgets\/Widget\/key.html\">key<\/a>, <a href=\"widgets\/ScrollView\/scrollDirection.html\">scrollDirection<\/a>, <a href=\"widgets\/ScrollView\/reverse.html\">reverse<\/a>, <a href=\"widgets\/ScrollView\/controller.html\">controller<\/a>, <a href=\"widgets\/ScrollView\/primary.html\">primary<\/a>, <a href=\"widgets\/ScrollView\/physics.html\">physics<\/a>,\nand <a href=\"widgets\/ScrollView\/shrinkWrap.html\">shrinkWrap<\/a> properties on <a href=\"widgets\/ListView-class.html\">ListView<\/a> map directly to the identically\nnamed properties on <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>.<\/p>\n<p>The <a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a> property should be a list containing either a\n<a href=\"widgets\/SliverList-class.html\">SliverList<\/a> or a <a href=\"widgets\/SliverFixedExtentList-class.html\">SliverFixedExtentList<\/a>; the former if <a href=\"widgets\/ListView\/itemExtent.html\">itemExtent<\/a> on the\n<a href=\"widgets\/ListView-class.html\">ListView<\/a> was null, and the latter if <a href=\"widgets\/ListView\/itemExtent.html\">itemExtent<\/a> was not null.<\/p>\n<p>The <a href=\"widgets\/ListView\/childrenDelegate.html\">childrenDelegate<\/a> property on <a href=\"widgets\/ListView-class.html\">ListView<\/a> corresponds to the\n<a href=\"widgets\/SliverMultiBoxAdaptorWidget\/delegate.html\">SliverList.delegate<\/a> (or <a href=\"widgets\/SliverMultiBoxAdaptorWidget\/delegate.html\">SliverFixedExtentList.delegate<\/a>) property. The\n<a href=\"widgets\/ListView\/ListView.html\">new ListView<\/a> constructor's <code>children<\/code> argument corresponds to the\n<a href=\"widgets\/ListView\/childrenDelegate.html\">childrenDelegate<\/a> being a <a href=\"widgets\/SliverChildListDelegate-class.html\">SliverChildListDelegate<\/a> with that same\nargument. The <a href=\"widgets\/ListView\/ListView.builder.html\">new ListView.builder<\/a> constructor's <code>itemBuilder<\/code> and\n<code>childCount<\/code> arguments correspond to the <a href=\"widgets\/ListView\/childrenDelegate.html\">childrenDelegate<\/a> being a\n<a href=\"widgets\/SliverChildBuilderDelegate-class.html\">SliverChildBuilderDelegate<\/a> with the matching arguments.<\/p>\n<p>The <a href=\"widgets\/BoxScrollView\/padding.html\">padding<\/a> property corresponds to having a <a href=\"widgets\/SliverPadding-class.html\">SliverPadding<\/a> in the\n<a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a> property instead of the list itself, and having\nthe <a href=\"widgets\/SliverList-class.html\">SliverList<\/a> instead be a child of the <a href=\"widgets\/SliverPadding-class.html\">SliverPadding<\/a>.<\/p>\n<p><a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>s don't automatically avoid obstructions from <a href=\"widgets\/MediaQuery-class.html\">MediaQuery<\/a>\nlike <a href=\"widgets\/ListView-class.html\">ListView<\/a>s do. To reproduce the behavior, wrap the slivers in\n<a href=\"widgets\/SliverSafeArea-class.html\">SliverSafeArea<\/a>s.<\/p>\n<p>Once code has been ported to use <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>, other slivers, such as\n<a href=\"widgets\/SliverGrid-class.html\">SliverGrid<\/a> or <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a>, can be put in the <a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a>\nlist.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nHere are two brief snippets showing a <a href=\"widgets\/ListView-class.html\">ListView<\/a> and its equivalent using\n<a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">ListView(\n  shrinkWrap: true,\n  padding: const EdgeInsets.all(20.0),\n  children: &lt;Widget&gt;[\n    const Text('I\\'m dedicating every day to you'),\n    const Text('Domestic life was never quite my style'),\n    const Text('When you smile, you knock me out, I fall apart'),\n    const Text('And I thought I was so smart'),\n  ],\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">CustomScrollView(\n  shrinkWrap: true,\n  slivers: &lt;Widget&gt;[\n    SliverPadding(\n      padding: const EdgeInsets.all(20.0),\n      sliver: SliverList(\n        delegate: SliverChildListDelegate(\n          &lt;Widget&gt;[\n            const Text('I\\'m dedicating every day to you'),\n            const Text('Domestic life was never quite my style'),\n            const Text('When you smile, you knock me out, I fall apart'),\n            const Text('And I thought I was so smart'),\n          ],\n        ),\n      ),\n    ),\n  ],\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/SingleChildScrollView-class.html\">SingleChildScrollView<\/a>, which is a scrollable widget that has a single\nchild.<\/li>\n<li>\n<a href=\"widgets\/PageView-class.html\">PageView<\/a>, which is a scrolling list of child widgets that are each the\nsize of the viewport.<\/li>\n<li>\n<a href=\"widgets\/GridView-class.html\">GridView<\/a>, which is scrollable, 2D array of widgets.<\/li>\n<li>\n<a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>, which is a scrollable widget that creates custom\nscroll effects using slivers.<\/li>\n<li>\n<a href=\"widgets\/ListBody-class.html\">ListBody<\/a>, which arranges its children in a similar manner, but without\nscrolling.<\/li>\n<li>\n<a href=\"widgets\/ScrollNotification-class.html\">ScrollNotification<\/a> and <a href=\"widgets\/NotificationListener-class.html\">NotificationListener<\/a>, which can be used to watch\nthe scroll position without using a <a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a>.<\/li>\n<\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "widgets\/ListView-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "widgets",
     "name": "widgets.ListView",
+    "shortname": "ListView",
     "extends": [
         "widgets.BoxScrollView",
         "widgets.ScrollView",
@@ -9,693 +21,228 @@
         "foundation.Diagnosticable",
         "dart:core.Object"
     ],
-    "memberOf": "widgets",
     "events": [],
     "methods": [
         {
-            "name": "ListView",
-            "type": "",
             "desc": "<p>Creates a scrollable, linear array of widgets from an explicit <a href=\"dart-core\/List-class.html\">List<\/a>.<\/p>\n<p>This constructor is appropriate for list views with a small number of\nchildren because constructing the <a href=\"dart-core\/List-class.html\">List<\/a> requires doing work for every\nchild that could possibly be displayed in the list view instead of just\nthose children that are actually visible.<\/p>\n<p>It is usually more efficient to create children on demand using <a href=\"widgets\/ListView\/ListView.builder.html\">new\nListView.builder<\/a>.<\/p>\n<p>The <code>addAutomaticKeepAlives<\/code> argument corresponds to the\n<a href=\"widgets\/SliverChildListDelegate\/addAutomaticKeepAlives.html\">SliverChildListDelegate.addAutomaticKeepAlives<\/a> property. The\n<code>addRepaintBoundaries<\/code> argument corresponds to the\n<a href=\"widgets\/SliverChildListDelegate\/addRepaintBoundaries.html\">SliverChildListDelegate.addRepaintBoundaries<\/a> property. The\n<code>addSemanticIndexes<\/code> argument corresponds to the\n<a href=\"widgets\/SliverChildListDelegate\/addSemanticIndexes.html\">SliverChildListDelegate.addSemanticIndexes<\/a> property. None\nmay be null.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ListView({\n  Key key,\n  Axis scrollDirection = Axis.vertical,\n  bool reverse = false,\n  ScrollController controller,\n  bool primary,\n  ScrollPhysics physics,\n  bool shrinkWrap = false,\n  EdgeInsetsGeometry padding,\n  this.itemExtent,\n  bool addAutomaticKeepAlives = true,\n  bool addRepaintBoundaries = true,\n  bool addSemanticIndexes = true,\n  double cacheExtent,\n  List&lt;Widget&gt; children = const &lt;Widget&gt;[],\n  int semanticChildCount,\n  DragStartBehavior dragStartBehavior = DragStartBehavior.start,\n}) : childrenDelegate = SliverChildListDelegate(\n       children,\n       addAutomaticKeepAlives: addAutomaticKeepAlives,\n       addRepaintBoundaries: addRepaintBoundaries,\n       addSemanticIndexes: addSemanticIndexes,\n     ),\n     super(\n       key: key,\n       scrollDirection: scrollDirection,\n       reverse: reverse,\n       controller: controller,\n       primary: primary,\n       physics: physics,\n       shrinkWrap: shrinkWrap,\n       padding: padding,\n       cacheExtent: cacheExtent,\n       semanticChildCount: semanticChildCount ?? children.length,\n       dragStartBehavior: dragStartBehavior,\n     );<\/code><\/pre>\n    ",
+            "href": "widgets\/ListView\/ListView.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "widgets.ListView",
-            "sig": "",
             "params": [
                 {
-                    "name": "key",
-                    "type": "foundation.Key",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "scrollDirection",
-                    "type": "painting.Axis",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "reverse",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "controller",
-                    "type": "widgets.ScrollController",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "primary",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "physics",
-                    "type": "widgets.ScrollPhysics",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "shrinkWrap",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "padding",
-                    "type": "painting.EdgeInsetsGeometry",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "itemExtent",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
                     "name": "addAutomaticKeepAlives",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "addRepaintBoundaries",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "addSemanticIndexes",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "cacheExtent",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
                 },
                 {
                     "name": "children",
-                    "type": "dart:core.List<widgets.Widget>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.List",
-                        "widgets.Widget"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.List<widgets.Widget>"
                 },
                 {
-                    "name": "semanticChildCount",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "controller",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.ScrollController"
                 },
                 {
                     "name": "dragStartBehavior",
-                    "type": "gestures.DragStartBehavior",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "gestures.DragStartBehavior"
+                },
+                {
+                    "name": "itemExtent",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
+                },
+                {
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "foundation.Key"
+                },
+                {
+                    "name": "padding",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "painting.EdgeInsetsGeometry"
+                },
+                {
+                    "name": "physics",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.ScrollPhysics"
+                },
+                {
+                    "name": "primary",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "reverse",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "scrollDirection",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "painting.Axis"
+                },
+                {
+                    "name": "semanticChildCount",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.int"
+                },
+                {
+                    "name": "shrinkWrap",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
                 }
-            ],
-            "isConstructor": true,
-            "href": "widgets\/ListView\/ListView.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ListView({\n  Key key,\n  Axis scrollDirection = Axis.vertical,\n  bool reverse = false,\n  ScrollController controller,\n  bool primary,\n  ScrollPhysics physics,\n  bool shrinkWrap = false,\n  EdgeInsetsGeometry padding,\n  this.itemExtent,\n  bool addAutomaticKeepAlives = true,\n  bool addRepaintBoundaries = true,\n  bool addSemanticIndexes = true,\n  double cacheExtent,\n  List&lt;Widget&gt; children = const &lt;Widget&gt;[],\n  int semanticChildCount,\n  DragStartBehavior dragStartBehavior = DragStartBehavior.start,\n}) : childrenDelegate = SliverChildListDelegate(\n       children,\n       addAutomaticKeepAlives: addAutomaticKeepAlives,\n       addRepaintBoundaries: addRepaintBoundaries,\n       addSemanticIndexes: addSemanticIndexes,\n     ),\n     super(\n       key: key,\n       scrollDirection: scrollDirection,\n       reverse: reverse,\n       controller: controller,\n       primary: primary,\n       physics: physics,\n       shrinkWrap: shrinkWrap,\n       padding: padding,\n       cacheExtent: cacheExtent,\n       semanticChildCount: semanticChildCount ?? children.length,\n       dragStartBehavior: dragStartBehavior,\n     );<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "buildChildLayout",
-            "type": "widgets.Widget",
             "desc": "<p>Subclasses should override this method to build the layout model.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nWidget buildChildLayout(BuildContext context) {\n  if (itemExtent != null) {\n    return SliverFixedExtentList(\n      delegate: childrenDelegate,\n      itemExtent: itemExtent,\n    );\n  }\n  return SliverList(delegate: childrenDelegate);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ListView\/buildChildLayout.html",
+            "isDeprecated": "0",
+            "type": "widgets.Widget",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.ListView",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/ListView\/buildChildLayout.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nWidget buildChildLayout(BuildContext context) {\n  if (itemExtent != null) {\n    return SliverFixedExtentList(\n      delegate: childrenDelegate,\n      itemExtent: itemExtent,\n    );\n  }\n  return SliverList(delegate: childrenDelegate);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "ListView.builder",
-            "type": "",
-            "desc": "<p>Creates a scrollable, linear array of widgets that are created on demand.<\/p>\n<p>This constructor is appropriate for list views with a large (or infinite)\nnumber of children because the builder is called only for those children\nthat are actually visible.<\/p>\n<p>Providing a non-null <code>itemCount<\/code> improves the ability of the <a href=\"widgets\/ListView-class.html\">ListView<\/a> to\nestimate the maximum scroll extent.<\/p>\n<p>The <code>itemBuilder<\/code> callback will be called only with indices greater than\nor equal to zero and less than <code>itemCount<\/code>.<\/p>\n<p>The <code>itemBuilder<\/code> should actually create the widget instances when called.\nAvoid using a builder that returns a previously-constructed widget; if the\nlist view's children are created in advance, or all at once when the\n<a href=\"widgets\/ListView-class.html\">ListView<\/a> itself is created, it is more efficient to use <a href=\"widgets\/ListView\/ListView.html\">new ListView<\/a>.\nEven more efficient, however, is to create the instances on demand using\nthis constructor's <code>itemBuilder<\/code> callback.<\/p>\n<p>The <code>addAutomaticKeepAlives<\/code> argument corresponds to the\n<a href=\"widgets\/SliverChildBuilderDelegate\/addAutomaticKeepAlives.html\">SliverChildBuilderDelegate.addAutomaticKeepAlives<\/a> property. The\n<code>addRepaintBoundaries<\/code> argument corresponds to the\n<a href=\"widgets\/SliverChildBuilderDelegate\/addRepaintBoundaries.html\">SliverChildBuilderDelegate.addRepaintBoundaries<\/a> property. The\n<code>addSemanticIndexes<\/code> argument corresponds to the\n<a href=\"widgets\/SliverChildBuilderDelegate\/addSemanticIndexes.html\">SliverChildBuilderDelegate.addSemanticIndexes<\/a> property. None may be\nnull.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.ListView",
-            "sig": "",
-            "params": [
-                {
-                    "name": "key",
-                    "type": "foundation.Key",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "scrollDirection",
-                    "type": "painting.Axis",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "reverse",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "controller",
-                    "type": "widgets.ScrollController",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "primary",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "physics",
-                    "type": "widgets.ScrollPhysics",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "shrinkWrap",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "padding",
-                    "type": "painting.EdgeInsetsGeometry",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "itemExtent",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "itemBuilder",
-                    "type": "widgets.IndexedWidgetBuilder",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "itemCount",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "addAutomaticKeepAlives",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "addRepaintBoundaries",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "addSemanticIndexes",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "cacheExtent",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "semanticChildCount",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "dragStartBehavior",
-                    "type": "gestures.DragStartBehavior",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "widgets\/ListView\/ListView.builder.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ListView.builder({\n  Key key,\n  Axis scrollDirection = Axis.vertical,\n  bool reverse = false,\n  ScrollController controller,\n  bool primary,\n  ScrollPhysics physics,\n  bool shrinkWrap = false,\n  EdgeInsetsGeometry padding,\n  this.itemExtent,\n  @required IndexedWidgetBuilder itemBuilder,\n  int itemCount,\n  bool addAutomaticKeepAlives = true,\n  bool addRepaintBoundaries = true,\n  bool addSemanticIndexes = true,\n  double cacheExtent,\n  int semanticChildCount,\n  DragStartBehavior dragStartBehavior = DragStartBehavior.start,\n}) : childrenDelegate = SliverChildBuilderDelegate(\n       itemBuilder,\n       childCount: itemCount,\n       addAutomaticKeepAlives: addAutomaticKeepAlives,\n       addRepaintBoundaries: addRepaintBoundaries,\n       addSemanticIndexes: addSemanticIndexes,\n     ),\n     super(\n       key: key,\n       scrollDirection: scrollDirection,\n       reverse: reverse,\n       controller: controller,\n       primary: primary,\n       physics: physics,\n       shrinkWrap: shrinkWrap,\n       padding: padding,\n       cacheExtent: cacheExtent,\n       semanticChildCount: semanticChildCount ?? itemCount,\n       dragStartBehavior: dragStartBehavior,\n     );<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "ListView.custom",
-            "type": "",
-            "desc": "<p>Creates a scrollable, linear array of widgets with a custom child model.<\/p>\n<p>For example, a custom child model can control the algorithm used to\nestimate the size of children that are not actually visible.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.ListView",
-            "sig": "",
-            "params": [
-                {
-                    "name": "key",
-                    "type": "foundation.Key",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "scrollDirection",
-                    "type": "painting.Axis",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "reverse",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "controller",
-                    "type": "widgets.ScrollController",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "primary",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "physics",
-                    "type": "widgets.ScrollPhysics",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "shrinkWrap",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "padding",
-                    "type": "painting.EdgeInsetsGeometry",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "itemExtent",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "childrenDelegate",
-                    "type": "widgets.SliverChildDelegate",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "cacheExtent",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "semanticChildCount",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "widgets\/ListView\/ListView.custom.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const ListView.custom({\n  Key key,\n  Axis scrollDirection = Axis.vertical,\n  bool reverse = false,\n  ScrollController controller,\n  bool primary,\n  ScrollPhysics physics,\n  bool shrinkWrap = false,\n  EdgeInsetsGeometry padding,\n  this.itemExtent,\n  @required this.childrenDelegate,\n  double cacheExtent,\n  int semanticChildCount,\n}) : assert(childrenDelegate != null),\n     super(\n       key: key,\n       scrollDirection: scrollDirection,\n       reverse: reverse,\n       controller: controller,\n       primary: primary,\n       physics: physics,\n       shrinkWrap: shrinkWrap,\n       padding: padding,\n       cacheExtent: cacheExtent,\n       semanticChildCount: semanticChildCount,\n     );<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "debugFillProperties",
-            "type": "",
             "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"widgets\/ListView\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTree\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/Diagnosticable\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(DoubleProperty('itemExtent', itemExtent, defaultValue: null));\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ListView\/debugFillProperties.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.ListView",
-            "sig": "",
             "params": [
                 {
                     "name": "properties",
-                    "type": "foundation.DiagnosticPropertiesBuilder",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "foundation.DiagnosticPropertiesBuilder"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/ListView\/debugFillProperties.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(DoubleProperty('itemExtent', itemExtent, defaultValue: null));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "ListView.separated",
-            "type": "",
-            "desc": "<p>Creates a fixed-length scrollable linear array of list \"items\" separated\nby list item \"separators\".<\/p>\n<p>This constructor is appropriate for list views with a large number of\nitem and separator children because the builders are only called for\nthe children that are actually visible.<\/p>\n<p>The <code>itemBuilder<\/code> callback will be called with indices greater than\nor equal to zero and less than <code>itemCount<\/code>.<\/p>\n<p>Separators only appear between list items: separator 0 appears after item\n0 and the last separator appears before the last item.<\/p>\n<p>The <code>separatorBuilder<\/code> callback will be called with indices greater than\nor equal to zero and less than <code>itemCount - 1<\/code>.<\/p>\n<p>The <code>itemBuilder<\/code> and <code>separatorBuilder<\/code> callbacks should actually create\nwidget instances when called. Avoid using a builder that returns a\npreviously-constructed widget; if the list view's children are created in\nadvance, or all at once when the <a href=\"widgets\/ListView-class.html\">ListView<\/a> itself is created, it is more\nefficient to use <a href=\"widgets\/ListView\/ListView.html\">new ListView<\/a>.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows how to create <a href=\"widgets\/ListView-class.html\">ListView<\/a> whose <a href=\"material\/ListTile-class.html\">ListTile<\/a> list items\nare separated by <a href=\"material\/Divider-class.html\">Divider<\/a>s.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">ListView.separated(\n  itemCount: 25,\n  separatorBuilder: (BuildContext context, int index) =&gt; Divider(),\n  itemBuilder: (BuildContext context, int index) {\n    return ListTile(\n      title: Text('item $index'),\n    );\n  },\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>The <code>addAutomaticKeepAlives<\/code> argument corresponds to the\n<a href=\"widgets\/SliverChildBuilderDelegate\/addAutomaticKeepAlives.html\">SliverChildBuilderDelegate.addAutomaticKeepAlives<\/a> property. The\n<code>addRepaintBoundaries<\/code> argument corresponds to the\n<a href=\"widgets\/SliverChildBuilderDelegate\/addRepaintBoundaries.html\">SliverChildBuilderDelegate.addRepaintBoundaries<\/a> property. The\n<code>addSemanticIndexes<\/code> argument corresponds to the\n<a href=\"widgets\/SliverChildBuilderDelegate\/addSemanticIndexes.html\">SliverChildBuilderDelegate.addSemanticIndexes<\/a> property. None may be\nnull.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.ListView",
-            "sig": "",
-            "params": [
-                {
-                    "name": "key",
-                    "type": "foundation.Key",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "scrollDirection",
-                    "type": "painting.Axis",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "reverse",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "controller",
-                    "type": "widgets.ScrollController",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "primary",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "physics",
-                    "type": "widgets.ScrollPhysics",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "shrinkWrap",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "padding",
-                    "type": "painting.EdgeInsetsGeometry",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "itemBuilder",
-                    "type": "widgets.IndexedWidgetBuilder",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "separatorBuilder",
-                    "type": "widgets.IndexedWidgetBuilder",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "itemCount",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "addAutomaticKeepAlives",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "addRepaintBoundaries",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "addSemanticIndexes",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "cacheExtent",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "widgets\/ListView\/ListView.separated.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ListView.separated({\n  Key key,\n  Axis scrollDirection = Axis.vertical,\n  bool reverse = false,\n  ScrollController controller,\n  bool primary,\n  ScrollPhysics physics,\n  bool shrinkWrap = false,\n  EdgeInsetsGeometry padding,\n  @required IndexedWidgetBuilder itemBuilder,\n  @required IndexedWidgetBuilder separatorBuilder,\n  @required int itemCount,\n  bool addAutomaticKeepAlives = true,\n  bool addRepaintBoundaries = true,\n  bool addSemanticIndexes = true,\n  double cacheExtent,\n}) : assert(itemBuilder != null),\n     assert(separatorBuilder != null),\n     assert(itemCount != null &amp;&amp; itemCount &gt;= 0),\n     itemExtent = null,\n     childrenDelegate = SliverChildBuilderDelegate(\n       (BuildContext context, int index) {\n         final int itemIndex = index ~\/ 2;\n         Widget widget;\n         if (index.isEven) {\n           widget = itemBuilder(context, itemIndex);\n         } else {\n           widget = separatorBuilder(context, itemIndex);\n           assert(() {\n             if (widget == null) {\n               throw FlutterError('separatorBuilder cannot return null.');\n             }\n             return true;\n           }());\n         }\n         return widget;\n       },\n       childCount: _computeSemanticChildCount(itemCount),\n       addAutomaticKeepAlives: addAutomaticKeepAlives,\n       addRepaintBoundaries: addRepaintBoundaries,\n       addSemanticIndexes: addSemanticIndexes,\n       semanticIndexCallback: (Widget _, int index) {\n         return index.isEven ? index ~\/ 2 : null;\n       },\n     ),\n     super(\n       key: key,\n       scrollDirection: scrollDirection,\n       reverse: reverse,\n       controller: controller,\n       primary: primary,\n       physics: physics,\n       shrinkWrap: shrinkWrap,\n       padding: padding,\n       cacheExtent: cacheExtent,\n       semanticChildCount: _computeSemanticChildCount(itemCount),\n     );<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "childrenDelegate",
-            "type": "widgets.SliverChildDelegate",
-            "types": [],
             "desc": "<p>A delegate that provides the children for the <a href=\"widgets\/ListView-class.html\">ListView<\/a>.<\/p>\n<p>The <a href=\"widgets\/ListView\/ListView.custom.html\">ListView.custom<\/a> constructor lets you specify this delegate\nexplicitly. The <a href=\"widgets\/ListView-class.html\">ListView<\/a> and <a href=\"widgets\/ListView\/ListView.builder.html\">ListView.builder<\/a> constructors create a\n<a href=\"widgets\/ListView\/childrenDelegate.html\">childrenDelegate<\/a> that wraps the given <a href=\"dart-core\/List-class.html\">List<\/a> and <a href=\"widgets\/IndexedWidgetBuilder.html\">IndexedWidgetBuilder<\/a>,\nrespectively.<\/p>\n        ",
-            "memberOf": "widgets.ListView",
-            "isConstant": false,
-            "href": "widgets\/ListView\/childrenDelegate.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final SliverChildDelegate childrenDelegate\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/ListView\/childrenDelegate.html",
+            "isDeprecated": "0",
+            "type": "widgets.SliverChildDelegate",
+            "memberOf": "widgets.ListView",
+            "params": []
         },
         {
-            "name": "itemExtent",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>If non-null, forces the children to have the given extent in the scroll\ndirection.<\/p>\n<p>Specifying an <a href=\"widgets\/ListView\/itemExtent.html\">itemExtent<\/a> is more efficient than letting the children\ndetermine their own extent because the scrolling machinery can make use of\nthe foreknowledge of the children's extent to save work, for example when\nthe scroll position changes drastically.<\/p>\n        ",
-            "memberOf": "widgets.ListView",
-            "isConstant": false,
-            "href": "widgets\/ListView\/itemExtent.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double itemExtent\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/ListView\/itemExtent.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "widgets.ListView",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "widgets\/ListView-class.html",
-    "desc": "<p>A scrollable list of widgets arranged linearly.<\/p>\n<p><a href=\"widgets\/ListView-class.html\">ListView<\/a> is the most commonly used scrolling widget. It displays its\nchildren one after another in the scroll direction. In the cross axis, the\nchildren are required to fill the <a href=\"widgets\/ListView-class.html\">ListView<\/a>.<\/p>\n<p>If non-null, the <a href=\"widgets\/ListView\/itemExtent.html\">itemExtent<\/a> forces the children to have the given extent\nin the scroll direction. Specifying an <a href=\"widgets\/ListView\/itemExtent.html\">itemExtent<\/a> is more efficient than\nletting the children determine their own extent because the scrolling\nmachinery can make use of the foreknowledge of the children's extent to save\nwork, for example when the scroll position changes drastically.<\/p>\n<p>There are four options for constructing a <a href=\"widgets\/ListView-class.html\">ListView<\/a>:<\/p>\n<ol>\n<li>\n<p>The default constructor takes an explicit <a href=\"dart-core\/List-class.html\">List&lt;Widget&gt;<\/a> of children. This\nconstructor is appropriate for list views with a small number of\nchildren because constructing the <a href=\"dart-core\/List-class.html\">List<\/a> requires doing work for every\nchild that could possibly be displayed in the list view instead of just\nthose children that are actually visible.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"widgets\/ListView\/ListView.builder.html\">ListView.builder<\/a> constructor takes an <a href=\"widgets\/IndexedWidgetBuilder.html\">IndexedWidgetBuilder<\/a>, which\nbuilds the children on demand. This constructor is appropriate for list views\nwith a large (or infinite) number of children because the builder is called\nonly for those children that are actually visible.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"widgets\/ListView\/ListView.separated.html\">ListView.separated<\/a> constructor takes two <a href=\"widgets\/IndexedWidgetBuilder.html\">IndexedWidgetBuilder<\/a>s:\n<code>itemBuilder<\/code> builds child items on demand, and <code>separatorBuilder<\/code>\nsimilarly builds separator children which appear in between the child items.\nThis constructor is appropriate for list views with a fixed number of children.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"widgets\/ListView\/ListView.custom.html\">ListView.custom<\/a> constructor takes a <a href=\"widgets\/SliverChildDelegate-class.html\">SliverChildDelegate<\/a>, which provides\nthe ability to customize additional aspects of the child model. For example,\na <a href=\"widgets\/SliverChildDelegate-class.html\">SliverChildDelegate<\/a> can control the algorithm used to estimate the\nsize of children that are not actually visible.<\/p>\n<\/li>\n<\/ol>\n<p>To control the initial scroll offset of the scroll view, provide a\n<a href=\"widgets\/ScrollView\/controller.html\">controller<\/a> with its <a href=\"widgets\/ScrollController\/initialScrollOffset.html\">ScrollController.initialScrollOffset<\/a> property set.<\/p>\n<p>By default, <a href=\"widgets\/ListView-class.html\">ListView<\/a> will automatically pad the list's scrollable\nextremities to avoid partial obstructions indicated by <a href=\"widgets\/MediaQuery-class.html\">MediaQuery<\/a>'s\npadding. To avoid this behavior, override with a zero <a href=\"widgets\/BoxScrollView\/padding.html\">padding<\/a> property.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example uses the default constructor for <a href=\"widgets\/ListView-class.html\">ListView<\/a> which takes an\nexplicit <a href=\"dart-core\/List-class.html\">List&lt;Widget&gt;<\/a> of children. This <a href=\"widgets\/ListView-class.html\">ListView<\/a>'s children are made up\nof <a href=\"widgets\/Container-class.html\">Container<\/a>s with <a href=\"widgets\/Text-class.html\">Text<\/a>.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">ListView(\n  padding: const EdgeInsets.all(8.0),\n  children: &lt;Widget&gt;[\n    Container(\n      height: 50,\n      color: Colors.amber[600],\n      child: const Center(child: Text('Entry A')),\n    ),\n    Container(\n      height: 50,\n      color: Colors.amber[500],\n      child: const Center(child: Text('Entry B')),\n    ),\n    Container(\n      height: 50,\n      color: Colors.amber[100],\n      child: const Center(child: Text('Entry C')),\n    ),\n  ],\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example mirrors the previous one, creating the same list using the\n<a href=\"widgets\/ListView\/ListView.builder.html\">ListView.builder<\/a> constructor. Using the <a href=\"widgets\/IndexedWidgetBuilder.html\">IndexedWidgetBuilder<\/a>, children\nare built lazily and can be infinite in number.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">final List&lt;String&gt; entries = &lt;String&gt;['A', 'B', 'C'];\nfinal List&lt;int&gt; colorCodes = &lt;int&gt;[600, 500, 100];\n\nListView.builder(\n  padding: const EdgeInsets.all(8.0),\n  itemCount: entries.length,\n  itemBuilder: (BuildContext context, int index) {\n    return Container(\n      height: 50,\n      color: Colors.amber[colorCodes[index]],\n      child: Center(child: Text('Entry ${entries[index]}')),\n    );\n  }\n);<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example continues to build from our the previous ones, creating a\nsimilar list using <a href=\"widgets\/ListView\/ListView.separated.html\">ListView.separated<\/a>. Here, a <a href=\"material\/Divider-class.html\">Divider<\/a> is used as a\nseparator.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">final List&lt;String&gt; entries = &lt;String&gt;['A', 'B', 'C'];\nfinal List&lt;int&gt; colorCodes = &lt;int&gt;[600, 500, 100];\n\nListView.separated(\n  padding: const EdgeInsets.all(8.0),\n  itemCount: entries.length,\n  itemBuilder: (BuildContext context, int index) {\n    return Container(\n      height: 50,\n      color: Colors.amber[colorCodes[index]],\n      child: Center(child: Text('Entry ${entries[index]}')),\n    );\n  },\n  separatorBuilder: (BuildContext context, int index) =&gt; const Divider(),\n);<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<h2 id=\"child-elements-lifecycle\">Child elements' lifecycle<\/h2>\n<h3 id=\"creation\">Creation<\/h3>\n<p>While laying out the list, visible children's elements, states and render\nobjects will be created lazily based on existing widgets (such as when using\nthe default constructor) or lazily provided ones (such as when using the\n<a href=\"widgets\/ListView\/ListView.builder.html\">ListView.builder<\/a> constructor).<\/p>\n<h3 id=\"destruction\">Destruction<\/h3>\n<p>When a child is scrolled out of view, the associated element subtree,\nstates and render objects are destroyed. A new child at the same position\nin the list will be lazily recreated along with new elements, states and\nrender objects when it is scrolled back.<\/p>\n<h3 id=\"destruction-mitigation\">Destruction mitigation<\/h3>\n<p>In order to preserve state as child elements are scrolled in and out of\nview, the following options are possible:<\/p>\n<ul>\n<li>\n<p>Moving the ownership of non-trivial UI-state-driving business logic\nout of the list child subtree. For instance, if a list contains posts\nwith their number of upvotes coming from a cached network response, store\nthe list of posts and upvote number in a data model outside the list. Let\nthe list child UI subtree be easily recreate-able from the\nsource-of-truth model object. Use <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>s in the child\nwidget subtree to store instantaneous UI state only.<\/p>\n<\/li>\n<li>\n<p>Letting <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a> be the root widget of the list child widget subtree\nthat needs to be preserved. The <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a> widget marks the child\nsubtree's top render object child for keep-alive. When the associated top\nrender object is scrolled out of view, the list keeps the child's render\nobject (and by extension, its associated elements and states) in a cache\nlist instead of destroying them. When scrolled back into view, the render\nobject is repainted as-is (if it wasn't marked dirty in the interim).<\/p>\n<p>This only works if <code>addAutomaticKeepAlives<\/code> and <code>addRepaintBoundaries<\/code>\nare false since those parameters cause the <a href=\"widgets\/ListView-class.html\">ListView<\/a> to wrap each child\nwidget subtree with other widgets.<\/p>\n<\/li>\n<li>\n<p>Using <a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> widgets (inserted by default when\n<code>addAutomaticKeepAlives<\/code> is true). Instead of unconditionally caching the\nchild element subtree when scrolling off-screen like <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a>,\n<a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> can let whether to cache the subtree be determined\nby descendant logic in the subtree.<\/p>\n<p>As an example, the <a href=\"widgets\/EditableText-class.html\">EditableText<\/a> widget signals its list child element\nsubtree to stay alive while its text field has input focus. If it doesn't\nhave focus and no other descendants signaled for keep-alive via a\n<a href=\"widgets\/KeepAliveNotification-class.html\">KeepAliveNotification<\/a>, the list child element subtree will be destroyed\nwhen scrolled away.<\/p>\n<p><a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> descendants typically signal it to be kept alive\nby using the <a href=\"widgets\/AutomaticKeepAliveClientMixin-mixin.html\">AutomaticKeepAliveClientMixin<\/a>, then implementing the\n<code>wantKeepAlive<\/code> getter and calling <code>updateKeepAlive<\/code>.<\/p>\n<\/li>\n<\/ul>\n<h2 id=\"transitioning-to-customscrollview\">Transitioning to <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>\n<\/h2>\n<p>A <a href=\"widgets\/ListView-class.html\">ListView<\/a> is basically a <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a> with a single <a href=\"widgets\/SliverList-class.html\">SliverList<\/a> in\nits <a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a> property.<\/p>\n<p>If <a href=\"widgets\/ListView-class.html\">ListView<\/a> is no longer sufficient, for example because the scroll view\nis to have both a list and a grid, or because the list is to be combined\nwith a <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a>, etc, it is straight-forward to port code from using\n<a href=\"widgets\/ListView-class.html\">ListView<\/a> to using <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a> directly.<\/p>\n<p>The <a href=\"widgets\/Widget\/key.html\">key<\/a>, <a href=\"widgets\/ScrollView\/scrollDirection.html\">scrollDirection<\/a>, <a href=\"widgets\/ScrollView\/reverse.html\">reverse<\/a>, <a href=\"widgets\/ScrollView\/controller.html\">controller<\/a>, <a href=\"widgets\/ScrollView\/primary.html\">primary<\/a>, <a href=\"widgets\/ScrollView\/physics.html\">physics<\/a>,\nand <a href=\"widgets\/ScrollView\/shrinkWrap.html\">shrinkWrap<\/a> properties on <a href=\"widgets\/ListView-class.html\">ListView<\/a> map directly to the identically\nnamed properties on <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>.<\/p>\n<p>The <a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a> property should be a list containing either a\n<a href=\"widgets\/SliverList-class.html\">SliverList<\/a> or a <a href=\"widgets\/SliverFixedExtentList-class.html\">SliverFixedExtentList<\/a>; the former if <a href=\"widgets\/ListView\/itemExtent.html\">itemExtent<\/a> on the\n<a href=\"widgets\/ListView-class.html\">ListView<\/a> was null, and the latter if <a href=\"widgets\/ListView\/itemExtent.html\">itemExtent<\/a> was not null.<\/p>\n<p>The <a href=\"widgets\/ListView\/childrenDelegate.html\">childrenDelegate<\/a> property on <a href=\"widgets\/ListView-class.html\">ListView<\/a> corresponds to the\n<a href=\"widgets\/SliverMultiBoxAdaptorWidget\/delegate.html\">SliverList.delegate<\/a> (or <a href=\"widgets\/SliverMultiBoxAdaptorWidget\/delegate.html\">SliverFixedExtentList.delegate<\/a>) property. The\n<a href=\"widgets\/ListView\/ListView.html\">new ListView<\/a> constructor's <code>children<\/code> argument corresponds to the\n<a href=\"widgets\/ListView\/childrenDelegate.html\">childrenDelegate<\/a> being a <a href=\"widgets\/SliverChildListDelegate-class.html\">SliverChildListDelegate<\/a> with that same\nargument. The <a href=\"widgets\/ListView\/ListView.builder.html\">new ListView.builder<\/a> constructor's <code>itemBuilder<\/code> and\n<code>childCount<\/code> arguments correspond to the <a href=\"widgets\/ListView\/childrenDelegate.html\">childrenDelegate<\/a> being a\n<a href=\"widgets\/SliverChildBuilderDelegate-class.html\">SliverChildBuilderDelegate<\/a> with the matching arguments.<\/p>\n<p>The <a href=\"widgets\/BoxScrollView\/padding.html\">padding<\/a> property corresponds to having a <a href=\"widgets\/SliverPadding-class.html\">SliverPadding<\/a> in the\n<a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a> property instead of the list itself, and having\nthe <a href=\"widgets\/SliverList-class.html\">SliverList<\/a> instead be a child of the <a href=\"widgets\/SliverPadding-class.html\">SliverPadding<\/a>.<\/p>\n<p><a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>s don't automatically avoid obstructions from <a href=\"widgets\/MediaQuery-class.html\">MediaQuery<\/a>\nlike <a href=\"widgets\/ListView-class.html\">ListView<\/a>s do. To reproduce the behavior, wrap the slivers in\n<a href=\"widgets\/SliverSafeArea-class.html\">SliverSafeArea<\/a>s.<\/p>\n<p>Once code has been ported to use <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>, other slivers, such as\n<a href=\"widgets\/SliverGrid-class.html\">SliverGrid<\/a> or <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a>, can be put in the <a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a>\nlist.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nHere are two brief snippets showing a <a href=\"widgets\/ListView-class.html\">ListView<\/a> and its equivalent using\n<a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">ListView(\n  shrinkWrap: true,\n  padding: const EdgeInsets.all(20.0),\n  children: &lt;Widget&gt;[\n    const Text('I\\'m dedicating every day to you'),\n    const Text('Domestic life was never quite my style'),\n    const Text('When you smile, you knock me out, I fall apart'),\n    const Text('And I thought I was so smart'),\n  ],\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">CustomScrollView(\n  shrinkWrap: true,\n  slivers: &lt;Widget&gt;[\n    SliverPadding(\n      padding: const EdgeInsets.all(20.0),\n      sliver: SliverList(\n        delegate: SliverChildListDelegate(\n          &lt;Widget&gt;[\n            const Text('I\\'m dedicating every day to you'),\n            const Text('Domestic life was never quite my style'),\n            const Text('When you smile, you knock me out, I fall apart'),\n            const Text('And I thought I was so smart'),\n          ],\n        ),\n      ),\n    ),\n  ],\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/SingleChildScrollView-class.html\">SingleChildScrollView<\/a>, which is a scrollable widget that has a single\nchild.<\/li>\n<li>\n<a href=\"widgets\/PageView-class.html\">PageView<\/a>, which is a scrolling list of child widgets that are each the\nsize of the viewport.<\/li>\n<li>\n<a href=\"widgets\/GridView-class.html\">GridView<\/a>, which is scrollable, 2D array of widgets.<\/li>\n<li>\n<a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>, which is a scrollable widget that creates custom\nscroll effects using slivers.<\/li>\n<li>\n<a href=\"widgets\/ListBody-class.html\">ListBody<\/a>, which arranges its children in a similar manner, but without\nscrolling.<\/li>\n<li>\n<a href=\"widgets\/ScrollNotification-class.html\">ScrollNotification<\/a> and <a href=\"widgets\/NotificationListener-class.html\">NotificationListener<\/a>, which can be used to watch\nthe scroll position without using a <a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a>.<\/li>\n<\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "ListView"
+    ]
 }

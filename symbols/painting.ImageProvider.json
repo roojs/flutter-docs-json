@@ -1,162 +1,141 @@
 {
-    "name": "painting.ImageProvider",
-    "extends": [],
+    "desc": "<p>Identifies an image without committing to the precise final asset. This\nallows a set of images to be identified and for the precise image to later\nbe resolved based on the environment, e.g. the device pixel ratio.<\/p>\n<p>To obtain an <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a> from an <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a>, call <a href=\"painting\/ImageProvider\/resolve.html\">resolve<\/a>,\npassing it an <a href=\"painting\/ImageConfiguration-class.html\">ImageConfiguration<\/a> object.<\/p>\n<p><a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> uses the global <a href=\"painting\/imageCache.html\">imageCache<\/a> to cache images.<\/p>\n<p>The type argument <code>T<\/code> is the type of the object used to represent a resolved\nconfiguration. This is also the type used for the key in the image cache. It\nshould be immutable and implement the <code>==<\/code> operator and the <a href=\"dart-core\/Object\/hashCode.html\">hashCode<\/a>\ngetter. Subclasses should subclass a variant of <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> with an\nexplicit <code>T<\/code> type argument.<\/p>\n<p>The type argument does not have to be specified when using the type as an\nargument (where any image provider is acceptable).<\/p>\n<p>The following image formats are supported: JPEG, PNG, GIF, Animated GIF, WebP, Animated WebP, BMP, and WBMP<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following shows the code required to write a widget that fully conforms\nto the <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> and <a href=\"widgets\/Widget-class.html\">Widget<\/a> protocols. (It is essentially a\nbare-bones version of the <a href=\"widgets\/Image-class.html\">widgets.Image<\/a> widget.)\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class MyImage extends StatefulWidget {\n  const MyImage({\n    Key key,\n    @required this.imageProvider,\n  }) : assert(imageProvider != null),\n       super(key: key);\n\n  final ImageProvider imageProvider;\n\n  @override\n  _MyImageState createState() =&gt; _MyImageState();\n}\n\nclass _MyImageState extends State&lt;MyImage&gt; {\n  ImageStream _imageStream;\n  ImageInfo _imageInfo;\n\n  @override\n  void didChangeDependencies() {\n    super.didChangeDependencies();\n    \/\/ We call _getImage here because createLocalImageConfiguration() needs to\n    \/\/ be called again if the dependencies changed, in case the changes relate\n    \/\/ to the DefaultAssetBundle, MediaQuery, etc, which that method uses.\n    _getImage();\n  }\n\n  @override\n  void didUpdateWidget(MyImage oldWidget) {\n    super.didUpdateWidget(oldWidget);\n    if (widget.imageProvider != oldWidget.imageProvider)\n      _getImage();\n  }\n\n  void _getImage() {\n    final ImageStream oldImageStream = _imageStream;\n    _imageStream = widget.imageProvider.resolve(createLocalImageConfiguration(context));\n    if (_imageStream.key != oldImageStream?.key) {\n      \/\/ If the keys are the same, then we got the same image back, and so we don't\n      \/\/ need to update the listeners. If the key changed, though, we must make sure\n      \/\/ to switch our listeners to the new image stream.\n      oldImageStream?.removeListener(_updateImage);\n      _imageStream.addListener(_updateImage);\n    }\n  }\n\n  void _updateImage(ImageInfo imageInfo, bool synchronousCall) {\n    setState(() {\n      \/\/ Trigger a build whenever the image changes.\n      _imageInfo = imageInfo;\n    });\n  }\n\n  @override\n  void dispose() {\n    _imageStream.removeListener(_updateImage);\n    super.dispose();\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return RawImage(\n      image: _imageInfo?.image, \/\/ this is a dart:ui Image object\n      scale: _imageInfo?.scale ?? 1.0,\n    );\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "painting\/ImageProvider-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "painting",
+    "name": "painting.ImageProvider",
+    "shortname": "ImageProvider",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "ImageProvider",
-            "type": "",
             "desc": "<p>Abstract const constructor. This constructor enables subclasses to provide\nconst constructors so that they can be used in const expressions.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const ImageProvider();<\/code><\/pre>\n    ",
+            "href": "painting\/ImageProvider\/ImageProvider.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "painting.ImageProvider",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "painting\/ImageProvider\/ImageProvider.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const ImageProvider();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "evict",
-            "type": "dart:async.Future<dart:core.bool>",
             "desc": "<p>Evicts an entry from the image cache.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> which indicates whether the value was successfully\nremoved.<\/p>\n<p>The <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> used does not need to be the same instance that was\npassed to an <a href=\"widgets\/Image-class.html\">Image<\/a> widget, but it does need to create a key which is\nequal to one.<\/p>\n<p>The <code>cache<\/code> is optional and defaults to the global image cache.<\/p>\n<p>The <code>configuration<\/code> is optional and defaults to\n<a href=\"painting\/ImageConfiguration\/empty-constant.html\">ImageConfiguration.empty<\/a>.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following sample code shows how an image loaded using the <a href=\"widgets\/Image-class.html\">Image<\/a>\nwidget can be evicted using a <a href=\"painting\/NetworkImage-class.html\">NetworkImage<\/a> with a matching URL.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class MyWidget extends StatelessWidget {\n  final String url = '...';\n\n  @override\n  Widget build(BuildContext context) {\n    return Image.network(url);\n  }\n\n  void evictImage() {\n    final NetworkImage provider = NetworkImage(url);\n    provider.evict().then&lt;void&gt;((bool success) {\n      if (success)\n        debugPrint('removed image!');\n    });\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;bool&gt; evict({ ImageCache cache, ImageConfiguration configuration = ImageConfiguration.empty }) async {\n  cache ??= imageCache;\n  final T key = await obtainKey(configuration);\n  return cache.evict(key);\n}<\/code><\/pre>\n    ",
+            "href": "painting\/ImageProvider\/evict.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:core.bool>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.ImageProvider",
-            "sig": "",
             "params": [
                 {
                     "name": "cache",
-                    "type": "painting.ImageCache",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageCache"
                 },
                 {
                     "name": "configuration",
-                    "type": "painting.ImageConfiguration",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageConfiguration"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/ImageProvider\/evict.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;bool&gt; evict({ ImageCache cache, ImageConfiguration configuration = ImageConfiguration.empty }) async {\n  cache ??= imageCache;\n  final T key = await obtainKey(configuration);\n  return cache.evict(key);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:core.bool"
             ]
         },
         {
-            "name": "load",
-            "type": "painting.ImageStreamCompleter",
             "desc": "<p>Converts a key into an <a href=\"painting\/ImageStreamCompleter-class.html\">ImageStreamCompleter<\/a>, and begins fetching the\nimage.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nImageStreamCompleter load(T key);<\/code><\/pre>\n    ",
+            "href": "painting\/ImageProvider\/load.html",
+            "isDeprecated": "0",
+            "type": "painting.ImageStreamCompleter",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.ImageProvider",
-            "sig": "",
             "params": [
                 {
                     "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/ImageProvider\/load.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nImageStreamCompleter load(T key);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "obtainKey",
-            "type": "dart:async.Future",
             "desc": "<p>Converts an ImageProvider's settings plus an ImageConfiguration to a key\nthat describes the precise image to load.<\/p>\n<p>The type of the key is determined by the subclass. It is a value that\nunambiguously identifies the image (<em>including its scale<\/em>) that the <a href=\"painting\/ImageProvider\/load.html\">load<\/a>\nmethod will fetch. Different <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a>s given the same constructor\narguments and <a href=\"painting\/ImageConfiguration-class.html\">ImageConfiguration<\/a> objects should return keys that are\n'==' to each other (possibly by using a class for the key that itself\nimplements <code>==<\/code>).<\/p>\n    ",
-            "static": false,
-            "memberOf": "painting.ImageProvider",
-            "sig": "",
-            "params": [
-                {
-                    "name": "configuration",
-                    "type": "painting.ImageConfiguration",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "painting\/ImageProvider\/obtainKey.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nFuture&lt;T&gt; obtainKey(ImageConfiguration configuration);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "resolve",
-            "type": "painting.ImageStream",
-            "desc": "<p>Resolves this image provider using the given <code>configuration<\/code>, returning\nan <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a>.<\/p>\n<p>This is the public entry-point of the <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> class hierarchy.<\/p>\n<p>Subclasses should implement <a href=\"painting\/ImageProvider\/obtainKey.html\">obtainKey<\/a> and <a href=\"painting\/ImageProvider\/load.html\">load<\/a>, which are used by this\nmethod.<\/p>\n    ",
+            "href": "painting\/ImageProvider\/obtainKey.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.ImageProvider",
-            "sig": "",
             "params": [
                 {
                     "name": "configuration",
-                    "type": "painting.ImageConfiguration",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageConfiguration"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/ImageProvider\/resolve.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ImageStream resolve(ImageConfiguration configuration) {\n  assert(configuration != null);\n  final ImageStream stream = ImageStream();\n  T obtainedKey;\n  Future&lt;void&gt; handleError(dynamic exception, StackTrace stack) async {\n    await null; \/\/ wait an event turn in case a listener has been added to the image stream.\n    final _ErrorImageCompleter imageCompleter = _ErrorImageCompleter();\n    stream.setCompleter(imageCompleter);\n    imageCompleter.setError(\n      exception: exception,\n      stack: stack,\n      context: 'while resolving an image',\n      silent: true, \/\/ could be a network error or whatnot\n      informationCollector: (StringBuffer information) {\n        information.writeln('Image provider: $this');\n        information.writeln('Image configuration: $configuration');\n        if (obtainedKey != null) {\n          information.writeln('Image key: $obtainedKey');\n        }\n      },\n    );\n  }\n\n  \/\/ `obtainKey` can throw both sync and async errors.\n  \/\/ `catchError` handles cases where async errors are thrown and the try block is for sync errors.\n  \/\/\n  \/\/ `onError` callback on [ImageCache] handles the cases where `obtainKey` is a sync future and `load` throws.\n  Future&lt;T&gt; key;\n  try {\n    key = obtainKey(configuration);\n  } catch (error, stackTrace) {\n    handleError(error, stackTrace);\n    return stream;\n  }\n\n  key.then&lt;void&gt;((T key) {\n    obtainedKey = key;\n    final ImageStreamCompleter completer = PaintingBinding.instance\n        .imageCache.putIfAbsent(key, () =&gt; load(key), onError: handleError);\n    if (completer != null) {\n      stream.setCompleter(completer);\n    }\n  }).catchError(handleError);\n\n  return stream;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "toString",
-            "type": "dart:core.String",
-            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "desc": "<p>Resolves this image provider using the given <code>configuration<\/code>, returning\nan <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a>.<\/p>\n<p>This is the public entry-point of the <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> class hierarchy.<\/p>\n<p>Subclasses should implement <a href=\"painting\/ImageProvider\/obtainKey.html\">obtainKey<\/a> and <a href=\"painting\/ImageProvider\/load.html\">load<\/a>, which are used by this\nmethod.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ImageStream resolve(ImageConfiguration configuration) {\n  assert(configuration != null);\n  final ImageStream stream = ImageStream();\n  T obtainedKey;\n  Future&lt;void&gt; handleError(dynamic exception, StackTrace stack) async {\n    await null; \/\/ wait an event turn in case a listener has been added to the image stream.\n    final _ErrorImageCompleter imageCompleter = _ErrorImageCompleter();\n    stream.setCompleter(imageCompleter);\n    imageCompleter.setError(\n      exception: exception,\n      stack: stack,\n      context: 'while resolving an image',\n      silent: true, \/\/ could be a network error or whatnot\n      informationCollector: (StringBuffer information) {\n        information.writeln('Image provider: $this');\n        information.writeln('Image configuration: $configuration');\n        if (obtainedKey != null) {\n          information.writeln('Image key: $obtainedKey');\n        }\n      },\n    );\n  }\n\n  \/\/ `obtainKey` can throw both sync and async errors.\n  \/\/ `catchError` handles cases where async errors are thrown and the try block is for sync errors.\n  \/\/\n  \/\/ `onError` callback on [ImageCache] handles the cases where `obtainKey` is a sync future and `load` throws.\n  Future&lt;T&gt; key;\n  try {\n    key = obtainKey(configuration);\n  } catch (error, stackTrace) {\n    handleError(error, stackTrace);\n    return stream;\n  }\n\n  key.then&lt;void&gt;((T key) {\n    obtainedKey = key;\n    final ImageStreamCompleter completer = PaintingBinding.instance\n        .imageCache.putIfAbsent(key, () =&gt; load(key), onError: handleError);\n    if (completer != null) {\n      stream.setCompleter(completer);\n    }\n  }).catchError(handleError);\n\n  return stream;\n}<\/code><\/pre>\n    ",
+            "href": "painting\/ImageProvider\/resolve.html",
+            "isDeprecated": "0",
+            "type": "painting.ImageStream",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.ImageProvider",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "painting\/ImageProvider\/toString.html",
+            "params": [
+                {
+                    "name": "configuration",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageConfiguration"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; '$runtimeType()';<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "painting\/ImageProvider\/toString.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "painting.ImageProvider",
+            "params": []
         }
     ],
-    "props": [],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [
-        "painting.AssetBundleImageProvider",
-        "painting.AssetImage",
-        "painting.ExactAssetImage",
-        "painting.FileImage",
-        "painting.MemoryImage",
-        "painting.NetworkImage"
-    ],
-    "realImplementors": [],
-    "cn": [],
-    "href": "painting\/ImageProvider-class.html",
-    "desc": "<p>Identifies an image without committing to the precise final asset. This\nallows a set of images to be identified and for the precise image to later\nbe resolved based on the environment, e.g. the device pixel ratio.<\/p>\n<p>To obtain an <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a> from an <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a>, call <a href=\"painting\/ImageProvider\/resolve.html\">resolve<\/a>,\npassing it an <a href=\"painting\/ImageConfiguration-class.html\">ImageConfiguration<\/a> object.<\/p>\n<p><a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> uses the global <a href=\"painting\/imageCache.html\">imageCache<\/a> to cache images.<\/p>\n<p>The type argument <code>T<\/code> is the type of the object used to represent a resolved\nconfiguration. This is also the type used for the key in the image cache. It\nshould be immutable and implement the <code>==<\/code> operator and the <a href=\"dart-core\/Object\/hashCode.html\">hashCode<\/a>\ngetter. Subclasses should subclass a variant of <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> with an\nexplicit <code>T<\/code> type argument.<\/p>\n<p>The type argument does not have to be specified when using the type as an\nargument (where any image provider is acceptable).<\/p>\n<p>The following image formats are supported: JPEG, PNG, GIF, Animated GIF, WebP, Animated WebP, BMP, and WBMP<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following shows the code required to write a widget that fully conforms\nto the <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> and <a href=\"widgets\/Widget-class.html\">Widget<\/a> protocols. (It is essentially a\nbare-bones version of the <a href=\"widgets\/Image-class.html\">widgets.Image<\/a> widget.)\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class MyImage extends StatefulWidget {\n  const MyImage({\n    Key key,\n    @required this.imageProvider,\n  }) : assert(imageProvider != null),\n       super(key: key);\n\n  final ImageProvider imageProvider;\n\n  @override\n  _MyImageState createState() =&gt; _MyImageState();\n}\n\nclass _MyImageState extends State&lt;MyImage&gt; {\n  ImageStream _imageStream;\n  ImageInfo _imageInfo;\n\n  @override\n  void didChangeDependencies() {\n    super.didChangeDependencies();\n    \/\/ We call _getImage here because createLocalImageConfiguration() needs to\n    \/\/ be called again if the dependencies changed, in case the changes relate\n    \/\/ to the DefaultAssetBundle, MediaQuery, etc, which that method uses.\n    _getImage();\n  }\n\n  @override\n  void didUpdateWidget(MyImage oldWidget) {\n    super.didUpdateWidget(oldWidget);\n    if (widget.imageProvider != oldWidget.imageProvider)\n      _getImage();\n  }\n\n  void _getImage() {\n    final ImageStream oldImageStream = _imageStream;\n    _imageStream = widget.imageProvider.resolve(createLocalImageConfiguration(context));\n    if (_imageStream.key != oldImageStream?.key) {\n      \/\/ If the keys are the same, then we got the same image back, and so we don't\n      \/\/ need to update the listeners. If the key changed, though, we must make sure\n      \/\/ to switch our listeners to the new image stream.\n      oldImageStream?.removeListener(_updateImage);\n      _imageStream.addListener(_updateImage);\n    }\n  }\n\n  void _updateImage(ImageInfo imageInfo, bool synchronousCall) {\n    setState(() {\n      \/\/ Trigger a build whenever the image changes.\n      _imageInfo = imageInfo;\n    });\n  }\n\n  @override\n  void dispose() {\n    _imageStream.removeListener(_updateImage);\n    super.dispose();\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return RawImage(\n      image: _imageInfo?.image, \/\/ this is a dart:ui Image object\n      scale: _imageInfo?.scale ?? 1.0,\n    );\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "ImageProvider"
+    "props": []
 }

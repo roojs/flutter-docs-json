@@ -1,306 +1,243 @@
 {
-    "name": "dart:io.HttpServer",
-    "extends": [],
+    "desc": "<p>A server that delivers content, such as web pages, using the HTTP protocol.<\/p>\n<p>The HttpServer is a <a href=\"dart-async\/Stream-class.html\">Stream<\/a> that provides <a href=\"dart-io\/HttpRequest-class.html\">HttpRequest<\/a> objects. Each\nHttpRequest has an associated <a href=\"dart-io\/HttpResponse-class.html\">HttpResponse<\/a> object.\nThe server responds to a request by writing to that HttpResponse object.\nThe following example shows how to bind an HttpServer to an IPv6\n<a href=\"dart-io\/InternetAddress-class.html\">InternetAddress<\/a> on port 80 (the standard port for HTTP servers)\nand how to listen for requests.\nPort 80 is the default HTTP port. However, on most systems accessing\nthis requires super-user privileges. For local testing consider\nusing a non-reserved port (1024 and above).<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\n\nmain() {\n  HttpServer\n      .bind(InternetAddress.anyIPv6, 80)\n      .then((server) {\n        server.listen((HttpRequest request) {\n          request.response.write('Hello, world!');\n          request.response.close();\n        });\n      });\n}\n<\/code><\/pre>\n<p>Incomplete requests, in which all or part of the header is missing, are\nignored, and no exceptions or HttpRequest objects are generated for them.\nLikewise, when writing to an HttpResponse, any <a href=\"dart-io\/Socket-class.html\">Socket<\/a> exceptions are\nignored and any future writes are ignored.<\/p>\n<p>The HttpRequest exposes the request headers and provides the request body,\nif it exists, as a Stream of data. If the body is unread, it is drained\nwhen the server writes to the HttpResponse or closes it.<\/p>\n<h2 id=\"bind-with-a-secure-https-connection\">Bind with a secure HTTPS connection<\/h2>\n<p>Use <a href=\"dart-io\/HttpServer\/bindSecure.html\">bindSecure<\/a> to create an HTTPS server.<\/p>\n<p>The server presents a certificate to the client. The certificate\nchain and the private key are set in the <a href=\"dart-io\/SecurityContext-class.html\">SecurityContext<\/a>\nobject that is passed to <a href=\"dart-io\/HttpServer\/bindSecure.html\">bindSecure<\/a>.<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\nimport \"dart:isolate\";\n\nmain() {\n  SecurityContext context = new SecurityContext();\n  var chain =\n      Platform.script.resolve('certificates\/server_chain.pem')\n      .toFilePath();\n  var key =\n      Platform.script.resolve('certificates\/server_key.pem')\n      .toFilePath();\n  context.useCertificateChain(chain);\n  context.usePrivateKey(key, password: 'dartdart');\n\n  HttpServer\n      .bindSecure(InternetAddress.anyIPv6,\n                  443,\n                  context)\n      .then((server) {\n        server.listen((HttpRequest request) {\n          request.response.write('Hello, world!');\n          request.response.close();\n        });\n      });\n}\n<\/code><\/pre>\n<p> The certificates and keys are PEM files, which can be created and\n managed with the tools in OpenSSL.<\/p>\n<h2 id=\"connect-to-a-server-socket\">Connect to a server socket<\/h2>\n<p>You can use the <a href=\"dart-io\/HttpServer\/HttpServer.listenOn.html\">listenOn<\/a> constructor to attach an HTTP server to\na <a href=\"dart-io\/ServerSocket-class.html\">ServerSocket<\/a>.<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\n\nmain() {\n  ServerSocket.bind(InternetAddress.anyIPv6, 80)\n    .then((serverSocket) {\n      HttpServer httpserver = new HttpServer.listenOn(serverSocket);\n      serverSocket.listen((Socket socket) {\n        socket.write('Hello, client.');\n      });\n    });\n}\n<\/code><\/pre>\n<h2 id=\"other-resources\">Other resources<\/h2>\n<ul>\n<li>\n<p>HttpServer is a Stream. Refer to the <a href=\"dart-async\/Stream-class.html\">Stream<\/a> class for information\nabout the streaming qualities of an HttpServer.\nPausing the subscription of the stream, pauses at the OS level.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"https:\/\/pub.dartlang.org\/packages\/shelf\">shelf<\/a>\npackage on pub.dartlang.org contains a set of high-level classes that,\ntogether with this class, makes it easy to provide content through HTTP\nservers.<\/p>\n<\/li>\n<\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "dart-io\/HttpServer-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "dart:io",
+    "name": "dart:io.HttpServer",
+    "shortname": "HttpServer",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "bind",
-            "type": "dart:async.Future<dart:io.HttpServer>",
             "desc": "<p>Starts listening for HTTP requests on the specified <code>address<\/code> and\n<code>port<\/code>.<\/p>\n<p>The <code>address<\/code> can either be a <a href=\"dart-core\/String-class.html\">String<\/a> or an\n<a href=\"dart-io\/InternetAddress-class.html\">InternetAddress<\/a>. If <code>address<\/code> is a <a href=\"dart-core\/String-class.html\">String<\/a>, <a href=\"dart-io\/HttpServer\/bind.html\">bind<\/a> will\nperform a <a href=\"dart-io\/InternetAddress\/lookup.html\">InternetAddress.lookup<\/a> and use the first value in the\nlist. To listen on the loopback adapter, which will allow only\nincoming connections from the local host, use the value\n<a href=\"dart-io\/InternetAddress\/loopbackIPv4.html\">InternetAddress.loopbackIPv4<\/a> or\n<a href=\"dart-io\/InternetAddress\/loopbackIPv6.html\">InternetAddress.loopbackIPv6<\/a>. To allow for incoming\nconnection from the network use either one of the values\n<a href=\"dart-io\/InternetAddress\/anyIPv4.html\">InternetAddress.anyIPv4<\/a> or <a href=\"dart-io\/InternetAddress\/anyIPv6.html\">InternetAddress.anyIPv6<\/a> to\nbind to all interfaces or the IP address of a specific interface.<\/p>\n<p>If an IP version 6 (IPv6) address is used, both IP version 6\n(IPv6) and version 4 (IPv4) connections will be accepted. To\nrestrict this to version 6 (IPv6) only, use <code>v6Only<\/code> to set\nversion 6 only. However, if the address is\n<a href=\"dart-io\/InternetAddress\/loopbackIPv6.html\">InternetAddress.loopbackIPv6<\/a>, only IP version 6 (IPv6) connections\nwill be accepted.<\/p>\n<p>If <code>port<\/code> has the value <code>0<\/code> an ephemeral port will be chosen by\nthe system. The actual port used can be retrieved using the\n<code>port<\/code> getter.<\/p>\n<p>The optional argument <code>backlog<\/code> can be used to specify the listen\nbacklog for the underlying OS listen setup. If <code>backlog<\/code> has the\nvalue of <code>0<\/code> (the default) a reasonable value will be chosen by\nthe system.<\/p>\n<p>The optional argument <code>shared<\/code> specifies whether additional HttpServer\nobjects can bind to the same combination of <code>address<\/code>, <code>port<\/code> and <code>v6Only<\/code>.\nIf <code>shared<\/code> is <code>true<\/code> and more <code>HttpServer<\/code>s from this isolate or other\nisolates are bound to the port, then the incoming connections will be\ndistributed among all the bound <code>HttpServer<\/code>s. Connections can be\ndistributed over multiple isolates this way.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;HttpServer&gt; bind(address, int port,\n        {int backlog: 0, bool v6Only: false, bool shared: false}) =&gt;\n    _HttpServer.bind(address, port, backlog, v6Only, shared);<\/code><\/pre>\n    ",
+            "href": "dart-io\/HttpServer\/bind.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:io.HttpServer>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:io.HttpServer",
-            "sig": "",
             "params": [
                 {
                     "name": "address",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "port",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 },
                 {
                     "name": "backlog",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "v6Only",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "shared",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-io\/HttpServer\/bind.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;HttpServer&gt; bind(address, int port,\n        {int backlog: 0, bool v6Only: false, bool shared: false}) =&gt;\n    _HttpServer.bind(address, port, backlog, v6Only, shared);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:io.HttpServer"
-            ]
-        },
-        {
-            "name": "bindSecure",
-            "type": "dart:async.Future<dart:io.HttpServer>",
-            "desc": "<p>The <code>address<\/code> can either be a <a href=\"dart-core\/String-class.html\">String<\/a> or an\n<a href=\"dart-io\/InternetAddress-class.html\">InternetAddress<\/a>. If <code>address<\/code> is a <a href=\"dart-core\/String-class.html\">String<\/a>, <a href=\"dart-io\/HttpServer\/bind.html\">bind<\/a> will\nperform a <a href=\"dart-io\/InternetAddress\/lookup.html\">InternetAddress.lookup<\/a> and use the first value in the\nlist. To listen on the loopback adapter, which will allow only\nincoming connections from the local host, use the value\n<a href=\"dart-io\/InternetAddress\/loopbackIPv4.html\">InternetAddress.loopbackIPv4<\/a> or\n<a href=\"dart-io\/InternetAddress\/loopbackIPv6.html\">InternetAddress.loopbackIPv6<\/a>. To allow for incoming\nconnection from the network use either one of the values\n<a href=\"dart-io\/InternetAddress\/anyIPv4.html\">InternetAddress.anyIPv4<\/a> or <a href=\"dart-io\/InternetAddress\/anyIPv6.html\">InternetAddress.anyIPv6<\/a> to\nbind to all interfaces or the IP address of a specific interface.<\/p>\n<p>If an IP version 6 (IPv6) address is used, both IP version 6\n(IPv6) and version 4 (IPv4) connections will be accepted. To\nrestrict this to version 6 (IPv6) only, use <code>v6Only<\/code> to set\nversion 6 only.<\/p>\n<p>If <code>port<\/code> has the value <code>0<\/code> an ephemeral port will be chosen by\nthe system. The actual port used can be retrieved using the\n<code>port<\/code> getter.<\/p>\n<p>The optional argument <code>backlog<\/code> can be used to specify the listen\nbacklog for the underlying OS listen setup. If <code>backlog<\/code> has the\nvalue of <code>0<\/code> (the default) a reasonable value will be chosen by\nthe system.<\/p>\n<p>If <code>requestClientCertificate<\/code> is true, the server will\nrequest clients to authenticate with a client certificate.\nThe server will advertise the names of trusted issuers of client\ncertificates, getting them from a <a href=\"dart-io\/SecurityContext-class.html\">SecurityContext<\/a>, where they have been\nset using <a href=\"dart-io\/SecurityContext\/setClientAuthorities.html\">SecurityContext.setClientAuthorities<\/a>.<\/p>\n<p>The optional argument <code>shared<\/code> specifies whether additional HttpServer\nobjects can bind to the same combination of <code>address<\/code>, <code>port<\/code> and <code>v6Only<\/code>.\nIf <code>shared<\/code> is <code>true<\/code> and more <code>HttpServer<\/code>s from this isolate or other\nisolates are bound to the port, then the incoming connections will be\ndistributed among all the bound <code>HttpServer<\/code>s. Connections can be\ndistributed over multiple isolates this way.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:io.HttpServer",
-            "sig": "",
-            "params": [
-                {
-                    "name": "address",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 },
                 {
                     "name": "port",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                },
+                {
+                    "name": "shared",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "v6Only",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
+                }
+            ]
+        },
+        {
+            "desc": "<p>The <code>address<\/code> can either be a <a href=\"dart-core\/String-class.html\">String<\/a> or an\n<a href=\"dart-io\/InternetAddress-class.html\">InternetAddress<\/a>. If <code>address<\/code> is a <a href=\"dart-core\/String-class.html\">String<\/a>, <a href=\"dart-io\/HttpServer\/bind.html\">bind<\/a> will\nperform a <a href=\"dart-io\/InternetAddress\/lookup.html\">InternetAddress.lookup<\/a> and use the first value in the\nlist. To listen on the loopback adapter, which will allow only\nincoming connections from the local host, use the value\n<a href=\"dart-io\/InternetAddress\/loopbackIPv4.html\">InternetAddress.loopbackIPv4<\/a> or\n<a href=\"dart-io\/InternetAddress\/loopbackIPv6.html\">InternetAddress.loopbackIPv6<\/a>. To allow for incoming\nconnection from the network use either one of the values\n<a href=\"dart-io\/InternetAddress\/anyIPv4.html\">InternetAddress.anyIPv4<\/a> or <a href=\"dart-io\/InternetAddress\/anyIPv6.html\">InternetAddress.anyIPv6<\/a> to\nbind to all interfaces or the IP address of a specific interface.<\/p>\n<p>If an IP version 6 (IPv6) address is used, both IP version 6\n(IPv6) and version 4 (IPv4) connections will be accepted. To\nrestrict this to version 6 (IPv6) only, use <code>v6Only<\/code> to set\nversion 6 only.<\/p>\n<p>If <code>port<\/code> has the value <code>0<\/code> an ephemeral port will be chosen by\nthe system. The actual port used can be retrieved using the\n<code>port<\/code> getter.<\/p>\n<p>The optional argument <code>backlog<\/code> can be used to specify the listen\nbacklog for the underlying OS listen setup. If <code>backlog<\/code> has the\nvalue of <code>0<\/code> (the default) a reasonable value will be chosen by\nthe system.<\/p>\n<p>If <code>requestClientCertificate<\/code> is true, the server will\nrequest clients to authenticate with a client certificate.\nThe server will advertise the names of trusted issuers of client\ncertificates, getting them from a <a href=\"dart-io\/SecurityContext-class.html\">SecurityContext<\/a>, where they have been\nset using <a href=\"dart-io\/SecurityContext\/setClientAuthorities.html\">SecurityContext.setClientAuthorities<\/a>.<\/p>\n<p>The optional argument <code>shared<\/code> specifies whether additional HttpServer\nobjects can bind to the same combination of <code>address<\/code>, <code>port<\/code> and <code>v6Only<\/code>.\nIf <code>shared<\/code> is <code>true<\/code> and more <code>HttpServer<\/code>s from this isolate or other\nisolates are bound to the port, then the incoming connections will be\ndistributed among all the bound <code>HttpServer<\/code>s. Connections can be\ndistributed over multiple isolates this way.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;HttpServer&gt; bindSecure(\n        address, int port, SecurityContext context,\n        {int backlog: 0,\n        bool v6Only: false,\n        bool requestClientCertificate: false,\n        bool shared: false}) =&gt;\n    _HttpServer.bindSecure(address, port, context, backlog, v6Only,\n        requestClientCertificate, shared);<\/code><\/pre>\n    ",
+            "href": "dart-io\/HttpServer\/bindSecure.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:io.HttpServer>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:io.HttpServer",
+            "params": [
+                {
+                    "name": "address",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
+                },
+                {
+                    "name": "backlog",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 },
                 {
                     "name": "context",
-                    "type": "dart:io.SecurityContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:io.SecurityContext"
                 },
                 {
-                    "name": "backlog",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "port",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "v6Only",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 },
                 {
                     "name": "requestClientCertificate",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "shared",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "v6Only",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-io\/HttpServer\/bindSecure.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Future&lt;HttpServer&gt; bindSecure(\n        address, int port, SecurityContext context,\n        {int backlog: 0,\n        bool v6Only: false,\n        bool requestClientCertificate: false,\n        bool shared: false}) =&gt;\n    _HttpServer.bindSecure(address, port, context, backlog, v6Only,\n        requestClientCertificate, shared);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:io.HttpServer"
             ]
         },
         {
-            "name": "close",
-            "type": "dart:async.Future",
             "desc": "<p>Permanently stops this <a href=\"dart-io\/HttpServer-class.html\">HttpServer<\/a> from listening for new\nconnections.  This closes the <a href=\"dart-async\/Stream-class.html\">Stream<\/a> of <a href=\"dart-io\/HttpRequest-class.html\">HttpRequest<\/a>s with a\ndone event. The returned future completes when the server is\nstopped. For a server started using <a href=\"dart-io\/HttpServer\/bind.html\">bind<\/a> or <a href=\"dart-io\/HttpServer\/bindSecure.html\">bindSecure<\/a> this\nmeans that the port listened on no longer in use.<\/p>\n<p>If <code>force<\/code> is <code>true<\/code>, active connections will be closed immediately.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future close({bool force: false});<\/code><\/pre>\n    ",
+            "href": "dart-io\/HttpServer\/close.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:io.HttpServer",
-            "sig": "",
             "params": [
                 {
                     "name": "force",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-io\/HttpServer\/close.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future close({bool force: false});<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "connectionsInfo",
-            "type": "dart:io.HttpConnectionsInfo",
             "desc": "<p>Returns an <a href=\"dart-io\/HttpConnectionsInfo-class.html\">HttpConnectionsInfo<\/a> object summarizing the number of\ncurrent connections handled by the server.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:io.HttpServer",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "dart-io\/HttpServer\/connectionsInfo.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">HttpConnectionsInfo connectionsInfo();<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "HttpServer.listenOn",
-            "type": "",
-            "desc": "<p>Attaches the HTTP server to an existing <a href=\"dart-io\/ServerSocket-class.html\">ServerSocket<\/a>. When the\n<a href=\"dart-io\/HttpServer-class.html\">HttpServer<\/a> is closed, the <a href=\"dart-io\/HttpServer-class.html\">HttpServer<\/a> will just detach itself,\nclosing current connections but not closing <code>serverSocket<\/code>.<\/p>\n    ",
+            "href": "dart-io\/HttpServer\/connectionsInfo.html",
+            "isDeprecated": "0",
+            "type": "dart:io.HttpConnectionsInfo",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:io.HttpServer",
-            "sig": "",
-            "params": [
-                {
-                    "name": "serverSocket",
-                    "type": "dart:io.ServerSocket",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "dart-io\/HttpServer\/HttpServer.listenOn.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory HttpServer.listenOn(ServerSocket serverSocket) =&gt;\n    new _HttpServer.listenOn(serverSocket);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "address",
-            "type": "dart:io.InternetAddress",
-            "types": [],
             "desc": "<p>Returns the address that the server is listening on. This can be\nused to get the actual address used, when the address is fetched by\na lookup from a hostname.<\/p>\n        ",
-            "memberOf": "dart:io.HttpServer",
-            "isConstant": false,
-            "href": "dart-io\/HttpServer\/address.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">InternetAddress get address;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-io\/HttpServer\/address.html",
+            "isDeprecated": "0",
+            "type": "dart:io.InternetAddress",
+            "memberOf": "dart:io.HttpServer",
+            "params": []
         },
         {
-            "name": "autoCompress",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether the <a href=\"dart-io\/HttpServer-class.html\">HttpServer<\/a> should compress the content, if possible.<\/p>\n<p>The content can only be compressed when the response is using\nchunked Transfer-Encoding and the incoming request has <code>gzip<\/code>\nas an accepted encoding in the Accept-Encoding header.<\/p>\n<p>The default value is <code>false<\/code> (compression disabled).\nTo enable, set <code>autoCompress<\/code> to <code>true<\/code>.<\/p>\n        ",
-            "memberOf": "dart:io.HttpServer",
-            "isConstant": false,
-            "href": "dart-io\/HttpServer\/autoCompress.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool autoCompress\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-io\/HttpServer\/autoCompress.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "dart:io.HttpServer",
+            "params": []
         },
         {
-            "name": "defaultResponseHeaders",
-            "type": "dart:io.HttpHeaders",
-            "types": [],
             "desc": "<p>Default set of headers added to all response objects.<\/p>\n<p>By default the following headers are in this set:<\/p>\n<pre class=\"language-dart\"><code>Content-Type: text\/plain; charset=utf-8\nX-Frame-Options: SAMEORIGIN\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 1; mode=block\n<\/code><\/pre>\n<p>If the <code>Server<\/code> header is added here and the <code>serverHeader<\/code> is set as\nwell then the value of <code>serverHeader<\/code> takes precedence.<\/p>\n        ",
-            "memberOf": "dart:io.HttpServer",
-            "isConstant": false,
-            "href": "dart-io\/HttpServer\/defaultResponseHeaders.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">HttpHeaders get defaultResponseHeaders;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-io\/HttpServer\/defaultResponseHeaders.html",
+            "isDeprecated": "0",
+            "type": "dart:io.HttpHeaders",
+            "memberOf": "dart:io.HttpServer",
+            "params": []
         },
         {
-            "name": "idleTimeout",
-            "type": "dart:core.Duration",
-            "types": [],
             "desc": "<p>Gets or sets the timeout used for idle keep-alive connections. If no\nfurther request is seen within <a href=\"dart-io\/HttpServer\/idleTimeout.html\">idleTimeout<\/a> after the previous request was\ncompleted, the connection is dropped.<\/p>\n<p>Default is 120 seconds.<\/p>\n<p>Note that it may take up to <code>2 * idleTimeout<\/code> before a idle connection is\naborted.<\/p>\n<p>To disable, set <a href=\"dart-io\/HttpServer\/idleTimeout.html\">idleTimeout<\/a> to <code>null<\/code>.<\/p>\n        ",
-            "memberOf": "dart:io.HttpServer",
-            "isConstant": false,
-            "href": "dart-io\/HttpServer\/idleTimeout.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Duration idleTimeout\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-io\/HttpServer\/idleTimeout.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Duration",
+            "memberOf": "dart:io.HttpServer",
+            "params": []
         },
         {
-            "name": "port",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>Returns the port that the server is listening on. This can be\nused to get the actual port used when a value of 0 for <code>port<\/code> is\nspecified in the <a href=\"dart-io\/HttpServer\/bind.html\">bind<\/a> or <a href=\"dart-io\/HttpServer\/bindSecure.html\">bindSecure<\/a> call.<\/p>\n        ",
-            "memberOf": "dart:io.HttpServer",
-            "isConstant": false,
-            "href": "dart-io\/HttpServer\/port.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get port;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-io\/HttpServer\/port.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "dart:io.HttpServer",
+            "params": []
         },
         {
-            "name": "serverHeader",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>Gets and sets the default value of the <code>Server<\/code> header for all responses\ngenerated by this <a href=\"dart-io\/HttpServer-class.html\">HttpServer<\/a>.<\/p>\n<p>If <a href=\"dart-io\/HttpServer\/serverHeader.html\">serverHeader<\/a> is <code>null<\/code>, no <code>Server<\/code> header will be added to each\nresponse.<\/p>\n<p>The default value is <code>null<\/code>.<\/p>\n        ",
-            "memberOf": "dart:io.HttpServer",
-            "isConstant": false,
-            "href": "dart-io\/HttpServer\/serverHeader.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String serverHeader\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "sessionTimeout",
-            "type": "",
-            "types": [],
-            "desc": "<p>Sets the timeout, in seconds, for sessions of this <a href=\"dart-io\/HttpServer-class.html\">HttpServer<\/a>.\nThe default timeout is 20 minutes.<\/p>\n        ",
+            "href": "dart-io\/HttpServer\/serverHeader.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
             "memberOf": "dart:io.HttpServer",
-            "isConstant": false,
-            "href": "dart-io\/HttpServer\/sessionTimeout.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">set sessionTimeout(int timeout);<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "dart-io\/HttpServer-class.html",
-    "desc": "<p>A server that delivers content, such as web pages, using the HTTP protocol.<\/p>\n<p>The HttpServer is a <a href=\"dart-async\/Stream-class.html\">Stream<\/a> that provides <a href=\"dart-io\/HttpRequest-class.html\">HttpRequest<\/a> objects. Each\nHttpRequest has an associated <a href=\"dart-io\/HttpResponse-class.html\">HttpResponse<\/a> object.\nThe server responds to a request by writing to that HttpResponse object.\nThe following example shows how to bind an HttpServer to an IPv6\n<a href=\"dart-io\/InternetAddress-class.html\">InternetAddress<\/a> on port 80 (the standard port for HTTP servers)\nand how to listen for requests.\nPort 80 is the default HTTP port. However, on most systems accessing\nthis requires super-user privileges. For local testing consider\nusing a non-reserved port (1024 and above).<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\n\nmain() {\n  HttpServer\n      .bind(InternetAddress.anyIPv6, 80)\n      .then((server) {\n        server.listen((HttpRequest request) {\n          request.response.write('Hello, world!');\n          request.response.close();\n        });\n      });\n}\n<\/code><\/pre>\n<p>Incomplete requests, in which all or part of the header is missing, are\nignored, and no exceptions or HttpRequest objects are generated for them.\nLikewise, when writing to an HttpResponse, any <a href=\"dart-io\/Socket-class.html\">Socket<\/a> exceptions are\nignored and any future writes are ignored.<\/p>\n<p>The HttpRequest exposes the request headers and provides the request body,\nif it exists, as a Stream of data. If the body is unread, it is drained\nwhen the server writes to the HttpResponse or closes it.<\/p>\n<h2 id=\"bind-with-a-secure-https-connection\">Bind with a secure HTTPS connection<\/h2>\n<p>Use <a href=\"dart-io\/HttpServer\/bindSecure.html\">bindSecure<\/a> to create an HTTPS server.<\/p>\n<p>The server presents a certificate to the client. The certificate\nchain and the private key are set in the <a href=\"dart-io\/SecurityContext-class.html\">SecurityContext<\/a>\nobject that is passed to <a href=\"dart-io\/HttpServer\/bindSecure.html\">bindSecure<\/a>.<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\nimport \"dart:isolate\";\n\nmain() {\n  SecurityContext context = new SecurityContext();\n  var chain =\n      Platform.script.resolve('certificates\/server_chain.pem')\n      .toFilePath();\n  var key =\n      Platform.script.resolve('certificates\/server_key.pem')\n      .toFilePath();\n  context.useCertificateChain(chain);\n  context.usePrivateKey(key, password: 'dartdart');\n\n  HttpServer\n      .bindSecure(InternetAddress.anyIPv6,\n                  443,\n                  context)\n      .then((server) {\n        server.listen((HttpRequest request) {\n          request.response.write('Hello, world!');\n          request.response.close();\n        });\n      });\n}\n<\/code><\/pre>\n<p> The certificates and keys are PEM files, which can be created and\n managed with the tools in OpenSSL.<\/p>\n<h2 id=\"connect-to-a-server-socket\">Connect to a server socket<\/h2>\n<p>You can use the <a href=\"dart-io\/HttpServer\/HttpServer.listenOn.html\">listenOn<\/a> constructor to attach an HTTP server to\na <a href=\"dart-io\/ServerSocket-class.html\">ServerSocket<\/a>.<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\n\nmain() {\n  ServerSocket.bind(InternetAddress.anyIPv6, 80)\n    .then((serverSocket) {\n      HttpServer httpserver = new HttpServer.listenOn(serverSocket);\n      serverSocket.listen((Socket socket) {\n        socket.write('Hello, client.');\n      });\n    });\n}\n<\/code><\/pre>\n<h2 id=\"other-resources\">Other resources<\/h2>\n<ul>\n<li>\n<p>HttpServer is a Stream. Refer to the <a href=\"dart-async\/Stream-class.html\">Stream<\/a> class for information\nabout the streaming qualities of an HttpServer.\nPausing the subscription of the stream, pauses at the OS level.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"https:\/\/pub.dartlang.org\/packages\/shelf\">shelf<\/a>\npackage on pub.dartlang.org contains a set of high-level classes that,\ntogether with this class, makes it easy to provide content through HTTP\nservers.<\/p>\n<\/li>\n<\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "HttpServer"
+    ]
 }

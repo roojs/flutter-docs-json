@@ -1,138 +1,123 @@
 {
-    "name": "async.CancelableCompleter",
-    "extends": [],
+    "desc": "<p>A completer for a <a href=\"package-async_async\/CancelableOperation-class.html\">CancelableOperation<\/a>.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-async_async\/CancelableCompleter-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "async",
+    "name": "async.CancelableCompleter",
+    "shortname": "CancelableCompleter",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "CancelableCompleter",
-            "type": "",
             "desc": "<p>Creates a new completer for a <a href=\"package-async_async\/CancelableOperation-class.html\">CancelableOperation<\/a>.<\/p>\n<p>When the future operation canceled, as long as the completer hasn't yet\ncompleted, <code>onCancel<\/code> is called. If <code>onCancel<\/code> returns a <a href=\"dart-async\/Future-class.html\">Future<\/a>, it's\nforwarded to <a href=\"package-async_async\/CancelableOperation\/cancel.html\">CancelableOperation.cancel<\/a>.<\/p>\n<p><code>onCancel<\/code> will be called synchronously when the operation is canceled.\nIt's guaranteed to only be called once.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">CancelableCompleter({FutureOr onCancel()})\n    : _onCancel = onCancel,\n      _inner = new Completer&lt;T&gt;() {\n  _operation = new CancelableOperation&lt;T&gt;._(this);\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/CancelableCompleter\/CancelableCompleter.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "async.CancelableCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "onCancel",
-                    "type": "dart:async.FutureOr",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:async.FutureOr"
                 }
-            ],
-            "isConstructor": true,
-            "href": "package-async_async\/CancelableCompleter\/CancelableCompleter.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">CancelableCompleter({FutureOr onCancel()})\n    : _onCancel = onCancel,\n      _inner = new Completer&lt;T&gt;() {\n  _operation = new CancelableOperation&lt;T&gt;._(this);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "complete",
-            "type": "",
             "desc": "<p>Completes <a href=\"package-async_async\/CancelableCompleter\/operation.html\">operation<\/a> to <code>value<\/code>.<\/p>\n<p>If <code>value<\/code> is a <a href=\"dart-async\/Future-class.html\">Future<\/a>, this will complete to the result of that\n<a href=\"dart-async\/Future-class.html\">Future<\/a> once it completes.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void complete([value]) {\n  if (_isCompleted) throw new StateError(\"Operation already completed\");\n  _isCompleted = true;\n\n  if (value is! Future) {\n    if (_isCanceled) return;\n    _inner.complete(value);\n    return;\n  }\n\n  if (_isCanceled) {\n    \/\/ Make sure errors from [value] aren't top-leveled.\n    value.catchError((_) {});\n    return;\n  }\n\n  value.then((result) {\n    if (_isCanceled) return;\n    _inner.complete(result);\n  }, onError: (error, stackTrace) {\n    if (_isCanceled) return;\n    _inner.completeError(error, stackTrace);\n  });\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/CancelableCompleter\/complete.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.CancelableCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/CancelableCompleter\/complete.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void complete([value]) {\n  if (_isCompleted) throw new StateError(\"Operation already completed\");\n  _isCompleted = true;\n\n  if (value is! Future) {\n    if (_isCanceled) return;\n    _inner.complete(value);\n    return;\n  }\n\n  if (_isCanceled) {\n    \/\/ Make sure errors from [value] aren't top-leveled.\n    value.catchError((_) {});\n    return;\n  }\n\n  value.then((result) {\n    if (_isCanceled) return;\n    _inner.complete(result);\n  }, onError: (error, stackTrace) {\n    if (_isCanceled) return;\n    _inner.completeError(error, stackTrace);\n  });\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "completeError",
-            "type": "",
             "desc": "<p>Completes <a href=\"package-async_async\/CancelableCompleter\/operation.html\">operation<\/a> to <code>error<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void completeError(Object error, [StackTrace stackTrace]) {\n  if (_isCompleted) throw new StateError(\"Operation already completed\");\n  _isCompleted = true;\n\n  if (_isCanceled) return;\n  _inner.completeError(error, stackTrace);\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/CancelableCompleter\/completeError.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.CancelableCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "error",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
                 },
                 {
                     "name": "stackTrace",
-                    "type": "dart:core.StackTrace",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.StackTrace"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/CancelableCompleter\/completeError.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void completeError(Object error, [StackTrace stackTrace]) {\n  if (_isCompleted) throw new StateError(\"Operation already completed\");\n  _isCompleted = true;\n\n  if (_isCanceled) return;\n  _inner.completeError(error, stackTrace);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "name": "isCanceled",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether the completer was canceled before being completed.<\/p>\n        ",
-            "memberOf": "async.CancelableCompleter",
-            "isConstant": false,
-            "href": "package-async_async\/CancelableCompleter\/isCanceled.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isCanceled =&gt; _isCanceled;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "isCompleted",
+            "href": "package-async_async\/CancelableCompleter\/isCanceled.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether the completer has completed.<\/p>\n        ",
             "memberOf": "async.CancelableCompleter",
-            "isConstant": false,
-            "href": "package-async_async\/CancelableCompleter\/isCompleted.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isCompleted =&gt; _isCompleted;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "operation",
-            "type": "async.CancelableOperation",
-            "types": [],
-            "desc": "<p>The operation controlled by this completer.<\/p>\n        ",
+            "desc": "<p>Whether the completer has completed.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isCompleted =&gt; _isCompleted;<\/code><\/pre>\n        ",
+            "href": "package-async_async\/CancelableCompleter\/isCompleted.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
             "memberOf": "async.CancelableCompleter",
-            "isConstant": false,
-            "href": "package-async_async\/CancelableCompleter\/operation.html",
+            "params": []
+        },
+        {
+            "desc": "<p>The operation controlled by this completer.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">CancelableOperation&lt;T&gt; get operation =&gt; _operation;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-async_async\/CancelableCompleter\/operation.html",
+            "isDeprecated": "0",
+            "type": "async.CancelableOperation",
+            "memberOf": "async.CancelableCompleter",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-async_async\/CancelableCompleter-class.html",
-    "desc": "<p>A completer for a <a href=\"package-async_async\/CancelableOperation-class.html\">CancelableOperation<\/a>.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "CancelableCompleter"
+    ]
 }

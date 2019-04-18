@@ -1,260 +1,238 @@
 {
+    "desc": "<p>A composited layer that applies a transformation matrix to its children such\nthat they are positioned to match a <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>If any of the ancestors of this layer have a degenerate matrix (e.g. scaling\nby zero), then the <a href=\"rendering\/FollowerLayer-class.html\">FollowerLayer<\/a> will not be able to transform its child\nto the coordinate space of the <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>A <a href=\"rendering\/FollowerLayer\/linkedOffset.html\">linkedOffset<\/a> property can be provided to further offset the child layer\nfrom the leader layer, for example if the child is to follow the linked\nlayer at a distance rather than directly overlapping it.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "rendering\/FollowerLayer-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "rendering",
     "name": "rendering.FollowerLayer",
+    "shortname": "FollowerLayer",
     "extends": [
         "rendering.ContainerLayer",
         "rendering.Layer",
         "foundation.AbstractNode",
         "dart:core.Object"
     ],
-    "memberOf": "rendering",
     "events": [],
     "methods": [
         {
-            "name": "FollowerLayer",
-            "type": "",
             "desc": "<p>Creates a follower layer.<\/p>\n<p>The <code>link<\/code> property must not be null.<\/p>\n<p>The <code>unlinkedOffset<\/code>, <code>linkedOffset<\/code>, and <code>showWhenUnlinked<\/code> properties\nmust be non-null before the compositing phase of the pipeline.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">FollowerLayer({\n  @required this.link,\n  this.showWhenUnlinked = true,\n  this.unlinkedOffset = Offset.zero,\n  this.linkedOffset = Offset.zero,\n}) : assert(link != null);<\/code><\/pre>\n    ",
+            "href": "rendering\/FollowerLayer\/FollowerLayer.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "rendering.FollowerLayer",
-            "sig": "",
             "params": [
                 {
                     "name": "link",
-                    "type": "rendering.LayerLink",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "showWhenUnlinked",
-                    "type": "dart:core.bool",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "unlinkedOffset",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "rendering.LayerLink"
                 },
                 {
                     "name": "linkedOffset",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.Offset"
+                },
+                {
+                    "name": "showWhenUnlinked",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "unlinkedOffset",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.Offset"
                 }
-            ],
-            "isConstructor": true,
-            "href": "rendering\/FollowerLayer\/FollowerLayer.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">FollowerLayer({\n  @required this.link,\n  this.showWhenUnlinked = true,\n  this.unlinkedOffset = Offset.zero,\n  this.linkedOffset = Offset.zero,\n}) : assert(link != null);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "addToScene",
-            "type": "dart:ui.EngineLayer",
             "desc": "<p>Override this method to upload this layer to the engine.<\/p>\n<p>Return the engine layer for retained rendering. When there's no\ncorresponding engine layer, null is returned.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nui.EngineLayer addToScene(ui.SceneBuilder builder, [ Offset layerOffset = Offset.zero ]) {\n  assert(link != null);\n  assert(showWhenUnlinked != null);\n  if (link.leader == null &amp;&amp; !showWhenUnlinked) {\n    _lastTransform = null;\n    _lastOffset = null;\n    _inverseDirty = true;\n    return null; \/\/ this does not have an engine layer.\n  }\n  _establishTransform();\n  if (_lastTransform != null) {\n    builder.pushTransform(_lastTransform.storage);\n    addChildrenToScene(builder);\n    builder.pop();\n    _lastOffset = unlinkedOffset + layerOffset;\n  } else {\n    _lastOffset = null;\n    final Matrix4 matrix = Matrix4.translationValues(unlinkedOffset.dx, unlinkedOffset.dy, .0);\n    builder.pushTransform(matrix.storage);\n    addChildrenToScene(builder);\n    builder.pop();\n  }\n  _inverseDirty = true;\n  return null; \/\/ this does not have an engine layer.\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/FollowerLayer\/addToScene.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.EngineLayer",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.FollowerLayer",
-            "sig": "",
             "params": [
                 {
                     "name": "builder",
-                    "type": "dart:ui.SceneBuilder",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.SceneBuilder"
                 },
                 {
                     "name": "layerOffset",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Offset"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/FollowerLayer\/addToScene.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nui.EngineLayer addToScene(ui.SceneBuilder builder, [ Offset layerOffset = Offset.zero ]) {\n  assert(link != null);\n  assert(showWhenUnlinked != null);\n  if (link.leader == null &amp;&amp; !showWhenUnlinked) {\n    _lastTransform = null;\n    _lastOffset = null;\n    _inverseDirty = true;\n    return null; \/\/ this does not have an engine layer.\n  }\n  _establishTransform();\n  if (_lastTransform != null) {\n    builder.pushTransform(_lastTransform.storage);\n    addChildrenToScene(builder);\n    builder.pop();\n    _lastOffset = unlinkedOffset + layerOffset;\n  } else {\n    _lastOffset = null;\n    final Matrix4 matrix = Matrix4.translationValues(unlinkedOffset.dx, unlinkedOffset.dy, .0);\n    builder.pushTransform(matrix.storage);\n    addChildrenToScene(builder);\n    builder.pop();\n  }\n  _inverseDirty = true;\n  return null; \/\/ this does not have an engine layer.\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "applyTransform",
-            "type": "",
             "desc": "<p>Applies the transform that would be applied when compositing the given\nchild to the given matrix.<\/p>\n<p>Specifically, this should apply the transform that is applied to child's\n<em>origin<\/em>. When using <a href=\"rendering\/FollowerLayer\/applyTransform.html\">applyTransform<\/a> with a chain of layers, results will\nbe unreliable unless the deepest layer in the chain collapses the\n<code>layerOffset<\/code> in <a href=\"rendering\/FollowerLayer\/addToScene.html\">addToScene<\/a> to zero, meaning that it passes\n<a href=\"dart-ui\/Offset\/zero-constant.html\">Offset.zero<\/a> to its children, and bakes any incoming <code>layerOffset<\/code> into\nthe <a href=\"dart-ui\/SceneBuilder-class.html\">SceneBuilder<\/a> as (for instance) a transform (which is then also\nincluded in the transformation applied by <a href=\"rendering\/FollowerLayer\/applyTransform.html\">applyTransform<\/a>).<\/p>\n<p>For example, if <a href=\"rendering\/FollowerLayer\/addToScene.html\">addToScene<\/a> applies the <code>layerOffset<\/code> and then\npasses <a href=\"dart-ui\/Offset\/zero-constant.html\">Offset.zero<\/a> to the children, then it should be included in the\ntransform applied here, whereas if <a href=\"rendering\/FollowerLayer\/addToScene.html\">addToScene<\/a> just passes the\n<code>layerOffset<\/code> to the child, then it should not be included in the\ntransform applied here.<\/p>\n<p>This method is only valid immediately after <a href=\"rendering\/FollowerLayer\/addToScene.html\">addToScene<\/a> has been called,\nbefore any of the properties have been changed.<\/p>\n<p>The default implementation does nothing, since <a href=\"rendering\/ContainerLayer-class.html\">ContainerLayer<\/a>, by\ndefault, composites its children at the origin of the <a href=\"rendering\/ContainerLayer-class.html\">ContainerLayer<\/a>\nitself.<\/p>\n<p>The <code>child<\/code> argument should generally not be null, since in principle a\nlayer could transform each child independently. However, certain layers\nmay explicitly allow null as a value, for example if they know that they\ntransform all their children identically.<\/p>\n<p>The <code>transform<\/code> argument must not be null.<\/p>\n<p>Used by <a href=\"rendering\/FollowerLayer-class.html\">FollowerLayer<\/a> to transform its child to a <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>'s\nposition.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid applyTransform(Layer child, Matrix4 transform) {\n  assert(child != null);\n  assert(transform != null);\n  if (_lastTransform != null) {\n    transform.multiply(_lastTransform);\n  } else {\n    transform.multiply(Matrix4.translationValues(unlinkedOffset.dx, unlinkedOffset.dy, .0));\n  }\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/FollowerLayer\/applyTransform.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.FollowerLayer",
-            "sig": "",
             "params": [
                 {
                     "name": "child",
-                    "type": "rendering.Layer",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "rendering.Layer"
                 },
                 {
                     "name": "transform",
-                    "type": "vector_math_64.Matrix4",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_64.Matrix4"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/FollowerLayer\/applyTransform.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid applyTransform(Layer child, Matrix4 transform) {\n  assert(child != null);\n  assert(transform != null);\n  if (_lastTransform != null) {\n    transform.multiply(_lastTransform);\n  } else {\n    transform.multiply(Matrix4.translationValues(unlinkedOffset.dx, unlinkedOffset.dy, .0));\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "debugFillProperties",
-            "type": "",
             "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"rendering\/FollowerLayer\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTreeMixin\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/DiagnosticableTreeMixin\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(DiagnosticsProperty&lt;LayerLink&gt;('link', link));\n  properties.add(TransformProperty('transform', getLastTransform(), defaultValue: null));\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/FollowerLayer\/debugFillProperties.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.FollowerLayer",
-            "sig": "",
             "params": [
                 {
                     "name": "properties",
-                    "type": "foundation.DiagnosticPropertiesBuilder",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "foundation.DiagnosticPropertiesBuilder"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/FollowerLayer\/debugFillProperties.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(DiagnosticsProperty&lt;LayerLink&gt;('link', link));\n  properties.add(TransformProperty('transform', getLastTransform(), defaultValue: null));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "find",
-            "type": "",
             "desc": "<p>Returns the value of <code>S<\/code> that corresponds to the point described by\n<code>regionOffset<\/code>.<\/p>\n<p>Returns null if no matching region is found.<\/p>\n<p>The main way for a value to be assigned here is by pushing an\n<a href=\"rendering\/AnnotatedRegionLayer-class.html\">AnnotatedRegionLayer<\/a> into the layer tree.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/AnnotatedRegionLayer-class.html\">AnnotatedRegionLayer<\/a>, for placing values in the layer tree.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nS find&lt;S&gt;(Offset regionOffset) {\n  if (link.leader == null) {\n    return showWhenUnlinked ? super.find&lt;S&gt;(regionOffset - unlinkedOffset) : null;\n  }\n  if (_inverseDirty) {\n    _invertedTransform = Matrix4.tryInvert(getLastTransform());\n    _inverseDirty = false;\n  }\n  if (_invertedTransform == null)\n    return null;\n  final Vector4 vector = Vector4(regionOffset.dx, regionOffset.dy, 0.0, 1.0);\n  final Vector4 result = _invertedTransform.transform(vector);\n  return super.find&lt;S&gt;(Offset(result[0] - linkedOffset.dx, result[1] - linkedOffset.dy));\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/FollowerLayer\/find.html",
+            "isDeprecated": "0",
+            "type": "<S>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.FollowerLayer",
-            "sig": "",
             "params": [
                 {
                     "name": "regionOffset",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Offset"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/FollowerLayer\/find.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nS find&lt;S&gt;(Offset regionOffset) {\n  if (link.leader == null) {\n    return showWhenUnlinked ? super.find&lt;S&gt;(regionOffset - unlinkedOffset) : null;\n  }\n  if (_inverseDirty) {\n    _invertedTransform = Matrix4.tryInvert(getLastTransform());\n    _inverseDirty = false;\n  }\n  if (_invertedTransform == null)\n    return null;\n  final Vector4 vector = Vector4(regionOffset.dx, regionOffset.dy, 0.0, 1.0);\n  final Vector4 result = _invertedTransform.transform(vector);\n  return super.find&lt;S&gt;(Offset(result[0] - linkedOffset.dx, result[1] - linkedOffset.dy));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "getLastTransform",
-            "type": "vector_math_64.Matrix4",
             "desc": "<p>The transform that was used during the last composition phase.<\/p>\n<p>If the <a href=\"rendering\/FollowerLayer\/link.html\">link<\/a> was not linked to a <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>, or if this layer has\na degenerate matrix applied, then this will be null.<\/p>\n<p>This method returns a new <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a> instance each time it is invoked.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matrix4 getLastTransform() {\n  if (_lastTransform == null)\n    return null;\n  final Matrix4 result = Matrix4.translationValues(-_lastOffset.dx, -_lastOffset.dy, 0.0);\n  result.multiply(_lastTransform);\n  return result;\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/FollowerLayer\/getLastTransform.html",
+            "isDeprecated": "0",
+            "type": "vector_math_64.Matrix4",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.FollowerLayer",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "rendering\/FollowerLayer\/getLastTransform.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matrix4 getLastTransform() {\n  if (_lastTransform == null)\n    return null;\n  final Matrix4 result = Matrix4.translationValues(-_lastOffset.dx, -_lastOffset.dy, 0.0);\n  result.multiply(_lastTransform);\n  return result;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "alwaysNeedsAddToScene",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>This disables retained rendering for Leader\/FollowerLayer.<\/p>\n<p>A FollowerLayer copies changes from a LeaderLayer that could be anywhere\nin the Layer tree, and that LeaderLayer could change without notifying the\nFollowerLayer. Therefore we have to always call a FollowerLayer's\n<a href=\"rendering\/FollowerLayer\/addToScene.html\">addToScene<\/a>. In order to call FollowerLayer's <a href=\"rendering\/FollowerLayer\/addToScene.html\">addToScene<\/a>, LeaderLayer's\n<a href=\"rendering\/FollowerLayer\/addToScene.html\">addToScene<\/a> must be called first so LeaderLayer must also be considered\nas <a href=\"rendering\/FollowerLayer\/alwaysNeedsAddToScene.html\">alwaysNeedsAddToScene<\/a>.<\/p>\n        ",
-            "memberOf": "rendering.FollowerLayer",
-            "isConstant": false,
-            "href": "rendering\/FollowerLayer\/alwaysNeedsAddToScene.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get alwaysNeedsAddToScene =&gt; true;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "link",
-            "type": "rendering.LayerLink",
-            "types": [],
-            "desc": "<p>The link to the <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>The same object should be provided to a <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a> that is earlier in\nthe layer tree. When this layer is composited, it will apply a transform\nthat moves its children to match the position of the <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n        ",
-            "memberOf": "rendering.FollowerLayer",
-            "isConstant": false,
-            "href": "rendering\/FollowerLayer\/link.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final LayerLink link\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "linkedOffset",
-            "type": "dart:ui.Offset",
-            "types": [],
-            "desc": "<p>Offset from the origin of the leader layer to the origin of the child\nlayers, used when the layer is linked to a <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>The scene must be explicitly recomposited after this property is changed\n(as described at <a href=\"rendering\/Layer-class.html\">Layer<\/a>).<\/p>\n<p>The <a href=\"rendering\/FollowerLayer\/linkedOffset.html\">linkedOffset<\/a> property must be non-null before the compositing phase\nof the pipeline.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/FollowerLayer\/unlinkedOffset.html\">unlinkedOffset<\/a>, for when the layer is not linked.<\/li><\/ul>",
-            "memberOf": "rendering.FollowerLayer",
-            "isConstant": false,
-            "href": "rendering\/FollowerLayer\/linkedOffset.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Offset linkedOffset\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "showWhenUnlinked",
+            "href": "rendering\/FollowerLayer\/alwaysNeedsAddToScene.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether to show the layer's contents when the <a href=\"rendering\/FollowerLayer\/link.html\">link<\/a> does not point to a\n<a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>When the layer is linked, children layers are positioned such that they\nhave the same global position as the linked <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>When the layer is not linked, then: if <a href=\"rendering\/FollowerLayer\/showWhenUnlinked.html\">showWhenUnlinked<\/a> is true,\nchildren are positioned as if the <a href=\"rendering\/FollowerLayer-class.html\">FollowerLayer<\/a> was a <a href=\"rendering\/ContainerLayer-class.html\">ContainerLayer<\/a>;\nif it is false, then children are hidden.<\/p>\n<p>The <a href=\"rendering\/FollowerLayer\/showWhenUnlinked.html\">showWhenUnlinked<\/a> property must be non-null before the compositing\nphase of the pipeline.<\/p>\n        ",
             "memberOf": "rendering.FollowerLayer",
-            "isConstant": false,
-            "href": "rendering\/FollowerLayer\/showWhenUnlinked.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool showWhenUnlinked\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "unlinkedOffset",
-            "type": "dart:ui.Offset",
-            "types": [],
-            "desc": "<p>Offset from parent in the parent's coordinate system, used when the layer\nis not linked to a <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>The scene must be explicitly recomposited after this property is changed\n(as described at <a href=\"rendering\/Layer-class.html\">Layer<\/a>).<\/p>\n<p>The <a href=\"rendering\/FollowerLayer\/unlinkedOffset.html\">unlinkedOffset<\/a> property must be non-null before the compositing\nphase of the pipeline.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/FollowerLayer\/linkedOffset.html\">linkedOffset<\/a>, for when the layers are linked.<\/li><\/ul>",
+            "desc": "<p>The link to the <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>The same object should be provided to a <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a> that is earlier in\nthe layer tree. When this layer is composited, it will apply a transform\nthat moves its children to match the position of the <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final LayerLink link\n\n<\/code><\/pre>\n        ",
+            "href": "rendering\/FollowerLayer\/link.html",
+            "isDeprecated": "0",
+            "type": "rendering.LayerLink",
             "memberOf": "rendering.FollowerLayer",
-            "isConstant": false,
-            "href": "rendering\/FollowerLayer\/unlinkedOffset.html",
+            "params": []
+        },
+        {
+            "desc": "<p>Offset from the origin of the leader layer to the origin of the child\nlayers, used when the layer is linked to a <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>The scene must be explicitly recomposited after this property is changed\n(as described at <a href=\"rendering\/Layer-class.html\">Layer<\/a>).<\/p>\n<p>The <a href=\"rendering\/FollowerLayer\/linkedOffset.html\">linkedOffset<\/a> property must be non-null before the compositing phase\nof the pipeline.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/FollowerLayer\/unlinkedOffset.html\">unlinkedOffset<\/a>, for when the layer is not linked.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Offset linkedOffset\n\n<\/code><\/pre>\n        ",
+            "href": "rendering\/FollowerLayer\/linkedOffset.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Offset",
+            "memberOf": "rendering.FollowerLayer",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether to show the layer's contents when the <a href=\"rendering\/FollowerLayer\/link.html\">link<\/a> does not point to a\n<a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>When the layer is linked, children layers are positioned such that they\nhave the same global position as the linked <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>When the layer is not linked, then: if <a href=\"rendering\/FollowerLayer\/showWhenUnlinked.html\">showWhenUnlinked<\/a> is true,\nchildren are positioned as if the <a href=\"rendering\/FollowerLayer-class.html\">FollowerLayer<\/a> was a <a href=\"rendering\/ContainerLayer-class.html\">ContainerLayer<\/a>;\nif it is false, then children are hidden.<\/p>\n<p>The <a href=\"rendering\/FollowerLayer\/showWhenUnlinked.html\">showWhenUnlinked<\/a> property must be non-null before the compositing\nphase of the pipeline.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool showWhenUnlinked\n\n<\/code><\/pre>\n        ",
+            "href": "rendering\/FollowerLayer\/showWhenUnlinked.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "rendering.FollowerLayer",
+            "params": []
+        },
+        {
+            "desc": "<p>Offset from parent in the parent's coordinate system, used when the layer\nis not linked to a <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>The scene must be explicitly recomposited after this property is changed\n(as described at <a href=\"rendering\/Layer-class.html\">Layer<\/a>).<\/p>\n<p>The <a href=\"rendering\/FollowerLayer\/unlinkedOffset.html\">unlinkedOffset<\/a> property must be non-null before the compositing\nphase of the pipeline.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/FollowerLayer\/linkedOffset.html\">linkedOffset<\/a>, for when the layers are linked.<\/li><\/ul>",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Offset unlinkedOffset\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/FollowerLayer\/unlinkedOffset.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Offset",
+            "memberOf": "rendering.FollowerLayer",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "rendering\/FollowerLayer-class.html",
-    "desc": "<p>A composited layer that applies a transformation matrix to its children such\nthat they are positioned to match a <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>If any of the ancestors of this layer have a degenerate matrix (e.g. scaling\nby zero), then the <a href=\"rendering\/FollowerLayer-class.html\">FollowerLayer<\/a> will not be able to transform its child\nto the coordinate space of the <a href=\"rendering\/LeaderLayer-class.html\">LeaderLayer<\/a>.<\/p>\n<p>A <a href=\"rendering\/FollowerLayer\/linkedOffset.html\">linkedOffset<\/a> property can be provided to further offset the child layer\nfrom the leader layer, for example if the child is to follow the linked\nlayer at a distance rather than directly overlapping it.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "FollowerLayer"
+    ]
 }

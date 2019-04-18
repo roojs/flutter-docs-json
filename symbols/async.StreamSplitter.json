@@ -1,108 +1,97 @@
 {
-    "name": "async.StreamSplitter",
-    "extends": [],
+    "desc": "<p>A class that splits a single source stream into an arbitrary number of\n(single-subscription) streams (called \"branch\") that emit the same events.<\/p>\n<p>Each branch will emit all the same values and errors as the source stream,\nregardless of which values have been emitted on other branches. This means\nthat the splitter stores every event that has been emitted so far, which may\nconsume a lot of memory. The user can call <a href=\"package-async_async\/StreamSplitter\/close.html\">close<\/a> to indicate that no more\nbranches will be created, and this memory will be released.<\/p>\n<p>The source stream is only listened to once a branch is created <em>and listened\nto<\/em>. It's paused when all branches are paused <em>or when all branches are\ncanceled<\/em>, and resumed once there's at least one branch that's listening and\nunpaused. It's not canceled unless no branches are listening and <a href=\"package-async_async\/StreamSplitter\/close.html\">close<\/a> has\nbeen called.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-async_async\/StreamSplitter-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "async",
+    "name": "async.StreamSplitter",
+    "shortname": "StreamSplitter",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "StreamSplitter",
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamSplitter(this._stream);<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamSplitter\/StreamSplitter.html",
+            "isDeprecated": "0",
             "type": "",
-            "desc": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "async.StreamSplitter",
-            "sig": "",
             "params": [
                 {
                     "name": "_stream",
-                    "type": "dart:async.Stream",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:async.Stream"
                 }
-            ],
-            "isConstructor": true,
-            "href": "package-async_async\/StreamSplitter\/StreamSplitter.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamSplitter(this._stream);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "close",
-            "type": "dart:async.Future",
             "desc": "<p>Indicates that no more branches will be requested via <a href=\"package-async_async\/StreamSplitter\/split.html\">split<\/a>.<\/p>\n<p>This clears the internal buffer of events. If there are no branches or all\nbranches have been canceled, this cancels the subscription to the input\nstream.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes once all events have been processed by\nall branches and (if applicable) the subscription to the input stream has\nbeen canceled.<\/p>\n    ",
-            "static": false,
-            "memberOf": "async.StreamSplitter",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamSplitter\/close.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future close() {\n  if (_isClosed) return _closeGroup.future;\n  _isClosed = true;\n\n  _buffer.clear();\n  if (_controllers.isEmpty) _cancelSubscription();\n\n  return _closeGroup.future;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "split",
-            "type": "dart:async.Stream",
-            "desc": "<p>Returns a single-subscription stream that's a copy of the input stream.<\/p>\n<p>This will throw a <a href=\"dart-core\/StateError-class.html\">StateError<\/a> if <a href=\"package-async_async\/StreamSplitter\/close.html\">close<\/a> has been called.<\/p>\n    ",
-            "static": false,
-            "memberOf": "async.StreamSplitter",
-            "sig": "",
-            "params": [],
+            "href": "package-async_async\/StreamSplitter\/close.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "package-async_async\/StreamSplitter\/split.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; split() {\n  if (_isClosed) {\n    throw new StateError(\"Can't call split() on a closed StreamSplitter.\");\n  }\n\n  var controller = new StreamController&lt;T&gt;(\n      onListen: _onListen, onPause: _onPause, onResume: _onResume);\n  controller.onCancel = () =&gt; _onCancel(controller);\n\n  for (var result in _buffer) {\n    result.addTo(controller);\n  }\n\n  if (_isDone) {\n    _closeGroup.add(controller.close());\n  } else {\n    _controllers.add(controller);\n  }\n\n  return controller.stream;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "splitFrom",
-            "type": "dart:core.List<dart:async.Stream>",
-            "desc": "<p>Splits <code>stream<\/code> into <code>count<\/code> identical streams.<\/p>\n<p><code>count<\/code> defaults to 2. This is the same as creating <code>count<\/code> branches and\nthen closing the <a href=\"package-async_async\/StreamSplitter-class.html\">StreamSplitter<\/a>.<\/p>\n    ",
             "static": false,
             "memberOf": "async.StreamSplitter",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns a single-subscription stream that's a copy of the input stream.<\/p>\n<p>This will throw a <a href=\"dart-core\/StateError-class.html\">StateError<\/a> if <a href=\"package-async_async\/StreamSplitter\/close.html\">close<\/a> has been called.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; split() {\n  if (_isClosed) {\n    throw new StateError(\"Can't call split() on a closed StreamSplitter.\");\n  }\n\n  var controller = new StreamController&lt;T&gt;(\n      onListen: _onListen, onPause: _onPause, onResume: _onResume);\n  controller.onCancel = () =&gt; _onCancel(controller);\n\n  for (var result in _buffer) {\n    result.addTo(controller);\n  }\n\n  if (_isDone) {\n    _closeGroup.add(controller.close());\n  } else {\n    _controllers.add(controller);\n  }\n\n  return controller.stream;\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamSplitter\/split.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Stream",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "async.StreamSplitter",
+            "params": []
+        },
+        {
+            "desc": "<p>Splits <code>stream<\/code> into <code>count<\/code> identical streams.<\/p>\n<p><code>count<\/code> defaults to 2. This is the same as creating <code>count<\/code> branches and\nthen closing the <a href=\"package-async_async\/StreamSplitter-class.html\">StreamSplitter<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static List&lt;Stream&lt;T&gt;&gt; splitFrom&lt;T&gt;(Stream&lt;T&gt; stream, [int count]) {\n  if (count == null) count = 2;\n  var splitter = new StreamSplitter&lt;T&gt;(stream);\n  var streams = new List&lt;Stream&lt;T&gt;&gt;.generate(count, (_) =&gt; splitter.split());\n  splitter.close();\n  return streams;\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamSplitter\/splitFrom.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<dart:async.Stream>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "async.StreamSplitter",
             "params": [
                 {
-                    "name": "stream",
-                    "type": "dart:async.Stream",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "count",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 },
                 {
-                    "name": "count",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "stream",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:async.Stream"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamSplitter\/splitFrom.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static List&lt;Stream&lt;T&gt;&gt; splitFrom&lt;T&gt;(Stream&lt;T&gt; stream, [int count]) {\n  if (count == null) count = 2;\n  var splitter = new StreamSplitter&lt;T&gt;(stream);\n  var streams = new List&lt;Stream&lt;T&gt;&gt;.generate(count, (_) =&gt; splitter.split());\n  splitter.close();\n  return streams;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:core.List",
-                "dart:async.Stream"
             ]
         }
     ],
-    "props": [],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-async_async\/StreamSplitter-class.html",
-    "desc": "<p>A class that splits a single source stream into an arbitrary number of\n(single-subscription) streams (called \"branch\") that emit the same events.<\/p>\n<p>Each branch will emit all the same values and errors as the source stream,\nregardless of which values have been emitted on other branches. This means\nthat the splitter stores every event that has been emitted so far, which may\nconsume a lot of memory. The user can call <a href=\"package-async_async\/StreamSplitter\/close.html\">close<\/a> to indicate that no more\nbranches will be created, and this memory will be released.<\/p>\n<p>The source stream is only listened to once a branch is created <em>and listened\nto<\/em>. It's paused when all branches are paused <em>or when all branches are\ncanceled<\/em>, and resumed once there's at least one branch that's listening and\nunpaused. It's not canceled unless no branches are listening and <a href=\"package-async_async\/StreamSplitter\/close.html\">close<\/a> has\nbeen called.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "StreamSplitter"
+    "props": []
 }

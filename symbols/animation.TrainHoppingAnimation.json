@@ -1,156 +1,127 @@
 {
+    "desc": "<p>This animation starts by proxying one animation, but when the value of that\nanimation crosses the value of the second (either because the second is\ngoing in the opposite direction, or because the one overtakes the other),\nthe animation hops over to proxying the second animation.<\/p>\n<p>When the <a href=\"animation\/TrainHoppingAnimation-class.html\">TrainHoppingAnimation<\/a> starts proxying the second animation\ninstead of the first, the <a href=\"animation\/TrainHoppingAnimation\/onSwitchedTrain.html\">onSwitchedTrain<\/a> callback is called.<\/p>\n<p>If the two animations start at the same value, then the\n<a href=\"animation\/TrainHoppingAnimation-class.html\">TrainHoppingAnimation<\/a> immediately hops to the second animation, and the\n<a href=\"animation\/TrainHoppingAnimation\/onSwitchedTrain.html\">onSwitchedTrain<\/a> callback is not called. If only one animation is provided\n(i.e. if the second is null), then the <a href=\"animation\/TrainHoppingAnimation-class.html\">TrainHoppingAnimation<\/a> just proxies\nthe first animation.<\/p>\n<p>Since this object must track the two animations even when it has no\nlisteners of its own, instead of shutting down when all its listeners are\nremoved, it exposes a <a href=\"animation\/TrainHoppingAnimation\/dispose.html\">dispose()<\/a> method. Call this method to shut this\nobject down.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "animation\/TrainHoppingAnimation-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "animation",
     "name": "animation.TrainHoppingAnimation",
+    "shortname": "TrainHoppingAnimation",
     "extends": [
         "dart:core.double",
         "animation.Animation",
         "foundation.Listenable",
         "dart:core.Object"
     ],
-    "memberOf": "animation",
     "events": [
         {
-            "name": "onSwitchedTrain",
-            "type": "dart:ui.VoidCallback",
             "desc": "<p>Called when this animation switches to be driven by the second animation.<\/p>\n<p>This is not called if the two animations provided to the constructor have\nthe same value at the time of the call to the constructor. In that case,\nthe second animation is used from the start, and the first is ignored.<\/p>\n        ",
-            "static": false,
-            "memberOf": "",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "animation\/TrainHoppingAnimation\/onSwitchedTrain.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">VoidCallback onSwitchedTrain\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false,
-            "isConstant": false
+            "href": "animation\/TrainHoppingAnimation\/onSwitchedTrain.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.VoidCallback",
+            "memberOf": "animation.TrainHoppingAnimation",
+            "params": []
         }
     ],
     "methods": [
         {
-            "name": "TrainHoppingAnimation",
-            "type": "",
             "desc": "<p>Creates a train-hopping animation.<\/p>\n<p>The current train argument must not be null but the next train argument\ncan be null. If the next train is null, then this object will just proxy\nthe first animation and never hop.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TrainHoppingAnimation(this._currentTrain, this._nextTrain, { this.onSwitchedTrain })\n    : assert(_currentTrain != null) {\n  if (_nextTrain != null) {\n    if (_currentTrain.value == _nextTrain.value) {\n      _currentTrain = _nextTrain;\n      _nextTrain = null;\n    } else if (_currentTrain.value &gt; _nextTrain.value) {\n      _mode = _TrainHoppingMode.maximize;\n    } else {\n      assert(_currentTrain.value &lt; _nextTrain.value);\n      _mode = _TrainHoppingMode.minimize;\n    }\n  }\n  _currentTrain.addStatusListener(_statusChangeHandler);\n  _currentTrain.addListener(_valueChangeHandler);\n  _nextTrain?.addListener(_valueChangeHandler);\n  assert(_mode != null || _nextTrain == null);\n}<\/code><\/pre>\n    ",
+            "href": "animation\/TrainHoppingAnimation\/TrainHoppingAnimation.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "animation.TrainHoppingAnimation",
-            "sig": "",
             "params": [
                 {
                     "name": "_currentTrain",
-                    "type": "animation.Animation<dart:core.double>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "animation.Animation",
-                        "dart:core.double"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "animation.Animation<dart:core.double>"
                 },
                 {
                     "name": "_nextTrain",
-                    "type": "animation.Animation<dart:core.double>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "animation.Animation",
-                        "dart:core.double"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "animation.Animation<dart:core.double>"
                 },
                 {
                     "name": "onSwitchedTrain",
-                    "type": "dart:ui.VoidCallback",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.VoidCallback"
                 }
-            ],
-            "isConstructor": true,
-            "href": "animation\/TrainHoppingAnimation\/TrainHoppingAnimation.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TrainHoppingAnimation(this._currentTrain, this._nextTrain, { this.onSwitchedTrain })\n    : assert(_currentTrain != null) {\n  if (_nextTrain != null) {\n    if (_currentTrain.value == _nextTrain.value) {\n      _currentTrain = _nextTrain;\n      _nextTrain = null;\n    } else if (_currentTrain.value &gt; _nextTrain.value) {\n      _mode = _TrainHoppingMode.maximize;\n    } else {\n      assert(_currentTrain.value &lt; _nextTrain.value);\n      _mode = _TrainHoppingMode.minimize;\n    }\n  }\n  _currentTrain.addStatusListener(_statusChangeHandler);\n  _currentTrain.addListener(_valueChangeHandler);\n  _nextTrain?.addListener(_valueChangeHandler);\n  assert(_mode != null || _nextTrain == null);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "dispose",
-            "type": "",
             "desc": "<p>Frees all the resources used by this performance.\nAfter this is called, this object is no longer usable.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  assert(_currentTrain != null);\n  _currentTrain.removeStatusListener(_statusChangeHandler);\n  _currentTrain.removeListener(_valueChangeHandler);\n  _currentTrain = null;\n  _nextTrain?.removeListener(_valueChangeHandler);\n  _nextTrain = null;\n  super.dispose();\n}<\/code><\/pre>\n    ",
+            "href": "animation\/TrainHoppingAnimation\/dispose.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "animation.TrainHoppingAnimation",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "animation\/TrainHoppingAnimation\/dispose.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  assert(_currentTrain != null);\n  _currentTrain.removeStatusListener(_statusChangeHandler);\n  _currentTrain.removeListener(_valueChangeHandler);\n  _currentTrain = null;\n  _nextTrain?.removeListener(_valueChangeHandler);\n  _nextTrain = null;\n  super.dispose();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "params": []
         },
         {
-            "name": "toString",
-            "type": "dart:core.String",
             "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() {\n  if (_nextTrain != null)\n    return '$currentTrain\\u27A9$runtimeType(next: $_nextTrain)';\n  return '$currentTrain\\u27A9$runtimeType(no next)';\n}<\/code><\/pre>\n    ",
+            "href": "animation\/TrainHoppingAnimation\/toString.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "animation.TrainHoppingAnimation",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "animation\/TrainHoppingAnimation\/toString.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() {\n  if (_nextTrain != null)\n    return '$currentTrain\\u27A9$runtimeType(next: $_nextTrain)';\n  return '$currentTrain\\u27A9$runtimeType(no next)';\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "currentTrain",
-            "type": "animation.Animation<dart:core.double>",
-            "types": [
-                "animation.Animation",
-                "dart:core.double"
-            ],
             "desc": "<p>The animation that is currently driving this animation.<\/p>\n<p>The identity of this object will change from the first animation to the\nsecond animation when <a href=\"animation\/TrainHoppingAnimation\/onSwitchedTrain.html\">onSwitchedTrain<\/a> is called.<\/p>\n        ",
-            "memberOf": "animation.TrainHoppingAnimation",
-            "isConstant": false,
-            "href": "animation\/TrainHoppingAnimation\/currentTrain.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Animation&lt;double&gt; get currentTrain =&gt; _currentTrain;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "animation\/TrainHoppingAnimation\/currentTrain.html",
+            "isDeprecated": "0",
+            "type": "animation.Animation<dart:core.double>",
+            "memberOf": "animation.TrainHoppingAnimation",
+            "params": []
         },
         {
-            "name": "status",
-            "type": "animation.AnimationStatus",
-            "types": [],
             "desc": "<p>The current status of this animation.<\/p>\n        ",
-            "memberOf": "animation.TrainHoppingAnimation",
-            "isConstant": false,
-            "href": "animation\/TrainHoppingAnimation\/status.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAnimationStatus get status =&gt; _currentTrain.status;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "animation\/TrainHoppingAnimation\/status.html",
+            "isDeprecated": "0",
+            "type": "animation.AnimationStatus",
+            "memberOf": "animation.TrainHoppingAnimation",
+            "params": []
         },
         {
-            "name": "value",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The current value of the animation.<\/p>\n        ",
-            "memberOf": "animation.TrainHoppingAnimation",
-            "isConstant": false,
-            "href": "animation\/TrainHoppingAnimation\/value.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble get value =&gt; _currentTrain.value;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "animation\/TrainHoppingAnimation\/value.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "animation.TrainHoppingAnimation",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "animation\/TrainHoppingAnimation-class.html",
-    "desc": "<p>This animation starts by proxying one animation, but when the value of that\nanimation crosses the value of the second (either because the second is\ngoing in the opposite direction, or because the one overtakes the other),\nthe animation hops over to proxying the second animation.<\/p>\n<p>When the <a href=\"animation\/TrainHoppingAnimation-class.html\">TrainHoppingAnimation<\/a> starts proxying the second animation\ninstead of the first, the <a href=\"animation\/TrainHoppingAnimation\/onSwitchedTrain.html\">onSwitchedTrain<\/a> callback is called.<\/p>\n<p>If the two animations start at the same value, then the\n<a href=\"animation\/TrainHoppingAnimation-class.html\">TrainHoppingAnimation<\/a> immediately hops to the second animation, and the\n<a href=\"animation\/TrainHoppingAnimation\/onSwitchedTrain.html\">onSwitchedTrain<\/a> callback is not called. If only one animation is provided\n(i.e. if the second is null), then the <a href=\"animation\/TrainHoppingAnimation-class.html\">TrainHoppingAnimation<\/a> just proxies\nthe first animation.<\/p>\n<p>Since this object must track the two animations even when it has no\nlisteners of its own, instead of shutting down when all its listeners are\nremoved, it exposes a <a href=\"animation\/TrainHoppingAnimation\/dispose.html\">dispose()<\/a> method. Call this method to shut this\nobject down.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "TrainHoppingAnimation"
+    ]
 }

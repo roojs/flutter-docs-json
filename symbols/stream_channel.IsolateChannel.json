@@ -1,127 +1,73 @@
 {
+    "desc": "<p>A <a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a> that communicates over a <a href=\"dart-isolate\/ReceivePort-class.html\">ReceivePort<\/a>\/<a href=\"dart-isolate\/SendPort-class.html\">SendPort<\/a> pair,\npresumably with another isolate.<\/p>\n<p>The remote endpoint doesn't necessarily need to be running an\n<a href=\"package-stream_channel_stream_channel\/IsolateChannel-class.html\">IsolateChannel<\/a>. This can be used with any two ports, although the\n<a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a> semantics mean that this class will treat them as being\npaired (for example, closing the <a href=\"package-stream_channel_stream_channel\/IsolateChannel\/sink.html\">sink<\/a> will cause the <a href=\"package-stream_channel_stream_channel\/IsolateChannel\/stream.html\">stream<\/a> to stop\nemitting events).<\/p>\n<p>The underlying isolate ports have no notion of closing connections. This\nmeans that <a href=\"package-stream_channel_stream_channel\/IsolateChannel\/stream.html\">stream<\/a> won't close unless <a href=\"package-stream_channel_stream_channel\/IsolateChannel\/sink.html\">sink<\/a> is closed, and that closing\n<a href=\"package-stream_channel_stream_channel\/IsolateChannel\/sink.html\">sink<\/a> won't cause the remote endpoint to close. Users should take care to\nensure that they always close the <a href=\"package-stream_channel_stream_channel\/IsolateChannel\/sink.html\">sink<\/a> of every <a href=\"package-stream_channel_stream_channel\/IsolateChannel-class.html\">IsolateChannel<\/a> they use\nto avoid leaving dangling <a href=\"dart-isolate\/ReceivePort-class.html\">ReceivePort<\/a>s.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-stream_channel_stream_channel\/IsolateChannel-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "stream_channel",
     "name": "stream_channel.IsolateChannel",
+    "shortname": "IsolateChannel",
     "extends": [
         "stream_channel.StreamChannelMixin",
         "dart:core.Object"
     ],
-    "memberOf": "stream_channel",
     "events": [],
     "methods": [
         {
-            "name": "IsolateChannel",
-            "type": "",
             "desc": "<p>Creates a stream channel that receives messages from <code>receivePort<\/code> and\nsends them over <code>sendPort<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory IsolateChannel(ReceivePort receivePort, SendPort sendPort) {\n  var controller =\n      new StreamChannelController&lt;T&gt;(allowForeignErrors: false, sync: true);\n  receivePort.cast&lt;T&gt;().pipe(controller.local.sink);\n  controller.local.stream\n      .listen((data) =&gt; sendPort.send(data), onDone: receivePort.close);\n  return new IsolateChannel._(\n      controller.foreign.stream, controller.foreign.sink);\n}<\/code><\/pre>\n    ",
+            "href": "package-stream_channel_stream_channel\/IsolateChannel\/IsolateChannel.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "stream_channel.IsolateChannel",
-            "sig": "",
             "params": [
                 {
                     "name": "receivePort",
-                    "type": "dart:isolate.ReceivePort",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:isolate.ReceivePort"
                 },
                 {
                     "name": "sendPort",
-                    "type": "dart:isolate.SendPort",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "package-stream_channel_stream_channel\/IsolateChannel\/IsolateChannel.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory IsolateChannel(ReceivePort receivePort, SendPort sendPort) {\n  var controller =\n      new StreamChannelController&lt;T&gt;(allowForeignErrors: false, sync: true);\n  receivePort.cast&lt;T&gt;().pipe(controller.local.sink);\n  controller.local.stream\n      .listen((data) =&gt; sendPort.send(data), onDone: receivePort.close);\n  return new IsolateChannel._(\n      controller.foreign.stream, controller.foreign.sink);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "IsolateChannel.connectReceive",
-            "type": "",
-            "desc": "<p>Connects to a remote channel that was created with\n<a href=\"package-stream_channel_stream_channel\/IsolateChannel\/IsolateChannel.connectSend.html\">IsolateChannel.connectSend<\/a>.<\/p>\n<p>These constructors establish a connection using only a single\n<a href=\"dart-isolate\/SendPort-class.html\">SendPort<\/a>\/<a href=\"dart-isolate\/ReceivePort-class.html\">ReceivePort<\/a> pair, as long as each side uses one of the\nconnect constructors.<\/p>\n<p>The connection protocol is guaranteed to remain compatible across versions\nat least until the next major version release. If the protocol is\nviolated, the resulting channel will emit a single value on its stream and\nthen close.<\/p>\n    ",
-            "static": false,
-            "memberOf": "stream_channel.IsolateChannel",
-            "sig": "",
-            "params": [
-                {
-                    "name": "receivePort",
-                    "type": "dart:isolate.ReceivePort",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "dart:isolate.SendPort"
                 }
-            ],
-            "isConstructor": true,
-            "href": "package-stream_channel_stream_channel\/IsolateChannel\/IsolateChannel.connectReceive.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory IsolateChannel.connectReceive(ReceivePort receivePort) {\n  \/\/ We can't use a [StreamChannelCompleter] here because we need the return\n  \/\/ value to be an [IsolateChannel].\n  var streamCompleter = new StreamCompleter&lt;T&gt;();\n  var sinkCompleter = new StreamSinkCompleter&lt;T&gt;();\n  var channel =\n      new IsolateChannel&lt;T&gt;._(streamCompleter.stream, sinkCompleter.sink);\n\n  \/\/ The first message across the ReceivePort should be a SendPort pointing to\n  \/\/ the remote end. If it's not, we'll make the stream emit an error\n  \/\/ complaining.\n  StreamSubscription&lt;dynamic&gt; subscription;\n  subscription = receivePort.listen((message) {\n    if (message is SendPort) {\n      var controller = new StreamChannelController&lt;T&gt;(\n          allowForeignErrors: false, sync: true);\n      new SubscriptionStream(subscription)\n          .cast&lt;T&gt;()\n          .pipe(controller.local.sink);\n      controller.local.stream\n          .listen((data) =&gt; message.send(data), onDone: receivePort.close);\n\n      streamCompleter.setSourceStream(controller.foreign.stream);\n      sinkCompleter.setDestinationSink(controller.foreign.sink);\n      return;\n    }\n\n    streamCompleter.setError(\n        new StateError('Unexpected Isolate response \"$message\".'),\n        StackTrace.current);\n    sinkCompleter.setDestinationSink(new NullStreamSink&lt;T&gt;());\n    subscription.cancel();\n  });\n\n  return channel;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "IsolateChannel.connectSend",
-            "type": "",
-            "desc": "<p>Connects to a remote channel that was created with\n<a href=\"package-stream_channel_stream_channel\/IsolateChannel\/IsolateChannel.connectReceive.html\">IsolateChannel.connectReceive<\/a>.<\/p>\n<p>These constructors establish a connection using only a single\n<a href=\"dart-isolate\/SendPort-class.html\">SendPort<\/a>\/<a href=\"dart-isolate\/ReceivePort-class.html\">ReceivePort<\/a> pair, as long as each side uses one of the\nconnect constructors.<\/p>\n<p>The connection protocol is guaranteed to remain compatible across versions\nat least until the next major version release.<\/p>\n    ",
-            "static": false,
-            "memberOf": "stream_channel.IsolateChannel",
-            "sig": "",
-            "params": [
-                {
-                    "name": "sendPort",
-                    "type": "dart:isolate.SendPort",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "package-stream_channel_stream_channel\/IsolateChannel\/IsolateChannel.connectSend.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory IsolateChannel.connectSend(SendPort sendPort) {\n  var receivePort = new ReceivePort();\n  sendPort.send(receivePort.sendPort);\n  return new IsolateChannel(receivePort, sendPort);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "sink",
-            "type": "dart:async.StreamSink",
-            "types": [],
             "desc": "<p>The sink for sending values to the other endpoint.<\/p>\n        ",
-            "memberOf": "stream_channel.IsolateChannel",
-            "isConstant": false,
-            "href": "package-stream_channel_stream_channel\/IsolateChannel\/sink.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final StreamSink&lt;T&gt; sink\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-stream_channel_stream_channel\/IsolateChannel\/sink.html",
+            "isDeprecated": "0",
+            "type": "dart:async.StreamSink",
+            "memberOf": "stream_channel.IsolateChannel",
+            "params": []
         },
         {
-            "name": "stream",
-            "type": "dart:async.Stream",
-            "types": [],
             "desc": "<p>The single-subscription stream that emits values from the other endpoint.<\/p>\n        ",
-            "memberOf": "stream_channel.IsolateChannel",
-            "isConstant": false,
-            "href": "package-stream_channel_stream_channel\/IsolateChannel\/stream.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Stream&lt;T&gt; stream\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-stream_channel_stream_channel\/IsolateChannel\/stream.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Stream",
+            "memberOf": "stream_channel.IsolateChannel",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-stream_channel_stream_channel\/IsolateChannel-class.html",
-    "desc": "<p>A <a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a> that communicates over a <a href=\"dart-isolate\/ReceivePort-class.html\">ReceivePort<\/a>\/<a href=\"dart-isolate\/SendPort-class.html\">SendPort<\/a> pair,\npresumably with another isolate.<\/p>\n<p>The remote endpoint doesn't necessarily need to be running an\n<a href=\"package-stream_channel_stream_channel\/IsolateChannel-class.html\">IsolateChannel<\/a>. This can be used with any two ports, although the\n<a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a> semantics mean that this class will treat them as being\npaired (for example, closing the <a href=\"package-stream_channel_stream_channel\/IsolateChannel\/sink.html\">sink<\/a> will cause the <a href=\"package-stream_channel_stream_channel\/IsolateChannel\/stream.html\">stream<\/a> to stop\nemitting events).<\/p>\n<p>The underlying isolate ports have no notion of closing connections. This\nmeans that <a href=\"package-stream_channel_stream_channel\/IsolateChannel\/stream.html\">stream<\/a> won't close unless <a href=\"package-stream_channel_stream_channel\/IsolateChannel\/sink.html\">sink<\/a> is closed, and that closing\n<a href=\"package-stream_channel_stream_channel\/IsolateChannel\/sink.html\">sink<\/a> won't cause the remote endpoint to close. Users should take care to\nensure that they always close the <a href=\"package-stream_channel_stream_channel\/IsolateChannel\/sink.html\">sink<\/a> of every <a href=\"package-stream_channel_stream_channel\/IsolateChannel-class.html\">IsolateChannel<\/a> they use\nto avoid leaving dangling <a href=\"dart-isolate\/ReceivePort-class.html\">ReceivePort<\/a>s.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "IsolateChannel"
+    ]
 }

@@ -1,222 +1,191 @@
 {
-    "name": "quiver.testing.async.FakeAsync",
-    "extends": [],
+    "desc": "<p>A mechanism to make time-dependent units testable.<\/p>\n<p>Test code can be passed as a callback to <a href=\"quiver.testing.async\/FakeAsync\/run.html\">run<\/a>, which causes it to be run in\na <a href=\"dart-async\/Zone-class.html\">Zone<\/a> which fakes timer and microtask creation, such that they are run\nduring calls to <a href=\"quiver.testing.async\/FakeAsync\/elapse.html\">elapse<\/a> which simulates the asynchronous passage of time.<\/p>\n<p>The synchronous passage of time (blocking or expensive calls) can also be\nsimulated using <a href=\"quiver.testing.async\/FakeAsync\/elapseBlocking.html\">elapseBlocking<\/a>.<\/p>\n<p>To allow the unit under test to tell time, it can receive a <a href=\"quiver.time\/Clock-class.html\">Clock<\/a> as a\ndependency, and default it to <a href=\"quiver.time\/Clock\/Clock.html\">const Clock()<\/a> in production, but then use\n<code>clock<\/code> in test code.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>test('testedFunc', () {\n  new FakeAsync().run((async) {\n    testedFunc(clock: async.getClock(initialTime));\n    async.elapse(duration);\n    expect(...)\n  });\n});\n<\/code><\/pre>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "quiver.testing.async\/FakeAsync-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "quiver.testing.async",
+    "name": "quiver.testing.async.FakeAsync",
+    "shortname": "FakeAsync",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "FakeAsync",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "quiver.testing.async.FakeAsync",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "quiver.testing.async\/FakeAsync\/FakeAsync.html",
+            "desc": null,
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory FakeAsync() = _FakeAsync;<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "quiver.testing.async\/FakeAsync\/FakeAsync.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
+            "static": false,
+            "memberOf": "quiver.testing.async.FakeAsync",
+            "params": []
         },
         {
-            "name": "elapse",
-            "type": "",
             "desc": "<p>Simulates the asynchronous passage of time.<\/p>\n<p><strong>This should only be called from within the zone used by <a href=\"quiver.testing.async\/FakeAsync\/run.html\">run<\/a>.<\/strong><\/p>\n<p>If <code>duration<\/code> is negative, the returned future completes with an\n<a href=\"dart-core\/ArgumentError-class.html\">ArgumentError<\/a>.<\/p>\n<p>If a previous call to <a href=\"quiver.testing.async\/FakeAsync\/elapse.html\">elapse<\/a> has not yet completed, throws a\n<a href=\"dart-core\/StateError-class.html\">StateError<\/a>.<\/p>\n<p>Any Timers created within the zone used by <a href=\"quiver.testing.async\/FakeAsync\/run.html\">run<\/a> which are to expire\nat or before the new time after <code>duration<\/code> has elapsed are run.\nThe microtask queue is processed surrounding each timer.  When a timer is\nrun, the <code>clock<\/code> will have been advanced by the timer's specified\nduration.  Calls to <a href=\"quiver.testing.async\/FakeAsync\/elapseBlocking.html\">elapseBlocking<\/a> from within these timers and\nmicrotasks which cause the <code>clock<\/code> to elapse more than the specified\n<code>duration<\/code>, can cause more timers to expire and thus be called.<\/p>\n<p>Once all expired timers are processed, the <code>clock<\/code> is advanced (if\nnecessary) to the time this method was called + <code>duration<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "quiver.testing.async.FakeAsync",
-            "sig": "",
-            "params": [
-                {
-                    "name": "duration",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "quiver.testing.async\/FakeAsync\/elapse.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void elapse(Duration duration);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "elapseBlocking",
-            "type": "",
-            "desc": "<p>Simulates the synchronous passage of time, resulting from blocking or\nexpensive calls.<\/p>\n<p>Neither timers nor microtasks are run during this call.  Upon return, the\n<code>clock<\/code> will have been advanced by <code>duration<\/code>.<\/p>\n<p>If <code>duration<\/code> is negative, throws an <a href=\"dart-core\/ArgumentError-class.html\">ArgumentError<\/a>.<\/p>\n    ",
+            "href": "quiver.testing.async\/FakeAsync\/elapse.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "quiver.testing.async.FakeAsync",
-            "sig": "",
             "params": [
                 {
                     "name": "duration",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Duration"
                 }
-            ],
-            "isConstructor": false,
-            "href": "quiver.testing.async\/FakeAsync\/elapseBlocking.html",
+            ]
+        },
+        {
+            "desc": "<p>Simulates the synchronous passage of time, resulting from blocking or\nexpensive calls.<\/p>\n<p>Neither timers nor microtasks are run during this call.  Upon return, the\n<code>clock<\/code> will have been advanced by <code>duration<\/code>.<\/p>\n<p>If <code>duration<\/code> is negative, throws an <a href=\"dart-core\/ArgumentError-class.html\">ArgumentError<\/a>.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void elapseBlocking(Duration duration);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "flushMicrotasks",
-            "type": "",
-            "desc": "<p>Runs all remaining microtasks, including those scheduled as a result of\nrunning them, until there are no more microtasks scheduled.<\/p>\n<p>Does not run timers.<\/p>\n    ",
-            "static": false,
-            "memberOf": "quiver.testing.async.FakeAsync",
-            "sig": "",
-            "params": [],
+            "href": "quiver.testing.async\/FakeAsync\/elapseBlocking.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "quiver.testing.async\/FakeAsync\/flushMicrotasks.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void flushMicrotasks();<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "flushTimers",
-            "type": "",
-            "desc": "<p>Runs all timers until no timers remain (subject to <code>flushPeriodicTimers<\/code>\noption), including those scheduled as a result of running them.<\/p>\n<p><code>timeout<\/code> lets you set the maximum amount of time the flushing will take.\nThrows a <a href=\"dart-core\/StateError-class.html\">StateError<\/a> if the <code>timeout<\/code> is exceeded. The default timeout\nis 1 hour. <code>timeout<\/code> is relative to the elapsed time.<\/p>\n    ",
             "static": false,
             "memberOf": "quiver.testing.async.FakeAsync",
-            "sig": "",
             "params": [
                 {
-                    "name": "timeout",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "duration",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Duration"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Runs all remaining microtasks, including those scheduled as a result of\nrunning them, until there are no more microtasks scheduled.<\/p>\n<p>Does not run timers.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void flushMicrotasks();<\/code><\/pre>\n    ",
+            "href": "quiver.testing.async\/FakeAsync\/flushMicrotasks.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "quiver.testing.async.FakeAsync",
+            "params": []
+        },
+        {
+            "desc": "<p>Runs all timers until no timers remain (subject to <code>flushPeriodicTimers<\/code>\noption), including those scheduled as a result of running them.<\/p>\n<p><code>timeout<\/code> lets you set the maximum amount of time the flushing will take.\nThrows a <a href=\"dart-core\/StateError-class.html\">StateError<\/a> if the <code>timeout<\/code> is exceeded. The default timeout\nis 1 hour. <code>timeout<\/code> is relative to the elapsed time.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void flushTimers(\n    {Duration timeout: const Duration(hours: 1),\n    bool flushPeriodicTimers: true});<\/code><\/pre>\n    ",
+            "href": "quiver.testing.async\/FakeAsync\/flushTimers.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "quiver.testing.async.FakeAsync",
+            "params": [
                 {
                     "name": "flushPeriodicTimers",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "timeout",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Duration"
                 }
-            ],
-            "isConstructor": false,
-            "href": "quiver.testing.async\/FakeAsync\/flushTimers.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void flushTimers(\n    {Duration timeout: const Duration(hours: 1),\n    bool flushPeriodicTimers: true});<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "getClock",
-            "type": "quiver.time.Clock",
             "desc": "<p>Returns a fake <a href=\"quiver.time\/Clock-class.html\">Clock<\/a> whose time can is elapsed by calls to <a href=\"quiver.testing.async\/FakeAsync\/elapse.html\">elapse<\/a> and\n<a href=\"quiver.testing.async\/FakeAsync\/elapseBlocking.html\">elapseBlocking<\/a>.<\/p>\n<p>The returned clock starts at <code>initialTime<\/code>, and calls to <a href=\"quiver.testing.async\/FakeAsync\/elapse.html\">elapse<\/a> and\n<a href=\"quiver.testing.async\/FakeAsync\/elapseBlocking.html\">elapseBlocking<\/a> advance the clock, even if they occured before the call\nto this method.<\/p>\n<p>The clock can be passed as a dependency to the unit under test.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Clock getClock(DateTime initialTime);<\/code><\/pre>\n    ",
+            "href": "quiver.testing.async\/FakeAsync\/getClock.html",
+            "isDeprecated": "0",
+            "type": "quiver.time.Clock",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "quiver.testing.async.FakeAsync",
-            "sig": "",
             "params": [
                 {
                     "name": "initialTime",
-                    "type": "dart:core.DateTime",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.DateTime"
                 }
-            ],
-            "isConstructor": false,
-            "href": "quiver.testing.async\/FakeAsync\/getClock.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Clock getClock(DateTime initialTime);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "run",
-            "type": "",
             "desc": "<p>Runs <code>callback<\/code> in a <a href=\"dart-async\/Zone-class.html\">Zone<\/a> with fake timer and microtask scheduling.<\/p>\n<p>Uses\n<a href=\"dart-async\/ZoneSpecification\/createTimer.html\">ZoneSpecification.createTimer<\/a>, <a href=\"dart-async\/ZoneSpecification\/createPeriodicTimer.html\">ZoneSpecification.createPeriodicTimer<\/a>,\nand <a href=\"dart-async\/ZoneSpecification\/scheduleMicrotask.html\">ZoneSpecification.scheduleMicrotask<\/a> to store callbacks for later\nexecution within the zone via calls to <a href=\"quiver.testing.async\/FakeAsync\/elapse.html\">elapse<\/a>.<\/p>\n<p>Calls <code>callback<\/code> with <code>this<\/code> as argument and returns the result returned\nby <code>callback<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">dynamic run(callback(FakeAsync self));<\/code><\/pre>\n    ",
+            "href": "quiver.testing.async\/FakeAsync\/run.html",
+            "isDeprecated": "0",
+            "type": "<dynamic>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "quiver.testing.async.FakeAsync",
-            "sig": "",
             "params": [
                 {
                     "name": "self",
-                    "type": "quiver.testing.async.FakeAsync",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "self",
-                    "type": "quiver.testing.async.FakeAsync",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "quiver.testing.async.FakeAsync"
                 }
-            ],
-            "isConstructor": false,
-            "href": "quiver.testing.async\/FakeAsync\/run.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">dynamic run(callback(FakeAsync self));<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "name": "microtaskCount",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The number of pending microtasks.<\/p>\n        ",
-            "memberOf": "quiver.testing.async.FakeAsync",
-            "isConstant": false,
-            "href": "quiver.testing.async\/FakeAsync\/microtaskCount.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get microtaskCount;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "quiver.testing.async\/FakeAsync\/microtaskCount.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "quiver.testing.async.FakeAsync",
+            "params": []
         },
         {
-            "name": "nonPeriodicTimerCount",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The number of pending non periodic timers that have not been canceled.<\/p>\n        ",
-            "memberOf": "quiver.testing.async.FakeAsync",
-            "isConstant": false,
-            "href": "quiver.testing.async\/FakeAsync\/nonPeriodicTimerCount.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get nonPeriodicTimerCount;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "quiver.testing.async\/FakeAsync\/nonPeriodicTimerCount.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "quiver.testing.async.FakeAsync",
+            "params": []
         },
         {
-            "name": "periodicTimerCount",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The number of created periodic timers that have not been canceled.<\/p>\n        ",
-            "memberOf": "quiver.testing.async.FakeAsync",
-            "isConstant": false,
-            "href": "quiver.testing.async\/FakeAsync\/periodicTimerCount.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get periodicTimerCount;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "quiver.testing.async\/FakeAsync\/periodicTimerCount.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "quiver.testing.async.FakeAsync",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "quiver.testing.async\/FakeAsync-class.html",
-    "desc": "<p>A mechanism to make time-dependent units testable.<\/p>\n<p>Test code can be passed as a callback to <a href=\"quiver.testing.async\/FakeAsync\/run.html\">run<\/a>, which causes it to be run in\na <a href=\"dart-async\/Zone-class.html\">Zone<\/a> which fakes timer and microtask creation, such that they are run\nduring calls to <a href=\"quiver.testing.async\/FakeAsync\/elapse.html\">elapse<\/a> which simulates the asynchronous passage of time.<\/p>\n<p>The synchronous passage of time (blocking or expensive calls) can also be\nsimulated using <a href=\"quiver.testing.async\/FakeAsync\/elapseBlocking.html\">elapseBlocking<\/a>.<\/p>\n<p>To allow the unit under test to tell time, it can receive a <a href=\"quiver.time\/Clock-class.html\">Clock<\/a> as a\ndependency, and default it to <a href=\"quiver.time\/Clock\/Clock.html\">const Clock()<\/a> in production, but then use\n<code>clock<\/code> in test code.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>test('testedFunc', () {\n  new FakeAsync().run((async) {\n    testedFunc(clock: async.getClock(initialTime));\n    async.elapse(duration);\n    expect(...)\n  });\n});\n<\/code><\/pre>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "FakeAsync"
+    ]
 }

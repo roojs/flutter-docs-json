@@ -1,944 +1,644 @@
 {
-    "name": "dart:async.Zone",
-    "extends": [],
+    "desc": "<p>A zone represents an environment that remains stable across asynchronous\ncalls.<\/p>\n<p>Code is always executed in the context of a zone, available as\n<a href=\"dart-async\/Zone\/current.html\">Zone.current<\/a>. The initial <code>main<\/code> function runs in the context of the\ndefault zone (<a href=\"dart-async\/Zone\/root-constant.html\">Zone.root<\/a>). Code can be run in a different zone using either\n<a href=\"dart-async\/runZoned.html\">runZoned<\/a>, to create a new zone, or <a href=\"dart-async\/Zone\/run.html\">Zone.run<\/a> to run code in the context of\nan existing zone likely created using <a href=\"dart-async\/Zone\/fork.html\">Zone.fork<\/a>.<\/p>\n<p>Developers can create a new zone that overrides some of the functionality of\nan existing zone. For example, custom zones can replace of modify the\nbehavior of <code>print<\/code>, timers, microtasks or how uncaught errors are handled.<\/p>\n<p>The <a href=\"dart-async\/Zone-class.html\">Zone<\/a> class is not subclassable, but users can provide custom zones by\nforking an existing zone (usually <a href=\"dart-async\/Zone\/current.html\">Zone.current<\/a>) with a <a href=\"dart-async\/ZoneSpecification-class.html\">ZoneSpecification<\/a>.\nThis is similar to creating a new class that extends the base <code>Zone<\/code> class\nand that overrides some methods, except without actually creating a new\nclass. Instead the overriding methods are provided as functions that\nexplicitly take the equivalent of their own class, the \"super\" class and the\n<code>this<\/code> object as parameters.<\/p>\n<p>Asynchronous callbacks always run in the context of the zone where they were\nscheduled. This is implemented using two steps:<\/p>\n<ol>\n<li>the callback is first registered using one of <a href=\"dart-async\/Zone\/registerCallback.html\">registerCallback<\/a>,\n  <a href=\"dart-async\/Zone\/registerUnaryCallback.html\">registerUnaryCallback<\/a>, or <a href=\"dart-async\/Zone\/registerBinaryCallback.html\">registerBinaryCallback<\/a>. This allows the zone\n  to record that a callback exists and potentially modify it (by returning a\n  different callback). The code doing the registration (e.g., <code>Future.then<\/code>)\n  also remembers the current zone so that it can later run the callback in\n  that zone.<\/li>\n<li>At a later point the registered callback is run in the remembered zone.<\/li>\n<\/ol>\n<p>This is all handled internally by the platform code and most users don't need\nto worry about it. However, developers of new asynchronous operations,\nprovided by the underlying system or through native extensions, must follow\nthe protocol to be zone compatible.<\/p>\n<p>For convenience, zones provide <a href=\"dart-async\/Zone\/bindCallback.html\">bindCallback<\/a> (and the corresponding\n<a href=\"dart-async\/Zone\/bindUnaryCallback.html\">bindUnaryCallback<\/a> and <a href=\"dart-async\/Zone\/bindBinaryCallback.html\">bindBinaryCallback<\/a>) to make it easier to respect\nthe zone contract: these functions first invoke the corresponding <code>register<\/code>\nfunctions and then wrap the returned function so that it runs in the current\nzone when it is later asynchronously invoked.<\/p>\n<p>Similarly, zones provide <a href=\"dart-async\/Zone\/bindCallbackGuarded.html\">bindCallbackGuarded<\/a> (and the corresponding\n<a href=\"dart-async\/Zone\/bindUnaryCallbackGuarded.html\">bindUnaryCallbackGuarded<\/a> and <a href=\"dart-async\/Zone\/bindBinaryCallbackGuarded.html\">bindBinaryCallbackGuarded<\/a>), when the\ncallback should be invoked through <a href=\"dart-async\/Zone\/runGuarded.html\">Zone.runGuarded<\/a>.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "dart-async\/Zone-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "dart:async",
+    "name": "dart:async.Zone",
+    "shortname": "Zone",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "operator []",
-            "type": "",
-            "desc": "<p>Retrieves the zone-value associated with <code>key<\/code>.<\/p>\n<p>If this zone does not contain the value looks up the same key in the\nparent zone. If the <code>key<\/code> is not found returns <code>null<\/code>.<\/p>\n<p>Any object can be used as key, as long as it has compatible <code>operator ==<\/code>\nand <code>hashCode<\/code> implementations.\nBy controlling access to the key, a zone can grant or deny access to the\nzone value.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:async.Zone",
-            "sig": "",
-            "params": [
-                {
-                    "name": "key",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/operator_get.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">operator [](Object key);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "bindBinaryCallback",
-            "type": "dart:async.ZoneBinaryCallback",
             "desc": "<p>Registers the provided <code>callback<\/code> and returns a function that will\n execute in this zone.<\/p>\n<p> Equivalent to:<\/p>\n<pre class=\"language-dart\"><code> ZoneCallback registered = registerBinaryCallback(callback);\n return (arg1, arg2) =&gt; thin.runBinary(registered, arg1, arg2);\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "dart:async.Zone",
-            "sig": "",
-            "params": [
-                {
-                    "name": "argument2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument1",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/bindBinaryCallback.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ZoneBinaryCallback&lt;R, T1, T2&gt; bindBinaryCallback&lt;R, T1, T2&gt;(\n    R callback(T1 argument1, T2 argument2));<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "bindBinaryCallbackGuarded",
-            "type": "",
-            "desc": "<p>Registers the provided <code>callback<\/code> and returns a function that will\n execute in this zone.<\/p>\n<p> Equivalent to:<\/p>\n<pre class=\"language-dart\"><code> ZoneCallback registered = registerBinaryCallback(callback);\n return (arg1, arg2) =&gt; this.runBinaryGuarded(registered, arg1, arg2);\n<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/bindBinaryCallback.html",
+            "isDeprecated": "0",
+            "type": "dart:async.ZoneBinaryCallback",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:async.Zone",
-            "sig": "",
             "params": [
-                {
-                    "name": "",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
                 {
                     "name": "argument1",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T1>"
                 },
                 {
                     "name": "argument2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T2>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/bindBinaryCallbackGuarded.html",
+            ]
+        },
+        {
+            "desc": "<p>Registers the provided <code>callback<\/code> and returns a function that will\n execute in this zone.<\/p>\n<p> Equivalent to:<\/p>\n<pre class=\"language-dart\"><code> ZoneCallback registered = registerBinaryCallback(callback);\n return (arg1, arg2) =&gt; this.runBinaryGuarded(registered, arg1, arg2);\n<\/code><\/pre>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void Function(T1, T2) bindBinaryCallbackGuarded&lt;T1, T2&gt;(\n    void callback(T1 argument1, T2 argument2));<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "href": "dart-async\/Zone\/bindBinaryCallbackGuarded.html",
+            "isDeprecated": "0",
+            "type": "<void Function(T1<  T2)>>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:async.Zone",
+            "params": [
+                {
+                    "name": "argument1",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T1>"
+                },
+                {
+                    "name": "argument2",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T2>"
+                }
+            ]
         },
         {
-            "name": "bindCallback",
-            "type": "dart:async.ZoneCallback",
             "desc": "<p>Registers the provided <code>callback<\/code> and returns a function that will\n execute in this zone.<\/p>\n<p> Equivalent to:<\/p>\n<pre class=\"language-dart\"><code> ZoneCallback registered = this.registerCallback(callback);\n return () =&gt; this.run(registered);\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "dart:async.Zone",
-            "sig": "",
-            "params": [
-                {
-                    "name": "callback",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/bindCallback.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ZoneCallback&lt;R&gt; bindCallback&lt;R&gt;(R callback());<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "bindCallbackGuarded",
-            "type": "",
-            "desc": "<p>Registers the provided <code>callback<\/code> and returns a function that will\nexecute in this zone.<\/p>\n<p>When the function executes, errors are caught and treated as uncaught\nerrors.<\/p>\n<p>Equivalent to:<\/p>\n<pre class=\"language-dart\"><code>ZoneCallback registered = this.registerCallback(callback);\nreturn () =&gt; this.runGuarded(registered);\n<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/bindCallback.html",
+            "isDeprecated": "0",
+            "type": "dart:async.ZoneCallback",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:async.Zone",
-            "sig": "",
             "params": [
                 {
                     "name": "callback",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<R>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/bindCallbackGuarded.html",
+            ]
+        },
+        {
+            "desc": "<p>Registers the provided <code>callback<\/code> and returns a function that will\nexecute in this zone.<\/p>\n<p>When the function executes, errors are caught and treated as uncaught\nerrors.<\/p>\n<p>Equivalent to:<\/p>\n<pre class=\"language-dart\"><code>ZoneCallback registered = this.registerCallback(callback);\nreturn () =&gt; this.runGuarded(registered);\n<\/code><\/pre>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void Function() bindCallbackGuarded(void callback());<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "href": "dart-async\/Zone\/bindCallbackGuarded.html",
+            "isDeprecated": "0",
+            "type": "<void Function()>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:async.Zone",
+            "params": [
+                {
+                    "name": "callback",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<void>"
+                }
+            ]
         },
         {
-            "name": "bindUnaryCallback",
-            "type": "dart:async.ZoneUnaryCallback",
             "desc": "<p>Registers the provided <code>callback<\/code> and returns a function that will\n execute in this zone.<\/p>\n<p> Equivalent to:<\/p>\n<pre class=\"language-dart\"><code> ZoneCallback registered = this.registerUnaryCallback(callback);\n return (arg) =&gt; thin.runUnary(registered, arg);\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "dart:async.Zone",
-            "sig": "",
-            "params": [
-                {
-                    "name": "argument",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/bindUnaryCallback.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ZoneUnaryCallback&lt;R, T&gt; bindUnaryCallback&lt;R, T&gt;(R callback(T argument));<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "bindUnaryCallbackGuarded",
-            "type": "",
-            "desc": "<p>Registers the provided <code>callback<\/code> and returns a function that will\nexecute in this zone.<\/p>\n<p>When the function executes, errors are caught and treated as uncaught\nerrors.<\/p>\n<p>Equivalent to:<\/p>\n<pre class=\"language-dart\"><code>ZoneCallback registered = this.registerUnaryCallback(callback);\nreturn (arg) =&gt; this.runUnaryGuarded(registered, arg);\n<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/bindUnaryCallback.html",
+            "isDeprecated": "0",
+            "type": "dart:async.ZoneUnaryCallback",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:async.Zone",
-            "sig": "",
             "params": [
                 {
-                    "name": "",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
                     "name": "argument",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/bindUnaryCallbackGuarded.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void Function(T) bindUnaryCallbackGuarded&lt;T&gt;(void callback(T argument));<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "createPeriodicTimer",
-            "type": "dart:async.Timer",
-            "desc": "<p>Creates a periodic Timer where the callback is executed in this zone.<\/p>\n    ",
+            "desc": "<p>Registers the provided <code>callback<\/code> and returns a function that will\nexecute in this zone.<\/p>\n<p>When the function executes, errors are caught and treated as uncaught\nerrors.<\/p>\n<p>Equivalent to:<\/p>\n<pre class=\"language-dart\"><code>ZoneCallback registered = this.registerUnaryCallback(callback);\nreturn (arg) =&gt; this.runUnaryGuarded(registered, arg);\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void Function(T) bindUnaryCallbackGuarded&lt;T&gt;(void callback(T argument));<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/bindUnaryCallbackGuarded.html",
+            "isDeprecated": "0",
+            "type": "<void Function(T)>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:async.Zone",
-            "sig": "",
+            "params": [
+                {
+                    "name": "argument",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Creates a periodic Timer where the callback is executed in this zone.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Timer createPeriodicTimer(Duration period, void callback(Timer timer));<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/createPeriodicTimer.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Timer",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:async.Zone",
             "params": [
                 {
                     "name": "period",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Duration"
                 },
                 {
                     "name": "timer",
-                    "type": "dart:async.Timer",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "timer",
-                    "type": "dart:async.Timer",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:async.Timer"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/createPeriodicTimer.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Timer createPeriodicTimer(Duration period, void callback(Timer timer));<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "createTimer",
-            "type": "dart:async.Timer",
             "desc": "<p>Creates a Timer where the callback is executed in this zone.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Timer createTimer(Duration duration, void callback());<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/createTimer.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Timer",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:async.Zone",
-            "sig": "",
             "params": [
                 {
-                    "name": "duration",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "callback",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<void>"
                 },
                 {
-                    "name": "callback",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "duration",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Duration"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/createTimer.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Timer createTimer(Duration duration, void callback());<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "errorCallback",
-            "type": "dart:async.AsyncError",
             "desc": "<p>Intercepts errors when added programmatically to a <code>Future<\/code> or <code>Stream<\/code>.<\/p>\n<p>When calling <a href=\"dart-async\/Completer\/completeError.html\">Completer.completeError<\/a>, <a href=\"dart-async\/StreamController\/addError.html\">StreamController.addError<\/a>,\nor some <a href=\"dart-async\/Future-class.html\">Future<\/a> constructors, the current zone is allowed to intercept\nand replace the error.<\/p>\n<p>Future constructors invoke this function when the error is received\ndirectly, for example with <a href=\"dart-async\/Future\/Future.error.html\">Future.error<\/a>, or when the error is caught\nsynchronously, for example with <a href=\"dart-async\/Future\/Future.sync.html\">Future.sync<\/a>.<\/p>\n<p>There is no guarantee that an error is only sent through <a href=\"dart-async\/Zone\/errorCallback.html\">errorCallback<\/a>\nonce. Libraries that use intermediate controllers or completers might\nend up invoking <a href=\"dart-async\/Zone\/errorCallback.html\">errorCallback<\/a> multiple times.<\/p>\n<p>Returns <code>null<\/code> if no replacement is desired. Otherwise returns an instance\nof <a href=\"dart-async\/AsyncError-class.html\">AsyncError<\/a> holding the new pair of error and stack trace.<\/p>\n<p>Although not recommended, the returned instance may have its <code>error<\/code> member\n(<a href=\"dart-async\/AsyncError\/error.html\">AsyncError.error<\/a>) be equal to <code>null<\/code> in which case the error should be\nreplaced by a <a href=\"dart-core\/NullThrownError-class.html\">NullThrownError<\/a>.<\/p>\n<p>Custom zones may intercept this operation.<\/p>\n<p>Implementations of a new asynchronous primitive that converts synchronous\nerrors to asynchronous errors rarely need to invoke <a href=\"dart-async\/Zone\/errorCallback.html\">errorCallback<\/a>, since\nerrors are usually reported through future completers or stream\ncontrollers.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">AsyncError errorCallback(Object error, StackTrace stackTrace);<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/errorCallback.html",
+            "isDeprecated": "0",
+            "type": "dart:async.AsyncError",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:async.Zone",
-            "sig": "",
             "params": [
                 {
                     "name": "error",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
                 },
                 {
                     "name": "stackTrace",
-                    "type": "dart:core.StackTrace",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.StackTrace"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/errorCallback.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">AsyncError errorCallback(Object error, StackTrace stackTrace);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "fork",
-            "type": "dart:async.Zone",
             "desc": "<p>Creates a new zone as a child of <code>this<\/code>.<\/p>\n<p>The new zone uses the closures in the given <code>specification<\/code> to override\nthe current's zone behavior. All specification entries that are <code>null<\/code>\ninherit the behavior from the parent zone (<code>this<\/code>).<\/p>\n<p>The new zone inherits the stored values (accessed through <a href=\"dart-async\/Zone\/operator_get.html\">operator []<\/a>)\nof this zone and updates them with values from <code>zoneValues<\/code>, which either\nadds new values or overrides existing ones.<\/p>\n<p>Note that the fork operation is interceptible. A zone can thus change\nthe zone specification (or zone values), giving the forking zone full\ncontrol over the child zone.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Zone fork({ZoneSpecification specification, Map zoneValues});<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/fork.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Zone",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:async.Zone",
-            "sig": "",
             "params": [
                 {
                     "name": "specification",
-                    "type": "dart:async.ZoneSpecification",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:async.ZoneSpecification"
                 },
                 {
                     "name": "zoneValues",
-                    "type": "dart:core.Map",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Map"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/fork.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Zone fork({ZoneSpecification specification, Map zoneValues});<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "handleUncaughtError",
-            "type": "",
             "desc": "<p>Handles uncaught asynchronous errors.<\/p>\n<p>There are two kind of asynchronous errors that are handled by this\nfunction:<\/p>\n<ol>\n<li>Uncaught errors that were thrown in asynchronous callbacks, for example,\n  a <code>throw<\/code> in the function passed to <a href=\"dart-async\/Zone\/run.html\">Timer.run<\/a>.<\/li>\n<li>Asynchronous errors that are pushed through <a href=\"dart-async\/Future-class.html\">Future<\/a> and <a href=\"dart-async\/Stream-class.html\">Stream<\/a>\n  chains, but for which no child registered an error handler.\n  Most asynchronous classes, like <a href=\"dart-async\/Future-class.html\">Future<\/a> or <a href=\"dart-async\/Stream-class.html\">Stream<\/a> push errors to their\n  listeners. Errors are propagated this way until either a listener handles\n  the error (for example with <a href=\"dart-async\/Future\/catchError.html\">Future.catchError<\/a>), or no listener is\n  available anymore. In the latter case, futures and streams invoke the\n  zone's <a href=\"dart-async\/Zone\/handleUncaughtError.html\">handleUncaughtError<\/a>.<\/li>\n<\/ol>\n<p>By default, when handled by the root zone, uncaught asynchronous errors are\ntreated like uncaught synchronous exceptions.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void handleUncaughtError(error, StackTrace stackTrace);<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/handleUncaughtError.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:async.Zone",
-            "sig": "",
             "params": [
                 {
                     "name": "error",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 },
                 {
                     "name": "stackTrace",
-                    "type": "dart:core.StackTrace",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.StackTrace"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/handleUncaughtError.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void handleUncaughtError(error, StackTrace stackTrace);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "inSameErrorZone",
-            "type": "dart:core.bool",
             "desc": "<p>Returns true if <code>this<\/code> and <code>otherZone<\/code> are in the same error zone.<\/p>\n<p>Two zones are in the same error zone if they have the same <a href=\"dart-async\/Zone\/errorZone.html\">errorZone<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool inSameErrorZone(Zone otherZone);<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/inSameErrorZone.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:async.Zone",
-            "sig": "",
             "params": [
                 {
                     "name": "otherZone",
-                    "type": "dart:async.Zone",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:async.Zone"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/inSameErrorZone.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool inSameErrorZone(Zone otherZone);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "print",
-            "type": "",
             "desc": "<p>Prints the given <code>line<\/code>.<\/p>\n<p>The global <code>print<\/code> function delegates to the current zone's <a href=\"dart-async\/Zone\/print.html\">print<\/a>\nfunction which makes it possible to intercept printing.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>import 'dart:async';\n\nmain() {\n  runZoned(() {\n    \/\/ Ends up printing: \"Intercepted: in zone\".\n    print(\"in zone\");\n  }, zoneSpecification: new ZoneSpecification(\n      print: (Zone self, ZoneDelegate parent, Zone zone, String line) {\n    parent.print(zone, \"Intercepted: $line\");\n  }));\n}\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void print(String line);<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/print.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:async.Zone",
-            "sig": "",
             "params": [
                 {
                     "name": "line",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/print.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void print(String line);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "registerBinaryCallback",
-            "type": "dart:async.ZoneBinaryCallback",
             "desc": "<p>Registers the given callback in this zone.<\/p>\n<p>Similar to <a href=\"dart-async\/Zone\/registerCallback.html\">registerCallback<\/a> but with a unary callback.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ZoneBinaryCallback&lt;R, T1, T2&gt; registerBinaryCallback&lt;R, T1, T2&gt;(\n    R callback(T1 arg1, T2 arg2));<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/registerBinaryCallback.html",
+            "isDeprecated": "0",
+            "type": "dart:async.ZoneBinaryCallback",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:async.Zone",
-            "sig": "",
             "params": [
-                {
-                    "name": "arg2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
                 {
                     "name": "arg1",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T1>"
                 },
                 {
                     "name": "arg2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T2>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/registerBinaryCallback.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ZoneBinaryCallback&lt;R, T1, T2&gt; registerBinaryCallback&lt;R, T1, T2&gt;(\n    R callback(T1 arg1, T2 arg2));<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "registerCallback",
-            "type": "dart:async.ZoneCallback",
             "desc": "<p>Registers the given callback in this zone.<\/p>\n<p>When implementing an asynchronous primitive that uses callbacks, the\ncallback must be registered using <a href=\"dart-async\/Zone\/registerCallback.html\">registerCallback<\/a> at the point where the\nuser provides the callback. This allows zones to record other information\nthat they need at the same time, perhaps even wrapping the callback, so\nthat the callback is prepared when it is later run in the same zones\n(using <a href=\"dart-async\/Zone\/run.html\">run<\/a>). For example, a zone may decide\nto store the stack trace (at the time of the registration) with the\ncallback.<\/p>\n<p>Returns the callback that should be used in place of the provided\n<code>callback<\/code>. Frequently zones simply return the original callback.<\/p>\n<p>Custom zones may intercept this operation. The default implementation in\n<a href=\"dart-async\/Zone\/root-constant.html\">Zone.root<\/a> returns the original callback unchanged.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:async.Zone",
-            "sig": "",
-            "params": [
-                {
-                    "name": "callback",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/registerCallback.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ZoneCallback&lt;R&gt; registerCallback&lt;R&gt;(R callback());<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "registerUnaryCallback",
-            "type": "dart:async.ZoneUnaryCallback",
-            "desc": "<p>Registers the given callback in this zone.<\/p>\n<p>Similar to <a href=\"dart-async\/Zone\/registerCallback.html\">registerCallback<\/a> but with a unary callback.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:async.Zone",
-            "sig": "",
-            "params": [
-                {
-                    "name": "arg",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
+            "href": "dart-async\/Zone\/registerCallback.html",
+            "isDeprecated": "0",
+            "type": "dart:async.ZoneCallback",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "dart-async\/Zone\/registerUnaryCallback.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ZoneUnaryCallback&lt;R, T&gt; registerUnaryCallback&lt;R, T&gt;(R callback(T arg));<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "run",
-            "type": "",
-            "desc": "<p>Executes <code>action<\/code> in this zone.<\/p>\n<p>By default (as implemented in the <a href=\"dart-async\/Zone\/root-constant.html\">root<\/a> zone), runs <code>action<\/code>\nwith <a href=\"dart-async\/Zone\/current.html\">current<\/a> set to this zone.<\/p>\n<p>If <code>action<\/code> throws, the synchronous exception is not caught by the zone's\nerror handler. Use <a href=\"dart-async\/Zone\/runGuarded.html\">runGuarded<\/a> to achieve that.<\/p>\n<p>Since the root zone is the only zone that can modify the value of\n<a href=\"dart-async\/Zone\/current.html\">current<\/a>, custom zones intercepting run should always delegate to their\nparent zone. They may take actions before and after the call.<\/p>\n    ",
             "static": false,
             "memberOf": "dart:async.Zone",
-            "sig": "",
-            "params": [
-                {
-                    "name": "action",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/run.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">R run&lt;R&gt;(R action());<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "runBinary",
-            "type": "",
-            "desc": "<p>Executes the given <code>action<\/code> with <code>argument1<\/code> and <code>argument2<\/code> in this\nzone.<\/p>\n<p>As <a href=\"dart-async\/Zone\/run.html\">run<\/a> except that <code>action<\/code> is called with two arguments instead of none.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:async.Zone",
-            "sig": "",
-            "params": [
-                {
-                    "name": "argument2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument1",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument1",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/runBinary.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">R runBinary&lt;R, T1, T2&gt;(\n    R action(T1 argument1, T2 argument2), T1 argument1, T2 argument2);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "runBinaryGuarded",
-            "type": "",
-            "desc": "<p>Executes the given <code>action<\/code> with <code>argument1<\/code> and <code>argument2<\/code> in this\nzone and catches synchronous errors.<\/p>\n<p>See <a href=\"dart-async\/Zone\/runGuarded.html\">runGuarded<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:async.Zone",
-            "sig": "",
-            "params": [
-                {
-                    "name": "argument2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument1",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument1",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/runBinaryGuarded.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void runBinaryGuarded&lt;T1, T2&gt;(\n    void action(T1 argument1, T2 argument2), T1 argument1, T2 argument2);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "runGuarded",
-            "type": "",
-            "desc": "<p>Executes the given <code>action<\/code> in this zone and catches synchronous\nerrors.<\/p>\n<p>This function is equivalent to:<\/p>\n<pre class=\"language-dart\"><code>try {\n  this.run(action);\n} catch (e, s) {\n  this.handleUncaughtError(e, s);\n}\n<\/code><\/pre>\n<p>See <a href=\"dart-async\/Zone\/run.html\">run<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:async.Zone",
-            "sig": "",
-            "params": [
-                {
-                    "name": "action",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/runGuarded.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void runGuarded(void action());<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "runUnary",
-            "type": "",
-            "desc": "<p>Executes the given <code>action<\/code> with <code>argument<\/code> in this zone.<\/p>\n<p>As <a href=\"dart-async\/Zone\/run.html\">run<\/a> except that <code>action<\/code> is called with one <code>argument<\/code> instead of\nnone.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:async.Zone",
-            "sig": "",
-            "params": [
-                {
-                    "name": "argument",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/runUnary.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">R runUnary&lt;R, T&gt;(R action(T argument), T argument);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "runUnaryGuarded",
-            "type": "",
-            "desc": "<p>Executes the given <code>action<\/code> with <code>argument<\/code> in this zone and\ncatches synchronous errors.<\/p>\n<p>See <a href=\"dart-async\/Zone\/runGuarded.html\">runGuarded<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:async.Zone",
-            "sig": "",
-            "params": [
-                {
-                    "name": "argument",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "argument",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-async\/Zone\/runUnaryGuarded.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void runUnaryGuarded&lt;T&gt;(void action(T argument), T argument);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "scheduleMicrotask",
-            "type": "",
-            "desc": "<p>Runs <code>callback<\/code> asynchronously in this zone.<\/p>\n<p>The global <code>scheduleMicrotask<\/code> delegates to the current zone's\n<a href=\"dart-async\/Zone\/scheduleMicrotask.html\">scheduleMicrotask<\/a>. The root zone's implementation interacts with the\nunderlying system to schedule the given callback as a microtask.<\/p>\n<p>Custom zones may intercept this operation (for example to wrap the given\n<code>callback<\/code>).<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:async.Zone",
-            "sig": "",
             "params": [
                 {
                     "name": "callback",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<R>"
                 }
-            ],
+            ]
+        },
+        {
+            "desc": "<p>Registers the given callback in this zone.<\/p>\n<p>Similar to <a href=\"dart-async\/Zone\/registerCallback.html\">registerCallback<\/a> but with a unary callback.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ZoneUnaryCallback&lt;R, T&gt; registerUnaryCallback&lt;R, T&gt;(R callback(T arg));<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/registerUnaryCallback.html",
+            "isDeprecated": "0",
+            "type": "dart:async.ZoneUnaryCallback",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "dart-async\/Zone\/scheduleMicrotask.html",
+            "static": false,
+            "memberOf": "dart:async.Zone",
+            "params": [
+                {
+                    "name": "arg",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Executes <code>action<\/code> in this zone.<\/p>\n<p>By default (as implemented in the <a href=\"dart-async\/Zone\/root-constant.html\">root<\/a> zone), runs <code>action<\/code>\nwith <a href=\"dart-async\/Zone\/current.html\">current<\/a> set to this zone.<\/p>\n<p>If <code>action<\/code> throws, the synchronous exception is not caught by the zone's\nerror handler. Use <a href=\"dart-async\/Zone\/runGuarded.html\">runGuarded<\/a> to achieve that.<\/p>\n<p>Since the root zone is the only zone that can modify the value of\n<a href=\"dart-async\/Zone\/current.html\">current<\/a>, custom zones intercepting run should always delegate to their\nparent zone. They may take actions before and after the call.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">R run&lt;R&gt;(R action());<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/run.html",
+            "isDeprecated": "0",
+            "type": "<R>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:async.Zone",
+            "params": [
+                {
+                    "name": "action",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<R>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Executes the given <code>action<\/code> with <code>argument1<\/code> and <code>argument2<\/code> in this\nzone.<\/p>\n<p>As <a href=\"dart-async\/Zone\/run.html\">run<\/a> except that <code>action<\/code> is called with two arguments instead of none.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">R runBinary&lt;R, T1, T2&gt;(\n    R action(T1 argument1, T2 argument2), T1 argument1, T2 argument2);<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/runBinary.html",
+            "isDeprecated": "0",
+            "type": "<R>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:async.Zone",
+            "params": [
+                {
+                    "name": "argument1",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T1>"
+                },
+                {
+                    "name": "argument2",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T2>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Executes the given <code>action<\/code> with <code>argument1<\/code> and <code>argument2<\/code> in this\nzone and catches synchronous errors.<\/p>\n<p>See <a href=\"dart-async\/Zone\/runGuarded.html\">runGuarded<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void runBinaryGuarded&lt;T1, T2&gt;(\n    void action(T1 argument1, T2 argument2), T1 argument1, T2 argument2);<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/runBinaryGuarded.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:async.Zone",
+            "params": [
+                {
+                    "name": "argument1",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T1>"
+                },
+                {
+                    "name": "argument2",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T2>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Executes the given <code>action<\/code> in this zone and catches synchronous\nerrors.<\/p>\n<p>This function is equivalent to:<\/p>\n<pre class=\"language-dart\"><code>try {\n  this.run(action);\n} catch (e, s) {\n  this.handleUncaughtError(e, s);\n}\n<\/code><\/pre>\n<p>See <a href=\"dart-async\/Zone\/run.html\">run<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void runGuarded(void action());<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/runGuarded.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:async.Zone",
+            "params": [
+                {
+                    "name": "action",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<void>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Executes the given <code>action<\/code> with <code>argument<\/code> in this zone.<\/p>\n<p>As <a href=\"dart-async\/Zone\/run.html\">run<\/a> except that <code>action<\/code> is called with one <code>argument<\/code> instead of\nnone.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">R runUnary&lt;R, T&gt;(R action(T argument), T argument);<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/runUnary.html",
+            "isDeprecated": "0",
+            "type": "<R>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:async.Zone",
+            "params": [
+                {
+                    "name": "argument",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Executes the given <code>action<\/code> with <code>argument<\/code> in this zone and\ncatches synchronous errors.<\/p>\n<p>See <a href=\"dart-async\/Zone\/runGuarded.html\">runGuarded<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void runUnaryGuarded&lt;T&gt;(void action(T argument), T argument);<\/code><\/pre>\n    ",
+            "href": "dart-async\/Zone\/runUnaryGuarded.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:async.Zone",
+            "params": [
+                {
+                    "name": "argument",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Runs <code>callback<\/code> asynchronously in this zone.<\/p>\n<p>The global <code>scheduleMicrotask<\/code> delegates to the current zone's\n<a href=\"dart-async\/Zone\/scheduleMicrotask.html\">scheduleMicrotask<\/a>. The root zone's implementation interacts with the\nunderlying system to schedule the given callback as a microtask.<\/p>\n<p>Custom zones may intercept this operation (for example to wrap the given\n<code>callback<\/code>).<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void scheduleMicrotask(void callback());<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "href": "dart-async\/Zone\/scheduleMicrotask.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:async.Zone",
+            "params": [
+                {
+                    "name": "callback",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<void>"
+                }
+            ]
         }
     ],
     "props": [
         {
-            "name": "current",
-            "type": "dart:async.Zone",
-            "types": [],
             "desc": "<p>The zone that is currently active.<\/p>\n        ",
-            "memberOf": "dart:async.Zone",
-            "isConstant": false,
-            "href": "dart-async\/Zone\/current.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">static Zone get current =&gt; _current;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-async\/Zone\/current.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Zone",
+            "memberOf": "dart:async.Zone",
+            "params": []
         },
         {
-            "name": "errorZone",
-            "type": "dart:async.Zone",
-            "types": [],
             "desc": "<p>The error zone is the one that is responsible for dealing with uncaught\nerrors.<\/p>\n<p>This is the closest parent zone of this zone that provides a\n<a href=\"dart-async\/Zone\/handleUncaughtError.html\">handleUncaughtError<\/a> method.<\/p>\n<p>Asynchronous errors never cross zone boundaries between zones with\ndifferent error handlers.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>import 'dart:async';\n\nmain() {\n  var future;\n  runZoned(() {\n    \/\/ The asynchronous error is caught by the custom zone which prints\n    \/\/ 'asynchronous error'.\n    future = new Future.error(\"asynchronous error\");\n  }, onError: (e) { print(e); });  \/\/ Creates a zone with an error handler.\n  \/\/ The following `catchError` handler is never invoked, because the\n  \/\/ custom zone created by the call to `runZoned` provides an\n  \/\/ error handler.\n  future.catchError((e) { throw \"is never reached\"; });\n}\n<\/code><\/pre>\n<p>Note that errors cannot enter a child zone with a different error handler\neither:<\/p>\n<pre class=\"language-dart\"><code>import 'dart:async';\n\nmain() {\n  runZoned(() {\n    \/\/ The following asynchronous error is *not* caught by the `catchError`\n    \/\/ in the nested zone, since errors are not to cross zone boundaries\n    \/\/ with different error handlers.\n    \/\/ Instead the error is handled by the current error handler,\n    \/\/ printing \"Caught by outer zone: asynchronous error\".\n    var future = new Future.error(\"asynchronous error\");\n    runZoned(() {\n      future.catchError((e) { throw \"is never reached\"; });\n    }, onError: (e) { throw \"is never reached\"; });\n  }, onError: (e) { print(\"Caught by outer zone: $e\"); });\n}\n<\/code><\/pre>\n        ",
-            "memberOf": "dart:async.Zone",
-            "isConstant": false,
-            "href": "dart-async\/Zone\/errorZone.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Zone get errorZone;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "parent",
+            "href": "dart-async\/Zone\/errorZone.html",
+            "isDeprecated": "0",
             "type": "dart:async.Zone",
-            "types": [],
-            "desc": "<p>The parent zone of the this zone.<\/p>\n<p>Is <code>null<\/code> if <code>this<\/code> is the <a href=\"dart-async\/Zone\/root-constant.html\">root<\/a> zone.<\/p>\n<p>Zones are created by <a href=\"dart-async\/Zone\/fork.html\">fork<\/a> on an existing zone, or by <a href=\"dart-async\/runZoned.html\">runZoned<\/a> which\nforks the <a href=\"dart-async\/Zone\/current.html\">current<\/a> zone. The new zone's parent zone is the zone it was\nforked from.<\/p>\n        ",
             "memberOf": "dart:async.Zone",
-            "isConstant": false,
-            "href": "dart-async\/Zone\/parent.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Zone get parent;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "type": "",
-            "href": "dart-async\/Zone\/root-constant.html",
-            "desc": "<p>The root zone.<\/p>\n<p>All isolate entry functions (<code>main<\/code> or spawned functions) start running in\nthe root zone (that is, <a href=\"dart-async\/Zone\/current.html\">Zone.current<\/a> is identical to <a href=\"dart-async\/Zone\/root-constant.html\">Zone.root<\/a> when the\nentry function is called). If no custom zone is created, the rest of the\nprogram always runs in the root zone.<\/p>\n<p>The root zone implements the default behavior of all zone operations.\nMany methods, like <a href=\"dart-async\/Zone\/registerCallback.html\">registerCallback<\/a> do the bare minimum required of the\nfunction, and are only provided as a hook for custom zones. Others, like\n<a href=\"dart-async\/Zone\/scheduleMicrotask.html\">scheduleMicrotask<\/a>, interact with the underlying system to implement the\ndesired behavior.<\/p>\n    ",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const Zone root = _rootZone\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "root",
-            "memberOf": "dart:async.Zone"
+            "desc": "<p>The parent zone of the this zone.<\/p>\n<p>Is <code>null<\/code> if <code>this<\/code> is the <a href=\"dart-async\/Zone\/root-constant.html\">root<\/a> zone.<\/p>\n<p>Zones are created by <a href=\"dart-async\/Zone\/fork.html\">fork<\/a> on an existing zone, or by <a href=\"dart-async\/runZoned.html\">runZoned<\/a> which\nforks the <a href=\"dart-async\/Zone\/current.html\">current<\/a> zone. The new zone's parent zone is the zone it was\nforked from.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Zone get parent;<\/code><\/pre>\n        ",
+            "href": "dart-async\/Zone\/parent.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Zone",
+            "memberOf": "dart:async.Zone",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "dart-async\/Zone-class.html",
-    "desc": "<p>A zone represents an environment that remains stable across asynchronous\ncalls.<\/p>\n<p>Code is always executed in the context of a zone, available as\n<a href=\"dart-async\/Zone\/current.html\">Zone.current<\/a>. The initial <code>main<\/code> function runs in the context of the\ndefault zone (<a href=\"dart-async\/Zone\/root-constant.html\">Zone.root<\/a>). Code can be run in a different zone using either\n<a href=\"dart-async\/runZoned.html\">runZoned<\/a>, to create a new zone, or <a href=\"dart-async\/Zone\/run.html\">Zone.run<\/a> to run code in the context of\nan existing zone likely created using <a href=\"dart-async\/Zone\/fork.html\">Zone.fork<\/a>.<\/p>\n<p>Developers can create a new zone that overrides some of the functionality of\nan existing zone. For example, custom zones can replace of modify the\nbehavior of <code>print<\/code>, timers, microtasks or how uncaught errors are handled.<\/p>\n<p>The <a href=\"dart-async\/Zone-class.html\">Zone<\/a> class is not subclassable, but users can provide custom zones by\nforking an existing zone (usually <a href=\"dart-async\/Zone\/current.html\">Zone.current<\/a>) with a <a href=\"dart-async\/ZoneSpecification-class.html\">ZoneSpecification<\/a>.\nThis is similar to creating a new class that extends the base <code>Zone<\/code> class\nand that overrides some methods, except without actually creating a new\nclass. Instead the overriding methods are provided as functions that\nexplicitly take the equivalent of their own class, the \"super\" class and the\n<code>this<\/code> object as parameters.<\/p>\n<p>Asynchronous callbacks always run in the context of the zone where they were\nscheduled. This is implemented using two steps:<\/p>\n<ol>\n<li>the callback is first registered using one of <a href=\"dart-async\/Zone\/registerCallback.html\">registerCallback<\/a>,\n  <a href=\"dart-async\/Zone\/registerUnaryCallback.html\">registerUnaryCallback<\/a>, or <a href=\"dart-async\/Zone\/registerBinaryCallback.html\">registerBinaryCallback<\/a>. This allows the zone\n  to record that a callback exists and potentially modify it (by returning a\n  different callback). The code doing the registration (e.g., <code>Future.then<\/code>)\n  also remembers the current zone so that it can later run the callback in\n  that zone.<\/li>\n<li>At a later point the registered callback is run in the remembered zone.<\/li>\n<\/ol>\n<p>This is all handled internally by the platform code and most users don't need\nto worry about it. However, developers of new asynchronous operations,\nprovided by the underlying system or through native extensions, must follow\nthe protocol to be zone compatible.<\/p>\n<p>For convenience, zones provide <a href=\"dart-async\/Zone\/bindCallback.html\">bindCallback<\/a> (and the corresponding\n<a href=\"dart-async\/Zone\/bindUnaryCallback.html\">bindUnaryCallback<\/a> and <a href=\"dart-async\/Zone\/bindBinaryCallback.html\">bindBinaryCallback<\/a>) to make it easier to respect\nthe zone contract: these functions first invoke the corresponding <code>register<\/code>\nfunctions and then wrap the returned function so that it runs in the current\nzone when it is later asynchronously invoked.<\/p>\n<p>Similarly, zones provide <a href=\"dart-async\/Zone\/bindCallbackGuarded.html\">bindCallbackGuarded<\/a> (and the corresponding\n<a href=\"dart-async\/Zone\/bindUnaryCallbackGuarded.html\">bindUnaryCallbackGuarded<\/a> and <a href=\"dart-async\/Zone\/bindBinaryCallbackGuarded.html\">bindBinaryCallbackGuarded<\/a>), when the\ncallback should be invoked through <a href=\"dart-async\/Zone\/runGuarded.html\">Zone.runGuarded<\/a>.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "Zone"
+    ]
 }

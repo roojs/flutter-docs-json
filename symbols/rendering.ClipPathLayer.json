@@ -1,139 +1,128 @@
 {
+    "desc": "<p>A composite layer that clips its children using a path.<\/p>\n<p>When debugging, setting <a href=\"rendering\/debugDisableClipLayers.html\">debugDisableClipLayers<\/a> to true will cause this\nlayer to be skipped (directly replaced by its children). This can be helpful\nto track down the cause of performance problems.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "rendering\/ClipPathLayer-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "rendering",
     "name": "rendering.ClipPathLayer",
+    "shortname": "ClipPathLayer",
     "extends": [
         "rendering.ContainerLayer",
         "rendering.Layer",
         "foundation.AbstractNode",
         "dart:core.Object"
     ],
-    "memberOf": "rendering",
     "events": [],
     "methods": [
         {
-            "name": "ClipPathLayer",
-            "type": "",
             "desc": "<p>Creates a layer with a path-based clip.<\/p>\n<p>The <code>clipPath<\/code> property must be non-null before the compositing phase of\nthe pipeline.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ClipPathLayer({\n  @required Path clipPath,\n  Clip clipBehavior = Clip.antiAlias,\n}) : _clipPath = clipPath,\n     _clipBehavior = clipBehavior,\n     assert(clipBehavior != null),\n     assert(clipBehavior != Clip.none);<\/code><\/pre>\n    ",
+            "href": "rendering\/ClipPathLayer\/ClipPathLayer.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "rendering.ClipPathLayer",
-            "sig": "",
             "params": [
                 {
-                    "name": "clipPath",
-                    "type": "dart:ui.Path",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "clipBehavior",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.Clip"
                 },
                 {
-                    "name": "clipBehavior",
-                    "type": "dart:ui.Clip",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "clipPath",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.Path"
                 }
-            ],
-            "isConstructor": true,
-            "href": "rendering\/ClipPathLayer\/ClipPathLayer.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ClipPathLayer({\n  @required Path clipPath,\n  Clip clipBehavior = Clip.antiAlias,\n}) : _clipPath = clipPath,\n     _clipBehavior = clipBehavior,\n     assert(clipBehavior != null),\n     assert(clipBehavior != Clip.none);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "addToScene",
-            "type": "dart:ui.EngineLayer",
             "desc": "<p>Override this method to upload this layer to the engine.<\/p>\n<p>Return the engine layer for retained rendering. When there's no\ncorresponding engine layer, null is returned.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nui.EngineLayer addToScene(ui.SceneBuilder builder, [ Offset layerOffset = Offset.zero ]) {\n  bool enabled = true;\n  assert(() {\n    enabled = !debugDisableClipLayers;\n    return true;\n  }());\n  if (enabled)\n    builder.pushClipPath(clipPath.shift(layerOffset), clipBehavior: clipBehavior);\n  addChildrenToScene(builder, layerOffset);\n  if (enabled)\n    builder.pop();\n  return null; \/\/ this does not return an engine layer yet.\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/ClipPathLayer\/addToScene.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.EngineLayer",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.ClipPathLayer",
-            "sig": "",
             "params": [
                 {
                     "name": "builder",
-                    "type": "dart:ui.SceneBuilder",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.SceneBuilder"
                 },
                 {
                     "name": "layerOffset",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Offset"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/ClipPathLayer\/addToScene.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nui.EngineLayer addToScene(ui.SceneBuilder builder, [ Offset layerOffset = Offset.zero ]) {\n  bool enabled = true;\n  assert(() {\n    enabled = !debugDisableClipLayers;\n    return true;\n  }());\n  if (enabled)\n    builder.pushClipPath(clipPath.shift(layerOffset), clipBehavior: clipBehavior);\n  addChildrenToScene(builder, layerOffset);\n  if (enabled)\n    builder.pop();\n  return null; \/\/ this does not return an engine layer yet.\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "find",
-            "type": "",
             "desc": "<p>Returns the value of <code>S<\/code> that corresponds to the point described by\n<code>regionOffset<\/code>.<\/p>\n<p>Returns null if no matching region is found.<\/p>\n<p>The main way for a value to be assigned here is by pushing an\n<a href=\"rendering\/AnnotatedRegionLayer-class.html\">AnnotatedRegionLayer<\/a> into the layer tree.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/AnnotatedRegionLayer-class.html\">AnnotatedRegionLayer<\/a>, for placing values in the layer tree.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nS find&lt;S&gt;(Offset regionOffset) {\n  if (!clipPath.contains(regionOffset))\n    return null;\n  return super.find&lt;S&gt;(regionOffset);\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/ClipPathLayer\/find.html",
+            "isDeprecated": "0",
+            "type": "<S>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.ClipPathLayer",
-            "sig": "",
             "params": [
                 {
                     "name": "regionOffset",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Offset"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/ClipPathLayer\/find.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nS find&lt;S&gt;(Offset regionOffset) {\n  if (!clipPath.contains(regionOffset))\n    return null;\n  return super.find&lt;S&gt;(regionOffset);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "name": "clipBehavior",
-            "type": "dart:ui.Clip",
-            "types": [],
             "desc": "<p>Controls how to clip (default to <a href=\"dart-ui\/Clip-class.html\">Clip.antiAlias<\/a>).<\/p>\n<p><a href=\"dart-ui\/Clip-class.html\">Clip.none<\/a> is not allowed here.<\/p>\n        ",
-            "memberOf": "rendering.ClipPathLayer",
-            "isConstant": false,
-            "href": "rendering\/ClipPathLayer\/clipBehavior.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Clip get clipBehavior =&gt; _clipBehavior;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/ClipPathLayer\/clipBehavior.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Clip",
+            "memberOf": "rendering.ClipPathLayer",
+            "params": []
         },
         {
-            "name": "clipPath",
-            "type": "dart:ui.Path",
-            "types": [],
             "desc": "<p>The path to clip in the parent's coordinate system.<\/p>\n<p>The scene must be explicitly recomposited after this property is changed\n(as described at <a href=\"rendering\/Layer-class.html\">Layer<\/a>).<\/p>\n        ",
-            "memberOf": "rendering.ClipPathLayer",
-            "isConstant": false,
-            "href": "rendering\/ClipPathLayer\/clipPath.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Path get clipPath =&gt; _clipPath;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/ClipPathLayer\/clipPath.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Path",
+            "memberOf": "rendering.ClipPathLayer",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "rendering\/ClipPathLayer-class.html",
-    "desc": "<p>A composite layer that clips its children using a path.<\/p>\n<p>When debugging, setting <a href=\"rendering\/debugDisableClipLayers.html\">debugDisableClipLayers<\/a> to true will cause this\nlayer to be skipped (directly replaced by its children). This can be helpful\nto track down the cause of performance problems.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "ClipPathLayer"
+    ]
 }

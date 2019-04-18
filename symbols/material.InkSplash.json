@@ -1,225 +1,203 @@
 {
+    "desc": "<p>A visual reaction on a piece of <a href=\"material\/Material-class.html\">Material<\/a> to user input.<\/p>\n<p>A circular ink feature whose origin starts at the input touch point\nand whose radius expands from zero.<\/p>\n<p>This object is rarely created directly. Instead of creating an ink splash\ndirectly, consider using an <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> or <a href=\"material\/InkWell-class.html\">InkWell<\/a> widget, which uses\ngestures (such as tap and long-press) to trigger ink splashes.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"material\/InkRipple-class.html\">InkRipple<\/a>, which is an ink splash feature that expands more\naggressively than this class does.<\/li>\n<li>\n<a href=\"material\/InkResponse-class.html\">InkResponse<\/a>, which uses gestures to trigger ink highlights and ink\nsplashes in the parent <a href=\"material\/Material-class.html\">Material<\/a>.<\/li>\n<li>\n<a href=\"material\/InkWell-class.html\">InkWell<\/a>, which is a rectangular <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> (the most common type of\nink response).<\/li>\n<li>\n<a href=\"material\/Material-class.html\">Material<\/a>, which is the widget on which the ink splash is painted.<\/li>\n<li>\n<a href=\"material\/InkHighlight-class.html\">InkHighlight<\/a>, which is an ink feature that emphasizes a part of a\n<a href=\"material\/Material-class.html\">Material<\/a>.<\/li>\n<\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "material\/InkSplash-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "material",
     "name": "material.InkSplash",
+    "shortname": "InkSplash",
     "extends": [
         "material.InteractiveInkFeature",
         "material.InkFeature",
         "dart:core.Object"
     ],
-    "memberOf": "material",
     "events": [],
     "methods": [
         {
-            "name": "InkSplash",
-            "type": "",
             "desc": "<p>Begin a splash, centered at position relative to <code>referenceBox<\/code>.<\/p>\n<p>The <code>controller<\/code> argument is typically obtained via\n<code>Material.of(context)<\/code>.<\/p>\n<p>If <code>containedInkWell<\/code> is true, then the splash will be sized to fit\nthe well rectangle, then clipped to it when drawn. The well\nrectangle is the box returned by <code>rectCallback<\/code>, if provided, or\notherwise is the bounds of the <code>referenceBox<\/code>.<\/p>\n<p>If <code>containedInkWell<\/code> is false, then <code>rectCallback<\/code> should be null.\nThe ink splash is clipped only to the edges of the <a href=\"material\/Material-class.html\">Material<\/a>.\nThis is the default.<\/p>\n<p>When the splash is removed, <code>onRemoved<\/code> will be called.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">InkSplash({\n  @required MaterialInkController controller,\n  @required RenderBox referenceBox,\n  @required TextDirection textDirection,\n  Offset position,\n  Color color,\n  bool containedInkWell = false,\n  RectCallback rectCallback,\n  BorderRadius borderRadius,\n  ShapeBorder customBorder,\n  double radius,\n  VoidCallback onRemoved,\n}) : assert(textDirection != null),\n     _position = position,\n     _borderRadius = borderRadius ?? BorderRadius.zero,\n     _customBorder = customBorder,\n     _targetRadius = radius ?? _getTargetRadius(referenceBox, containedInkWell, rectCallback, position),\n     _clipCallback = _getClipCallback(referenceBox, containedInkWell, rectCallback),\n     _repositionToReferenceBox = !containedInkWell,\n     _textDirection = textDirection,\n     super(controller: controller, referenceBox: referenceBox, color: color, onRemoved: onRemoved) {\n  assert(_borderRadius != null);\n  _radiusController = AnimationController(duration: _kUnconfirmedSplashDuration, vsync: controller.vsync)\n    ..addListener(controller.markNeedsPaint)\n    ..forward();\n  _radius = _radiusController.drive(Tween&lt;double&gt;(\n    begin: _kSplashInitialSize,\n    end: _targetRadius,\n  ));\n  _alphaController = AnimationController(duration: _kSplashFadeDuration, vsync: controller.vsync)\n    ..addListener(controller.markNeedsPaint)\n    ..addStatusListener(_handleAlphaStatusChanged);\n  _alpha = _alphaController.drive(IntTween(\n    begin: color.alpha,\n    end: 0,\n  ));\n\n  controller.addInkFeature(this);\n}<\/code><\/pre>\n    ",
+            "href": "material\/InkSplash\/InkSplash.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "material.InkSplash",
-            "sig": "",
             "params": [
                 {
-                    "name": "controller",
-                    "type": "material.MaterialInkController",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "borderRadius",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "referenceBox",
-                    "type": "rendering.RenderBox",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "textDirection",
-                    "type": "dart:ui.TextDirection",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "position",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "painting.BorderRadius"
                 },
                 {
                     "name": "color",
-                    "type": "dart:ui.Color",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.Color"
                 },
                 {
                     "name": "containedInkWell",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
                 },
                 {
-                    "name": "rectCallback",
-                    "type": "material.RectCallback",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "controller",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "borderRadius",
-                    "type": "painting.BorderRadius",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "material.MaterialInkController"
                 },
                 {
                     "name": "customBorder",
-                    "type": "painting.ShapeBorder",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "radius",
-                    "type": "dart:core.double",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "painting.ShapeBorder"
                 },
                 {
                     "name": "onRemoved",
-                    "type": "dart:ui.VoidCallback",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.VoidCallback"
+                },
+                {
+                    "name": "position",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.Offset"
+                },
+                {
+                    "name": "radius",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
+                },
+                {
+                    "name": "rectCallback",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "material.RectCallback"
+                },
+                {
+                    "name": "referenceBox",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "rendering.RenderBox"
+                },
+                {
+                    "name": "textDirection",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.TextDirection"
                 }
-            ],
-            "isConstructor": true,
-            "href": "material\/InkSplash\/InkSplash.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">InkSplash({\n  @required MaterialInkController controller,\n  @required RenderBox referenceBox,\n  @required TextDirection textDirection,\n  Offset position,\n  Color color,\n  bool containedInkWell = false,\n  RectCallback rectCallback,\n  BorderRadius borderRadius,\n  ShapeBorder customBorder,\n  double radius,\n  VoidCallback onRemoved,\n}) : assert(textDirection != null),\n     _position = position,\n     _borderRadius = borderRadius ?? BorderRadius.zero,\n     _customBorder = customBorder,\n     _targetRadius = radius ?? _getTargetRadius(referenceBox, containedInkWell, rectCallback, position),\n     _clipCallback = _getClipCallback(referenceBox, containedInkWell, rectCallback),\n     _repositionToReferenceBox = !containedInkWell,\n     _textDirection = textDirection,\n     super(controller: controller, referenceBox: referenceBox, color: color, onRemoved: onRemoved) {\n  assert(_borderRadius != null);\n  _radiusController = AnimationController(duration: _kUnconfirmedSplashDuration, vsync: controller.vsync)\n    ..addListener(controller.markNeedsPaint)\n    ..forward();\n  _radius = _radiusController.drive(Tween&lt;double&gt;(\n    begin: _kSplashInitialSize,\n    end: _targetRadius,\n  ));\n  _alphaController = AnimationController(duration: _kSplashFadeDuration, vsync: controller.vsync)\n    ..addListener(controller.markNeedsPaint)\n    ..addStatusListener(_handleAlphaStatusChanged);\n  _alpha = _alphaController.drive(IntTween(\n    begin: color.alpha,\n    end: 0,\n  ));\n\n  controller.addInkFeature(this);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "cancel",
-            "type": "",
             "desc": "<p>Called when the user input that triggered this feature's appearance was canceled.<\/p>\n<p>Typically causes the ink to gradually disappear. By default this method does\nnothing.<\/p>\n    ",
-            "static": false,
-            "memberOf": "material.InkSplash",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "material\/InkSplash\/cancel.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid cancel() {\n  _alphaController?.forward();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "href": "material\/InkSplash\/cancel.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "material.InkSplash",
+            "params": []
         },
         {
-            "name": "confirm",
-            "type": "",
             "desc": "<p>Called when the user input that triggered this feature's appearance was confirmed.<\/p>\n<p>Typically causes the ink to propagate faster across the material. By default this\nmethod does nothing.<\/p>\n    ",
-            "static": false,
-            "memberOf": "material.InkSplash",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "material\/InkSplash\/confirm.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid confirm() {\n  final int duration = (_targetRadius \/ _kSplashConfirmedVelocity).floor();\n  _radiusController\n    ..duration = Duration(milliseconds: duration)\n    ..forward();\n  _alphaController.forward();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "dispose",
-            "type": "",
-            "desc": "<p>Free up the resources associated with this ink feature.<\/p>\n    ",
-            "static": false,
-            "memberOf": "material.InkSplash",
-            "sig": "",
-            "params": [],
+            "href": "material\/InkSplash\/confirm.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "material\/InkSplash\/dispose.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  _radiusController.dispose();\n  _alphaController.dispose();\n  _alphaController = null;\n  super.dispose();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "paintFeature",
-            "type": "",
-            "desc": "<p>Override this method to paint the ink feature.<\/p>\n<p>The transform argument gives the coordinate conversion from the coordinate\nsystem of the canvas to the coordinate system of the <a href=\"material\/InkFeature\/referenceBox.html\">referenceBox<\/a>.<\/p>\n    ",
             "static": false,
             "memberOf": "material.InkSplash",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>Free up the resources associated with this ink feature.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  _radiusController.dispose();\n  _alphaController.dispose();\n  _alphaController = null;\n  super.dispose();\n}<\/code><\/pre>\n    ",
+            "href": "material\/InkSplash\/dispose.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "material.InkSplash",
+            "params": []
+        },
+        {
+            "desc": "<p>Override this method to paint the ink feature.<\/p>\n<p>The transform argument gives the coordinate conversion from the coordinate\nsystem of the canvas to the coordinate system of the <a href=\"material\/InkFeature\/referenceBox.html\">referenceBox<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid paintFeature(Canvas canvas, Matrix4 transform) {\n  final Paint paint = Paint()..color = color.withAlpha(_alpha.value);\n  Offset center = _position;\n  if (_repositionToReferenceBox)\n    center = Offset.lerp(center, referenceBox.size.center(Offset.zero), _radiusController.value);\n  final Offset originOffset = MatrixUtils.getAsTranslation(transform);\n  canvas.save();\n  if (originOffset == null) {\n    canvas.transform(transform.storage);\n  } else {\n    canvas.translate(originOffset.dx, originOffset.dy);\n  }\n  if (_clipCallback != null) {\n    final Rect rect = _clipCallback();\n    if (_customBorder != null) {\n      canvas.clipPath(_customBorder.getOuterPath(rect, textDirection: _textDirection));\n    } else if (_borderRadius != BorderRadius.zero) {\n      canvas.clipRRect(RRect.fromRectAndCorners(\n        rect,\n        topLeft: _borderRadius.topLeft, topRight: _borderRadius.topRight,\n        bottomLeft: _borderRadius.bottomLeft, bottomRight: _borderRadius.bottomRight,\n      ));\n    } else {\n      canvas.clipRect(rect);\n    }\n  }\n  canvas.drawCircle(center, _radius.value, paint);\n  canvas.restore();\n}<\/code><\/pre>\n    ",
+            "href": "material\/InkSplash\/paintFeature.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "material.InkSplash",
             "params": [
                 {
                     "name": "canvas",
-                    "type": "dart:ui.Canvas",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Canvas"
                 },
                 {
                     "name": "transform",
-                    "type": "vector_math_64.Matrix4",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_64.Matrix4"
                 }
-            ],
-            "isConstructor": false,
-            "href": "material\/InkSplash\/paintFeature.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid paintFeature(Canvas canvas, Matrix4 transform) {\n  final Paint paint = Paint()..color = color.withAlpha(_alpha.value);\n  Offset center = _position;\n  if (_repositionToReferenceBox)\n    center = Offset.lerp(center, referenceBox.size.center(Offset.zero), _radiusController.value);\n  final Offset originOffset = MatrixUtils.getAsTranslation(transform);\n  canvas.save();\n  if (originOffset == null) {\n    canvas.transform(transform.storage);\n  } else {\n    canvas.translate(originOffset.dx, originOffset.dy);\n  }\n  if (_clipCallback != null) {\n    final Rect rect = _clipCallback();\n    if (_customBorder != null) {\n      canvas.clipPath(_customBorder.getOuterPath(rect, textDirection: _textDirection));\n    } else if (_borderRadius != BorderRadius.zero) {\n      canvas.clipRRect(RRect.fromRectAndCorners(\n        rect,\n        topLeft: _borderRadius.topLeft, topRight: _borderRadius.topRight,\n        bottomLeft: _borderRadius.bottomLeft, bottomRight: _borderRadius.bottomRight,\n      ));\n    } else {\n      canvas.clipRect(rect);\n    }\n  }\n  canvas.drawCircle(center, _radius.value, paint);\n  canvas.restore();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
-    "props": [
-        {
-            "type": "",
-            "href": "material\/InkSplash\/splashFactory-constant.html",
-            "desc": "<p>Used to specify this type of ink splash for an <a href=\"material\/InkWell-class.html\">InkWell<\/a>, <a href=\"material\/InkResponse-class.html\">InkResponse<\/a>\nor material <a href=\"material\/Theme-class.html\">Theme<\/a>.<\/p>\n    ",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const InteractiveInkFeatureFactory splashFactory = _InkSplashFactory()\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "splashFactory",
-            "memberOf": "material.InkSplash"
-        }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "material\/InkSplash-class.html",
-    "desc": "<p>A visual reaction on a piece of <a href=\"material\/Material-class.html\">Material<\/a> to user input.<\/p>\n<p>A circular ink feature whose origin starts at the input touch point\nand whose radius expands from zero.<\/p>\n<p>This object is rarely created directly. Instead of creating an ink splash\ndirectly, consider using an <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> or <a href=\"material\/InkWell-class.html\">InkWell<\/a> widget, which uses\ngestures (such as tap and long-press) to trigger ink splashes.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"material\/InkRipple-class.html\">InkRipple<\/a>, which is an ink splash feature that expands more\naggressively than this class does.<\/li>\n<li>\n<a href=\"material\/InkResponse-class.html\">InkResponse<\/a>, which uses gestures to trigger ink highlights and ink\nsplashes in the parent <a href=\"material\/Material-class.html\">Material<\/a>.<\/li>\n<li>\n<a href=\"material\/InkWell-class.html\">InkWell<\/a>, which is a rectangular <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> (the most common type of\nink response).<\/li>\n<li>\n<a href=\"material\/Material-class.html\">Material<\/a>, which is the widget on which the ink splash is painted.<\/li>\n<li>\n<a href=\"material\/InkHighlight-class.html\">InkHighlight<\/a>, which is an ink feature that emphasizes a part of a\n<a href=\"material\/Material-class.html\">Material<\/a>.<\/li>\n<\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "InkSplash"
+    "props": []
 }

@@ -1,5 +1,17 @@
 {
+    "desc": "<p>Creates a separate display list for its child.<\/p>\n<p>This render object creates a separate display list for its child, which\ncan improve performance if the subtree repaints at different times than\nthe surrounding parts of the tree. Specifically, when the child does not\nrepaint but its parent does, we can re-use the display list we recorded\npreviously. Similarly, when the child repaints but the surround tree does\nnot, we can re-record its display list without re-recording the display list\nfor the surround tree.<\/p>\n<p>In some cases, it is necessary to place <em>two<\/em> (or more) repaint boundaries\nto get a useful effect. Consider, for example, an e-mail application that\nshows an unread count and a list of e-mails. Whenever a new e-mail comes in,\nthe list would update, but so would the unread count. If only one of these\ntwo parts of the application was behind a repaint boundary, the entire\napplication would repaint each time. On the other hand, if both were behind\na repaint boundary, a new e-mail would only change those two parts of the\napplication and the rest of the application would not repaint.<\/p>\n<p>To tell if a particular RenderRepaintBoundary is useful, run your\napplication in checked mode, interacting with it in typical ways, and then\ncall <a href=\"rendering\/debugDumpRenderTree.html\">debugDumpRenderTree<\/a>. Each RenderRepaintBoundary will include the\nratio of cases where the repaint boundary was useful vs the cases where it\nwas not. These counts can also be inspected programmatically using\n<a href=\"rendering\/RenderRepaintBoundary\/debugAsymmetricPaintCount.html\">debugAsymmetricPaintCount<\/a> and <a href=\"rendering\/RenderRepaintBoundary\/debugSymmetricPaintCount.html\">debugSymmetricPaintCount<\/a> respectively.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "rendering\/RenderRepaintBoundary-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "rendering",
     "name": "rendering.RenderRepaintBoundary",
+    "shortname": "RenderRepaintBoundary",
     "extends": [
         "rendering.RenderProxyBox",
         "rendering.RenderBox",
@@ -7,178 +19,145 @@
         "foundation.AbstractNode",
         "dart:core.Object"
     ],
-    "memberOf": "rendering",
     "events": [],
     "methods": [
         {
-            "name": "RenderRepaintBoundary",
-            "type": "",
             "desc": "<p>Creates a repaint boundary around <code>child<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RenderRepaintBoundary({ RenderBox child }) : super(child);<\/code><\/pre>\n    ",
+            "href": "rendering\/RenderRepaintBoundary\/RenderRepaintBoundary.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "rendering.RenderRepaintBoundary",
-            "sig": "",
             "params": [
                 {
                     "name": "child",
-                    "type": "rendering.RenderBox",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "rendering.RenderBox"
                 }
-            ],
-            "isConstructor": true,
-            "href": "rendering\/RenderRepaintBoundary\/RenderRepaintBoundary.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RenderRepaintBoundary({ RenderBox child }) : super(child);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "debugFillProperties",
-            "type": "",
             "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"rendering\/RenderRepaintBoundary\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTreeMixin\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"rendering\/RenderObject\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  bool inReleaseMode = true;\n  assert(() {\n    inReleaseMode = false;\n    if (debugSymmetricPaintCount + debugAsymmetricPaintCount == 0) {\n      properties.add(MessageProperty('usefulness ratio', 'no metrics collected yet (never painted)'));\n    } else {\n      final double fraction = debugAsymmetricPaintCount \/ (debugSymmetricPaintCount + debugAsymmetricPaintCount);\n      String diagnosis;\n      if (debugSymmetricPaintCount + debugAsymmetricPaintCount &lt; 5) {\n        diagnosis = 'insufficient data to draw conclusion (less than five repaints)';\n      } else if (fraction &gt; 0.9) {\n        diagnosis = 'this is an outstandingly useful repaint boundary and should definitely be kept';\n      } else if (fraction &gt; 0.5) {\n        diagnosis = 'this is a useful repaint boundary and should be kept';\n      } else if (fraction &gt; 0.30) {\n        diagnosis = 'this repaint boundary is probably useful, but maybe it would be more useful in tandem with adding more repaint boundaries elsewhere';\n      } else if (fraction &gt; 0.1) {\n        diagnosis = 'this repaint boundary does sometimes show value, though currently not that often';\n      } else if (debugAsymmetricPaintCount == 0) {\n        diagnosis = 'this repaint boundary is astoundingly ineffectual and should be removed';\n      } else {\n        diagnosis = 'this repaint boundary is not very effective and should probably be removed';\n      }\n      properties.add(PercentProperty('metrics', fraction, unit: 'useful', tooltip: '$debugSymmetricPaintCount bad vs $debugAsymmetricPaintCount good'));\n      properties.add(MessageProperty('diagnosis', diagnosis));\n    }\n    return true;\n  }());\n  if (inReleaseMode)\n    properties.add(DiagnosticsNode.message('(run in checked mode to collect repaint boundary statistics)'));\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/RenderRepaintBoundary\/debugFillProperties.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.RenderRepaintBoundary",
-            "sig": "",
             "params": [
                 {
                     "name": "properties",
-                    "type": "foundation.DiagnosticPropertiesBuilder",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "foundation.DiagnosticPropertiesBuilder"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderRepaintBoundary\/debugFillProperties.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  bool inReleaseMode = true;\n  assert(() {\n    inReleaseMode = false;\n    if (debugSymmetricPaintCount + debugAsymmetricPaintCount == 0) {\n      properties.add(MessageProperty('usefulness ratio', 'no metrics collected yet (never painted)'));\n    } else {\n      final double fraction = debugAsymmetricPaintCount \/ (debugSymmetricPaintCount + debugAsymmetricPaintCount);\n      String diagnosis;\n      if (debugSymmetricPaintCount + debugAsymmetricPaintCount &lt; 5) {\n        diagnosis = 'insufficient data to draw conclusion (less than five repaints)';\n      } else if (fraction &gt; 0.9) {\n        diagnosis = 'this is an outstandingly useful repaint boundary and should definitely be kept';\n      } else if (fraction &gt; 0.5) {\n        diagnosis = 'this is a useful repaint boundary and should be kept';\n      } else if (fraction &gt; 0.30) {\n        diagnosis = 'this repaint boundary is probably useful, but maybe it would be more useful in tandem with adding more repaint boundaries elsewhere';\n      } else if (fraction &gt; 0.1) {\n        diagnosis = 'this repaint boundary does sometimes show value, though currently not that often';\n      } else if (debugAsymmetricPaintCount == 0) {\n        diagnosis = 'this repaint boundary is astoundingly ineffectual and should be removed';\n      } else {\n        diagnosis = 'this repaint boundary is not very effective and should probably be removed';\n      }\n      properties.add(PercentProperty('metrics', fraction, unit: 'useful', tooltip: '$debugSymmetricPaintCount bad vs $debugAsymmetricPaintCount good'));\n      properties.add(MessageProperty('diagnosis', diagnosis));\n    }\n    return true;\n  }());\n  if (inReleaseMode)\n    properties.add(DiagnosticsNode.message('(run in checked mode to collect repaint boundary statistics)'));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "debugRegisterRepaintBoundaryPaint",
-            "type": "",
             "desc": "<p>Called, in checked mode, if <a href=\"rendering\/RenderRepaintBoundary\/isRepaintBoundary.html\">isRepaintBoundary<\/a> is true, when either the\nthis render object or its parent attempt to paint.<\/p>\n<p>This can be used to record metrics about whether the node should actually\nbe a repaint boundary.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugRegisterRepaintBoundaryPaint({ bool includedParent = true, bool includedChild = false }) {\n  assert(() {\n    if (includedParent &amp;&amp; includedChild)\n      _debugSymmetricPaintCount += 1;\n    else\n      _debugAsymmetricPaintCount += 1;\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/RenderRepaintBoundary\/debugRegisterRepaintBoundaryPaint.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.RenderRepaintBoundary",
-            "sig": "",
             "params": [
                 {
-                    "name": "includedParent",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "includedChild",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 },
                 {
-                    "name": "includedChild",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "includedParent",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderRepaintBoundary\/debugRegisterRepaintBoundaryPaint.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugRegisterRepaintBoundaryPaint({ bool includedParent = true, bool includedChild = false }) {\n  assert(() {\n    if (includedParent &amp;&amp; includedChild)\n      _debugSymmetricPaintCount += 1;\n    else\n      _debugAsymmetricPaintCount += 1;\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "debugResetMetrics",
-            "type": "",
             "desc": "<p>Resets the <a href=\"rendering\/RenderRepaintBoundary\/debugSymmetricPaintCount.html\">debugSymmetricPaintCount<\/a> and <a href=\"rendering\/RenderRepaintBoundary\/debugAsymmetricPaintCount.html\">debugAsymmetricPaintCount<\/a>\ncounts to zero.<\/p>\n<p>Only valid when asserts are enabled. Does nothing in release builds.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void debugResetMetrics() {\n  assert(() {\n    _debugSymmetricPaintCount = 0;\n    _debugAsymmetricPaintCount = 0;\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/RenderRepaintBoundary\/debugResetMetrics.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.RenderRepaintBoundary",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "rendering\/RenderRepaintBoundary\/debugResetMetrics.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void debugResetMetrics() {\n  assert(() {\n    _debugSymmetricPaintCount = 0;\n    _debugAsymmetricPaintCount = 0;\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "params": []
         },
         {
-            "name": "toImage",
-            "type": "dart:async.Future<dart:ui.Image>",
             "desc": "<p>Capture an image of the current state of this render object and its\nchildren.<\/p>\n<p>The returned <a href=\"dart-ui\/Image-class.html\">ui.Image<\/a> has uncompressed raw RGBA bytes in the dimensions\nof the render object, multiplied by the <code>pixelRatio<\/code>.<\/p>\n<p>To use <a href=\"rendering\/RenderRepaintBoundary\/toImage.html\">toImage<\/a>, the render object must have gone through the paint phase\n(i.e. <a href=\"rendering\/RenderObject\/debugNeedsPaint.html\">debugNeedsPaint<\/a> must be false).<\/p>\n<p>The <code>pixelRatio<\/code> describes the scale between the logical pixels and the\nsize of the output image. It is independent of the\n<code>window.devicePixelRatio<\/code> for the device, so specifying 1.0 (the default)\nwill give you a 1:1 mapping between logical pixels and the output pixels\nin the image.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following is an example of how to go from a <code>GlobalKey<\/code> on a\n<code>RepaintBoundary<\/code> to a PNG:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class PngHome extends StatefulWidget {\n  PngHome({Key key}) : super(key: key);\n\n  @override\n  _PngHomeState createState() =&gt; _PngHomeState();\n}\n\nclass _PngHomeState extends State&lt;PngHome&gt; {\n  GlobalKey globalKey = GlobalKey();\n\n  Future&lt;void&gt; _capturePng() async {\n    RenderRepaintBoundary boundary = globalKey.currentContext.findRenderObject();\n    ui.Image image = await boundary.toImage();\n    ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);\n    Uint8List pngBytes = byteData.buffer.asUint8List();\n    print(pngBytes);\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return RepaintBoundary(\n      key: globalKey,\n      child: Center(\n        child: FlatButton(\n          child: Text('Hello World', textDirection: TextDirection.ltr),\n          onPressed: _capturePng,\n        ),\n      ),\n    );\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"rendering\/RenderRepaintBoundary\/toImage.html\">OffsetLayer.toImage<\/a> for a similar API at the layer level.<\/li>\n<li>\n<a href=\"rendering\/RenderRepaintBoundary\/toImage.html\">dart:ui.Scene.toImage<\/a> for more information about the image returned.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;ui.Image&gt; toImage({ double pixelRatio = 1.0 }) {\n  assert(!debugNeedsPaint);\n  return layer.toImage(Offset.zero &amp; size, pixelRatio: pixelRatio);\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/RenderRepaintBoundary\/toImage.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:ui.Image>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.RenderRepaintBoundary",
-            "sig": "",
             "params": [
                 {
                     "name": "pixelRatio",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderRepaintBoundary\/toImage.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;ui.Image&gt; toImage({ double pixelRatio = 1.0 }) {\n  assert(!debugNeedsPaint);\n  return layer.toImage(Offset.zero &amp; size, pixelRatio: pixelRatio);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:ui.Image"
             ]
         }
     ],
     "props": [
         {
-            "name": "debugAsymmetricPaintCount",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The number of times that either this render object repainted without the\nparent being painted, or the parent repainted without this object being\npainted. When a repaint boundary is used at a seam in the render tree\nwhere the parent tends to repaint at entirely different times than the\nchild, it can improve performance by reducing the number of paint\noperations that have to be recorded each frame.<\/p>\n<p>Only valid when asserts are enabled. In release builds, always returns\nzero.<\/p>\n<p>Can be reset using <a href=\"rendering\/RenderRepaintBoundary\/debugResetMetrics.html\">debugResetMetrics<\/a>. See <a href=\"rendering\/RenderRepaintBoundary\/debugSymmetricPaintCount.html\">debugSymmetricPaintCount<\/a> for\nthe corresponding count of times where both the parent and the child\npainted together.<\/p>\n        ",
-            "memberOf": "rendering.RenderRepaintBoundary",
-            "isConstant": false,
-            "href": "rendering\/RenderRepaintBoundary\/debugAsymmetricPaintCount.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get debugAsymmetricPaintCount =&gt; _debugAsymmetricPaintCount;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "debugSymmetricPaintCount",
+            "href": "rendering\/RenderRepaintBoundary\/debugAsymmetricPaintCount.html",
+            "isDeprecated": "0",
             "type": "dart:core.int",
-            "types": [],
-            "desc": "<p>The number of times that this render object repainted at the same time as\nits parent. Repaint boundaries are only useful when the parent and child\npaint at different times. When both paint at the same time, the repaint\nboundary is redundant, and may be actually making performance worse.<\/p>\n<p>Only valid when asserts are enabled. In release builds, always returns\nzero.<\/p>\n<p>Can be reset using <a href=\"rendering\/RenderRepaintBoundary\/debugResetMetrics.html\">debugResetMetrics<\/a>. See <a href=\"rendering\/RenderRepaintBoundary\/debugAsymmetricPaintCount.html\">debugAsymmetricPaintCount<\/a>\nfor the corresponding count of times where only the parent or only the\nchild painted.<\/p>\n        ",
             "memberOf": "rendering.RenderRepaintBoundary",
-            "isConstant": false,
-            "href": "rendering\/RenderRepaintBoundary\/debugSymmetricPaintCount.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get debugSymmetricPaintCount =&gt; _debugSymmetricPaintCount;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "isRepaintBoundary",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether this render object repaints separately from its parent.<\/p>\n<p>Override this in subclasses to indicate that instances of your class ought\nto repaint independently. For example, render objects that repaint\nfrequently might want to repaint themselves without requiring their parent\nto repaint.<\/p>\n<p>If this getter returns true, the <a href=\"rendering\/RenderBox\/paintBounds.html\">paintBounds<\/a> are applied to this object\nand all descendants.<\/p>\n<p>Warning: This getter must not change value over the lifetime of this object.<\/p>\n        ",
+            "desc": "<p>The number of times that this render object repainted at the same time as\nits parent. Repaint boundaries are only useful when the parent and child\npaint at different times. When both paint at the same time, the repaint\nboundary is redundant, and may be actually making performance worse.<\/p>\n<p>Only valid when asserts are enabled. In release builds, always returns\nzero.<\/p>\n<p>Can be reset using <a href=\"rendering\/RenderRepaintBoundary\/debugResetMetrics.html\">debugResetMetrics<\/a>. See <a href=\"rendering\/RenderRepaintBoundary\/debugAsymmetricPaintCount.html\">debugAsymmetricPaintCount<\/a>\nfor the corresponding count of times where only the parent or only the\nchild painted.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get debugSymmetricPaintCount =&gt; _debugSymmetricPaintCount;<\/code><\/pre>\n        ",
+            "href": "rendering\/RenderRepaintBoundary\/debugSymmetricPaintCount.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
             "memberOf": "rendering.RenderRepaintBoundary",
-            "isConstant": false,
-            "href": "rendering\/RenderRepaintBoundary\/isRepaintBoundary.html",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether this render object repaints separately from its parent.<\/p>\n<p>Override this in subclasses to indicate that instances of your class ought\nto repaint independently. For example, render objects that repaint\nfrequently might want to repaint themselves without requiring their parent\nto repaint.<\/p>\n<p>If this getter returns true, the <a href=\"rendering\/RenderBox\/paintBounds.html\">paintBounds<\/a> are applied to this object\nand all descendants.<\/p>\n<p>Warning: This getter must not change value over the lifetime of this object.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get isRepaintBoundary =&gt; true;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/RenderRepaintBoundary\/isRepaintBoundary.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "rendering.RenderRepaintBoundary",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "rendering\/RenderRepaintBoundary-class.html",
-    "desc": "<p>Creates a separate display list for its child.<\/p>\n<p>This render object creates a separate display list for its child, which\ncan improve performance if the subtree repaints at different times than\nthe surrounding parts of the tree. Specifically, when the child does not\nrepaint but its parent does, we can re-use the display list we recorded\npreviously. Similarly, when the child repaints but the surround tree does\nnot, we can re-record its display list without re-recording the display list\nfor the surround tree.<\/p>\n<p>In some cases, it is necessary to place <em>two<\/em> (or more) repaint boundaries\nto get a useful effect. Consider, for example, an e-mail application that\nshows an unread count and a list of e-mails. Whenever a new e-mail comes in,\nthe list would update, but so would the unread count. If only one of these\ntwo parts of the application was behind a repaint boundary, the entire\napplication would repaint each time. On the other hand, if both were behind\na repaint boundary, a new e-mail would only change those two parts of the\napplication and the rest of the application would not repaint.<\/p>\n<p>To tell if a particular RenderRepaintBoundary is useful, run your\napplication in checked mode, interacting with it in typical ways, and then\ncall <a href=\"rendering\/debugDumpRenderTree.html\">debugDumpRenderTree<\/a>. Each RenderRepaintBoundary will include the\nratio of cases where the repaint boundary was useful vs the cases where it\nwas not. These counts can also be inspected programmatically using\n<a href=\"rendering\/RenderRepaintBoundary\/debugAsymmetricPaintCount.html\">debugAsymmetricPaintCount<\/a> and <a href=\"rendering\/RenderRepaintBoundary\/debugSymmetricPaintCount.html\">debugSymmetricPaintCount<\/a> respectively.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "RenderRepaintBoundary"
+    ]
 }

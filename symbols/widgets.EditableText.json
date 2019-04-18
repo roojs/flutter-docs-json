@@ -1,5 +1,17 @@
 {
+    "desc": "<p>A basic text input field.<\/p>\n<p>This widget interacts with the <a href=\"services\/TextInput-class.html\">TextInput<\/a> service to let the user edit the\ntext it contains. It also provides scrolling, selection, and cursor\nmovement. This widget does not provide any focus management (e.g.,\ntap-to-focus).<\/p>\n<h2 id=\"input-actions\">Input Actions<\/h2>\n<p>A <a href=\"services\/TextInputAction-class.html\">TextInputAction<\/a> can be provided to customize the appearance of the\naction button on the soft keyboard for Android and iOS. The default action\nis <a href=\"services\/TextInputAction-class.html\">TextInputAction.done<\/a>.<\/p>\n<p>Many <a href=\"services\/TextInputAction-class.html\">TextInputAction<\/a>s are common between Android and iOS. However, if an\n<code>inputAction<\/code> is provided that is not supported by the current\nplatform in debug mode, an error will be thrown when the corresponding\nEditableText receives focus. For example, providing iOS's \"emergencyCall\"\naction when running on an Android device will result in an error when in\ndebug mode. In release mode, incompatible <a href=\"services\/TextInputAction-class.html\">TextInputAction<\/a>s are replaced\neither with \"unspecified\" on Android, or \"default\" on iOS. Appropriate\n<code>inputAction<\/code>s can be chosen by checking the current platform and then\nselecting the appropriate action.<\/p>\n<h2 id=\"lifecycle\">Lifecycle<\/h2>\n<p>Upon completion of editing, like pressing the \"done\" button on the keyboard,\ntwo actions take place:<\/p>\n<p>  1st: Editing is finalized. The default behavior of this step includes\n  an invocation of <a href=\"widgets\/EditableText\/onChanged.html\">onChanged<\/a>. That default behavior can be overridden.\n  See <a href=\"widgets\/EditableText\/onEditingComplete.html\">onEditingComplete<\/a> for details.<\/p>\n<p>  2nd: <a href=\"widgets\/EditableText\/onSubmitted.html\">onSubmitted<\/a> is invoked with the user's input value.<\/p>\n<p><a href=\"widgets\/EditableText\/onSubmitted.html\">onSubmitted<\/a> can be used to manually move focus to another input widget\nwhen a user finishes with the currently focused input widget.<\/p>\n<p>Rather than using this widget directly, consider using <a href=\"material\/TextField-class.html\">TextField<\/a>, which\nis a full-featured, material-design text input field with placeholder text,\nlabels, and <a href=\"widgets\/Form-class.html\">Form<\/a> integration.<\/p>\n<h2 id=\"gesture-events-handling\">Gesture Events Handling<\/h2>\n<p>This widget provides rudimentary, platform-agnostic gesture handling for\nuser actions such as tapping, long-pressing and scrolling when\n<a href=\"widgets\/EditableText\/rendererIgnoresPointer.html\">rendererIgnoresPointer<\/a> is false (false by default). To tightly conform\nto the platform behavior with respect to input gestures in text fields, use\n<a href=\"material\/TextField-class.html\">TextField<\/a> or <a href=\"cupertino\/CupertinoTextField-class.html\">CupertinoTextField<\/a>. For custom selection behavior, call\nmethods such as <a href=\"rendering\/RenderEditable\/selectPosition.html\">RenderEditable.selectPosition<\/a>,\n<a href=\"rendering\/RenderEditable\/selectWord.html\">RenderEditable.selectWord<\/a>, etc. programmatically.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"material\/TextField-class.html\">TextField<\/a>, which is a full-featured, material-design text input field\nwith placeholder text, labels, and <a href=\"widgets\/Form-class.html\">Form<\/a> integration.<\/li><\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "widgets\/EditableText-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "widgets",
     "name": "widgets.EditableText",
+    "shortname": "EditableText",
     "extends": [
         "widgets.StatefulWidget",
         "widgets.Widget",
@@ -7,866 +19,732 @@
         "foundation.Diagnosticable",
         "dart:core.Object"
     ],
-    "memberOf": "widgets",
     "events": [
         {
-            "name": "onChanged",
-            "type": "foundation.ValueChanged<dart:core.String>",
             "desc": "<p>Called when the user initiates a change to the TextField's\nvalue: when they have inserted or deleted text.<\/p>\n<p>This callback does run not when the TextField's text is changed\nprogrammatically, via the TextField's <a href=\"widgets\/EditableText\/controller.html\">controller<\/a>. Typically it\nisn't necessary to be notified of such changes, since they're\ninitiated by the app itself.<\/p>\n<p>To be notified of all changes to the TextField's text, cursor,\nand selection, one can add a listener to its <a href=\"widgets\/EditableText\/controller.html\">controller<\/a> with\n<a href=\"foundation\/ChangeNotifier\/addListener.html\">TextEditingController.addListener<\/a>.\nSee also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/EditableText\/inputFormatters.html\">inputFormatters<\/a>, which are called before <a href=\"widgets\/EditableText\/onChanged.html\">onChanged<\/a>\nruns and can validate and change (\"format\") the input value.<\/li>\n<li>\n<a href=\"widgets\/EditableText\/onEditingComplete.html\">onEditingComplete<\/a>, <a href=\"widgets\/EditableText\/onSubmitted.html\">onSubmitted<\/a>, <a href=\"widgets\/EditableText\/onSelectionChanged.html\">onSelectionChanged<\/a>:\nwhich are more specialized input change notifications.<\/li>\n<\/ul>",
-            "static": false,
-            "memberOf": "",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/EditableText\/onChanged.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final ValueChanged&lt;String&gt; onChanged\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false,
-            "isConstant": false,
-            "types": [
-                "foundation.ValueChanged",
-                "dart:core.String"
-            ]
-        },
-        {
-            "name": "onEditingComplete",
-            "type": "dart:ui.VoidCallback",
-            "desc": "<p>Called when the user submits editable content (e.g., user presses the \"done\"\nbutton on the keyboard).<\/p>\n<p>The default implementation of <a href=\"widgets\/EditableText\/onEditingComplete.html\">onEditingComplete<\/a> executes 2 different\nbehaviors based on the situation:<\/p>\n<ul>\n<li>\n<p>When a completion action is pressed, such as \"done\", \"go\", \"send\", or\n\"search\", the user's content is submitted to the <a href=\"widgets\/EditableText\/controller.html\">controller<\/a> and then\nfocus is given up.<\/p>\n<\/li>\n<li>\n<p>When a non-completion action is pressed, such as \"next\" or \"previous\",\nthe user's content is submitted to the <a href=\"widgets\/EditableText\/controller.html\">controller<\/a>, but focus is not\ngiven up because developers may want to immediately move focus to\nanother input widget within <a href=\"widgets\/EditableText\/onSubmitted.html\">onSubmitted<\/a>.<\/p>\n<\/li>\n<\/ul>\n<p>Providing <a href=\"widgets\/EditableText\/onEditingComplete.html\">onEditingComplete<\/a> prevents the aforementioned default behavior.<\/p>\n        ",
-            "static": false,
-            "memberOf": "",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/EditableText\/onEditingComplete.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final VoidCallback onEditingComplete\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false,
-            "isConstant": false
-        },
-        {
-            "name": "onSelectionChanged",
-            "type": "widgets.SelectionChangedCallback",
-            "desc": "<p>Called when the user changes the selection of text (including the cursor\nlocation).<\/p>\n        ",
-            "static": false,
-            "memberOf": "",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/EditableText\/onSelectionChanged.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final SelectionChangedCallback onSelectionChanged\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false,
-            "isConstant": false
-        },
-        {
-            "name": "onSubmitted",
+            "href": "widgets\/EditableText\/onChanged.html",
+            "isDeprecated": "0",
             "type": "foundation.ValueChanged<dart:core.String>",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>Called when the user submits editable content (e.g., user presses the \"done\"\nbutton on the keyboard).<\/p>\n<p>The default implementation of <a href=\"widgets\/EditableText\/onEditingComplete.html\">onEditingComplete<\/a> executes 2 different\nbehaviors based on the situation:<\/p>\n<ul>\n<li>\n<p>When a completion action is pressed, such as \"done\", \"go\", \"send\", or\n\"search\", the user's content is submitted to the <a href=\"widgets\/EditableText\/controller.html\">controller<\/a> and then\nfocus is given up.<\/p>\n<\/li>\n<li>\n<p>When a non-completion action is pressed, such as \"next\" or \"previous\",\nthe user's content is submitted to the <a href=\"widgets\/EditableText\/controller.html\">controller<\/a>, but focus is not\ngiven up because developers may want to immediately move focus to\nanother input widget within <a href=\"widgets\/EditableText\/onSubmitted.html\">onSubmitted<\/a>.<\/p>\n<\/li>\n<\/ul>\n<p>Providing <a href=\"widgets\/EditableText\/onEditingComplete.html\">onEditingComplete<\/a> prevents the aforementioned default behavior.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final VoidCallback onEditingComplete\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/onEditingComplete.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.VoidCallback",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>Called when the user changes the selection of text (including the cursor\nlocation).<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final SelectionChangedCallback onSelectionChanged\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/onSelectionChanged.html",
+            "isDeprecated": "0",
+            "type": "widgets.SelectionChangedCallback",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
             "desc": "<p>Called when the user indicates that they are done editing the text in the\nfield.<\/p>\n        ",
-            "static": false,
-            "memberOf": "",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/EditableText\/onSubmitted.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final ValueChanged&lt;String&gt; onSubmitted\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false,
-            "isConstant": false,
-            "types": [
-                "foundation.ValueChanged",
-                "dart:core.String"
-            ]
+            "href": "widgets\/EditableText\/onSubmitted.html",
+            "isDeprecated": "0",
+            "type": "foundation.ValueChanged<dart:core.String>",
+            "memberOf": "widgets.EditableText",
+            "params": []
         }
     ],
     "methods": [
         {
-            "name": "EditableText",
-            "type": "",
             "desc": "<p>Creates a basic text input control.<\/p>\n<p>The <code>maxLines<\/code> property can be set to null to remove the restriction on\nthe number of lines. By default, it is one, meaning this is a single-line\ntext field. <code>maxLines<\/code> must be null or greater than zero.<\/p>\n<p>If <code>keyboardType<\/code> is not set or is null, it will default to\n<a href=\"services\/TextInputType\/text-constant.html\">TextInputType.text<\/a> unless <code>maxLines<\/code> is greater than one, when it will\ndefault to <a href=\"services\/TextInputType\/multiline-constant.html\">TextInputType.multiline<\/a>.<\/p>\n<p>The <code>controller<\/code>, <code>focusNode<\/code>, <code>style<\/code>, <code>cursorColor<\/code>, <code>backgroundCursorColor<\/code>,\n<code>textAlign<\/code>, <code>dragStartBehavior<\/code> and <code>rendererIgnoresPointer<\/code> arguments\nmust not be null.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">EditableText({\n  Key key,\n  @required this.controller,\n  @required this.focusNode,\n  this.obscureText = false,\n  this.autocorrect = true,\n  @required this.style,\n  StrutStyle strutStyle,\n  @required this.cursorColor,\n  @required this.backgroundCursorColor,\n  this.textAlign = TextAlign.start,\n  this.textDirection,\n  this.locale,\n  this.textScaleFactor,\n  this.maxLines = 1,\n  this.minLines,\n  this.expands = false,\n  this.autofocus = false,\n  this.selectionColor,\n  this.selectionControls,\n  TextInputType keyboardType,\n  this.textInputAction,\n  this.textCapitalization = TextCapitalization.none,\n  this.onChanged,\n  this.onEditingComplete,\n  this.onSubmitted,\n  this.onSelectionChanged,\n  List&lt;TextInputFormatter&gt; inputFormatters,\n  this.rendererIgnoresPointer = false,\n  this.cursorWidth = 2.0,\n  this.cursorRadius,\n  this.cursorOpacityAnimates = false,\n  this.cursorOffset,\n  this.paintCursorAboveText = false,\n  this.scrollPadding = const EdgeInsets.all(20.0),\n  this.keyboardAppearance = Brightness.light,\n  this.dragStartBehavior = DragStartBehavior.start,\n  this.enableInteractiveSelection,\n}) : assert(controller != null),\n     assert(focusNode != null),\n     assert(obscureText != null),\n     assert(autocorrect != null),\n     assert(style != null),\n     assert(cursorColor != null),\n     assert(cursorOpacityAnimates != null),\n     assert(paintCursorAboveText != null),\n     assert(backgroundCursorColor != null),\n     assert(textAlign != null),\n     assert(maxLines == null || maxLines &gt; 0),\n     assert(minLines == null || minLines &gt; 0),\n     assert(\n       (maxLines == null) || (minLines == null) || (maxLines &gt;= minLines),\n       'minLines can\\'t be greater than maxLines',\n     ),\n     assert(expands != null),\n     assert(\n       !expands || (maxLines == null &amp;&amp; minLines == null),\n       'minLines and maxLines must be null when expands is true.',\n     ),\n     assert(autofocus != null),\n     assert(rendererIgnoresPointer != null),\n     assert(scrollPadding != null),\n     assert(dragStartBehavior != null),\n     _strutStyle = strutStyle,\n     keyboardType = keyboardType ?? (maxLines == 1 ? TextInputType.text : TextInputType.multiline),\n     inputFormatters = maxLines == 1\n         ? (\n             &lt;TextInputFormatter&gt;[BlacklistingTextInputFormatter.singleLineFormatter]\n               ..addAll(inputFormatters ?? const Iterable&lt;TextInputFormatter&gt;.empty())\n           )\n         : inputFormatters,\n     super(key: key);<\/code><\/pre>\n    ",
+            "href": "widgets\/EditableText\/EditableText.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "widgets.EditableText",
-            "sig": "",
             "params": [
                 {
-                    "name": "key",
-                    "type": "foundation.Key",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "controller",
-                    "type": "widgets.TextEditingController",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "focusNode",
-                    "type": "widgets.FocusNode",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "obscureText",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
                     "name": "autocorrect",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "style",
-                    "type": "painting.TextStyle",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "strutStyle",
-                    "type": "painting.StrutStyle",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "cursorColor",
-                    "type": "dart:ui.Color",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "backgroundCursorColor",
-                    "type": "dart:ui.Color",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "textAlign",
-                    "type": "dart:ui.TextAlign",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "textDirection",
-                    "type": "dart:ui.TextDirection",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "locale",
-                    "type": "dart:ui.Locale",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "textScaleFactor",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "maxLines",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "minLines",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "expands",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "autofocus",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
                 },
                 {
-                    "name": "selectionColor",
-                    "type": "dart:ui.Color",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "backgroundCursorColor",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.Color"
                 },
                 {
-                    "name": "selectionControls",
-                    "type": "widgets.TextSelectionControls",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "controller",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.TextEditingController"
                 },
                 {
-                    "name": "keyboardType",
-                    "type": "services.TextInputType",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "cursorColor",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "textInputAction",
-                    "type": "services.TextInputAction",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "textCapitalization",
-                    "type": "services.TextCapitalization",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "onChanged",
-                    "type": "foundation.ValueChanged<dart:core.String>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "foundation.ValueChanged",
-                        "dart:core.String"
-                    ]
-                },
-                {
-                    "name": "onEditingComplete",
-                    "type": "dart:ui.VoidCallback",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "onSubmitted",
-                    "type": "foundation.ValueChanged<dart:core.String>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "foundation.ValueChanged",
-                        "dart:core.String"
-                    ]
-                },
-                {
-                    "name": "onSelectionChanged",
-                    "type": "widgets.SelectionChangedCallback",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "inputFormatters",
-                    "type": "dart:core.List<services.TextInputFormatter>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.List",
-                        "services.TextInputFormatter"
-                    ]
-                },
-                {
-                    "name": "rendererIgnoresPointer",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "cursorWidth",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "cursorRadius",
-                    "type": "dart:ui.Radius",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "cursorOpacityAnimates",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "dart:ui.Color"
                 },
                 {
                     "name": "cursorOffset",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.Offset"
                 },
                 {
-                    "name": "paintCursorAboveText",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "cursorOpacityAnimates",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
                 },
                 {
-                    "name": "scrollPadding",
-                    "type": "painting.EdgeInsets",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "cursorRadius",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.Radius"
                 },
                 {
-                    "name": "keyboardAppearance",
-                    "type": "dart:ui.Brightness",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "cursorWidth",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
                 },
                 {
                     "name": "dragStartBehavior",
-                    "type": "gestures.DragStartBehavior",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "gestures.DragStartBehavior"
                 },
                 {
                     "name": "enableInteractiveSelection",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "expands",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "focusNode",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.FocusNode"
+                },
+                {
+                    "name": "inputFormatters",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.List<services.TextInputFormatter>"
+                },
+                {
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "foundation.Key"
+                },
+                {
+                    "name": "keyboardAppearance",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.Brightness"
+                },
+                {
+                    "name": "keyboardType",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "services.TextInputType"
+                },
+                {
+                    "name": "locale",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.Locale"
+                },
+                {
+                    "name": "maxLines",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.int"
+                },
+                {
+                    "name": "minLines",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.int"
+                },
+                {
+                    "name": "obscureText",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "onChanged",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "foundation.ValueChanged<dart:core.String>"
+                },
+                {
+                    "name": "onEditingComplete",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.VoidCallback"
+                },
+                {
+                    "name": "onSelectionChanged",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.SelectionChangedCallback"
+                },
+                {
+                    "name": "onSubmitted",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "foundation.ValueChanged<dart:core.String>"
+                },
+                {
+                    "name": "paintCursorAboveText",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "rendererIgnoresPointer",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "scrollPadding",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "painting.EdgeInsets"
+                },
+                {
+                    "name": "selectionColor",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.Color"
+                },
+                {
+                    "name": "selectionControls",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.TextSelectionControls"
+                },
+                {
+                    "name": "strutStyle",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "painting.StrutStyle"
+                },
+                {
+                    "name": "style",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "painting.TextStyle"
+                },
+                {
+                    "name": "textAlign",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.TextAlign"
+                },
+                {
+                    "name": "textCapitalization",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "services.TextCapitalization"
+                },
+                {
+                    "name": "textDirection",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.TextDirection"
+                },
+                {
+                    "name": "textInputAction",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "services.TextInputAction"
+                },
+                {
+                    "name": "textScaleFactor",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
                 }
-            ],
-            "isConstructor": true,
-            "href": "widgets\/EditableText\/EditableText.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">EditableText({\n  Key key,\n  @required this.controller,\n  @required this.focusNode,\n  this.obscureText = false,\n  this.autocorrect = true,\n  @required this.style,\n  StrutStyle strutStyle,\n  @required this.cursorColor,\n  @required this.backgroundCursorColor,\n  this.textAlign = TextAlign.start,\n  this.textDirection,\n  this.locale,\n  this.textScaleFactor,\n  this.maxLines = 1,\n  this.minLines,\n  this.expands = false,\n  this.autofocus = false,\n  this.selectionColor,\n  this.selectionControls,\n  TextInputType keyboardType,\n  this.textInputAction,\n  this.textCapitalization = TextCapitalization.none,\n  this.onChanged,\n  this.onEditingComplete,\n  this.onSubmitted,\n  this.onSelectionChanged,\n  List&lt;TextInputFormatter&gt; inputFormatters,\n  this.rendererIgnoresPointer = false,\n  this.cursorWidth = 2.0,\n  this.cursorRadius,\n  this.cursorOpacityAnimates = false,\n  this.cursorOffset,\n  this.paintCursorAboveText = false,\n  this.scrollPadding = const EdgeInsets.all(20.0),\n  this.keyboardAppearance = Brightness.light,\n  this.dragStartBehavior = DragStartBehavior.start,\n  this.enableInteractiveSelection,\n}) : assert(controller != null),\n     assert(focusNode != null),\n     assert(obscureText != null),\n     assert(autocorrect != null),\n     assert(style != null),\n     assert(cursorColor != null),\n     assert(cursorOpacityAnimates != null),\n     assert(paintCursorAboveText != null),\n     assert(backgroundCursorColor != null),\n     assert(textAlign != null),\n     assert(maxLines == null || maxLines &gt; 0),\n     assert(minLines == null || minLines &gt; 0),\n     assert(\n       (maxLines == null) || (minLines == null) || (maxLines &gt;= minLines),\n       'minLines can\\'t be greater than maxLines',\n     ),\n     assert(expands != null),\n     assert(\n       !expands || (maxLines == null &amp;&amp; minLines == null),\n       'minLines and maxLines must be null when expands is true.',\n     ),\n     assert(autofocus != null),\n     assert(rendererIgnoresPointer != null),\n     assert(scrollPadding != null),\n     assert(dragStartBehavior != null),\n     _strutStyle = strutStyle,\n     keyboardType = keyboardType ?? (maxLines == 1 ? TextInputType.text : TextInputType.multiline),\n     inputFormatters = maxLines == 1\n         ? (\n             &lt;TextInputFormatter&gt;[BlacklistingTextInputFormatter.singleLineFormatter]\n               ..addAll(inputFormatters ?? const Iterable&lt;TextInputFormatter&gt;.empty())\n           )\n         : inputFormatters,\n     super(key: key);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "createState",
-            "type": "widgets.EditableTextState",
             "desc": "<p>Creates the mutable state for this widget at a given location in the tree.<\/p>\n<p>Subclasses should override this method to return a newly created\ninstance of their associated <a href=\"widgets\/State-class.html\">State<\/a> subclass:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">@override\n_MyState createState() =&gt; _MyState();\n<\/code><\/pre>\n<p>The framework can call this method multiple times over the lifetime of\na <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>. For example, if the widget is inserted into the tree\nin multiple locations, the framework will create a separate <a href=\"widgets\/State-class.html\">State<\/a> object\nfor each location. Similarly, if the widget is removed from the tree and\nlater inserted into the tree again, the framework will call <a href=\"widgets\/EditableText\/createState.html\">createState<\/a>\nagain to create a fresh <a href=\"widgets\/State-class.html\">State<\/a> object, simplifying the lifecycle of\n<a href=\"widgets\/State-class.html\">State<\/a> objects.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nEditableTextState createState() =&gt; EditableTextState();<\/code><\/pre>\n    ",
+            "href": "widgets\/EditableText\/createState.html",
+            "isDeprecated": "0",
+            "type": "widgets.EditableTextState",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.EditableText",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/EditableText\/createState.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nEditableTextState createState() =&gt; EditableTextState();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "debugFillProperties",
-            "type": "",
             "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"widgets\/EditableText\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTree\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/Diagnosticable\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(DiagnosticsProperty&lt;TextEditingController&gt;('controller', controller));\n  properties.add(DiagnosticsProperty&lt;FocusNode&gt;('focusNode', focusNode));\n  properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n  properties.add(DiagnosticsProperty&lt;bool&gt;('autocorrect', autocorrect, defaultValue: true));\n  style?.debugFillProperties(properties);\n  properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n  properties.add(EnumProperty&lt;TextDirection&gt;('textDirection', textDirection, defaultValue: null));\n  properties.add(DiagnosticsProperty&lt;Locale&gt;('locale', locale, defaultValue: null));\n  properties.add(DoubleProperty('textScaleFactor', textScaleFactor, defaultValue: null));\n  properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n  properties.add(IntProperty('minLines', minLines, defaultValue: null));\n  properties.add(DiagnosticsProperty&lt;bool&gt;('expands', expands, defaultValue: false));\n  properties.add(DiagnosticsProperty&lt;bool&gt;('autofocus', autofocus, defaultValue: false));\n  properties.add(DiagnosticsProperty&lt;TextInputType&gt;('keyboardType', keyboardType, defaultValue: null));\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/EditableText\/debugFillProperties.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.EditableText",
-            "sig": "",
             "params": [
                 {
                     "name": "properties",
-                    "type": "foundation.DiagnosticPropertiesBuilder",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "foundation.DiagnosticPropertiesBuilder"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/EditableText\/debugFillProperties.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.add(DiagnosticsProperty&lt;TextEditingController&gt;('controller', controller));\n  properties.add(DiagnosticsProperty&lt;FocusNode&gt;('focusNode', focusNode));\n  properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n  properties.add(DiagnosticsProperty&lt;bool&gt;('autocorrect', autocorrect, defaultValue: true));\n  style?.debugFillProperties(properties);\n  properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n  properties.add(EnumProperty&lt;TextDirection&gt;('textDirection', textDirection, defaultValue: null));\n  properties.add(DiagnosticsProperty&lt;Locale&gt;('locale', locale, defaultValue: null));\n  properties.add(DoubleProperty('textScaleFactor', textScaleFactor, defaultValue: null));\n  properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n  properties.add(IntProperty('minLines', minLines, defaultValue: null));\n  properties.add(DiagnosticsProperty&lt;bool&gt;('expands', expands, defaultValue: false));\n  properties.add(DiagnosticsProperty&lt;bool&gt;('autofocus', autofocus, defaultValue: false));\n  properties.add(DiagnosticsProperty&lt;TextInputType&gt;('keyboardType', keyboardType, defaultValue: null));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "name": "autocorrect",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether to enable autocorrection.<\/p>\n<p>Defaults to true. Cannot be null.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/autocorrect.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool autocorrect\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/EditableText\/autocorrect.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.EditableText",
+            "params": []
         },
         {
-            "name": "autofocus",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether this text field should focus itself if nothing else is already\nfocused.<\/p>\n<p>If true, the keyboard will open as soon as this text field obtains focus.\nOtherwise, the keyboard is only shown after the user taps the text field.<\/p>\n<p>Defaults to false. Cannot be null.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/autofocus.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool autofocus\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/EditableText\/autofocus.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.EditableText",
+            "params": []
         },
         {
-            "name": "backgroundCursorColor",
-            "type": "dart:ui.Color",
-            "types": [],
             "desc": "<p>The color to use when painting the background cursor aligned with the text\nwhile rendering the floating cursor.<\/p>\n<p>Cannot be null. By default it is the disabled grey color from\nCupertinoColors.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/backgroundCursorColor.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Color backgroundCursorColor\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/EditableText\/backgroundCursorColor.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Color",
+            "memberOf": "widgets.EditableText",
+            "params": []
         },
         {
-            "name": "controller",
-            "type": "widgets.TextEditingController",
-            "types": [],
             "desc": "<p>Controls the text being edited.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/controller.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextEditingController controller\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/EditableText\/controller.html",
+            "isDeprecated": "0",
+            "type": "widgets.TextEditingController",
+            "memberOf": "widgets.EditableText",
+            "params": []
         },
         {
-            "name": "cursorColor",
-            "type": "dart:ui.Color",
-            "types": [],
             "desc": "<p>The color to use when painting the cursor.<\/p>\n<p>Cannot be null.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/cursorColor.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Color cursorColor\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "cursorOffset",
-            "type": "dart:ui.Offset",
-            "types": [],
-            "desc": "<p>The offset that is used, in pixels, when painting the cursor on screen.<\/p>\n<p>By default, the cursor position should be set to an offset of\n(-<a href=\"widgets\/EditableText\/cursorWidth.html\">cursorWidth<\/a> * 0.5, 0.0) on iOS platforms and (0, 0) on Android\nplatforms. The origin from where the offset is applied to is the arbitrary\nlocation where the cursor ends up being rendered from by default.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/cursorOffset.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Offset cursorOffset\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "cursorOpacityAnimates",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether the cursor will animate from fully transparent to fully opaque\nduring each cursor blink.<\/p>\n<p>By default, the cursor opacity will animate on iOS platforms and will not\nanimate on Android platforms.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/cursorOpacityAnimates.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool cursorOpacityAnimates\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "cursorRadius",
-            "type": "dart:ui.Radius",
-            "types": [],
-            "desc": "<p>How rounded the corners of the cursor should be.<\/p>\n<p>By default, the cursor has no radius.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/cursorRadius.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Radius cursorRadius\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "cursorWidth",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>How thick the cursor will be.<\/p>\n<p>Defaults to 2.0<\/p>\n<p>The cursor will draw under the text. The cursor width will extend\nto the right of the boundary between characters for left-to-right text\nand to the left for right-to-left text. This corresponds to extending\ndownstream relative to the selected position. Negative values may be used\nto reverse this behavior.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/cursorWidth.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double cursorWidth\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "debugDeterministicCursor",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Setting this property to true makes the cursor stop blinking or fading\non and off once the cursor appears on focus. This property is useful for\ntesting purposes.<\/p>\n<p>It does not affect the necessity to focus the EditableText for the cursor\nto appear in the first place.<\/p>\n<p>Defaults to false, resulting in a typical blinking cursor.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/debugDeterministicCursor.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">static bool debugDeterministicCursor = false\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "dragStartBehavior",
-            "type": "gestures.DragStartBehavior",
-            "types": [],
-            "desc": "<p>Determines the way that drag start behavior is handled.<\/p>\n<p>If set to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a>, scrolling drag behavior will\nbegin upon the detection of a drag gesture. If set to\n<a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.down<\/a> it will begin when a down event is first detected.<\/p>\n<p>In general, setting this to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a> will make drag\nanimation smoother and setting it to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.down<\/a> will make\ndrag behavior feel slightly more reactive.<\/p>\n<p>By default, the drag start behavior is <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/EditableText\/dragStartBehavior.html\">DragGestureRecognizer.dragStartBehavior<\/a>, which gives an example for the different behaviors.<\/li><\/ul>",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/dragStartBehavior.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final DragStartBehavior dragStartBehavior\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "enableInteractiveSelection",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>If true, then long-pressing this TextField will select text and show the\ncut\/copy\/paste menu, and tapping will move the text caret.<\/p>\n<p>True by default.<\/p>\n<p>If false, most of the accessibility support for selecting text, copy\nand paste, and moving the caret will be disabled.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/enableInteractiveSelection.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool enableInteractiveSelection\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "expands",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether this widget's height will be sized to fill its parent.<\/p>\n<p>If set to true and wrapped in a parent widget like <a href=\"widgets\/Expanded-class.html\">Expanded<\/a> or\n<a href=\"widgets\/SizedBox-class.html\">SizedBox<\/a>, the input will expand to fill the parent.<\/p>\n<p><a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> and <a href=\"widgets\/EditableText\/minLines.html\">minLines<\/a> must both be null when this is set to true,\notherwise an error is thrown.<\/p>\n<p>Defaults to false.<\/p>\n<p>See the examples in <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> for the complete picture of how <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a>,\n<a href=\"widgets\/EditableText\/minLines.html\">minLines<\/a>, and <a href=\"widgets\/EditableText\/expands.html\">expands<\/a> interact to produce various behaviors.<\/p>\n<p>Input that matches the height of its parent<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Expanded(\n  child: TextField(maxLines: null, expands: true),\n)\n<\/code><\/pre>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/expands.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool expands\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "focusNode",
-            "type": "widgets.FocusNode",
-            "types": [],
-            "desc": "<p>Controls whether this widget has keyboard focus.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/focusNode.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final FocusNode focusNode\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "inputFormatters",
-            "type": "dart:core.List<services.TextInputFormatter>",
-            "types": [
-                "dart:core.List",
-                "services.TextInputFormatter"
-            ],
-            "desc": "<p>Optional input validation and formatting overrides.<\/p>\n<p>Formatters are run in the provided order when the text input changes.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/inputFormatters.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final List&lt;TextInputFormatter&gt; inputFormatters\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "keyboardAppearance",
-            "type": "dart:ui.Brightness",
-            "types": [],
-            "desc": "<p>The appearance of the keyboard.<\/p>\n<p>This setting is only honored on iOS devices.<\/p>\n<p>Defaults to <a href=\"dart-ui\/Brightness-class.html\">Brightness.light<\/a>.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/keyboardAppearance.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Brightness keyboardAppearance\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "keyboardType",
-            "type": "services.TextInputType",
-            "types": [],
-            "desc": "<p>The type of keyboard to use for editing the text.<\/p>\n<p>Defaults to <a href=\"services\/TextInputType\/text-constant.html\">TextInputType.text<\/a> if <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> is one and\n<a href=\"services\/TextInputType\/multiline-constant.html\">TextInputType.multiline<\/a> otherwise.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/keyboardType.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextInputType keyboardType\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "locale",
-            "type": "dart:ui.Locale",
-            "types": [],
-            "desc": "<p>Used to select a font when the same Unicode character can\nbe rendered differently, depending on the locale.<\/p>\n<p>It's rarely necessary to set this property. By default its value\nis inherited from the enclosing app with <code>Localizations.localeOf(context)<\/code>.<\/p>\n<p>See <a href=\"widgets\/EditableText\/locale.html\">RenderEditable.locale<\/a> for more information.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/locale.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Locale locale\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "maxLines",
-            "type": "dart:core.int",
-            "types": [],
-            "desc": "<p>The maximum number of lines for the text to span, wrapping if necessary.<\/p>\n<p>If this is 1 (the default), the text will not wrap, but will scroll\nhorizontally instead.<\/p>\n<p>If this is null, there is no limit to the number of lines, and the text\ncontainer will start with enough vertical space for one line and\nautomatically grow to accommodate additional lines as they are entered.<\/p>\n<p>If this is not null, the value must be greater than zero, and it will lock\nthe input to the given number of lines and take up enough horizontal space\nto accommodate that number of lines. Setting <a href=\"widgets\/EditableText\/minLines.html\">minLines<\/a> as well allows the\ninput to grow between the indicated range.<\/p>\n<p>The full set of behaviors possible with <a href=\"widgets\/EditableText\/minLines.html\">minLines<\/a> and <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> are as\nfollows. These examples apply equally to <code>TextField<\/code>, <code>TextFormField<\/code>, and\n<code>EditableText<\/code>.<\/p>\n<p>Input that occupies a single line and scrolls horizontally as needed.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">TextField()\n<\/code><\/pre>\n<p>Input whose height grows from one line up to as many lines as needed for\nthe text that was entered. If a height limit is imposed by its parent, it\nwill scroll vertically when its height reaches that limit.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">TextField(maxLines: null)\n<\/code><\/pre>\n<p>The input's height is large enough for the given number of lines. If\nadditional lines are entered the input scrolls vertically.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">TextField(maxLines: 2)\n<\/code><\/pre>\n<p>Input whose height grows with content between a min and max. An infinite\nmax is possible with <code>maxLines: null<\/code>.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">TextField(minLines: 2, maxLines: 4)\n<\/code><\/pre>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/maxLines.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int maxLines\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "minLines",
-            "type": "dart:core.int",
-            "types": [],
-            "desc": "<p>The minimum number of lines to occupy when the content spans fewer lines.\nWhen <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> is set as well, the height will grow between the indicated\nrange of lines. When <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> is null, it will grow as high as needed,\nstarting from <a href=\"widgets\/EditableText\/minLines.html\">minLines<\/a>.<\/p>\n<p>See the examples in <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> for the complete picture of how <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a>\nand <a href=\"widgets\/EditableText\/minLines.html\">minLines<\/a> interact to produce various behaviors.<\/p>\n<p>Defaults to null.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/minLines.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int minLines\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "obscureText",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether to hide the text being edited (e.g., for passwords).<\/p>\n<p>When this is set to true, all the characters in the text field are\nreplaced by U+2022 BULLET characters (\u2022).<\/p>\n<p>Defaults to false. Cannot be null.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/obscureText.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool obscureText\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "paintCursorAboveText",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>If the cursor should be painted on top of the text or underneath it.<\/p>\n<p>By default, the cursor should be painted on top for iOS platforms and\nunderneath for Android platforms.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/paintCursorAboveText.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool paintCursorAboveText\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "rendererIgnoresPointer",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>If true, the <a href=\"rendering\/RenderEditable-class.html\">RenderEditable<\/a> created by this widget will not handle\npointer events, see <code>renderEditable<\/code> and <a href=\"rendering\/RenderEditable\/ignorePointer.html\">RenderEditable.ignorePointer<\/a>.<\/p>\n<p>This property is false by default.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/rendererIgnoresPointer.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool rendererIgnoresPointer\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "scrollPadding",
-            "type": "painting.EdgeInsets",
-            "types": [],
-            "desc": "<p>Configures padding to edges surrounding a <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a> when the Textfield scrolls into view.<\/p>\n<p>When this widget receives focus and is not completely visible (for example scrolled partially\noff the screen or overlapped by the keyboard)\nthen it will attempt to make itself visible by scrolling a surrounding <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a>, if one is present.\nThis value controls how far from the edges of a <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a> the TextField will be positioned after the scroll.<\/p>\n<p>Defaults to EdgeInserts.all(20.0).<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/scrollPadding.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final EdgeInsets scrollPadding\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "selectionColor",
+            "href": "widgets\/EditableText\/cursorColor.html",
+            "isDeprecated": "0",
             "type": "dart:ui.Color",
-            "types": [],
-            "desc": "<p>The color to use when painting the selection.<\/p>\n        ",
             "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/selectionColor.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Color selectionColor\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "selectionControls",
-            "type": "widgets.TextSelectionControls",
-            "types": [],
-            "desc": "<p>Optional delegate for building the text selection handles and toolbar.<\/p>\n<p>The <a href=\"widgets\/EditableText-class.html\">EditableText<\/a> widget used on its own will not trigger the display\nof the selection toolbar by itself. The toolbar is shown by calling\n<a href=\"widgets\/EditableTextState\/showToolbar.html\">EditableTextState.showToolbar<\/a> in response to an appropriate user event.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"cupertino\/CupertinoTextField-class.html\">CupertinoTextField<\/a>, which wraps an <a href=\"widgets\/EditableText-class.html\">EditableText<\/a> and which shows the\nselection toolbar upon user events that are appropriate on the iOS\nplatform.<\/li>\n<li>\n<a href=\"material\/TextField-class.html\">TextField<\/a>, a Material Design themed wrapper of <a href=\"widgets\/EditableText-class.html\">EditableText<\/a>, which\nshows the selection toolbar upon appropriate user events based on the\nuser's platform set in <a href=\"material\/ThemeData\/platform.html\">ThemeData.platform<\/a>.<\/li>\n<\/ul>",
+            "desc": "<p>The offset that is used, in pixels, when painting the cursor on screen.<\/p>\n<p>By default, the cursor position should be set to an offset of\n(-<a href=\"widgets\/EditableText\/cursorWidth.html\">cursorWidth<\/a> * 0.5, 0.0) on iOS platforms and (0, 0) on Android\nplatforms. The origin from where the offset is applied to is the arbitrary\nlocation where the cursor ends up being rendered from by default.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Offset cursorOffset\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/cursorOffset.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Offset",
             "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/selectionControls.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextSelectionControls selectionControls\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "selectionEnabled",
+            "desc": "<p>Whether the cursor will animate from fully transparent to fully opaque\nduring each cursor blink.<\/p>\n<p>By default, the cursor opacity will animate on iOS platforms and will not\nanimate on Android platforms.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool cursorOpacityAnimates\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/cursorOpacityAnimates.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>True if interactive selection is enabled based on the values of\n<a href=\"widgets\/EditableText\/enableInteractiveSelection.html\">enableInteractiveSelection<\/a> and <a href=\"widgets\/EditableText\/obscureText.html\">obscureText<\/a>.<\/p>\n<p>By default <a href=\"widgets\/EditableText\/enableInteractiveSelection.html\">enableInteractiveSelection<\/a> is null, obscureText is false,\nand this method returns true.\nIf <a href=\"widgets\/EditableText\/enableInteractiveSelection.html\">enableInteractiveSelection<\/a> is null and obscureText is true, then this\nmethod returns false. This is the common case for password fields.\nIf <a href=\"widgets\/EditableText\/enableInteractiveSelection.html\">enableInteractiveSelection<\/a> is non-null then its value is returned. An\napp might set it to true to enable interactive selection for a password\nfield, or to false to unconditionally disable interactive selection.<\/p>\n        ",
             "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/selectionEnabled.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get selectionEnabled {\n  return enableInteractiveSelection ?? !obscureText;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "strutStyle",
-            "type": "painting.StrutStyle",
-            "types": [],
-            "desc": "<p>The strut style used for the vertical layout.<\/p>\n<p><a href=\"painting\/StrutStyle-class.html\">StrutStyle<\/a> is used to establish a predictable vertical layout.\nSince fonts may vary depending on user input and due to font\nfallback, <a href=\"painting\/StrutStyle\/forceStrutHeight.html\">StrutStyle.forceStrutHeight<\/a> is enabled by default\nto lock all lines to the height of the base <a href=\"painting\/TextStyle-class.html\">TextStyle<\/a>, provided by\n<a href=\"widgets\/EditableText\/style.html\">style<\/a>. This ensures the typed text fits within the allotted space.<\/p>\n<p>If null, the strut used will is inherit values from the <a href=\"widgets\/EditableText\/style.html\">style<\/a> and will\nhave <a href=\"painting\/StrutStyle\/forceStrutHeight.html\">StrutStyle.forceStrutHeight<\/a> set to true. When no <a href=\"widgets\/EditableText\/style.html\">style<\/a> is\npassed, the theme's <a href=\"painting\/TextStyle-class.html\">TextStyle<\/a> will be used to generate <a href=\"widgets\/EditableText\/strutStyle.html\">strutStyle<\/a>\ninstead.<\/p>\n<p>To disable strut-based vertical alignment and allow dynamic vertical\nlayout based on the glyphs typed, use <a href=\"painting\/StrutStyle\/disabled-constant.html\">StrutStyle.disabled<\/a>.<\/p>\n<p>Flutter's strut is based on <a href=\"https:\/\/en.wikipedia.org\/wiki\/Strut_(typesetting)\">typesetting strut<\/a>\nand CSS's <a href=\"https:\/\/www.w3.org\/TR\/CSS2\/visudet.html#line-height\">line-height<\/a>.\nWithin editable text and textfields, <a href=\"painting\/StrutStyle-class.html\">StrutStyle<\/a> will not use its standalone\ndefault values, and will instead inherit omitted\/null properties from the\n<a href=\"painting\/TextStyle-class.html\">TextStyle<\/a> instead. See <a href=\"painting\/StrutStyle\/inheritFromTextStyle.html\">StrutStyle.inheritFromTextStyle<\/a>.<\/p>\n        ",
+            "desc": "<p>How rounded the corners of the cursor should be.<\/p>\n<p>By default, the cursor has no radius.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Radius cursorRadius\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/cursorRadius.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Radius",
             "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/strutStyle.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">StrutStyle get strutStyle {\n  if (_strutStyle == null) {\n    return style != null ? StrutStyle.fromTextStyle(style, forceStrutHeight: true) : StrutStyle.disabled;\n  }\n  return _strutStyle.inheritFromTextStyle(style);\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "style",
-            "type": "painting.TextStyle",
-            "types": [],
-            "desc": "<p>The text style to use for the editable text.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/style.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextStyle style\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "textAlign",
-            "type": "dart:ui.TextAlign",
-            "types": [],
-            "desc": "<p>How the text should be aligned horizontally.<\/p>\n<p>Defaults to <a href=\"dart-ui\/TextAlign-class.html\">TextAlign.start<\/a> and cannot be null.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/textAlign.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextAlign textAlign\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "textCapitalization",
-            "type": "services.TextCapitalization",
-            "types": [],
-            "desc": "<p>Configures how the platform keyboard will select an uppercase or\nlowercase keyboard.<\/p>\n<p>Only supports text keyboards, other keyboard types will ignore this\nconfiguration. Capitalization is locale-aware.<\/p>\n<p>Defaults to <a href=\"services\/TextCapitalization-class.html\">TextCapitalization.none<\/a>. Must not be null.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"services\/TextCapitalization-class.html\">TextCapitalization<\/a>, for a description of each capitalization behavior.<\/li><\/ul>",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/textCapitalization.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextCapitalization textCapitalization\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "textDirection",
-            "type": "dart:ui.TextDirection",
-            "types": [],
-            "desc": "<p>The directionality of the text.<\/p>\n<p>This decides how <a href=\"widgets\/EditableText\/textAlign.html\">textAlign<\/a> values like <a href=\"dart-ui\/TextAlign-class.html\">TextAlign.start<\/a> and\n<a href=\"dart-ui\/TextAlign-class.html\">TextAlign.end<\/a> are interpreted.<\/p>\n<p>This is also used to disambiguate how to render bidirectional text. For\nexample, if the text is an English phrase followed by a Hebrew phrase,\nin a <a href=\"dart-ui\/TextDirection-class.html\">TextDirection.ltr<\/a> context the English phrase will be on the left\nand the Hebrew phrase to its right, while in a <a href=\"dart-ui\/TextDirection-class.html\">TextDirection.rtl<\/a>\ncontext, the English phrase will be on the right and the Hebrew phrase on\nits left.<\/p>\n<p>Defaults to the ambient <a href=\"widgets\/Directionality-class.html\">Directionality<\/a>, if any.<\/p>\n<p>See also:<\/p>\n<ul><li>{@macro flutter.gestures.monodrag.dragStartExample}<\/li><\/ul>",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/textDirection.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextDirection textDirection\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "textInputAction",
-            "type": "services.TextInputAction",
-            "types": [],
-            "desc": "<p>The type of action button to use with the soft keyboard.<\/p>\n        ",
-            "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/textInputAction.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextInputAction textInputAction\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "textScaleFactor",
+            "desc": "<p>How thick the cursor will be.<\/p>\n<p>Defaults to 2.0<\/p>\n<p>The cursor will draw under the text. The cursor width will extend\nto the right of the boundary between characters for left-to-right text\nand to the left for right-to-left text. This corresponds to extending\ndownstream relative to the selected position. Negative values may be used\nto reverse this behavior.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double cursorWidth\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/cursorWidth.html",
+            "isDeprecated": "0",
             "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>The number of font pixels for each logical pixel.<\/p>\n<p>For example, if the text scale factor is 1.5, text will be 50% larger than\nthe specified font size.<\/p>\n<p>Defaults to the <a href=\"widgets\/EditableText\/textScaleFactor.html\">MediaQueryData.textScaleFactor<\/a> obtained from the ambient\n<a href=\"widgets\/MediaQuery-class.html\">MediaQuery<\/a>, or 1.0 if there is no <a href=\"widgets\/MediaQuery-class.html\">MediaQuery<\/a> in scope.<\/p>\n        ",
             "memberOf": "widgets.EditableText",
-            "isConstant": false,
-            "href": "widgets\/EditableText\/textScaleFactor.html",
+            "params": []
+        },
+        {
+            "desc": "<p>Setting this property to true makes the cursor stop blinking or fading\non and off once the cursor appears on focus. This property is useful for\ntesting purposes.<\/p>\n<p>It does not affect the necessity to focus the EditableText for the cursor\nto appear in the first place.<\/p>\n<p>Defaults to false, resulting in a typical blinking cursor.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">static bool debugDeterministicCursor = false\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/debugDeterministicCursor.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>Determines the way that drag start behavior is handled.<\/p>\n<p>If set to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a>, scrolling drag behavior will\nbegin upon the detection of a drag gesture. If set to\n<a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.down<\/a> it will begin when a down event is first detected.<\/p>\n<p>In general, setting this to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a> will make drag\nanimation smoother and setting it to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.down<\/a> will make\ndrag behavior feel slightly more reactive.<\/p>\n<p>By default, the drag start behavior is <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/EditableText\/dragStartBehavior.html\">DragGestureRecognizer.dragStartBehavior<\/a>, which gives an example for the different behaviors.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final DragStartBehavior dragStartBehavior\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/dragStartBehavior.html",
+            "isDeprecated": "0",
+            "type": "gestures.DragStartBehavior",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>If true, then long-pressing this TextField will select text and show the\ncut\/copy\/paste menu, and tapping will move the text caret.<\/p>\n<p>True by default.<\/p>\n<p>If false, most of the accessibility support for selecting text, copy\nand paste, and moving the caret will be disabled.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool enableInteractiveSelection\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/enableInteractiveSelection.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether this widget's height will be sized to fill its parent.<\/p>\n<p>If set to true and wrapped in a parent widget like <a href=\"widgets\/Expanded-class.html\">Expanded<\/a> or\n<a href=\"widgets\/SizedBox-class.html\">SizedBox<\/a>, the input will expand to fill the parent.<\/p>\n<p><a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> and <a href=\"widgets\/EditableText\/minLines.html\">minLines<\/a> must both be null when this is set to true,\notherwise an error is thrown.<\/p>\n<p>Defaults to false.<\/p>\n<p>See the examples in <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> for the complete picture of how <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a>,\n<a href=\"widgets\/EditableText\/minLines.html\">minLines<\/a>, and <a href=\"widgets\/EditableText\/expands.html\">expands<\/a> interact to produce various behaviors.<\/p>\n<p>Input that matches the height of its parent<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Expanded(\n  child: TextField(maxLines: null, expands: true),\n)\n<\/code><\/pre>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool expands\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/expands.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>Controls whether this widget has keyboard focus.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final FocusNode focusNode\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/focusNode.html",
+            "isDeprecated": "0",
+            "type": "widgets.FocusNode",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>Optional input validation and formatting overrides.<\/p>\n<p>Formatters are run in the provided order when the text input changes.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final List&lt;TextInputFormatter&gt; inputFormatters\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/inputFormatters.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<services.TextInputFormatter>",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>The appearance of the keyboard.<\/p>\n<p>This setting is only honored on iOS devices.<\/p>\n<p>Defaults to <a href=\"dart-ui\/Brightness-class.html\">Brightness.light<\/a>.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Brightness keyboardAppearance\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/keyboardAppearance.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Brightness",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>The type of keyboard to use for editing the text.<\/p>\n<p>Defaults to <a href=\"services\/TextInputType\/text-constant.html\">TextInputType.text<\/a> if <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> is one and\n<a href=\"services\/TextInputType\/multiline-constant.html\">TextInputType.multiline<\/a> otherwise.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextInputType keyboardType\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/keyboardType.html",
+            "isDeprecated": "0",
+            "type": "services.TextInputType",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>Used to select a font when the same Unicode character can\nbe rendered differently, depending on the locale.<\/p>\n<p>It's rarely necessary to set this property. By default its value\nis inherited from the enclosing app with <code>Localizations.localeOf(context)<\/code>.<\/p>\n<p>See <a href=\"widgets\/EditableText\/locale.html\">RenderEditable.locale<\/a> for more information.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Locale locale\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/locale.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Locale",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>The maximum number of lines for the text to span, wrapping if necessary.<\/p>\n<p>If this is 1 (the default), the text will not wrap, but will scroll\nhorizontally instead.<\/p>\n<p>If this is null, there is no limit to the number of lines, and the text\ncontainer will start with enough vertical space for one line and\nautomatically grow to accommodate additional lines as they are entered.<\/p>\n<p>If this is not null, the value must be greater than zero, and it will lock\nthe input to the given number of lines and take up enough horizontal space\nto accommodate that number of lines. Setting <a href=\"widgets\/EditableText\/minLines.html\">minLines<\/a> as well allows the\ninput to grow between the indicated range.<\/p>\n<p>The full set of behaviors possible with <a href=\"widgets\/EditableText\/minLines.html\">minLines<\/a> and <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> are as\nfollows. These examples apply equally to <code>TextField<\/code>, <code>TextFormField<\/code>, and\n<code>EditableText<\/code>.<\/p>\n<p>Input that occupies a single line and scrolls horizontally as needed.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">TextField()\n<\/code><\/pre>\n<p>Input whose height grows from one line up to as many lines as needed for\nthe text that was entered. If a height limit is imposed by its parent, it\nwill scroll vertically when its height reaches that limit.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">TextField(maxLines: null)\n<\/code><\/pre>\n<p>The input's height is large enough for the given number of lines. If\nadditional lines are entered the input scrolls vertically.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">TextField(maxLines: 2)\n<\/code><\/pre>\n<p>Input whose height grows with content between a min and max. An infinite\nmax is possible with <code>maxLines: null<\/code>.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">TextField(minLines: 2, maxLines: 4)\n<\/code><\/pre>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int maxLines\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/maxLines.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>The minimum number of lines to occupy when the content spans fewer lines.\nWhen <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> is set as well, the height will grow between the indicated\nrange of lines. When <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> is null, it will grow as high as needed,\nstarting from <a href=\"widgets\/EditableText\/minLines.html\">minLines<\/a>.<\/p>\n<p>See the examples in <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a> for the complete picture of how <a href=\"widgets\/EditableText\/maxLines.html\">maxLines<\/a>\nand <a href=\"widgets\/EditableText\/minLines.html\">minLines<\/a> interact to produce various behaviors.<\/p>\n<p>Defaults to null.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int minLines\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/minLines.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether to hide the text being edited (e.g., for passwords).<\/p>\n<p>When this is set to true, all the characters in the text field are\nreplaced by U+2022 BULLET characters (\u2022).<\/p>\n<p>Defaults to false. Cannot be null.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool obscureText\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/obscureText.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>If the cursor should be painted on top of the text or underneath it.<\/p>\n<p>By default, the cursor should be painted on top for iOS platforms and\nunderneath for Android platforms.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool paintCursorAboveText\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/paintCursorAboveText.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>If true, the <a href=\"rendering\/RenderEditable-class.html\">RenderEditable<\/a> created by this widget will not handle\npointer events, see <code>renderEditable<\/code> and <a href=\"rendering\/RenderEditable\/ignorePointer.html\">RenderEditable.ignorePointer<\/a>.<\/p>\n<p>This property is false by default.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool rendererIgnoresPointer\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/rendererIgnoresPointer.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>Configures padding to edges surrounding a <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a> when the Textfield scrolls into view.<\/p>\n<p>When this widget receives focus and is not completely visible (for example scrolled partially\noff the screen or overlapped by the keyboard)\nthen it will attempt to make itself visible by scrolling a surrounding <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a>, if one is present.\nThis value controls how far from the edges of a <a href=\"widgets\/Scrollable-class.html\">Scrollable<\/a> the TextField will be positioned after the scroll.<\/p>\n<p>Defaults to EdgeInserts.all(20.0).<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final EdgeInsets scrollPadding\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/scrollPadding.html",
+            "isDeprecated": "0",
+            "type": "painting.EdgeInsets",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>The color to use when painting the selection.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Color selectionColor\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/selectionColor.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Color",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>Optional delegate for building the text selection handles and toolbar.<\/p>\n<p>The <a href=\"widgets\/EditableText-class.html\">EditableText<\/a> widget used on its own will not trigger the display\nof the selection toolbar by itself. The toolbar is shown by calling\n<a href=\"widgets\/EditableTextState\/showToolbar.html\">EditableTextState.showToolbar<\/a> in response to an appropriate user event.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"cupertino\/CupertinoTextField-class.html\">CupertinoTextField<\/a>, which wraps an <a href=\"widgets\/EditableText-class.html\">EditableText<\/a> and which shows the\nselection toolbar upon user events that are appropriate on the iOS\nplatform.<\/li>\n<li>\n<a href=\"material\/TextField-class.html\">TextField<\/a>, a Material Design themed wrapper of <a href=\"widgets\/EditableText-class.html\">EditableText<\/a>, which\nshows the selection toolbar upon appropriate user events based on the\nuser's platform set in <a href=\"material\/ThemeData\/platform.html\">ThemeData.platform<\/a>.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextSelectionControls selectionControls\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/selectionControls.html",
+            "isDeprecated": "0",
+            "type": "widgets.TextSelectionControls",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>True if interactive selection is enabled based on the values of\n<a href=\"widgets\/EditableText\/enableInteractiveSelection.html\">enableInteractiveSelection<\/a> and <a href=\"widgets\/EditableText\/obscureText.html\">obscureText<\/a>.<\/p>\n<p>By default <a href=\"widgets\/EditableText\/enableInteractiveSelection.html\">enableInteractiveSelection<\/a> is null, obscureText is false,\nand this method returns true.\nIf <a href=\"widgets\/EditableText\/enableInteractiveSelection.html\">enableInteractiveSelection<\/a> is null and obscureText is true, then this\nmethod returns false. This is the common case for password fields.\nIf <a href=\"widgets\/EditableText\/enableInteractiveSelection.html\">enableInteractiveSelection<\/a> is non-null then its value is returned. An\napp might set it to true to enable interactive selection for a password\nfield, or to false to unconditionally disable interactive selection.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get selectionEnabled {\n  return enableInteractiveSelection ?? !obscureText;\n}<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/selectionEnabled.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>The strut style used for the vertical layout.<\/p>\n<p><a href=\"painting\/StrutStyle-class.html\">StrutStyle<\/a> is used to establish a predictable vertical layout.\nSince fonts may vary depending on user input and due to font\nfallback, <a href=\"painting\/StrutStyle\/forceStrutHeight.html\">StrutStyle.forceStrutHeight<\/a> is enabled by default\nto lock all lines to the height of the base <a href=\"painting\/TextStyle-class.html\">TextStyle<\/a>, provided by\n<a href=\"widgets\/EditableText\/style.html\">style<\/a>. This ensures the typed text fits within the allotted space.<\/p>\n<p>If null, the strut used will is inherit values from the <a href=\"widgets\/EditableText\/style.html\">style<\/a> and will\nhave <a href=\"painting\/StrutStyle\/forceStrutHeight.html\">StrutStyle.forceStrutHeight<\/a> set to true. When no <a href=\"widgets\/EditableText\/style.html\">style<\/a> is\npassed, the theme's <a href=\"painting\/TextStyle-class.html\">TextStyle<\/a> will be used to generate <a href=\"widgets\/EditableText\/strutStyle.html\">strutStyle<\/a>\ninstead.<\/p>\n<p>To disable strut-based vertical alignment and allow dynamic vertical\nlayout based on the glyphs typed, use <a href=\"painting\/StrutStyle\/disabled-constant.html\">StrutStyle.disabled<\/a>.<\/p>\n<p>Flutter's strut is based on <a href=\"https:\/\/en.wikipedia.org\/wiki\/Strut_(typesetting)\">typesetting strut<\/a>\nand CSS's <a href=\"https:\/\/www.w3.org\/TR\/CSS2\/visudet.html#line-height\">line-height<\/a>.\nWithin editable text and textfields, <a href=\"painting\/StrutStyle-class.html\">StrutStyle<\/a> will not use its standalone\ndefault values, and will instead inherit omitted\/null properties from the\n<a href=\"painting\/TextStyle-class.html\">TextStyle<\/a> instead. See <a href=\"painting\/StrutStyle\/inheritFromTextStyle.html\">StrutStyle.inheritFromTextStyle<\/a>.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">StrutStyle get strutStyle {\n  if (_strutStyle == null) {\n    return style != null ? StrutStyle.fromTextStyle(style, forceStrutHeight: true) : StrutStyle.disabled;\n  }\n  return _strutStyle.inheritFromTextStyle(style);\n}<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/strutStyle.html",
+            "isDeprecated": "0",
+            "type": "painting.StrutStyle",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>The text style to use for the editable text.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextStyle style\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/style.html",
+            "isDeprecated": "0",
+            "type": "painting.TextStyle",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>How the text should be aligned horizontally.<\/p>\n<p>Defaults to <a href=\"dart-ui\/TextAlign-class.html\">TextAlign.start<\/a> and cannot be null.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextAlign textAlign\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/textAlign.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.TextAlign",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>Configures how the platform keyboard will select an uppercase or\nlowercase keyboard.<\/p>\n<p>Only supports text keyboards, other keyboard types will ignore this\nconfiguration. Capitalization is locale-aware.<\/p>\n<p>Defaults to <a href=\"services\/TextCapitalization-class.html\">TextCapitalization.none<\/a>. Must not be null.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"services\/TextCapitalization-class.html\">TextCapitalization<\/a>, for a description of each capitalization behavior.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextCapitalization textCapitalization\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/textCapitalization.html",
+            "isDeprecated": "0",
+            "type": "services.TextCapitalization",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>The directionality of the text.<\/p>\n<p>This decides how <a href=\"widgets\/EditableText\/textAlign.html\">textAlign<\/a> values like <a href=\"dart-ui\/TextAlign-class.html\">TextAlign.start<\/a> and\n<a href=\"dart-ui\/TextAlign-class.html\">TextAlign.end<\/a> are interpreted.<\/p>\n<p>This is also used to disambiguate how to render bidirectional text. For\nexample, if the text is an English phrase followed by a Hebrew phrase,\nin a <a href=\"dart-ui\/TextDirection-class.html\">TextDirection.ltr<\/a> context the English phrase will be on the left\nand the Hebrew phrase to its right, while in a <a href=\"dart-ui\/TextDirection-class.html\">TextDirection.rtl<\/a>\ncontext, the English phrase will be on the right and the Hebrew phrase on\nits left.<\/p>\n<p>Defaults to the ambient <a href=\"widgets\/Directionality-class.html\">Directionality<\/a>, if any.<\/p>\n<p>See also:<\/p>\n<ul><li>{@macro flutter.gestures.monodrag.dragStartExample}<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextDirection textDirection\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/textDirection.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.TextDirection",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>The type of action button to use with the soft keyboard.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final TextInputAction textInputAction\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/EditableText\/textInputAction.html",
+            "isDeprecated": "0",
+            "type": "services.TextInputAction",
+            "memberOf": "widgets.EditableText",
+            "params": []
+        },
+        {
+            "desc": "<p>The number of font pixels for each logical pixel.<\/p>\n<p>For example, if the text scale factor is 1.5, text will be 50% larger than\nthe specified font size.<\/p>\n<p>Defaults to the <a href=\"widgets\/EditableText\/textScaleFactor.html\">MediaQueryData.textScaleFactor<\/a> obtained from the ambient\n<a href=\"widgets\/MediaQuery-class.html\">MediaQuery<\/a>, or 1.0 if there is no <a href=\"widgets\/MediaQuery-class.html\">MediaQuery<\/a> in scope.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double textScaleFactor\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/EditableText\/textScaleFactor.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "widgets.EditableText",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [
-        "widgets.EditableTextState"
-    ],
-    "realImplementors": [
-        "widgets.EditableTextState"
-    ],
-    "cn": [],
-    "href": "widgets\/EditableText-class.html",
-    "desc": "<p>A basic text input field.<\/p>\n<p>This widget interacts with the <a href=\"services\/TextInput-class.html\">TextInput<\/a> service to let the user edit the\ntext it contains. It also provides scrolling, selection, and cursor\nmovement. This widget does not provide any focus management (e.g.,\ntap-to-focus).<\/p>\n<h2 id=\"input-actions\">Input Actions<\/h2>\n<p>A <a href=\"services\/TextInputAction-class.html\">TextInputAction<\/a> can be provided to customize the appearance of the\naction button on the soft keyboard for Android and iOS. The default action\nis <a href=\"services\/TextInputAction-class.html\">TextInputAction.done<\/a>.<\/p>\n<p>Many <a href=\"services\/TextInputAction-class.html\">TextInputAction<\/a>s are common between Android and iOS. However, if an\n<code>inputAction<\/code> is provided that is not supported by the current\nplatform in debug mode, an error will be thrown when the corresponding\nEditableText receives focus. For example, providing iOS's \"emergencyCall\"\naction when running on an Android device will result in an error when in\ndebug mode. In release mode, incompatible <a href=\"services\/TextInputAction-class.html\">TextInputAction<\/a>s are replaced\neither with \"unspecified\" on Android, or \"default\" on iOS. Appropriate\n<code>inputAction<\/code>s can be chosen by checking the current platform and then\nselecting the appropriate action.<\/p>\n<h2 id=\"lifecycle\">Lifecycle<\/h2>\n<p>Upon completion of editing, like pressing the \"done\" button on the keyboard,\ntwo actions take place:<\/p>\n<p>  1st: Editing is finalized. The default behavior of this step includes\n  an invocation of <a href=\"widgets\/EditableText\/onChanged.html\">onChanged<\/a>. That default behavior can be overridden.\n  See <a href=\"widgets\/EditableText\/onEditingComplete.html\">onEditingComplete<\/a> for details.<\/p>\n<p>  2nd: <a href=\"widgets\/EditableText\/onSubmitted.html\">onSubmitted<\/a> is invoked with the user's input value.<\/p>\n<p><a href=\"widgets\/EditableText\/onSubmitted.html\">onSubmitted<\/a> can be used to manually move focus to another input widget\nwhen a user finishes with the currently focused input widget.<\/p>\n<p>Rather than using this widget directly, consider using <a href=\"material\/TextField-class.html\">TextField<\/a>, which\nis a full-featured, material-design text input field with placeholder text,\nlabels, and <a href=\"widgets\/Form-class.html\">Form<\/a> integration.<\/p>\n<h2 id=\"gesture-events-handling\">Gesture Events Handling<\/h2>\n<p>This widget provides rudimentary, platform-agnostic gesture handling for\nuser actions such as tapping, long-pressing and scrolling when\n<a href=\"widgets\/EditableText\/rendererIgnoresPointer.html\">rendererIgnoresPointer<\/a> is false (false by default). To tightly conform\nto the platform behavior with respect to input gestures in text fields, use\n<a href=\"material\/TextField-class.html\">TextField<\/a> or <a href=\"cupertino\/CupertinoTextField-class.html\">CupertinoTextField<\/a>. For custom selection behavior, call\nmethods such as <a href=\"rendering\/RenderEditable\/selectPosition.html\">RenderEditable.selectPosition<\/a>,\n<a href=\"rendering\/RenderEditable\/selectWord.html\">RenderEditable.selectWord<\/a>, etc. programmatically.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"material\/TextField-class.html\">TextField<\/a>, which is a full-featured, material-design text input field\nwith placeholder text, labels, and <a href=\"widgets\/Form-class.html\">Form<\/a> integration.<\/li><\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "EditableText"
+    ]
 }

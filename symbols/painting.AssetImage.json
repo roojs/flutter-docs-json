@@ -1,189 +1,145 @@
 {
+    "desc": "<p>Fetches an image from an <a href=\"services\/AssetBundle-class.html\">AssetBundle<\/a>, having determined the exact image to\nuse based on the context.<\/p>\n<p>Given a main asset and a set of variants, AssetImage chooses the most\nappropriate asset for the current context, based on the device pixel ratio\nand size given in the configuration passed to <a href=\"painting\/ImageProvider\/resolve.html\">resolve<\/a>.<\/p>\n<p>To show a specific image from a bundle without any asset resolution, use an\n<a href=\"painting\/AssetBundleImageProvider-class.html\">AssetBundleImageProvider<\/a>.<\/p>\n<h2 id=\"naming-assets-for-matching-with-different-pixel-densities\">Naming assets for matching with different pixel densities<\/h2>\n<p>Main assets are presumed to match a nominal pixel ratio of 1.0. To specify\nassets targeting different pixel ratios, place the variant assets in\nthe application bundle under subdirectories named in the form \"Nx\", where\nN is the nominal device pixel ratio for that asset.<\/p>\n<p>For example, suppose an application wants to use an icon named\n\"heart.png\". This icon has representations at 1.0 (the main icon), as well\nas 1.5 and 2.0 pixel ratios (variants). The asset bundle should then contain\nthe following assets:<\/p>\n<pre class=\"language-dart\"><code>heart.png\n1.5x\/heart.png\n2.0x\/heart.png\n<\/code><\/pre>\n<p>On a device with a 1.0 device pixel ratio, the image chosen would be\nheart.png; on a device with a 1.3 device pixel ratio, the image chosen\nwould be 1.5x\/heart.png.<\/p>\n<p>The directory level of the asset does not matter as long as the variants are\nat the equivalent level; that is, the following is also a valid bundle\nstructure:<\/p>\n<pre class=\"language-dart\"><code>icons\/heart.png\nicons\/1.5x\/heart.png\nicons\/2.0x\/heart.png\n<\/code><\/pre>\n<p>assets\/icons\/3.0x\/heart.png would be a valid variant of\nassets\/icons\/heart.png.<\/p>\n<h2 id=\"fetching-assets\">Fetching assets<\/h2>\n<p>When fetching an image provided by the app itself, use the <a href=\"painting\/AssetImage\/assetName.html\">assetName<\/a>\nargument to name the asset to choose. For instance, consider the structure\nabove. First, the <code>pubspec.yaml<\/code> of the project should specify its assets in\nthe <code>flutter<\/code> section:<\/p>\n<pre class=\"language-yaml\"><code class=\"language-yaml\">flutter:\n  assets:\n    - icons\/heart.png\n<\/code><\/pre>\n<p>Then, to fetch the image, use<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">AssetImage('icons\/heart.png')\n<\/code><\/pre>\n<h2 id=\"assets-in-packages\">Assets in packages<\/h2>\n<p>To fetch an asset from a package, the <a href=\"painting\/AssetImage\/package.html\">package<\/a> argument must be provided.\nFor instance, suppose the structure above is inside a package called\n<code>my_icons<\/code>. Then to fetch the image, use:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">AssetImage('icons\/heart.png', package: 'my_icons')\n<\/code><\/pre>\n<p>Assets used by the package itself should also be fetched using the <a href=\"painting\/AssetImage\/package.html\">package<\/a>\nargument as above.<\/p>\n<p>If the desired asset is specified in the <code>pubspec.yaml<\/code> of the package, it\nis bundled automatically with the app. In particular, assets used by the\npackage itself must be specified in its <code>pubspec.yaml<\/code>.<\/p>\n<p>A package can also choose to have assets in its 'lib\/' folder that are not\nspecified in its <code>pubspec.yaml<\/code>. In this case for those images to be\nbundled, the app has to specify which ones to include. For instance a\npackage named <code>fancy_backgrounds<\/code> could have:<\/p>\n<pre class=\"language-dart\"><code>lib\/backgrounds\/background1.png\nlib\/backgrounds\/background2.png\nlib\/backgrounds\/background3.png\n<\/code><\/pre>\n<p>To include, say the first image, the <code>pubspec.yaml<\/code> of the app should specify\nit in the <code>assets<\/code> section:<\/p>\n<pre class=\"language-yaml\"><code class=\"language-yaml\">  assets:\n    - packages\/fancy_backgrounds\/backgrounds\/background1.png\n<\/code><\/pre>\n<p>The <code>lib\/<\/code> is implied, so it should not be included in the asset path.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/Image\/Image.asset.html\">Image.asset<\/a> for a shorthand of an <a href=\"widgets\/Image-class.html\">Image<\/a> widget backed by <a href=\"painting\/AssetImage-class.html\">AssetImage<\/a>\nwhen used without a scale.<\/li><\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "painting\/AssetImage-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "painting",
     "name": "painting.AssetImage",
+    "shortname": "AssetImage",
     "extends": [
         "painting.AssetBundleImageProvider",
         "painting.AssetBundleImageKey",
         "painting.ImageProvider",
         "dart:core.Object"
     ],
-    "memberOf": "painting",
     "events": [],
     "methods": [
         {
-            "name": "operator ==",
-            "type": "dart:core.bool",
-            "desc": "<p>The equality operator.<\/p>\n<p>The default behavior for all <a href=\"dart-core\/Object-class.html\">Object<\/a>s is to return true if and\nonly if <code>this<\/code> and <code>other<\/code> are the same object.<\/p>\n<p>Override this method to specify a different equality relation on\na class. The overriding method must still be an equivalence relation.\nThat is, it must be:<\/p>\n<ul>\n<li>\n<p>Total: It must return a boolean for all arguments. It should never throw\nor return <code>null<\/code>.<\/p>\n<\/li>\n<li>\n<p>Reflexive: For all objects <code>o<\/code>, <code>o == o<\/code> must be true.<\/p>\n<\/li>\n<li>\n<p>Symmetric: For all objects <code>o1<\/code> and <code>o2<\/code>, <code>o1 == o2<\/code> and <code>o2 == o1<\/code> must\neither both be true, or both be false.<\/p>\n<\/li>\n<li>\n<p>Transitive: For all objects <code>o1<\/code>, <code>o2<\/code>, and <code>o3<\/code>, if <code>o1 == o2<\/code> and\n<code>o2 == o3<\/code> are true, then <code>o1 == o3<\/code> must be true.<\/p>\n<\/li>\n<\/ul>\n<p>The method should also be consistent over time,\nso whether two objects are equal should only change\nif at least one of the objects was modified.<\/p>\n<p>If a subclass overrides the equality operator it should override\nthe <a href=\"painting\/AssetImage\/hashCode.html\">hashCode<\/a> method as well to maintain consistency.<\/p>\n    ",
-            "static": false,
-            "memberOf": "painting.AssetImage",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "painting\/AssetImage\/operator_equals.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool operator ==(dynamic other) {\n  if (other.runtimeType != runtimeType)\n    return false;\n  final AssetImage typedOther = other;\n  return keyName == typedOther.keyName\n      &amp;&amp; bundle == typedOther.bundle;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "AssetImage",
-            "type": "",
             "desc": "<p>Creates an object that fetches an image from an asset bundle.<\/p>\n<p>The <code>assetName<\/code> argument must not be null. It should name the main asset\nfrom the set of images to choose from. The <code>package<\/code> argument must be\nnon-null when fetching an asset that is included in package. See the\ndocumentation for the <a href=\"painting\/AssetImage-class.html\">AssetImage<\/a> class itself for details.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const AssetImage(\n  this.assetName, {\n  this.bundle,\n  this.package,\n}) : assert(assetName != null);<\/code><\/pre>\n    ",
+            "href": "painting\/AssetImage\/AssetImage.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "painting.AssetImage",
-            "sig": "",
             "params": [
                 {
                     "name": "assetName",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.String"
                 },
                 {
                     "name": "bundle",
-                    "type": "services.AssetBundle",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "services.AssetBundle"
                 },
                 {
                     "name": "package",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "painting\/AssetImage\/AssetImage.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const AssetImage(\n  this.assetName, {\n  this.bundle,\n  this.package,\n}) : assert(assetName != null);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "obtainKey",
-            "type": "dart:async.Future<painting.AssetBundleImageKey>",
-            "desc": "<p>Converts an ImageProvider's settings plus an ImageConfiguration to a key\nthat describes the precise image to load.<\/p>\n<p>The type of the key is determined by the subclass. It is a value that\nunambiguously identifies the image (<em>including its scale<\/em>) that the <a href=\"painting\/AssetBundleImageProvider\/load.html\">load<\/a>\nmethod will fetch. Different <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a>s given the same constructor\narguments and <a href=\"painting\/ImageConfiguration-class.html\">ImageConfiguration<\/a> objects should return keys that are\n'==' to each other (possibly by using a class for the key that itself\nimplements <code>==<\/code>).<\/p>\n    ",
-            "static": false,
-            "memberOf": "painting.AssetImage",
-            "sig": "",
-            "params": [
-                {
-                    "name": "configuration",
-                    "type": "painting.ImageConfiguration",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/AssetImage\/obtainKey.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;AssetBundleImageKey&gt; obtainKey(ImageConfiguration configuration) {\n  \/\/ This function tries to return a SynchronousFuture if possible. We do this\n  \/\/ because otherwise showing an image would always take at least one frame,\n  \/\/ which would be sad. (This code is called from inside build\/layout\/paint,\n  \/\/ which all happens in one call frame; using native Futures would guarantee\n  \/\/ that we resolve each future in a new call frame, and thus not in this\n  \/\/ build\/layout\/paint sequence.)\n  final AssetBundle chosenBundle = bundle ?? configuration.bundle ?? rootBundle;\n  Completer&lt;AssetBundleImageKey&gt; completer;\n  Future&lt;AssetBundleImageKey&gt; result;\n\n  chosenBundle.loadStructuredData&lt;Map&lt;String, List&lt;String&gt;&gt;&gt;(_kAssetManifestFileName, _manifestParser).then&lt;void&gt;(\n    (Map&lt;String, List&lt;String&gt;&gt; manifest) {\n      final String chosenName = _chooseVariant(\n        keyName,\n        configuration,\n        manifest == null ? null : manifest[keyName],\n      );\n      final double chosenScale = _parseScale(chosenName);\n      final AssetBundleImageKey key = AssetBundleImageKey(\n        bundle: chosenBundle,\n        name: chosenName,\n        scale: chosenScale,\n      );\n      if (completer != null) {\n        \/\/ We already returned from this function, which means we are in the\n        \/\/ asynchronous mode. Pass the value to the completer. The completer's\n        \/\/ future is what we returned.\n        completer.complete(key);\n      } else {\n        \/\/ We haven't yet returned, so we must have been called synchronously\n        \/\/ just after loadStructuredData returned (which means it provided us\n        \/\/ with a SynchronousFuture). Let's return a SynchronousFuture\n        \/\/ ourselves.\n        result = SynchronousFuture&lt;AssetBundleImageKey&gt;(key);\n      }\n    }\n  ).catchError((dynamic error, StackTrace stack) {\n    \/\/ We had an error. (This guarantees we weren't called synchronously.)\n    \/\/ Forward the error to the caller.\n    assert(completer != null);\n    assert(result == null);\n    completer.completeError(error, stack);\n  });\n  if (result != null) {\n    \/\/ The code above ran synchronously, and came up with an answer.\n    \/\/ Return the SynchronousFuture that we created above.\n    return result;\n  }\n  \/\/ The code above hasn't yet run its \"then\" handler yet. Let's prepare a\n  \/\/ completer for it to use when it does run.\n  completer = Completer&lt;AssetBundleImageKey&gt;();\n  return completer.future;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "painting.AssetBundleImageKey"
             ]
         },
         {
-            "name": "toString",
-            "type": "dart:core.String",
-            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "desc": "<p>Converts an ImageProvider's settings plus an ImageConfiguration to a key\nthat describes the precise image to load.<\/p>\n<p>The type of the key is determined by the subclass. It is a value that\nunambiguously identifies the image (<em>including its scale<\/em>) that the <a href=\"painting\/AssetBundleImageProvider\/load.html\">load<\/a>\nmethod will fetch. Different <a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a>s given the same constructor\narguments and <a href=\"painting\/ImageConfiguration-class.html\">ImageConfiguration<\/a> objects should return keys that are\n'==' to each other (possibly by using a class for the key that itself\nimplements <code>==<\/code>).<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;AssetBundleImageKey&gt; obtainKey(ImageConfiguration configuration) {\n  \/\/ This function tries to return a SynchronousFuture if possible. We do this\n  \/\/ because otherwise showing an image would always take at least one frame,\n  \/\/ which would be sad. (This code is called from inside build\/layout\/paint,\n  \/\/ which all happens in one call frame; using native Futures would guarantee\n  \/\/ that we resolve each future in a new call frame, and thus not in this\n  \/\/ build\/layout\/paint sequence.)\n  final AssetBundle chosenBundle = bundle ?? configuration.bundle ?? rootBundle;\n  Completer&lt;AssetBundleImageKey&gt; completer;\n  Future&lt;AssetBundleImageKey&gt; result;\n\n  chosenBundle.loadStructuredData&lt;Map&lt;String, List&lt;String&gt;&gt;&gt;(_kAssetManifestFileName, _manifestParser).then&lt;void&gt;(\n    (Map&lt;String, List&lt;String&gt;&gt; manifest) {\n      final String chosenName = _chooseVariant(\n        keyName,\n        configuration,\n        manifest == null ? null : manifest[keyName],\n      );\n      final double chosenScale = _parseScale(chosenName);\n      final AssetBundleImageKey key = AssetBundleImageKey(\n        bundle: chosenBundle,\n        name: chosenName,\n        scale: chosenScale,\n      );\n      if (completer != null) {\n        \/\/ We already returned from this function, which means we are in the\n        \/\/ asynchronous mode. Pass the value to the completer. The completer's\n        \/\/ future is what we returned.\n        completer.complete(key);\n      } else {\n        \/\/ We haven't yet returned, so we must have been called synchronously\n        \/\/ just after loadStructuredData returned (which means it provided us\n        \/\/ with a SynchronousFuture). Let's return a SynchronousFuture\n        \/\/ ourselves.\n        result = SynchronousFuture&lt;AssetBundleImageKey&gt;(key);\n      }\n    }\n  ).catchError((dynamic error, StackTrace stack) {\n    \/\/ We had an error. (This guarantees we weren't called synchronously.)\n    \/\/ Forward the error to the caller.\n    assert(completer != null);\n    assert(result == null);\n    completer.completeError(error, stack);\n  });\n  if (result != null) {\n    \/\/ The code above ran synchronously, and came up with an answer.\n    \/\/ Return the SynchronousFuture that we created above.\n    return result;\n  }\n  \/\/ The code above hasn't yet run its \"then\" handler yet. Let's prepare a\n  \/\/ completer for it to use when it does run.\n  completer = Completer&lt;AssetBundleImageKey&gt;();\n  return completer.future;\n}<\/code><\/pre>\n    ",
+            "href": "painting\/AssetImage\/obtainKey.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<painting.AssetBundleImageKey>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.AssetImage",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "painting\/AssetImage\/toString.html",
+            "params": [
+                {
+                    "name": "configuration",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageConfiguration"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; '$runtimeType(bundle: $bundle, name: \"$keyName\")';<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "painting\/AssetImage\/toString.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "painting.AssetImage",
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "assetName",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>The name of the main asset from the set of images to choose from. See the\ndocumentation for the <a href=\"painting\/AssetImage-class.html\">AssetImage<\/a> class itself for details.<\/p>\n        ",
-            "memberOf": "painting.AssetImage",
-            "isConstant": false,
-            "href": "painting\/AssetImage\/assetName.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String assetName\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "painting\/AssetImage\/assetName.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "painting.AssetImage",
+            "params": []
         },
         {
-            "name": "bundle",
-            "type": "services.AssetBundle",
-            "types": [],
             "desc": "<p>The bundle from which the image will be obtained.<\/p>\n<p>If the provided <a href=\"painting\/AssetImage\/bundle.html\">bundle<\/a> is null, the bundle provided in the\n<a href=\"painting\/ImageConfiguration-class.html\">ImageConfiguration<\/a> passed to the <a href=\"painting\/ImageProvider\/resolve.html\">resolve<\/a> call will be used instead. If\nthat is also null, the <a href=\"services\/rootBundle.html\">rootBundle<\/a> is used.<\/p>\n<p>The image is obtained by calling <a href=\"painting\/AssetBundleImageProvider\/load.html\">AssetBundle.load<\/a> on the given <a href=\"painting\/AssetImage\/bundle.html\">bundle<\/a>\nusing the key given by <a href=\"painting\/AssetImage\/keyName.html\">keyName<\/a>.<\/p>\n        ",
-            "memberOf": "painting.AssetImage",
-            "isConstant": false,
-            "href": "painting\/AssetImage\/bundle.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final AssetBundle bundle\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "painting\/AssetImage\/bundle.html",
+            "isDeprecated": "0",
+            "type": "services.AssetBundle",
+            "memberOf": "painting.AssetImage",
+            "params": []
         },
         {
-            "name": "hashCode",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The hash code for this object.<\/p>\n<p>A hash code is a single integer which represents the state of the object\nthat affects <a href=\"painting\/AssetImage\/operator_equals.html\">operator ==<\/a> comparisons.<\/p>\n<p>All objects have hash codes.\nThe default hash code represents only the identity of the object,\nthe same way as the default <a href=\"painting\/AssetImage\/operator_equals.html\">operator ==<\/a> implementation only considers objects\nequal if they are identical (see <a href=\"dart-core\/identityHashCode.html\">identityHashCode<\/a>).<\/p>\n<p>If <a href=\"painting\/AssetImage\/operator_equals.html\">operator ==<\/a> is overridden to use the object state instead,\nthe hash code must also be changed to represent that state.<\/p>\n<p>Hash codes must be the same for objects that are equal to each other\naccording to <a href=\"painting\/AssetImage\/operator_equals.html\">operator ==<\/a>.\nThe hash code of an object should only change if the object changes\nin a way that affects equality.\nThere are no further requirements for the hash codes.\nThey need not be consistent between executions of the same program\nand there are no distribution guarantees.<\/p>\n<p>Objects that are not equal are allowed to have the same hash code,\nit is even technically allowed that all instances have the same hash code,\nbut if clashes happen too often, it may reduce the efficiency of hash-based\ndata structures like <a href=\"dart-collection\/HashSet-class.html\">HashSet<\/a> or <a href=\"dart-collection\/HashMap-class.html\">HashMap<\/a>.<\/p>\n<p>If a subclass overrides <a href=\"painting\/AssetImage\/hashCode.html\">hashCode<\/a>, it should override the\n<a href=\"painting\/AssetImage\/operator_equals.html\">operator ==<\/a> operator as well to maintain consistency.<\/p>\n        ",
-            "memberOf": "painting.AssetImage",
-            "isConstant": false,
-            "href": "painting\/AssetImage\/hashCode.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get hashCode =&gt; hashValues(keyName, bundle);<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "painting\/AssetImage\/hashCode.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "painting.AssetImage",
+            "params": []
         },
         {
-            "name": "keyName",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>The name used to generate the key to obtain the asset. For local assets\nthis is <a href=\"painting\/AssetImage\/assetName.html\">assetName<\/a>, and for assets from packages the <a href=\"painting\/AssetImage\/assetName.html\">assetName<\/a> is\nprefixed 'packages\/&lt;package_name&gt;\/'.<\/p>\n        ",
-            "memberOf": "painting.AssetImage",
-            "isConstant": false,
-            "href": "painting\/AssetImage\/keyName.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get keyName =&gt; package == null ? assetName : 'packages\/$package\/$assetName';<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "painting\/AssetImage\/keyName.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "painting.AssetImage",
+            "params": []
         },
         {
-            "name": "package",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>The name of the package from which the image is included. See the\ndocumentation for the <a href=\"painting\/AssetImage-class.html\">AssetImage<\/a> class itself for details.<\/p>\n        ",
-            "memberOf": "painting.AssetImage",
-            "isConstant": false,
-            "href": "painting\/AssetImage\/package.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String package\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "painting\/AssetImage\/package.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "painting.AssetImage",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "painting\/AssetImage-class.html",
-    "desc": "<p>Fetches an image from an <a href=\"services\/AssetBundle-class.html\">AssetBundle<\/a>, having determined the exact image to\nuse based on the context.<\/p>\n<p>Given a main asset and a set of variants, AssetImage chooses the most\nappropriate asset for the current context, based on the device pixel ratio\nand size given in the configuration passed to <a href=\"painting\/ImageProvider\/resolve.html\">resolve<\/a>.<\/p>\n<p>To show a specific image from a bundle without any asset resolution, use an\n<a href=\"painting\/AssetBundleImageProvider-class.html\">AssetBundleImageProvider<\/a>.<\/p>\n<h2 id=\"naming-assets-for-matching-with-different-pixel-densities\">Naming assets for matching with different pixel densities<\/h2>\n<p>Main assets are presumed to match a nominal pixel ratio of 1.0. To specify\nassets targeting different pixel ratios, place the variant assets in\nthe application bundle under subdirectories named in the form \"Nx\", where\nN is the nominal device pixel ratio for that asset.<\/p>\n<p>For example, suppose an application wants to use an icon named\n\"heart.png\". This icon has representations at 1.0 (the main icon), as well\nas 1.5 and 2.0 pixel ratios (variants). The asset bundle should then contain\nthe following assets:<\/p>\n<pre class=\"language-dart\"><code>heart.png\n1.5x\/heart.png\n2.0x\/heart.png\n<\/code><\/pre>\n<p>On a device with a 1.0 device pixel ratio, the image chosen would be\nheart.png; on a device with a 1.3 device pixel ratio, the image chosen\nwould be 1.5x\/heart.png.<\/p>\n<p>The directory level of the asset does not matter as long as the variants are\nat the equivalent level; that is, the following is also a valid bundle\nstructure:<\/p>\n<pre class=\"language-dart\"><code>icons\/heart.png\nicons\/1.5x\/heart.png\nicons\/2.0x\/heart.png\n<\/code><\/pre>\n<p>assets\/icons\/3.0x\/heart.png would be a valid variant of\nassets\/icons\/heart.png.<\/p>\n<h2 id=\"fetching-assets\">Fetching assets<\/h2>\n<p>When fetching an image provided by the app itself, use the <a href=\"painting\/AssetImage\/assetName.html\">assetName<\/a>\nargument to name the asset to choose. For instance, consider the structure\nabove. First, the <code>pubspec.yaml<\/code> of the project should specify its assets in\nthe <code>flutter<\/code> section:<\/p>\n<pre class=\"language-yaml\"><code class=\"language-yaml\">flutter:\n  assets:\n    - icons\/heart.png\n<\/code><\/pre>\n<p>Then, to fetch the image, use<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">AssetImage('icons\/heart.png')\n<\/code><\/pre>\n<h2 id=\"assets-in-packages\">Assets in packages<\/h2>\n<p>To fetch an asset from a package, the <a href=\"painting\/AssetImage\/package.html\">package<\/a> argument must be provided.\nFor instance, suppose the structure above is inside a package called\n<code>my_icons<\/code>. Then to fetch the image, use:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">AssetImage('icons\/heart.png', package: 'my_icons')\n<\/code><\/pre>\n<p>Assets used by the package itself should also be fetched using the <a href=\"painting\/AssetImage\/package.html\">package<\/a>\nargument as above.<\/p>\n<p>If the desired asset is specified in the <code>pubspec.yaml<\/code> of the package, it\nis bundled automatically with the app. In particular, assets used by the\npackage itself must be specified in its <code>pubspec.yaml<\/code>.<\/p>\n<p>A package can also choose to have assets in its 'lib\/' folder that are not\nspecified in its <code>pubspec.yaml<\/code>. In this case for those images to be\nbundled, the app has to specify which ones to include. For instance a\npackage named <code>fancy_backgrounds<\/code> could have:<\/p>\n<pre class=\"language-dart\"><code>lib\/backgrounds\/background1.png\nlib\/backgrounds\/background2.png\nlib\/backgrounds\/background3.png\n<\/code><\/pre>\n<p>To include, say the first image, the <code>pubspec.yaml<\/code> of the app should specify\nit in the <code>assets<\/code> section:<\/p>\n<pre class=\"language-yaml\"><code class=\"language-yaml\">  assets:\n    - packages\/fancy_backgrounds\/backgrounds\/background1.png\n<\/code><\/pre>\n<p>The <code>lib\/<\/code> is implied, so it should not be included in the asset path.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/Image\/Image.asset.html\">Image.asset<\/a> for a shorthand of an <a href=\"widgets\/Image-class.html\">Image<\/a> widget backed by <a href=\"painting\/AssetImage-class.html\">AssetImage<\/a>\nwhen used without a scale.<\/li><\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "AssetImage"
+    ]
 }

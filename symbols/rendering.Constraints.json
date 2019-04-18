@@ -1,97 +1,82 @@
 {
-    "name": "rendering.Constraints",
-    "extends": [],
+    "desc": "<p>An abstract set of layout constraints.<\/p>\n<p>Concrete layout models (such as box) will create concrete subclasses to\ncommunicate layout constraints between parents and children.<\/p>\n<h2 id=\"writing-a-constraints-subclass\">Writing a Constraints subclass<\/h2>\n<p>When creating a new <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> subclass with a new layout protocol, one\nwill usually need to create a new <a href=\"rendering\/Constraints-class.html\">Constraints<\/a> subclass to express the\ninput to the layout algorithms.<\/p>\n<p>A <a href=\"rendering\/Constraints-class.html\">Constraints<\/a> subclass should be immutable (all fields final). There are\nseveral members to implement, in addition to whatever fields, constructors,\nand helper methods one may find useful for a particular layout protocol:<\/p>\n<ul>\n<li>\n<p>The <a href=\"rendering\/Constraints\/isTight.html\">isTight<\/a> getter, which should return true if the object represents a\ncase where the <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> class has no choice for how to lay itself\nout. For example, <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> returns true for <a href=\"rendering\/Constraints\/isTight.html\">isTight<\/a> when both\nthe minimum and maximum widths and the minimum and maximum heights are\nequal.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"rendering\/Constraints\/isNormalized.html\">isNormalized<\/a> getter, which should return true if the object\nrepresents its data in its canonical form. Sometimes, it is possible for\nfields to be redundant with each other, such that several different\nrepresentations have the same implications. For example, a\n<a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> instance with its minimum width greater than its maximum\nwidth is equivalent to one where the maximum width is set to that minimum\nwidth (<code>2&lt;w&lt;1<\/code> is equivalent to <code>2&lt;w&lt;2<\/code>, since minimum constraints have\npriority). This getter is used by the default implementation of\n<a href=\"rendering\/Constraints\/debugAssertIsValid.html\">debugAssertIsValid<\/a>.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"rendering\/Constraints\/debugAssertIsValid.html\">debugAssertIsValid<\/a> method, which should assert if there's anything\nwrong with the constraints object. (We use this approach rather than\nasserting in constructors so that our constructors can be <code>const<\/code> and so\nthat it is possible to create invalid constraints temporarily while\nbuilding valid ones.) See the implementation of\n<a href=\"rendering\/Constraints\/debugAssertIsValid.html\">BoxConstraints.debugAssertIsValid<\/a> for an example of the detailed checks\nthat can be made.<\/p>\n<\/li>\n<li>\n<p>The <code>==<\/code> operator and the <a href=\"dart-core\/Object\/hashCode.html\">hashCode<\/a> getter, so that constraints can be\ncompared for equality. If a render object is given constraints that are\nequal, then the rendering library will avoid laying the object out again\nif it is not dirty.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"dart-core\/Object\/toString.html\">toString<\/a> method, which should describe the constraints so that they\nappear in a usefully readable form in the output of <a href=\"rendering\/debugDumpRenderTree.html\">debugDumpRenderTree<\/a>.<\/p>\n<\/li>\n<\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "rendering\/Constraints-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "rendering",
+    "name": "rendering.Constraints",
+    "shortname": "Constraints",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "Constraints",
-            "type": "",
             "desc": "<p>Abstract const constructor. This constructor enables subclasses to provide\nconst constructors so that they can be used in const expressions.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Constraints();<\/code><\/pre>\n    ",
+            "href": "rendering\/Constraints\/Constraints.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "rendering.Constraints",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "rendering\/Constraints\/Constraints.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Constraints();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "debugAssertIsValid",
-            "type": "dart:core.bool",
             "desc": "<p>Asserts that the constraints are valid.<\/p>\n<p>This might involve checks more detailed than <a href=\"rendering\/Constraints\/isNormalized.html\">isNormalized<\/a>.<\/p>\n<p>For example, the <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> subclass verifies that the constraints\nare not <a href=\"dart-core\/double\/nan-constant.html\">double.nan<\/a>.<\/p>\n<p>If the <code>isAppliedConstraint<\/code> argument is true, then even stricter rules\nare enforced. This argument is set to true when checking constraints that\nare about to be applied to a <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> during layout, as opposed to\nconstraints that may be further affected by other constraints. For\nexample, the asserts for verifying the validity of\n<a href=\"rendering\/RenderConstrainedBox\/additionalConstraints.html\">RenderConstrainedBox.additionalConstraints<\/a> do not set this argument, but\nthe asserts for verifying the argument passed to the <a href=\"rendering\/RenderObject\/layout.html\">RenderObject.layout<\/a>\nmethod do.<\/p>\n<p>The <code>informationCollector<\/code> argument takes an optional callback which is\ncalled when an exception is to be thrown. The collected information is\nthen included in the message after the error line.<\/p>\n<p>Returns the same as <a href=\"rendering\/Constraints\/isNormalized.html\">isNormalized<\/a> if asserts are disabled.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool debugAssertIsValid({\n  bool isAppliedConstraint = false,\n  InformationCollector informationCollector,\n}) {\n  assert(isNormalized);\n  return isNormalized;\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/Constraints\/debugAssertIsValid.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.Constraints",
-            "sig": "",
             "params": [
                 {
-                    "name": "isAppliedConstraint",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "informationCollector",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "foundation.InformationCollector"
                 },
                 {
-                    "name": "informationCollector",
-                    "type": "foundation.InformationCollector",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "isAppliedConstraint",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/Constraints\/debugAssertIsValid.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool debugAssertIsValid({\n  bool isAppliedConstraint = false,\n  InformationCollector informationCollector,\n}) {\n  assert(isNormalized);\n  return isNormalized;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "isNormalized",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether the constraint is expressed in a consistent manner.<\/p>\n        ",
-            "memberOf": "rendering.Constraints",
-            "isConstant": false,
-            "href": "rendering\/Constraints\/isNormalized.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isNormalized;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/Constraints\/isNormalized.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "rendering.Constraints",
+            "params": []
         },
         {
-            "name": "isTight",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether there is exactly one size possible given these constraints<\/p>\n        ",
-            "memberOf": "rendering.Constraints",
-            "isConstant": false,
-            "href": "rendering\/Constraints\/isTight.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isTight;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/Constraints\/isTight.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "rendering.Constraints",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [
-        "rendering.BoxConstraints",
-        "rendering.SliverConstraints"
-    ],
-    "realImplementors": [
-        "rendering.BoxConstraints",
-        "rendering.SliverConstraints"
-    ],
-    "cn": [],
-    "href": "rendering\/Constraints-class.html",
-    "desc": "<p>An abstract set of layout constraints.<\/p>\n<p>Concrete layout models (such as box) will create concrete subclasses to\ncommunicate layout constraints between parents and children.<\/p>\n<h2 id=\"writing-a-constraints-subclass\">Writing a Constraints subclass<\/h2>\n<p>When creating a new <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> subclass with a new layout protocol, one\nwill usually need to create a new <a href=\"rendering\/Constraints-class.html\">Constraints<\/a> subclass to express the\ninput to the layout algorithms.<\/p>\n<p>A <a href=\"rendering\/Constraints-class.html\">Constraints<\/a> subclass should be immutable (all fields final). There are\nseveral members to implement, in addition to whatever fields, constructors,\nand helper methods one may find useful for a particular layout protocol:<\/p>\n<ul>\n<li>\n<p>The <a href=\"rendering\/Constraints\/isTight.html\">isTight<\/a> getter, which should return true if the object represents a\ncase where the <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> class has no choice for how to lay itself\nout. For example, <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> returns true for <a href=\"rendering\/Constraints\/isTight.html\">isTight<\/a> when both\nthe minimum and maximum widths and the minimum and maximum heights are\nequal.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"rendering\/Constraints\/isNormalized.html\">isNormalized<\/a> getter, which should return true if the object\nrepresents its data in its canonical form. Sometimes, it is possible for\nfields to be redundant with each other, such that several different\nrepresentations have the same implications. For example, a\n<a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> instance with its minimum width greater than its maximum\nwidth is equivalent to one where the maximum width is set to that minimum\nwidth (<code>2&lt;w&lt;1<\/code> is equivalent to <code>2&lt;w&lt;2<\/code>, since minimum constraints have\npriority). This getter is used by the default implementation of\n<a href=\"rendering\/Constraints\/debugAssertIsValid.html\">debugAssertIsValid<\/a>.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"rendering\/Constraints\/debugAssertIsValid.html\">debugAssertIsValid<\/a> method, which should assert if there's anything\nwrong with the constraints object. (We use this approach rather than\nasserting in constructors so that our constructors can be <code>const<\/code> and so\nthat it is possible to create invalid constraints temporarily while\nbuilding valid ones.) See the implementation of\n<a href=\"rendering\/Constraints\/debugAssertIsValid.html\">BoxConstraints.debugAssertIsValid<\/a> for an example of the detailed checks\nthat can be made.<\/p>\n<\/li>\n<li>\n<p>The <code>==<\/code> operator and the <a href=\"dart-core\/Object\/hashCode.html\">hashCode<\/a> getter, so that constraints can be\ncompared for equality. If a render object is given constraints that are\nequal, then the rendering library will avoid laying the object out again\nif it is not dirty.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"dart-core\/Object\/toString.html\">toString<\/a> method, which should describe the constraints so that they\nappear in a usefully readable form in the output of <a href=\"rendering\/debugDumpRenderTree.html\">debugDumpRenderTree<\/a>.<\/p>\n<\/li>\n<\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "Constraints"
+    ]
 }

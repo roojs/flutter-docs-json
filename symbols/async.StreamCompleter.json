@@ -1,147 +1,129 @@
 {
-    "name": "async.StreamCompleter",
-    "extends": [],
+    "desc": "<p>A single-subscription <a href=\"package-async_async\/StreamCompleter\/stream.html\">stream<\/a> where the contents are provided later.<\/p>\n<p>It is generally recommended that you never create a <code>Future&lt;Stream&gt;<\/code>\nbecause you can just directly create a stream that doesn't do anything\nuntil it's ready to do so.\nThis class can be used to create such a stream.<\/p>\n<p>The <a href=\"package-async_async\/StreamCompleter\/stream.html\">stream<\/a> is a normal stream that you can listen to immediately,\nbut until either <a href=\"package-async_async\/StreamCompleter\/setSourceStream.html\">setSourceStream<\/a> or <a href=\"package-async_async\/StreamCompleter\/setEmpty.html\">setEmpty<\/a> is called,\nthe stream won't produce any events.<\/p>\n<p>The same effect can be achieved by using a <a href=\"dart-async\/StreamController-class.html\">StreamController<\/a>\nand adding the stream using <code>addStream<\/code> when both\nthe controller's stream is listened to and the source stream is ready.\nThis class attempts to shortcut some of the overhead when possible.\nFor example, if the <a href=\"package-async_async\/StreamCompleter\/stream.html\">stream<\/a> is only listened to\nafter the source stream has been set,\nthe listen is performed directly on the source stream.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-async_async\/StreamCompleter-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "async",
+    "name": "async.StreamCompleter",
+    "shortname": "StreamCompleter",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "StreamCompleter",
+            "desc": null,
+            "example": null,
+            "href": "package-async_async\/StreamCompleter\/StreamCompleter.html",
+            "isDeprecated": "0",
             "type": "",
-            "desc": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "async.StreamCompleter",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "package-async_async\/StreamCompleter\/StreamCompleter.html",
-            "example": "",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "fromFuture",
-            "type": "dart:async.Stream",
             "desc": "<p>Convert a <code>Future&lt;Stream&gt;<\/code> to a <code>Stream<\/code>.<\/p>\n<p>This creates a stream using a stream completer,\nand sets the source stream to the result of the future when the\nfuture completes.<\/p>\n<p>If the future completes with an error, the returned stream will\ninstead contain just that error.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Stream&lt;T&gt; fromFuture&lt;T&gt;(Future&lt;Stream&lt;T&gt;&gt; streamFuture) {\n  var completer = new StreamCompleter&lt;T&gt;();\n  streamFuture.then(completer.setSourceStream, onError: completer.setError);\n  return completer.stream;\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamCompleter\/fromFuture.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Stream",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.StreamCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "streamFuture",
-                    "type": "dart:async.Future<dart:async.Stream>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:async.Future",
-                        "dart:async.Stream"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:async.Future<dart:async.Stream>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamCompleter\/fromFuture.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Stream&lt;T&gt; fromFuture&lt;T&gt;(Future&lt;Stream&lt;T&gt;&gt; streamFuture) {\n  var completer = new StreamCompleter&lt;T&gt;();\n  streamFuture.then(completer.setSourceStream, onError: completer.setError);\n  return completer.stream;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "setEmpty",
-            "type": "",
             "desc": "<p>Equivalent to setting an empty stream using <a href=\"package-async_async\/StreamCompleter\/setSourceStream.html\">setSourceStream<\/a>.<\/p>\n<p>Any one of <a href=\"package-async_async\/StreamCompleter\/setSourceStream.html\">setSourceStream<\/a>, <a href=\"package-async_async\/StreamCompleter\/setEmpty.html\">setEmpty<\/a>, and <a href=\"package-async_async\/StreamCompleter\/setError.html\">setError<\/a> may be called at\nmost once. Trying to call any of them again will fail.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setEmpty() {\n  if (_stream._isSourceStreamSet) {\n    throw new StateError(\"Source stream already set\");\n  }\n  _stream._setEmpty();\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamCompleter\/setEmpty.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.StreamCompleter",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamCompleter\/setEmpty.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setEmpty() {\n  if (_stream._isSourceStreamSet) {\n    throw new StateError(\"Source stream already set\");\n  }\n  _stream._setEmpty();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "params": []
         },
         {
-            "name": "setError",
-            "type": "",
             "desc": "<p>Completes this to a stream that emits <code>error<\/code> and then closes.<\/p>\n<p>This is useful when the process of creating the data for the stream fails.<\/p>\n<p>Any one of <a href=\"package-async_async\/StreamCompleter\/setSourceStream.html\">setSourceStream<\/a>, <a href=\"package-async_async\/StreamCompleter\/setEmpty.html\">setEmpty<\/a>, and <a href=\"package-async_async\/StreamCompleter\/setError.html\">setError<\/a> may be called at\nmost once. Trying to call any of them again will fail.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setError(error, [StackTrace stackTrace]) {\n  setSourceStream(new Stream.fromFuture(new Future.error(error, stackTrace)));\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamCompleter\/setError.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.StreamCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "error",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 },
                 {
                     "name": "stackTrace",
-                    "type": "dart:core.StackTrace",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.StackTrace"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamCompleter\/setError.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setError(error, [StackTrace stackTrace]) {\n  setSourceStream(new Stream.fromFuture(new Future.error(error, stackTrace)));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "setSourceStream",
-            "type": "",
             "desc": "<p>Set a stream as the source of events for the <a href=\"package-async_async\/StreamCompleter-class.html\">StreamCompleter<\/a>'s\n<a href=\"package-async_async\/StreamCompleter\/stream.html\">stream<\/a>.<\/p>\n<p>The completer's <code>stream<\/code> will act exactly as <code>sourceStream<\/code>.<\/p>\n<p>If the source stream is set before <a href=\"package-async_async\/StreamCompleter\/stream.html\">stream<\/a> is listened to,\nthe listen call on <a href=\"package-async_async\/StreamCompleter\/stream.html\">stream<\/a> is forwarded directly to <code>sourceStream<\/code>.<\/p>\n<p>If <a href=\"package-async_async\/StreamCompleter\/stream.html\">stream<\/a> is listened to before setting the source stream,\nan intermediate subscription is created. It looks like a completely\nnormal subscription, and can be paused or canceled, but it won't\nproduce any events until a source stream is provided.<\/p>\n<p>If the <code>stream<\/code> subscription is canceled before a source stream is set,\nthe source stream will be listened to and immediately canceled again.<\/p>\n<p>Otherwise, when the source stream is then set,\nit is immediately listened to, and its events are forwarded to the\nexisting subscription.<\/p>\n<p>Any one of <a href=\"package-async_async\/StreamCompleter\/setSourceStream.html\">setSourceStream<\/a>, <a href=\"package-async_async\/StreamCompleter\/setEmpty.html\">setEmpty<\/a>, and <a href=\"package-async_async\/StreamCompleter\/setError.html\">setError<\/a> may be called at\nmost once. Trying to call any of them again will fail.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setSourceStream(Stream&lt;T&gt; sourceStream) {\n  if (_stream._isSourceStreamSet) {\n    throw new StateError(\"Source stream already set\");\n  }\n  _stream._setSourceStream(sourceStream);\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamCompleter\/setSourceStream.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.StreamCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "sourceStream",
-                    "type": "dart:async.Stream",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:async.Stream"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamCompleter\/setSourceStream.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void setSourceStream(Stream&lt;T&gt; sourceStream) {\n  if (_stream._isSourceStreamSet) {\n    throw new StateError(\"Source stream already set\");\n  }\n  _stream._setSourceStream(sourceStream);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "name": "stream",
-            "type": "dart:async.Stream",
-            "types": [],
             "desc": "<p>The stream of this completer.<\/p>\n<p>This stream is always a single-subscription stream.<\/p>\n<p>When a source stream is provided, its events will be forwarded to\nlisteners on this stream.<\/p>\n<p>The stream can be listened either before or after a source stream\nis set.<\/p>\n        ",
-            "memberOf": "async.StreamCompleter",
-            "isConstant": false,
-            "href": "package-async_async\/StreamCompleter\/stream.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; get stream =&gt; _stream;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-async_async\/StreamCompleter\/stream.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Stream",
+            "memberOf": "async.StreamCompleter",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-async_async\/StreamCompleter-class.html",
-    "desc": "<p>A single-subscription <a href=\"package-async_async\/StreamCompleter\/stream.html\">stream<\/a> where the contents are provided later.<\/p>\n<p>It is generally recommended that you never create a <code>Future&lt;Stream&gt;<\/code>\nbecause you can just directly create a stream that doesn't do anything\nuntil it's ready to do so.\nThis class can be used to create such a stream.<\/p>\n<p>The <a href=\"package-async_async\/StreamCompleter\/stream.html\">stream<\/a> is a normal stream that you can listen to immediately,\nbut until either <a href=\"package-async_async\/StreamCompleter\/setSourceStream.html\">setSourceStream<\/a> or <a href=\"package-async_async\/StreamCompleter\/setEmpty.html\">setEmpty<\/a> is called,\nthe stream won't produce any events.<\/p>\n<p>The same effect can be achieved by using a <a href=\"dart-async\/StreamController-class.html\">StreamController<\/a>\nand adding the stream using <code>addStream<\/code> when both\nthe controller's stream is listened to and the source stream is ready.\nThis class attempts to shortcut some of the overhead when possible.\nFor example, if the <a href=\"package-async_async\/StreamCompleter\/stream.html\">stream<\/a> is only listened to\nafter the source stream has been set,\nthe listen is performed directly on the source stream.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "StreamCompleter"
+    ]
 }

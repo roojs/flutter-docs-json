@@ -1,142 +1,110 @@
 {
-    "name": "gestures.LeastSquaresSolver",
-    "extends": [],
+    "desc": "<p>Uses the least-squares algorithm to fit a polynomial to a set of data.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "gestures\/LeastSquaresSolver-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "gestures",
+    "name": "gestures.LeastSquaresSolver",
+    "shortname": "LeastSquaresSolver",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "LeastSquaresSolver",
-            "type": "",
             "desc": "<p>Creates a least-squares solver.<\/p>\n<p>The <code>x<\/code>, <code>y<\/code>, and <code>w<\/code> arguments must not be null.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">LeastSquaresSolver(this.x, this.y, this.w)\n  : assert(x.length == y.length),\n    assert(y.length == w.length);<\/code><\/pre>\n    ",
+            "href": "gestures\/LeastSquaresSolver\/LeastSquaresSolver.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "gestures.LeastSquaresSolver",
-            "sig": "",
             "params": [
                 {
-                    "name": "x",
-                    "type": "dart:core.List<dart:core.double>",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "w",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.List",
-                        "dart:core.double"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.List<dart:core.double>"
+                },
+                {
+                    "name": "x",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.List<dart:core.double>"
                 },
                 {
                     "name": "y",
-                    "type": "dart:core.List<dart:core.double>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.List",
-                        "dart:core.double"
-                    ]
-                },
-                {
-                    "name": "w",
-                    "type": "dart:core.List<dart:core.double>",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.List",
-                        "dart:core.double"
-                    ]
+                    "type": "dart:core.List<dart:core.double>"
                 }
-            ],
-            "isConstructor": true,
-            "href": "gestures\/LeastSquaresSolver\/LeastSquaresSolver.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">LeastSquaresSolver(this.x, this.y, this.w)\n  : assert(x.length == y.length),\n    assert(y.length == w.length);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "solve",
-            "type": "gestures.PolynomialFit",
             "desc": "<p>Fits a polynomial of the given degree to the data points.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">PolynomialFit solve(int degree) {\n  if (degree &gt; x.length) \/\/ Not enough data to fit a curve.\n    return null;\n\n  final PolynomialFit result = PolynomialFit(degree);\n\n  \/\/ Shorthands for the purpose of notation equivalence to original C++ code.\n  final int m = x.length;\n  final int n = degree + 1;\n\n  \/\/ Expand the X vector to a matrix A, pre-multiplied by the weights.\n  final _Matrix a = _Matrix(n, m);\n  for (int h = 0; h &lt; m; h += 1) {\n    a.set(0, h, w[h]);\n    for (int i = 1; i &lt; n; i += 1)\n      a.set(i, h, a.get(i - 1, h) * x[h]);\n  }\n\n  \/\/ Apply the Gram-Schmidt process to A to obtain its QR decomposition.\n\n  \/\/ Orthonormal basis, column-major ordVectorer.\n  final _Matrix q = _Matrix(n, m);\n  \/\/ Upper triangular matrix, row-major order.\n  final _Matrix r = _Matrix(n, n);\n  for (int j = 0; j &lt; n; j += 1) {\n    for (int h = 0; h &lt; m; h += 1)\n      q.set(j, h, a.get(j, h));\n    for (int i = 0; i &lt; j; i += 1) {\n      final double dot = q.getRow(j) * q.getRow(i);\n      for (int h = 0; h &lt; m; h += 1)\n        q.set(j, h, q.get(j, h) - dot * q.get(i, h));\n    }\n\n    final double norm = q.getRow(j).norm();\n    if (norm &lt; 0.000001) {\n      \/\/ Vectors are linearly dependent or zero so no solution.\n      return null;\n    }\n\n    final double inverseNorm = 1.0 \/ norm;\n    for (int h = 0; h &lt; m; h += 1)\n      q.set(j, h, q.get(j, h) * inverseNorm);\n    for (int i = 0; i &lt; n; i += 1)\n      r.set(j, i, i &lt; j ? 0.0 : q.getRow(j) * a.getRow(i));\n  }\n\n  \/\/ Solve R B = Qt W Y to find B. This is easy because R is upper triangular.\n  \/\/ We just work from bottom-right to top-left calculating B's coefficients.\n  final _Vector wy = _Vector(m);\n  for (int h = 0; h &lt; m; h += 1)\n    wy[h] = y[h] * w[h];\n  for (int i = n - 1; i &gt;= 0; i -= 1) {\n    result.coefficients[i] = q.getRow(i) * wy;\n    for (int j = n - 1; j &gt; i; j -= 1)\n      result.coefficients[i] -= r.get(i, j) * result.coefficients[j];\n    result.coefficients[i] \/= r.get(i, i);\n  }\n\n  \/\/ Calculate the coefficient of determination (confidence) as:\n  \/\/   1 - (sumSquaredError \/ sumSquaredTotal)\n  \/\/ ...where sumSquaredError is the residual sum of squares (variance of the\n  \/\/ error), and sumSquaredTotal is the total sum of squares (variance of the\n  \/\/ data) where each has been weighted.\n  double yMean = 0.0;\n  for (int h = 0; h &lt; m; h += 1)\n    yMean += y[h];\n  yMean \/= m;\n\n  double sumSquaredError = 0.0;\n  double sumSquaredTotal = 0.0;\n  for (int h = 0; h &lt; m; h += 1) {\n    double term = 1.0;\n    double err = y[h] - result.coefficients[0];\n    for (int i = 1; i &lt; n; i += 1) {\n      term *= x[h];\n      err -= term * result.coefficients[i];\n    }\n    sumSquaredError += w[h] * w[h] * err * err;\n    final double v = y[h] - yMean;\n    sumSquaredTotal += w[h] * w[h] * v * v;\n  }\n\n  result.confidence = sumSquaredTotal &lt;= 0.000001 ? 1.0 :\n                        1.0 - (sumSquaredError \/ sumSquaredTotal);\n\n  return result;\n}<\/code><\/pre>\n    ",
+            "href": "gestures\/LeastSquaresSolver\/solve.html",
+            "isDeprecated": "0",
+            "type": "gestures.PolynomialFit",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "gestures.LeastSquaresSolver",
-            "sig": "",
             "params": [
                 {
                     "name": "degree",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 }
-            ],
-            "isConstructor": false,
-            "href": "gestures\/LeastSquaresSolver\/solve.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">PolynomialFit solve(int degree) {\n  if (degree &gt; x.length) \/\/ Not enough data to fit a curve.\n    return null;\n\n  final PolynomialFit result = PolynomialFit(degree);\n\n  \/\/ Shorthands for the purpose of notation equivalence to original C++ code.\n  final int m = x.length;\n  final int n = degree + 1;\n\n  \/\/ Expand the X vector to a matrix A, pre-multiplied by the weights.\n  final _Matrix a = _Matrix(n, m);\n  for (int h = 0; h &lt; m; h += 1) {\n    a.set(0, h, w[h]);\n    for (int i = 1; i &lt; n; i += 1)\n      a.set(i, h, a.get(i - 1, h) * x[h]);\n  }\n\n  \/\/ Apply the Gram-Schmidt process to A to obtain its QR decomposition.\n\n  \/\/ Orthonormal basis, column-major ordVectorer.\n  final _Matrix q = _Matrix(n, m);\n  \/\/ Upper triangular matrix, row-major order.\n  final _Matrix r = _Matrix(n, n);\n  for (int j = 0; j &lt; n; j += 1) {\n    for (int h = 0; h &lt; m; h += 1)\n      q.set(j, h, a.get(j, h));\n    for (int i = 0; i &lt; j; i += 1) {\n      final double dot = q.getRow(j) * q.getRow(i);\n      for (int h = 0; h &lt; m; h += 1)\n        q.set(j, h, q.get(j, h) - dot * q.get(i, h));\n    }\n\n    final double norm = q.getRow(j).norm();\n    if (norm &lt; 0.000001) {\n      \/\/ Vectors are linearly dependent or zero so no solution.\n      return null;\n    }\n\n    final double inverseNorm = 1.0 \/ norm;\n    for (int h = 0; h &lt; m; h += 1)\n      q.set(j, h, q.get(j, h) * inverseNorm);\n    for (int i = 0; i &lt; n; i += 1)\n      r.set(j, i, i &lt; j ? 0.0 : q.getRow(j) * a.getRow(i));\n  }\n\n  \/\/ Solve R B = Qt W Y to find B. This is easy because R is upper triangular.\n  \/\/ We just work from bottom-right to top-left calculating B's coefficients.\n  final _Vector wy = _Vector(m);\n  for (int h = 0; h &lt; m; h += 1)\n    wy[h] = y[h] * w[h];\n  for (int i = n - 1; i &gt;= 0; i -= 1) {\n    result.coefficients[i] = q.getRow(i) * wy;\n    for (int j = n - 1; j &gt; i; j -= 1)\n      result.coefficients[i] -= r.get(i, j) * result.coefficients[j];\n    result.coefficients[i] \/= r.get(i, i);\n  }\n\n  \/\/ Calculate the coefficient of determination (confidence) as:\n  \/\/   1 - (sumSquaredError \/ sumSquaredTotal)\n  \/\/ ...where sumSquaredError is the residual sum of squares (variance of the\n  \/\/ error), and sumSquaredTotal is the total sum of squares (variance of the\n  \/\/ data) where each has been weighted.\n  double yMean = 0.0;\n  for (int h = 0; h &lt; m; h += 1)\n    yMean += y[h];\n  yMean \/= m;\n\n  double sumSquaredError = 0.0;\n  double sumSquaredTotal = 0.0;\n  for (int h = 0; h &lt; m; h += 1) {\n    double term = 1.0;\n    double err = y[h] - result.coefficients[0];\n    for (int i = 1; i &lt; n; i += 1) {\n      term *= x[h];\n      err -= term * result.coefficients[i];\n    }\n    sumSquaredError += w[h] * w[h] * err * err;\n    final double v = y[h] - yMean;\n    sumSquaredTotal += w[h] * w[h] * v * v;\n  }\n\n  result.confidence = sumSquaredTotal &lt;= 0.000001 ? 1.0 :\n                        1.0 - (sumSquaredError \/ sumSquaredTotal);\n\n  return result;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "w",
-            "type": "dart:core.List<dart:core.double>",
-            "types": [
-                "dart:core.List",
-                "dart:core.double"
-            ],
             "desc": "<p>The weight to use for each data point.<\/p>\n        ",
-            "memberOf": "gestures.LeastSquaresSolver",
-            "isConstant": false,
-            "href": "gestures\/LeastSquaresSolver\/w.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final List&lt;double&gt; w\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "gestures\/LeastSquaresSolver\/w.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<dart:core.double>",
+            "memberOf": "gestures.LeastSquaresSolver",
+            "params": []
         },
         {
-            "name": "x",
-            "type": "dart:core.List<dart:core.double>",
-            "types": [
-                "dart:core.List",
-                "dart:core.double"
-            ],
             "desc": "<p>The x-coordinates of each data point.<\/p>\n        ",
-            "memberOf": "gestures.LeastSquaresSolver",
-            "isConstant": false,
-            "href": "gestures\/LeastSquaresSolver\/x.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final List&lt;double&gt; x\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "gestures\/LeastSquaresSolver\/x.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<dart:core.double>",
+            "memberOf": "gestures.LeastSquaresSolver",
+            "params": []
         },
         {
-            "name": "y",
-            "type": "dart:core.List<dart:core.double>",
-            "types": [
-                "dart:core.List",
-                "dart:core.double"
-            ],
             "desc": "<p>The y-coordinates of each data point.<\/p>\n        ",
-            "memberOf": "gestures.LeastSquaresSolver",
-            "isConstant": false,
-            "href": "gestures\/LeastSquaresSolver\/y.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final List&lt;double&gt; y\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "gestures\/LeastSquaresSolver\/y.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<dart:core.double>",
+            "memberOf": "gestures.LeastSquaresSolver",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "gestures\/LeastSquaresSolver-class.html",
-    "desc": "<p>Uses the least-squares algorithm to fit a polynomial to a set of data.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "LeastSquaresSolver"
+    ]
 }

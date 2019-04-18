@@ -1,112 +1,91 @@
 {
-    "name": "dart:core.FormatException",
-    "extends": [],
+    "desc": "<p>Exception thrown when a string or some other data does not have an expected\nformat and cannot be parsed or processed.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "dart-core\/FormatException-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "dart:core",
+    "name": "dart:core.FormatException",
+    "shortname": "FormatException",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "FormatException",
-            "type": "",
             "desc": "<p>Creates a new FormatException with an optional error <code>message<\/code>.<\/p>\n<p>Optionally also supply the actual <code>source<\/code> with the incorrect format,\nand the <code>offset<\/code> in the format where a problem was detected.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@pragma(\"vm:entry-point\")\nconst FormatException([this.message = \"\", this.source, this.offset]);<\/code><\/pre>\n    ",
+            "href": "dart-core\/FormatException\/FormatException.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "dart:core.FormatException",
-            "sig": "",
             "params": [
                 {
                     "name": "message",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "source",
-                    "type": "",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "type": "dart:core.String"
                 },
                 {
                     "name": "offset",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.int"
+                },
+                {
+                    "name": "source",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "<dynamic>"
                 }
-            ],
-            "isConstructor": true,
-            "href": "dart-core\/FormatException\/FormatException.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@pragma(\"vm:entry-point\")\nconst FormatException([this.message = \"\", this.source, this.offset]);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "toString",
-            "type": "dart:core.String",
             "desc": "<p>Returns a description of the format exception.<\/p>\n<p>The description always contains the <a href=\"dart-core\/FormatException\/message.html\">message<\/a>.<\/p>\n<p>If <a href=\"dart-core\/FormatException\/source.html\">source<\/a> is present and is a string, the description will contain\n(at least a part of) the source.\nIf <a href=\"dart-core\/FormatException\/offset.html\">offset<\/a> is also provided, the part of the source included will\ncontain that offset, and the offset will be marked.<\/p>\n<p>If the source is a string and it contains a line break before offset,\nonly the line containing offset will be included, and its line number\nwill also be part of the description. Line and character offsets are\n1-based.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() {\n  String report = \"FormatException\";\n  if (message != null &amp;&amp; \"\" != message) {\n    report = \"$report: $message\";\n  }\n  int offset = this.offset;\n  Object objectSource = this.source;\n  if (objectSource is String) {\n    String source = objectSource;\n    if (offset != null &amp;&amp; (offset &lt; 0 || offset &gt; source.length)) {\n      offset = null;\n    }\n    \/\/ Source is string and offset is null or valid.\n    if (offset == null) {\n      if (source.length &gt; 78) {\n        source = source.substring(0, 75) + \"...\";\n      }\n      return \"$report\\n$source\";\n    }\n    int lineNum = 1;\n    int lineStart = 0;\n    bool previousCharWasCR = false;\n    for (int i = 0; i &lt; offset; i++) {\n      int char = source.codeUnitAt(i);\n      if (char == 0x0a) {\n        if (lineStart != i || !previousCharWasCR) {\n          lineNum++;\n        }\n        lineStart = i + 1;\n        previousCharWasCR = false;\n      } else if (char == 0x0d) {\n        lineNum++;\n        lineStart = i + 1;\n        previousCharWasCR = true;\n      }\n    }\n    if (lineNum &gt; 1) {\n      report += \" (at line $lineNum, character ${offset - lineStart + 1})\\n\";\n    } else {\n      report += \" (at character ${offset + 1})\\n\";\n    }\n    int lineEnd = source.length;\n    for (int i = offset; i &lt; source.length; i++) {\n      int char = source.codeUnitAt(i);\n      if (char == 0x0a || char == 0x0d) {\n        lineEnd = i;\n        break;\n      }\n    }\n    int length = lineEnd - lineStart;\n    int start = lineStart;\n    int end = lineEnd;\n    String prefix = \"\";\n    String postfix = \"\";\n    if (length &gt; 78) {\n      \/\/ Can't show entire line. Try to anchor at the nearest end, if\n      \/\/ one is within reach.\n      int index = offset - lineStart;\n      if (index &lt; 75) {\n        end = start + 75;\n        postfix = \"...\";\n      } else if (end - offset &lt; 75) {\n        start = end - 75;\n        prefix = \"...\";\n      } else {\n        \/\/ Neither end is near, just pick an area around the offset.\n        start = offset - 36;\n        end = offset + 36;\n        prefix = postfix = \"...\";\n      }\n    }\n    String slice = source.substring(start, end);\n    int markOffset = offset - start + prefix.length;\n    return \"$report$prefix$slice$postfix\\n${\" \" * markOffset}^\\n\";\n  } else {\n    \/\/ The source is not a string.\n    if (offset != null) {\n      report += \" (at offset $offset)\";\n    }\n    return report;\n  }\n}<\/code><\/pre>\n    ",
+            "href": "dart-core\/FormatException\/toString.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:core.FormatException",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "dart-core\/FormatException\/toString.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() {\n  String report = \"FormatException\";\n  if (message != null &amp;&amp; \"\" != message) {\n    report = \"$report: $message\";\n  }\n  int offset = this.offset;\n  Object objectSource = this.source;\n  if (objectSource is String) {\n    String source = objectSource;\n    if (offset != null &amp;&amp; (offset &lt; 0 || offset &gt; source.length)) {\n      offset = null;\n    }\n    \/\/ Source is string and offset is null or valid.\n    if (offset == null) {\n      if (source.length &gt; 78) {\n        source = source.substring(0, 75) + \"...\";\n      }\n      return \"$report\\n$source\";\n    }\n    int lineNum = 1;\n    int lineStart = 0;\n    bool previousCharWasCR = false;\n    for (int i = 0; i &lt; offset; i++) {\n      int char = source.codeUnitAt(i);\n      if (char == 0x0a) {\n        if (lineStart != i || !previousCharWasCR) {\n          lineNum++;\n        }\n        lineStart = i + 1;\n        previousCharWasCR = false;\n      } else if (char == 0x0d) {\n        lineNum++;\n        lineStart = i + 1;\n        previousCharWasCR = true;\n      }\n    }\n    if (lineNum &gt; 1) {\n      report += \" (at line $lineNum, character ${offset - lineStart + 1})\\n\";\n    } else {\n      report += \" (at character ${offset + 1})\\n\";\n    }\n    int lineEnd = source.length;\n    for (int i = offset; i &lt; source.length; i++) {\n      int char = source.codeUnitAt(i);\n      if (char == 0x0a || char == 0x0d) {\n        lineEnd = i;\n        break;\n      }\n    }\n    int length = lineEnd - lineStart;\n    int start = lineStart;\n    int end = lineEnd;\n    String prefix = \"\";\n    String postfix = \"\";\n    if (length &gt; 78) {\n      \/\/ Can't show entire line. Try to anchor at the nearest end, if\n      \/\/ one is within reach.\n      int index = offset - lineStart;\n      if (index &lt; 75) {\n        end = start + 75;\n        postfix = \"...\";\n      } else if (end - offset &lt; 75) {\n        start = end - 75;\n        prefix = \"...\";\n      } else {\n        \/\/ Neither end is near, just pick an area around the offset.\n        start = offset - 36;\n        end = offset + 36;\n        prefix = postfix = \"...\";\n      }\n    }\n    String slice = source.substring(start, end);\n    int markOffset = offset - start + prefix.length;\n    return \"$report$prefix$slice$postfix\\n${\" \" * markOffset}^\\n\";\n  } else {\n    \/\/ The source is not a string.\n    if (offset != null) {\n      report += \" (at offset $offset)\";\n    }\n    return report;\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "message",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>A message describing the format error.<\/p>\n        ",
-            "memberOf": "dart:core.FormatException",
-            "isConstant": false,
-            "href": "dart-core\/FormatException\/message.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String message\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-core\/FormatException\/message.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "dart:core.FormatException",
+            "params": []
         },
         {
-            "name": "offset",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The offset in <a href=\"dart-core\/FormatException\/source.html\">source<\/a> where the error was detected.<\/p>\n<p>A zero-based offset into the source that marks the format error causing\nthis exception to be created. If <code>source<\/code> is a string, this should be a\nstring index in the range <code>0 &lt;= offset &lt;= source.length<\/code>.<\/p>\n<p>If input is a string, the <a href=\"dart-core\/FormatException\/toString.html\">toString<\/a> method may represent this offset as\na line and character position. The offset should be inside the string,\nor at the end of the string.<\/p>\n<p>May be omitted. If present, <a href=\"dart-core\/FormatException\/source.html\">source<\/a> should also be present if possible.<\/p>\n        ",
-            "memberOf": "dart:core.FormatException",
-            "isConstant": false,
-            "href": "dart-core\/FormatException\/offset.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int offset\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "source",
-            "type": "",
-            "types": [],
-            "desc": "<p>The actual source input which caused the error.<\/p>\n<p>This is usually a <a href=\"dart-core\/String-class.html\">String<\/a>, but can be other types too.\nIf it is a string, parts of it may be included in the <a href=\"dart-core\/FormatException\/toString.html\">toString<\/a> message.<\/p>\n<p>The source is <code>null<\/code> if omitted or unknown.<\/p>\n        ",
+            "href": "dart-core\/FormatException\/offset.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
             "memberOf": "dart:core.FormatException",
-            "isConstant": false,
-            "href": "dart-core\/FormatException\/source.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final source\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "dart-core\/FormatException-class.html",
-    "desc": "<p>Exception thrown when a string or some other data does not have an expected\nformat and cannot be parsed or processed.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "FormatException"
+    ]
 }

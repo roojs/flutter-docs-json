@@ -1,178 +1,161 @@
 {
+    "desc": "<p>Owns <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> objects and notifies listeners of changes to the\nrender tree semantics.<\/p>\n<p>To listen for semantic updates, call <a href=\"rendering\/PipelineOwner\/ensureSemantics.html\">PipelineOwner.ensureSemantics<\/a> to\nobtain a <a href=\"rendering\/SemanticsHandle-class.html\">SemanticsHandle<\/a>. This will create a <a href=\"semantics\/SemanticsOwner-class.html\">SemanticsOwner<\/a> if\nnecessary.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "semantics\/SemanticsOwner-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "semantics",
     "name": "semantics.SemanticsOwner",
+    "shortname": "SemanticsOwner",
     "extends": [
         "foundation.ChangeNotifier",
         "dart:core.Object"
     ],
-    "memberOf": "semantics",
     "events": [],
     "methods": [
         {
-            "name": "SemanticsOwner",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "semantics.SemanticsOwner",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
+            "desc": null,
+            "example": null,
             "href": "semantics\/SemanticsOwner\/SemanticsOwner.html",
-            "example": "",
-            "isDeprecated": false
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
+            "static": false,
+            "memberOf": "semantics.SemanticsOwner",
+            "params": []
         },
         {
-            "name": "dispose",
-            "type": "",
             "desc": "<p>Discards any resources used by the object. After this is called, the\nobject is not in a usable state and should be discarded (calls to\n<a href=\"foundation\/ChangeNotifier\/addListener.html\">addListener<\/a> and <a href=\"foundation\/ChangeNotifier\/removeListener.html\">removeListener<\/a> will throw after the object is\ndisposed).<\/p>\n<p>This method should only be called by the object's owner.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  _dirtyNodes.clear();\n  _nodes.clear();\n  _detachedNodes.clear();\n  super.dispose();\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsOwner\/dispose.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsOwner",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsOwner\/dispose.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  _dirtyNodes.clear();\n  _nodes.clear();\n  _detachedNodes.clear();\n  super.dispose();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "params": []
         },
         {
-            "name": "performAction",
-            "type": "",
             "desc": "<p>Asks the <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> with the given id to perform the given action.<\/p>\n<p>If the <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> has not indicated that it can perform the action,\nthis function does nothing.<\/p>\n<p>If the given <code>action<\/code> requires arguments they need to be passed in via\nthe <code>args<\/code> parameter.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void performAction(int id, SemanticsAction action, [ dynamic args ]) {\n  assert(action != null);\n  final _SemanticsActionHandler handler = _getSemanticsActionHandlerForId(id, action);\n  if (handler != null) {\n    handler(args);\n    return;\n  }\n\n  \/\/ Default actions if no [handler] was provided.\n  if (action == SemanticsAction.showOnScreen &amp;&amp; _nodes[id]._showOnScreen != null)\n    _nodes[id]._showOnScreen();\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsOwner\/performAction.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsOwner",
-            "sig": "",
             "params": [
+                {
+                    "name": "action",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.SemanticsAction"
+                },
+                {
+                    "name": "args",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
+                },
                 {
                     "name": "id",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "action",
-                    "type": "dart:ui.SemanticsAction",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "args",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 }
-            ],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsOwner\/performAction.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void performAction(int id, SemanticsAction action, [ dynamic args ]) {\n  assert(action != null);\n  final _SemanticsActionHandler handler = _getSemanticsActionHandlerForId(id, action);\n  if (handler != null) {\n    handler(args);\n    return;\n  }\n\n  \/\/ Default actions if no [handler] was provided.\n  if (action == SemanticsAction.showOnScreen &amp;&amp; _nodes[id]._showOnScreen != null)\n    _nodes[id]._showOnScreen();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "performActionAt",
-            "type": "",
             "desc": "<p>Asks the <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> at the given position to perform the given action.<\/p>\n<p>If the <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> has not indicated that it can perform the action,\nthis function does nothing.<\/p>\n<p>If the given <code>action<\/code> requires arguments they need to be passed in via\nthe <code>args<\/code> parameter.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void performActionAt(Offset position, SemanticsAction action, [ dynamic args ]) {\n  assert(action != null);\n  final SemanticsNode node = rootSemanticsNode;\n  if (node == null)\n    return;\n  final _SemanticsActionHandler handler = _getSemanticsActionHandlerForPosition(node, position, action);\n  if (handler != null)\n    handler(args);\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsOwner\/performActionAt.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsOwner",
-            "sig": "",
             "params": [
                 {
-                    "name": "position",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
                     "name": "action",
-                    "type": "dart:ui.SemanticsAction",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.SemanticsAction"
                 },
                 {
                     "name": "args",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
+                },
+                {
+                    "name": "position",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Offset"
                 }
-            ],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsOwner\/performActionAt.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void performActionAt(Offset position, SemanticsAction action, [ dynamic args ]) {\n  assert(action != null);\n  final SemanticsNode node = rootSemanticsNode;\n  if (node == null)\n    return;\n  final _SemanticsActionHandler handler = _getSemanticsActionHandlerForPosition(node, position, action);\n  if (handler != null)\n    handler(args);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "sendSemanticsUpdate",
-            "type": "",
             "desc": "<p>Update the semantics using <a href=\"dart-ui\/Window\/updateSemantics.html\">Window.updateSemantics<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void sendSemanticsUpdate() {\n  if (_dirtyNodes.isEmpty)\n    return;\n  final Set&lt;int&gt; customSemanticsActionIds = &lt;int&gt;{};\n  final List&lt;SemanticsNode&gt; visitedNodes = &lt;SemanticsNode&gt;[];\n  while (_dirtyNodes.isNotEmpty) {\n    final List&lt;SemanticsNode&gt; localDirtyNodes = _dirtyNodes.where((SemanticsNode node) =&gt; !_detachedNodes.contains(node)).toList();\n    _dirtyNodes.clear();\n    _detachedNodes.clear();\n    localDirtyNodes.sort((SemanticsNode a, SemanticsNode b) =&gt; a.depth - b.depth);\n    visitedNodes.addAll(localDirtyNodes);\n    for (SemanticsNode node in localDirtyNodes) {\n      assert(node._dirty);\n      assert(node.parent == null || !node.parent.isPartOfNodeMerging || node.isMergedIntoParent);\n      if (node.isPartOfNodeMerging) {\n        assert(node.mergeAllDescendantsIntoThisNode || node.parent != null);\n        \/\/ if we're merged into our parent, make sure our parent is added to the dirty list\n        if (node.parent != null &amp;&amp; node.parent.isPartOfNodeMerging)\n          node.parent._markDirty(); \/\/ this can add the node to the dirty list\n      }\n    }\n  }\n  visitedNodes.sort((SemanticsNode a, SemanticsNode b) =&gt; a.depth - b.depth);\n  final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();\n  for (SemanticsNode node in visitedNodes) {\n    assert(node.parent?._dirty != true); \/\/ could be null (no parent) or false (not dirty)\n    \/\/ The _serialize() method marks the node as not dirty, and\n    \/\/ recurses through the tree to do a deep serialization of all\n    \/\/ contiguous dirty nodes. This means that when we return here,\n    \/\/ it's quite possible that subsequent nodes are no longer\n    \/\/ dirty. We skip these here.\n    \/\/ We also skip any nodes that were reset and subsequently\n    \/\/ dropped entirely (RenderObject.markNeedsSemanticsUpdate()\n    \/\/ calls reset() on its SemanticsNode if onlyChanges isn't set,\n    \/\/ which happens e.g. when the node is no longer contributing\n    \/\/ semantics).\n    if (node._dirty &amp;&amp; node.attached)\n      node._addToUpdate(builder, customSemanticsActionIds);\n  }\n  _dirtyNodes.clear();\n  for (int actionId in customSemanticsActionIds) {\n    final CustomSemanticsAction action = CustomSemanticsAction.getAction(actionId);\n    builder.updateCustomAction(id: actionId, label: action.label, hint: action.hint, overrideId: action.action?.index ?? -1);\n  }\n  SemanticsBinding.instance.window.updateSemantics(builder.build());\n  notifyListeners();\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsOwner\/sendSemanticsUpdate.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsOwner",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsOwner\/sendSemanticsUpdate.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void sendSemanticsUpdate() {\n  if (_dirtyNodes.isEmpty)\n    return;\n  final Set&lt;int&gt; customSemanticsActionIds = &lt;int&gt;{};\n  final List&lt;SemanticsNode&gt; visitedNodes = &lt;SemanticsNode&gt;[];\n  while (_dirtyNodes.isNotEmpty) {\n    final List&lt;SemanticsNode&gt; localDirtyNodes = _dirtyNodes.where((SemanticsNode node) =&gt; !_detachedNodes.contains(node)).toList();\n    _dirtyNodes.clear();\n    _detachedNodes.clear();\n    localDirtyNodes.sort((SemanticsNode a, SemanticsNode b) =&gt; a.depth - b.depth);\n    visitedNodes.addAll(localDirtyNodes);\n    for (SemanticsNode node in localDirtyNodes) {\n      assert(node._dirty);\n      assert(node.parent == null || !node.parent.isPartOfNodeMerging || node.isMergedIntoParent);\n      if (node.isPartOfNodeMerging) {\n        assert(node.mergeAllDescendantsIntoThisNode || node.parent != null);\n        \/\/ if we're merged into our parent, make sure our parent is added to the dirty list\n        if (node.parent != null &amp;&amp; node.parent.isPartOfNodeMerging)\n          node.parent._markDirty(); \/\/ this can add the node to the dirty list\n      }\n    }\n  }\n  visitedNodes.sort((SemanticsNode a, SemanticsNode b) =&gt; a.depth - b.depth);\n  final ui.SemanticsUpdateBuilder builder = ui.SemanticsUpdateBuilder();\n  for (SemanticsNode node in visitedNodes) {\n    assert(node.parent?._dirty != true); \/\/ could be null (no parent) or false (not dirty)\n    \/\/ The _serialize() method marks the node as not dirty, and\n    \/\/ recurses through the tree to do a deep serialization of all\n    \/\/ contiguous dirty nodes. This means that when we return here,\n    \/\/ it's quite possible that subsequent nodes are no longer\n    \/\/ dirty. We skip these here.\n    \/\/ We also skip any nodes that were reset and subsequently\n    \/\/ dropped entirely (RenderObject.markNeedsSemanticsUpdate()\n    \/\/ calls reset() on its SemanticsNode if onlyChanges isn't set,\n    \/\/ which happens e.g. when the node is no longer contributing\n    \/\/ semantics).\n    if (node._dirty &amp;&amp; node.attached)\n      node._addToUpdate(builder, customSemanticsActionIds);\n  }\n  _dirtyNodes.clear();\n  for (int actionId in customSemanticsActionIds) {\n    final CustomSemanticsAction action = CustomSemanticsAction.getAction(actionId);\n    builder.updateCustomAction(id: actionId, label: action.label, hint: action.hint, overrideId: action.action?.index ?? -1);\n  }\n  SemanticsBinding.instance.window.updateSemantics(builder.build());\n  notifyListeners();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "params": []
         },
         {
-            "name": "toString",
-            "type": "dart:core.String",
             "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; describeIdentity(this);<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsOwner\/toString.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsOwner",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsOwner\/toString.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; describeIdentity(this);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "rootSemanticsNode",
-            "type": "semantics.SemanticsNode",
-            "types": [],
             "desc": "<p>The root node of the semantics tree, if any.<\/p>\n<p>If the semantics tree is empty, returns null.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsOwner",
-            "isConstant": false,
-            "href": "semantics\/SemanticsOwner\/rootSemanticsNode.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">SemanticsNode get rootSemanticsNode =&gt; _nodes[0];<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsOwner\/rootSemanticsNode.html",
+            "isDeprecated": "0",
+            "type": "semantics.SemanticsNode",
+            "memberOf": "semantics.SemanticsOwner",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "semantics\/SemanticsOwner-class.html",
-    "desc": "<p>Owns <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> objects and notifies listeners of changes to the\nrender tree semantics.<\/p>\n<p>To listen for semantic updates, call <a href=\"rendering\/PipelineOwner\/ensureSemantics.html\">PipelineOwner.ensureSemantics<\/a> to\nobtain a <a href=\"rendering\/SemanticsHandle-class.html\">SemanticsHandle<\/a>. This will create a <a href=\"semantics\/SemanticsOwner-class.html\">SemanticsOwner<\/a> if\nnecessary.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "SemanticsOwner"
+    ]
 }

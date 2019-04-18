@@ -1,117 +1,76 @@
 {
-    "name": "async.CancelableOperation",
-    "extends": [],
+    "desc": "<p>An asynchronous operation that can be cancelled.<\/p>\n<p>The value of this operation is exposed as <a href=\"package-async_async\/CancelableOperation\/value.html\">value<\/a>. When this operation is\ncancelled, <a href=\"package-async_async\/CancelableOperation\/value.html\">value<\/a> won't complete either successfully or with an error. If\n<a href=\"package-async_async\/CancelableOperation\/value.html\">value<\/a> has already completed, cancelling the operation does nothing.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-async_async\/CancelableOperation-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "async",
+    "name": "async.CancelableOperation",
+    "shortname": "CancelableOperation",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "asStream",
-            "type": "dart:async.Stream",
             "desc": "<p>Creates a <a href=\"dart-async\/Stream-class.html\">Stream<\/a> containing the result of this operation.<\/p>\n<p>This is like <code>value.asStream()<\/code>, but if a subscription to the stream is\ncanceled, this is as well.<\/p>\n    ",
-            "static": false,
-            "memberOf": "async.CancelableOperation",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-async_async\/CancelableOperation\/asStream.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; asStream() {\n  var controller =\n      new StreamController&lt;T&gt;(sync: true, onCancel: _completer._cancel);\n\n  value.then((value) {\n    controller.add(value);\n    controller.close();\n  }, onError: (error, stackTrace) {\n    controller.addError(error, stackTrace);\n    controller.close();\n  });\n  return controller.stream;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "cancel",
-            "type": "dart:async.Future",
-            "desc": "<p>Cancels this operation.<\/p>\n<p>This returns the <a href=\"dart-async\/Future-class.html\">Future<\/a> returned by the <a href=\"package-async_async\/CancelableCompleter-class.html\">CancelableCompleter<\/a>'s\n<code>onCancel<\/code> callback. Unlike <a href=\"package-async_async\/CancelableOperation\/cancel.html\">Stream.cancel<\/a>, it never returns <code>null<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "async.CancelableOperation",
-            "sig": "",
-            "params": [],
+            "href": "package-async_async\/CancelableOperation\/asStream.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Stream",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "package-async_async\/CancelableOperation\/cancel.html",
+            "static": false,
+            "memberOf": "async.CancelableOperation",
+            "params": []
+        },
+        {
+            "desc": "<p>Cancels this operation.<\/p>\n<p>This returns the <a href=\"dart-async\/Future-class.html\">Future<\/a> returned by the <a href=\"package-async_async\/CancelableCompleter-class.html\">CancelableCompleter<\/a>'s\n<code>onCancel<\/code> callback. Unlike <a href=\"package-async_async\/CancelableOperation\/cancel.html\">Stream.cancel<\/a>, it never returns <code>null<\/code>.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future cancel() =&gt; _completer._cancel();<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "CancelableOperation.fromFuture",
-            "type": "",
-            "desc": "<p>Creates a <a href=\"package-async_async\/CancelableOperation-class.html\">CancelableOperation<\/a> wrapping <code>inner<\/code>.<\/p>\n<p>When this operation is canceled, <code>onCancel<\/code> will be called and any value\nor error produced by <code>inner<\/code> will be discarded. If <code>onCancel<\/code> returns a\n<a href=\"dart-async\/Future-class.html\">Future<\/a>, it will be forwarded to <a href=\"package-async_async\/CancelableOperation\/cancel.html\">cancel<\/a>.<\/p>\n<p><code>onCancel<\/code> will be called synchronously when the operation is canceled.\nIt's guaranteed to only be called once.<\/p>\n    ",
-            "static": false,
-            "memberOf": "async.CancelableOperation",
-            "sig": "",
-            "params": [
-                {
-                    "name": "inner",
-                    "type": "dart:async.Future",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "onCancel",
-                    "type": "dart:async.FutureOr",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "package-async_async\/CancelableOperation\/CancelableOperation.fromFuture.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory CancelableOperation.fromFuture(Future&lt;T&gt; inner,\n    {FutureOr onCancel()}) {\n  var completer = new CancelableCompleter&lt;T&gt;(onCancel: onCancel);\n  completer.complete(inner);\n  return completer.operation;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "valueOrCancellation",
+            "href": "package-async_async\/CancelableOperation\/cancel.html",
+            "isDeprecated": "0",
             "type": "dart:async.Future",
-            "desc": "<p>Creates a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes when this operation completes <em>or<\/em> when\nit's cancelled.<\/p>\n<p>If this operation completes, this completes to the same result as <a href=\"package-async_async\/CancelableOperation\/value.html\">value<\/a>.\nIf this operation is cancelled, the returned future waits for the future\nreturned by <a href=\"package-async_async\/CancelableOperation\/cancel.html\">cancel<\/a>, then completes to <code>cancellationValue<\/code>.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.CancelableOperation",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>Creates a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes when this operation completes <em>or<\/em> when\nit's cancelled.<\/p>\n<p>If this operation completes, this completes to the same result as <a href=\"package-async_async\/CancelableOperation\/value.html\">value<\/a>.\nIf this operation is cancelled, the returned future waits for the future\nreturned by <a href=\"package-async_async\/CancelableOperation\/cancel.html\">cancel<\/a>, then completes to <code>cancellationValue<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future valueOrCancellation([T cancellationValue]) {\n  var completer = new Completer&lt;T&gt;.sync();\n  value.then((result) =&gt; completer.complete(result),\n      onError: completer.completeError);\n\n  _completer._cancelMemo.future.then((_) {\n    completer.complete(cancellationValue);\n  }, onError: completer.completeError);\n\n  return completer.future;\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/CancelableOperation\/valueOrCancellation.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "async.CancelableOperation",
             "params": [
                 {
                     "name": "cancellationValue",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/CancelableOperation\/valueOrCancellation.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future valueOrCancellation([T cancellationValue]) {\n  var completer = new Completer&lt;T&gt;.sync();\n  value.then((result) =&gt; completer.complete(result),\n      onError: completer.completeError);\n\n  _completer._cancelMemo.future.then((_) {\n    completer.complete(cancellationValue);\n  }, onError: completer.completeError);\n\n  return completer.future;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "value",
-            "type": "dart:async.Future",
-            "types": [],
             "desc": "<p>The value returned by the operation.<\/p>\n        ",
-            "memberOf": "async.CancelableOperation",
-            "isConstant": false,
-            "href": "package-async_async\/CancelableOperation\/value.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; get value =&gt; _completer._inner.future;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-async_async\/CancelableOperation\/value.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "memberOf": "async.CancelableOperation",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-async_async\/CancelableOperation-class.html",
-    "desc": "<p>An asynchronous operation that can be cancelled.<\/p>\n<p>The value of this operation is exposed as <a href=\"package-async_async\/CancelableOperation\/value.html\">value<\/a>. When this operation is\ncancelled, <a href=\"package-async_async\/CancelableOperation\/value.html\">value<\/a> won't complete either successfully or with an error. If\n<a href=\"package-async_async\/CancelableOperation\/value.html\">value<\/a> has already completed, cancelling the operation does nothing.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "CancelableOperation"
+    ]
 }

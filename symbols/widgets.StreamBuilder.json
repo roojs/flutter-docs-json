@@ -1,5 +1,17 @@
 {
+    "desc": "<p>Widget that builds itself based on the latest snapshot of interaction with\na <a href=\"dart-async\/Stream-class.html\">Stream<\/a>.<\/p>\n<p>Widget rebuilding is scheduled by each interaction, using <a href=\"widgets\/State\/setState.html\">State.setState<\/a>,\nbut is otherwise decoupled from the timing of the stream. The <a href=\"widgets\/StreamBuilder\/builder.html\">builder<\/a>\nis called at the discretion of the Flutter pipeline, and will thus receive a\ntiming-dependent sub-sequence of the snapshots that represent the\ninteraction with the stream.<\/p>\n<p>As an example, when interacting with a stream producing the integers\n0 through 9, the <a href=\"widgets\/StreamBuilder\/builder.html\">builder<\/a> may be called with any ordered sub-sequence\nof the following snapshots that includes the last one (the one with\nConnectionState.done):<\/p>\n<ul>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.waiting, null)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.active, 0)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.active, 1)<\/code><\/li>\n<li>...<\/li>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.active, 9)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.done, 9)<\/code><\/li>\n<\/ul>\n<p>The actual sequence of invocations of the <a href=\"widgets\/StreamBuilder\/builder.html\">builder<\/a> depends on the relative\ntiming of events produced by the stream and the build rate of the Flutter\npipeline.<\/p>\n<p>Changing the <a href=\"widgets\/StreamBuilder-class.html\">StreamBuilder<\/a> configuration to another stream during event\ngeneration introduces snapshot pairs of the form:<\/p>\n<ul>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.none, 5)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.waiting, 5)<\/code><\/li>\n<\/ul>\n<p>The latter will be produced only when the new stream is non-null, and the\nformer only when the old stream is non-null.<\/p>\n<p>The stream may produce errors, resulting in snapshots of the form:<\/p>\n<ul><li><code>new AsyncSnapshot&lt;int&gt;.withError(ConnectionState.active, 'some error')<\/code><\/li><\/ul>\n<p>The data and error fields of snapshots produced are only changed when the\nstate is <code>ConnectionState.active<\/code>.<\/p>\n<p>The initial snapshot data can be controlled by specifying <a href=\"widgets\/StreamBuilder\/initialData.html\">initialData<\/a>.\nThis should be used to ensure that the first frame has the expected value,\nas the builder will always be called before the stream listener has a chance\nto be processed.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis sample shows a <a href=\"widgets\/StreamBuilder-class.html\">StreamBuilder<\/a> configuring a text label to show the\nlatest bid received for a lot in an auction. Assume the <code>_lot<\/code> field is\nset by a selector elsewhere in the UI.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">StreamBuilder&lt;int&gt;(\n  stream: _lot?.bids, \/\/ a Stream&lt;int&gt; or null\n  builder: (BuildContext context, AsyncSnapshot&lt;int&gt; snapshot) {\n    if (snapshot.hasError)\n      return Text('Error: ${snapshot.error}');\n    switch (snapshot.connectionState) {\n      case ConnectionState.none: return Text('Select lot');\n      case ConnectionState.waiting: return Text('Awaiting bids...');\n      case ConnectionState.active: return Text('\\$${snapshot.data}');\n      case ConnectionState.done: return Text('\\$${snapshot.data} (closed)');\n    }\n    return null; \/\/ unreachable\n  },\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ValueListenableBuilder-class.html\">ValueListenableBuilder<\/a>, which wraps a <a href=\"foundation\/ValueListenable-class.html\">ValueListenable<\/a> instead of a\n<a href=\"dart-async\/Stream-class.html\">Stream<\/a>.<\/li>\n<li>\n<a href=\"widgets\/StreamBuilderBase-class.html\">StreamBuilderBase<\/a>, which supports widget building based on a computation\nthat spans all interactions made with the stream.<\/li>\n<\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "widgets\/StreamBuilder-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "widgets",
     "name": "widgets.StreamBuilder",
+    "shortname": "StreamBuilder",
     "extends": [
         "widgets.AsyncSnapshot",
         "widgets.StreamBuilderBase",
@@ -9,276 +21,238 @@
         "foundation.Diagnosticable",
         "dart:core.Object"
     ],
-    "memberOf": "widgets",
-    "events": [],
+    "events": [
+        {
+            "desc": "<p>The build strategy currently used by this builder.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final AsyncWidgetBuilder&lt;T&gt; builder\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/StreamBuilder\/builder.html",
+            "isDeprecated": "0",
+            "type": "widgets.AsyncWidgetBuilder",
+            "memberOf": "widgets.StreamBuilder",
+            "params": []
+        }
+    ],
     "methods": [
         {
-            "name": "StreamBuilder",
-            "type": "",
             "desc": "<p>Creates a new <a href=\"widgets\/StreamBuilder-class.html\">StreamBuilder<\/a> that builds itself based on the latest\nsnapshot of interaction with the specified <code>stream<\/code> and whose build\nstrategy is given by <code>builder<\/code>.<\/p>\n<p>The <code>initialData<\/code> is used to create the initial snapshot.<\/p>\n<p>The <code>builder<\/code> must not be null.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const StreamBuilder({\n  Key key,\n  this.initialData,\n  Stream&lt;T&gt; stream,\n  @required this.builder,\n}) : assert(builder != null),\n     super(key: key, stream: stream);<\/code><\/pre>\n    ",
+            "href": "widgets\/StreamBuilder\/StreamBuilder.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "widgets.StreamBuilder",
-            "sig": "",
             "params": [
                 {
-                    "name": "key",
-                    "type": "foundation.Key",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "builder",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.AsyncWidgetBuilder"
                 },
                 {
                     "name": "initialData",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "<T>"
+                },
+                {
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "foundation.Key"
                 },
                 {
                     "name": "stream",
-                    "type": "dart:async.Stream",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "builder",
-                    "type": "widgets.AsyncWidgetBuilder",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "dart:async.Stream"
                 }
-            ],
-            "isConstructor": true,
-            "href": "widgets\/StreamBuilder\/StreamBuilder.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const StreamBuilder({\n  Key key,\n  this.initialData,\n  Stream&lt;T&gt; stream,\n  @required this.builder,\n}) : assert(builder != null),\n     super(key: key, stream: stream);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "afterConnected",
-            "type": "widgets.AsyncSnapshot",
             "desc": "<p>Returns an updated version of the <code>current<\/code> summary reflecting that we\nare now connected to a stream.<\/p>\n<p>The default implementation returns <code>current<\/code> as is.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAsyncSnapshot&lt;T&gt; afterConnected(AsyncSnapshot&lt;T&gt; current) =&gt; current.inState(ConnectionState.waiting);<\/code><\/pre>\n    ",
+            "href": "widgets\/StreamBuilder\/afterConnected.html",
+            "isDeprecated": "0",
+            "type": "widgets.AsyncSnapshot",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.StreamBuilder",
-            "sig": "",
             "params": [
                 {
                     "name": "current",
-                    "type": "widgets.AsyncSnapshot",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.AsyncSnapshot"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/StreamBuilder\/afterConnected.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAsyncSnapshot&lt;T&gt; afterConnected(AsyncSnapshot&lt;T&gt; current) =&gt; current.inState(ConnectionState.waiting);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "afterData",
-            "type": "widgets.AsyncSnapshot",
             "desc": "<p>Returns an updated version of the <code>current<\/code> summary following a data event.<\/p>\n<p>Sub-classes must override this method to specify how the current summary\nis combined with the new data item in the fold computation.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAsyncSnapshot&lt;T&gt; afterData(AsyncSnapshot&lt;T&gt; current, T data) {\n  return AsyncSnapshot&lt;T&gt;.withData(ConnectionState.active, data);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/StreamBuilder\/afterData.html",
+            "isDeprecated": "0",
+            "type": "widgets.AsyncSnapshot",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.StreamBuilder",
-            "sig": "",
             "params": [
                 {
                     "name": "current",
-                    "type": "widgets.AsyncSnapshot",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.AsyncSnapshot"
                 },
                 {
                     "name": "data",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/StreamBuilder\/afterData.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAsyncSnapshot&lt;T&gt; afterData(AsyncSnapshot&lt;T&gt; current, T data) {\n  return AsyncSnapshot&lt;T&gt;.withData(ConnectionState.active, data);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "afterDisconnected",
-            "type": "widgets.AsyncSnapshot",
             "desc": "<p>Returns an updated version of the <code>current<\/code> summary reflecting that we\nare no longer connected to a stream.<\/p>\n<p>The default implementation returns <code>current<\/code> as is.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.StreamBuilder",
-            "sig": "",
-            "params": [
-                {
-                    "name": "current",
-                    "type": "widgets.AsyncSnapshot",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/StreamBuilder\/afterDisconnected.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAsyncSnapshot&lt;T&gt; afterDisconnected(AsyncSnapshot&lt;T&gt; current) =&gt; current.inState(ConnectionState.none);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "afterDone",
+            "href": "widgets\/StreamBuilder\/afterDisconnected.html",
+            "isDeprecated": "0",
             "type": "widgets.AsyncSnapshot",
-            "desc": "<p>Returns an updated version of the <code>current<\/code> summary following stream\ntermination.<\/p>\n<p>The default implementation returns <code>current<\/code> as is.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.StreamBuilder",
-            "sig": "",
-            "params": [
-                {
-                    "name": "current",
-                    "type": "widgets.AsyncSnapshot",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
+            "dtype": "method",
             "isConstructor": false,
-            "href": "widgets\/StreamBuilder\/afterDone.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAsyncSnapshot&lt;T&gt; afterDone(AsyncSnapshot&lt;T&gt; current) =&gt; current.inState(ConnectionState.done);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "afterError",
-            "type": "widgets.AsyncSnapshot",
-            "desc": "<p>Returns an updated version of the <code>current<\/code> summary following an error.<\/p>\n<p>The default implementation returns <code>current<\/code> as is.<\/p>\n    ",
             "static": false,
             "memberOf": "widgets.StreamBuilder",
-            "sig": "",
             "params": [
                 {
                     "name": "current",
-                    "type": "widgets.AsyncSnapshot",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.AsyncSnapshot"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns an updated version of the <code>current<\/code> summary following stream\ntermination.<\/p>\n<p>The default implementation returns <code>current<\/code> as is.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAsyncSnapshot&lt;T&gt; afterDone(AsyncSnapshot&lt;T&gt; current) =&gt; current.inState(ConnectionState.done);<\/code><\/pre>\n    ",
+            "href": "widgets\/StreamBuilder\/afterDone.html",
+            "isDeprecated": "0",
+            "type": "widgets.AsyncSnapshot",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.StreamBuilder",
+            "params": [
+                {
+                    "name": "current",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.AsyncSnapshot"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns an updated version of the <code>current<\/code> summary following an error.<\/p>\n<p>The default implementation returns <code>current<\/code> as is.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAsyncSnapshot&lt;T&gt; afterError(AsyncSnapshot&lt;T&gt; current, Object error) {\n  return AsyncSnapshot&lt;T&gt;.withError(ConnectionState.active, error);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/StreamBuilder\/afterError.html",
+            "isDeprecated": "0",
+            "type": "widgets.AsyncSnapshot",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.StreamBuilder",
+            "params": [
+                {
+                    "name": "current",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.AsyncSnapshot"
                 },
                 {
                     "name": "error",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/StreamBuilder\/afterError.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAsyncSnapshot&lt;T&gt; afterError(AsyncSnapshot&lt;T&gt; current, Object error) {\n  return AsyncSnapshot&lt;T&gt;.withError(ConnectionState.active, error);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "build",
-            "type": "widgets.Widget",
             "desc": "<p>Returns a Widget based on the <code>currentSummary<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nWidget build(BuildContext context, AsyncSnapshot&lt;T&gt; currentSummary) =&gt; builder(context, currentSummary);<\/code><\/pre>\n    ",
+            "href": "widgets\/StreamBuilder\/build.html",
+            "isDeprecated": "0",
+            "type": "widgets.Widget",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.StreamBuilder",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
                     "name": "currentSummary",
-                    "type": "widgets.AsyncSnapshot",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.AsyncSnapshot"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/StreamBuilder\/build.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nWidget build(BuildContext context, AsyncSnapshot&lt;T&gt; currentSummary) =&gt; builder(context, currentSummary);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "initial",
-            "type": "widgets.AsyncSnapshot",
             "desc": "<p>Returns the initial summary of stream interaction, typically representing\nthe fact that no interaction has happened at all.<\/p>\n<p>Sub-classes must override this method to provide the initial value for\nthe fold computation.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAsyncSnapshot&lt;T&gt; initial() =&gt; AsyncSnapshot&lt;T&gt;.withData(ConnectionState.none, initialData);<\/code><\/pre>\n    ",
+            "href": "widgets\/StreamBuilder\/initial.html",
+            "isDeprecated": "0",
+            "type": "widgets.AsyncSnapshot",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.StreamBuilder",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/StreamBuilder\/initial.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAsyncSnapshot&lt;T&gt; initial() =&gt; AsyncSnapshot&lt;T&gt;.withData(ConnectionState.none, initialData);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         }
     ],
-    "props": [
-        {
-            "name": "builder",
-            "type": "widgets.AsyncWidgetBuilder",
-            "types": [],
-            "desc": "<p>The build strategy currently used by this builder.<\/p>\n        ",
-            "memberOf": "widgets.StreamBuilder",
-            "isConstant": false,
-            "href": "widgets\/StreamBuilder\/builder.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final AsyncWidgetBuilder&lt;T&gt; builder\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "initialData",
-            "type": "",
-            "types": [],
-            "desc": "<p>The data that will be used to create the initial snapshot.<\/p>\n<p>Providing this value (presumably obtained synchronously somehow when the\n<a href=\"dart-async\/Stream-class.html\">Stream<\/a> was created) ensures that the first frame will show useful data.\nOtherwise, the first frame will be built with the value null, regardless\nof whether a value is available on the stream: since streams are\nasynchronous, no events from the stream can be obtained before the initial\nbuild.<\/p>\n        ",
-            "memberOf": "widgets.StreamBuilder",
-            "isConstant": false,
-            "href": "widgets\/StreamBuilder\/initialData.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final T initialData\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "widgets\/StreamBuilder-class.html",
-    "desc": "<p>Widget that builds itself based on the latest snapshot of interaction with\na <a href=\"dart-async\/Stream-class.html\">Stream<\/a>.<\/p>\n<p>Widget rebuilding is scheduled by each interaction, using <a href=\"widgets\/State\/setState.html\">State.setState<\/a>,\nbut is otherwise decoupled from the timing of the stream. The <a href=\"widgets\/StreamBuilder\/builder.html\">builder<\/a>\nis called at the discretion of the Flutter pipeline, and will thus receive a\ntiming-dependent sub-sequence of the snapshots that represent the\ninteraction with the stream.<\/p>\n<p>As an example, when interacting with a stream producing the integers\n0 through 9, the <a href=\"widgets\/StreamBuilder\/builder.html\">builder<\/a> may be called with any ordered sub-sequence\nof the following snapshots that includes the last one (the one with\nConnectionState.done):<\/p>\n<ul>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.waiting, null)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.active, 0)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.active, 1)<\/code><\/li>\n<li>...<\/li>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.active, 9)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.done, 9)<\/code><\/li>\n<\/ul>\n<p>The actual sequence of invocations of the <a href=\"widgets\/StreamBuilder\/builder.html\">builder<\/a> depends on the relative\ntiming of events produced by the stream and the build rate of the Flutter\npipeline.<\/p>\n<p>Changing the <a href=\"widgets\/StreamBuilder-class.html\">StreamBuilder<\/a> configuration to another stream during event\ngeneration introduces snapshot pairs of the form:<\/p>\n<ul>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.none, 5)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;int&gt;.withData(ConnectionState.waiting, 5)<\/code><\/li>\n<\/ul>\n<p>The latter will be produced only when the new stream is non-null, and the\nformer only when the old stream is non-null.<\/p>\n<p>The stream may produce errors, resulting in snapshots of the form:<\/p>\n<ul><li><code>new AsyncSnapshot&lt;int&gt;.withError(ConnectionState.active, 'some error')<\/code><\/li><\/ul>\n<p>The data and error fields of snapshots produced are only changed when the\nstate is <code>ConnectionState.active<\/code>.<\/p>\n<p>The initial snapshot data can be controlled by specifying <a href=\"widgets\/StreamBuilder\/initialData.html\">initialData<\/a>.\nThis should be used to ensure that the first frame has the expected value,\nas the builder will always be called before the stream listener has a chance\nto be processed.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis sample shows a <a href=\"widgets\/StreamBuilder-class.html\">StreamBuilder<\/a> configuring a text label to show the\nlatest bid received for a lot in an auction. Assume the <code>_lot<\/code> field is\nset by a selector elsewhere in the UI.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">StreamBuilder&lt;int&gt;(\n  stream: _lot?.bids, \/\/ a Stream&lt;int&gt; or null\n  builder: (BuildContext context, AsyncSnapshot&lt;int&gt; snapshot) {\n    if (snapshot.hasError)\n      return Text('Error: ${snapshot.error}');\n    switch (snapshot.connectionState) {\n      case ConnectionState.none: return Text('Select lot');\n      case ConnectionState.waiting: return Text('Awaiting bids...');\n      case ConnectionState.active: return Text('\\$${snapshot.data}');\n      case ConnectionState.done: return Text('\\$${snapshot.data} (closed)');\n    }\n    return null; \/\/ unreachable\n  },\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ValueListenableBuilder-class.html\">ValueListenableBuilder<\/a>, which wraps a <a href=\"foundation\/ValueListenable-class.html\">ValueListenable<\/a> instead of a\n<a href=\"dart-async\/Stream-class.html\">Stream<\/a>.<\/li>\n<li>\n<a href=\"widgets\/StreamBuilderBase-class.html\">StreamBuilderBase<\/a>, which supports widget building based on a computation\nthat spans all interactions made with the stream.<\/li>\n<\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "StreamBuilder"
+    "props": []
 }

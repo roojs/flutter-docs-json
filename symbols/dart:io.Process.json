@@ -1,442 +1,377 @@
 {
-    "name": "dart:io.Process",
-    "extends": [],
+    "desc": "<p>The means to execute a program.<\/p>\n<p>Use the static <a href=\"dart-io\/Process\/start.html\">start<\/a> and <a href=\"dart-io\/Process\/run.html\">run<\/a> methods to start a new process.\nThe run method executes the process non-interactively to completion.\nIn contrast, the start method allows your code to interact with the\nrunning process.<\/p>\n<h2 id=\"start-a-process-with-the-run-method\">Start a process with the run method<\/h2>\n<p>The following code sample uses the run method to create a process\nthat runs the UNIX command <code>ls<\/code>, which lists the contents of a directory.\nThe run method completes with a <a href=\"dart-io\/ProcessResult-class.html\">ProcessResult<\/a> object when the process\nterminates. This provides access to the output and exit code from the\nprocess. The run method does not return a Process object; this prevents your\ncode from interacting with the running process.<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\n\nmain() {\n  \/\/ List all files in the current directory in UNIX-like systems.\n  Process.run('ls', ['-l']).then((ProcessResult results) {\n    print(results.stdout);\n  });\n}\n<\/code><\/pre>\n<h2 id=\"start-a-process-with-the-start-method\">Start a process with the start method<\/h2>\n<p>The following example uses start to create the process.\nThe start method returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> for a Process object.\nWhen the future completes the process is started and\nyour code can interact with the\nProcess: writing to stdin, listening to stdout, and so on.<\/p>\n<p>The following sample starts the UNIX <code>cat<\/code> utility, which when given no\ncommand-line arguments, echos its input.\nThe program writes to the process's standard input stream\nand prints data from its standard output stream.<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\nimport 'dart:convert';\n\nmain() {\n  Process.start('cat', []).then((Process process) {\n    process.stdout\n        .transform(utf8.decoder)\n        .listen((data) { print(data); });\n    process.stdin.writeln('Hello, world!');\n    process.stdin.writeln('Hello, galaxy!');\n    process.stdin.writeln('Hello, universe!');\n  });\n}\n<\/code><\/pre>\n<h2 id=\"standard-io-streams\">Standard I\/O streams<\/h2>\n<p>As seen in the previous code sample, you can interact with the Process's\nstandard output stream through the getter <a href=\"dart-io\/Process\/stdout.html\">stdout<\/a>,\nand you can interact with the Process's standard input stream through\nthe getter <a href=\"dart-io\/Process\/stdin.html\">stdin<\/a>.\nIn addition, Process provides a getter <a href=\"dart-io\/Process\/stderr.html\">stderr<\/a> for using the Process's\nstandard error stream.<\/p>\n<p>A Process's streams are distinct from the top-level streams\nfor the current program.<\/p>\n<h2 id=\"exit-codes\">Exit codes<\/h2>\n<p>Call the <a href=\"dart-io\/Process\/exitCode.html\">exitCode<\/a> method to get the exit code of the process.\nThe exit code indicates whether the program terminated successfully\n(usually indicated with an exit code of 0) or with an error.<\/p>\n<p>If the start method is used, the exitCode is available through a future\non the Process object (as shown in the example below).\nIf the run method is used, the exitCode is available\nthrough a getter on the ProcessResult instance.<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\n\nmain() {\n  Process.start('ls', ['-l']).then((process) {\n    \/\/ Get the exit code from the new process.\n    process.exitCode.then((exitCode) {\n      print('exit code: $exitCode');\n    });\n  });\n}\n<\/code><\/pre>\n<h2 id=\"other-resources\">Other resources<\/h2>\n<p><a href=\"https:\/\/www.dartlang.org\/dart-by-example\/#dart-io-and-command-line-apps\">Dart by Example<\/a>\nprovides additional task-oriented code samples that show how to use\nvarious API from the <a href=\"dart-io\/dart-io-library.html\">dart:io<\/a> library.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "dart-io\/Process-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "dart:io",
+    "name": "dart:io.Process",
+    "shortname": "Process",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "Process",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "dart:io.Process",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
+            "desc": null,
+            "example": null,
             "href": "dart-io\/Process\/Process.html",
-            "example": "",
-            "isDeprecated": false
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
+            "static": false,
+            "memberOf": "dart:io.Process",
+            "params": []
         },
         {
-            "name": "kill",
-            "type": "dart:core.bool",
             "desc": "<p>Kills the process.<\/p>\n<p>Where possible, sends the <code>signal<\/code> to the process. This includes\nLinux and OS X. The default signal is <a href=\"dart-io\/ProcessSignal\/sigterm-constant.html\">ProcessSignal.sigterm<\/a>\nwhich will normally terminate the process.<\/p>\n<p>On platforms without signal support, including Windows, the call\njust terminates the process in a platform specific way, and the\n<code>signal<\/code> parameter is ignored.<\/p>\n<p>Returns <code>true<\/code> if the signal is successfully delivered to the\nprocess. Otherwise the signal could not be sent, usually meaning\nthat the process is already dead.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:io.Process",
-            "sig": "",
-            "params": [
-                {
-                    "name": "signal",
-                    "type": "dart:io.ProcessSignal",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-io\/Process\/kill.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool kill([ProcessSignal signal = ProcessSignal.sigterm]);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "killPid",
+            "href": "dart-io\/Process\/kill.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "desc": "<p>Kills the process with id <code>pid<\/code>.<\/p>\n<p>Where possible, sends the <code>signal<\/code> to the process with id\n<code>pid<\/code>. This includes Linux and OS X. The default signal is\n<a href=\"dart-io\/ProcessSignal\/sigterm-constant.html\">ProcessSignal.sigterm<\/a> which will normally terminate the\nprocess.<\/p>\n<p>On platforms without signal support, including Windows, the call\njust terminates the process with id <code>pid<\/code> in a platform specific\nway, and the <code>signal<\/code> parameter is ignored.<\/p>\n<p>Returns <code>true<\/code> if the signal is successfully delivered to the\nprocess. Otherwise the signal could not be sent, usually meaning\nthat the process is already dead.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:io.Process",
-            "sig": "",
             "params": [
-                {
-                    "name": "pid",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
                 {
                     "name": "signal",
-                    "type": "dart:io.ProcessSignal",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:io.ProcessSignal"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-io\/Process\/killPid.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">external static bool killPid(int pid,\n    [ProcessSignal signal = ProcessSignal.sigterm]);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "run",
-            "type": "dart:async.Future<dart:io.ProcessResult>",
-            "desc": "<p>Starts a process and runs it non-interactively to completion. The\nprocess run is <code>executable<\/code> with the specified <code>arguments<\/code>.<\/p>\n<p>Use <code>workingDirectory<\/code> to set the working directory for the process. Note\nthat the change of directory occurs before executing the process on some\nplatforms, which may have impact when using relative paths for the\nexecutable and the arguments.<\/p>\n<p>Use <code>environment<\/code> to set the environment variables for the process. If not\nset the environment of the parent process is inherited. Currently, only\nUS-ASCII environment variables are supported and errors are likely to occur\nif an environment variable with code-points outside the US-ASCII range is\npassed in.<\/p>\n<p>If <code>includeParentEnvironment<\/code> is <code>true<\/code>, the process's environment will\ninclude the parent process's environment, with <code>environment<\/code> taking\nprecedence. Default is <code>true<\/code>.<\/p>\n<p>If <code>runInShell<\/code> is true, the process will be spawned through a system\nshell. On Linux and OS X, <code>\/bin\/sh<\/code> is used, while\n<code>%WINDIR%\\system32\\cmd.exe<\/code> is used on Windows.<\/p>\n<p>The encoding used for decoding <code>stdout<\/code> and <code>stderr<\/code> into text is\ncontrolled through <code>stdoutEncoding<\/code> and <code>stderrEncoding<\/code>. The\ndefault encoding is <a href=\"dart-io\/systemEncoding-constant.html\">systemEncoding<\/a>. If <code>null<\/code> is used no\ndecoding will happen and the <a href=\"dart-io\/ProcessResult-class.html\">ProcessResult<\/a> will hold binary\ndata.<\/p>\n<p>Returns a <code>Future&lt;ProcessResult&gt;<\/code> that completes with the\nresult of running the process, i.e., exit code, standard out and\nstandard in.<\/p>\n<p>The following code uses <code>Process.run<\/code> to grep for <code>main<\/code> in the\nfile <code>test.dart<\/code> on Linux.<\/p>\n<pre class=\"language-dart\"><code>Process.run('grep', ['-i', 'main', 'test.dart']).then((result) {\n  stdout.write(result.stdout);\n  stderr.write(result.stderr);\n});\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "dart:io.Process",
-            "sig": "",
-            "params": [
-                {
-                    "name": "executable",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "arguments",
-                    "type": "dart:core.List<dart:core.String>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.List",
-                        "dart:core.String"
-                    ]
-                },
-                {
-                    "name": "workingDirectory",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "environment",
-                    "type": "dart:core.Map<dart:core.String<dart:core.String>>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Map",
-                        "dart:core.String",
-                        "dart:core.String"
-                    ]
-                },
-                {
-                    "name": "includeParentEnvironment",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "runInShell",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "stdoutEncoding",
-                    "type": "dart:convert.Encoding",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "stderrEncoding",
-                    "type": "dart:convert.Encoding",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-io\/Process\/run.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">external static Future&lt;ProcessResult&gt; run(\n    String executable, List&lt;String&gt; arguments,\n    {String workingDirectory,\n    Map&lt;String, String&gt; environment,\n    bool includeParentEnvironment: true,\n    bool runInShell: false,\n    Encoding stdoutEncoding: systemEncoding,\n    Encoding stderrEncoding: systemEncoding});<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:io.ProcessResult"
             ]
         },
         {
-            "name": "runSync",
-            "type": "dart:io.ProcessResult",
-            "desc": "<p>Starts a process and runs it to completion. This is a synchronous\ncall and will block until the child process terminates.<\/p>\n<p>The arguments are the same as for <code>Process.run<\/code>.<\/p>\n<p>Returns a <code>ProcessResult<\/code> with the result of running the process,\ni.e., exit code, standard out and standard in.<\/p>\n    ",
+            "desc": "<p>Kills the process with id <code>pid<\/code>.<\/p>\n<p>Where possible, sends the <code>signal<\/code> to the process with id\n<code>pid<\/code>. This includes Linux and OS X. The default signal is\n<a href=\"dart-io\/ProcessSignal\/sigterm-constant.html\">ProcessSignal.sigterm<\/a> which will normally terminate the\nprocess.<\/p>\n<p>On platforms without signal support, including Windows, the call\njust terminates the process with id <code>pid<\/code> in a platform specific\nway, and the <code>signal<\/code> parameter is ignored.<\/p>\n<p>Returns <code>true<\/code> if the signal is successfully delivered to the\nprocess. Otherwise the signal could not be sent, usually meaning\nthat the process is already dead.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">external static bool killPid(int pid,\n    [ProcessSignal signal = ProcessSignal.sigterm]);<\/code><\/pre>\n    ",
+            "href": "dart-io\/Process\/killPid.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:io.Process",
-            "sig": "",
             "params": [
                 {
-                    "name": "executable",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "pid",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 },
+                {
+                    "name": "signal",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:io.ProcessSignal"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Starts a process and runs it non-interactively to completion. The\nprocess run is <code>executable<\/code> with the specified <code>arguments<\/code>.<\/p>\n<p>Use <code>workingDirectory<\/code> to set the working directory for the process. Note\nthat the change of directory occurs before executing the process on some\nplatforms, which may have impact when using relative paths for the\nexecutable and the arguments.<\/p>\n<p>Use <code>environment<\/code> to set the environment variables for the process. If not\nset the environment of the parent process is inherited. Currently, only\nUS-ASCII environment variables are supported and errors are likely to occur\nif an environment variable with code-points outside the US-ASCII range is\npassed in.<\/p>\n<p>If <code>includeParentEnvironment<\/code> is <code>true<\/code>, the process's environment will\ninclude the parent process's environment, with <code>environment<\/code> taking\nprecedence. Default is <code>true<\/code>.<\/p>\n<p>If <code>runInShell<\/code> is true, the process will be spawned through a system\nshell. On Linux and OS X, <code>\/bin\/sh<\/code> is used, while\n<code>%WINDIR%\\system32\\cmd.exe<\/code> is used on Windows.<\/p>\n<p>The encoding used for decoding <code>stdout<\/code> and <code>stderr<\/code> into text is\ncontrolled through <code>stdoutEncoding<\/code> and <code>stderrEncoding<\/code>. The\ndefault encoding is <a href=\"dart-io\/systemEncoding-constant.html\">systemEncoding<\/a>. If <code>null<\/code> is used no\ndecoding will happen and the <a href=\"dart-io\/ProcessResult-class.html\">ProcessResult<\/a> will hold binary\ndata.<\/p>\n<p>Returns a <code>Future&lt;ProcessResult&gt;<\/code> that completes with the\nresult of running the process, i.e., exit code, standard out and\nstandard in.<\/p>\n<p>The following code uses <code>Process.run<\/code> to grep for <code>main<\/code> in the\nfile <code>test.dart<\/code> on Linux.<\/p>\n<pre class=\"language-dart\"><code>Process.run('grep', ['-i', 'main', 'test.dart']).then((result) {\n  stdout.write(result.stdout);\n  stderr.write(result.stderr);\n});\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">external static Future&lt;ProcessResult&gt; run(\n    String executable, List&lt;String&gt; arguments,\n    {String workingDirectory,\n    Map&lt;String, String&gt; environment,\n    bool includeParentEnvironment: true,\n    bool runInShell: false,\n    Encoding stdoutEncoding: systemEncoding,\n    Encoding stderrEncoding: systemEncoding});<\/code><\/pre>\n    ",
+            "href": "dart-io\/Process\/run.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:io.ProcessResult>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:io.Process",
+            "params": [
                 {
                     "name": "arguments",
-                    "type": "dart:core.List<dart:core.String>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.List",
-                        "dart:core.String"
-                    ]
-                },
-                {
-                    "name": "workingDirectory",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.List<dart:core.String>"
                 },
                 {
                     "name": "environment",
-                    "type": "dart:core.Map<dart:core.String<dart:core.String>>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Map",
-                        "dart:core.String",
-                        "dart:core.String"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Map<dart:core.String<dart:core.String>>"
+                },
+                {
+                    "name": "executable",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 },
                 {
                     "name": "includeParentEnvironment",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "runInShell",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "stdoutEncoding",
-                    "type": "dart:convert.Encoding",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "stderrEncoding",
-                    "type": "dart:convert.Encoding",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-io\/Process\/runSync.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">external static ProcessResult runSync(\n    String executable, List&lt;String&gt; arguments,\n    {String workingDirectory,\n    Map&lt;String, String&gt; environment,\n    bool includeParentEnvironment: true,\n    bool runInShell: false,\n    Encoding stdoutEncoding: systemEncoding,\n    Encoding stderrEncoding: systemEncoding});<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "start",
-            "type": "dart:async.Future<dart:io.Process>",
-            "desc": "<p>Starts a process running the <code>executable<\/code> with the specified\n<code>arguments<\/code>. Returns a <code>Future&lt;Process&gt;<\/code> that completes with a\nProcess instance when the process has been successfully\nstarted. That <a href=\"dart-io\/Process-class.html\">Process<\/a> object can be used to interact with the\nprocess. If the process cannot be started the returned <a href=\"dart-async\/Future-class.html\">Future<\/a>\ncompletes with an exception.<\/p>\n<p>Use <code>workingDirectory<\/code> to set the working directory for the process. Note\nthat the change of directory occurs before executing the process on some\nplatforms, which may have impact when using relative paths for the\nexecutable and the arguments.<\/p>\n<p>Use <code>environment<\/code> to set the environment variables for the process. If not\nset the environment of the parent process is inherited. Currently, only\nUS-ASCII environment variables are supported and errors are likely to occur\nif an environment variable with code-points outside the US-ASCII range is\npassed in.<\/p>\n<p>If <code>includeParentEnvironment<\/code> is <code>true<\/code>, the process's environment will\ninclude the parent process's environment, with <code>environment<\/code> taking\nprecedence. Default is <code>true<\/code>.<\/p>\n<p>If <code>runInShell<\/code> is <code>true<\/code>, the process will be spawned through a system\nshell. On Linux and OS X, <code>\/bin\/sh<\/code> is used, while\n<code>%WINDIR%\\system32\\cmd.exe<\/code> is used on Windows.<\/p>\n<p>Users must read all data coming on the <a href=\"dart-io\/Process\/stdout.html\">stdout<\/a> and <a href=\"dart-io\/Process\/stderr.html\">stderr<\/a>\nstreams of processes started with <code>Process.start<\/code>. If the user\ndoes not read all data on the streams the underlying system\nresources will not be released since there is still pending data.<\/p>\n<p>The following code uses <code>Process.start<\/code> to grep for <code>main<\/code> in the\nfile <code>test.dart<\/code> on Linux.<\/p>\n<pre class=\"language-dart\"><code>Process.start('grep', ['-i', 'main', 'test.dart']).then((process) {\n  stdout.addStream(process.stdout);\n  stderr.addStream(process.stderr);\n});\n<\/code><\/pre>\n<p>If <code>mode<\/code> is <a href=\"dart-io\/ProcessStartMode\/normal-constant.html\">ProcessStartMode.normal<\/a> (the default) a child\nprocess will be started with <code>stdin<\/code>, <code>stdout<\/code> and <code>stderr<\/code>\nconnected.<\/p>\n<p>If <code>mode<\/code> is <a href=\"dart-io\/ProcessStartMode\/detached-constant.html\">ProcessStartMode.detached<\/a> a detached process will\nbe created. A detached process has no connection to its parent,\nand can keep running on its own when the parent dies. The only\ninformation available from a detached process is its <code>pid<\/code>. There\nis no connection to its <code>stdin<\/code>, <code>stdout<\/code> or <code>stderr<\/code>, nor will\nthe process' exit code become available when it terminates.<\/p>\n<p>If <code>mode<\/code> is <a href=\"dart-io\/ProcessStartMode\/detachedWithStdio-constant.html\">ProcessStartMode.detachedWithStdio<\/a> a detached\nprocess will be created where the <code>stdin<\/code>, <code>stdout<\/code> and <code>stderr<\/code>\nare connected. The creator can communicate with the child through\nthese. The detached process will keep running even if these\ncommunication channels are closed. The process' exit code will\nnot become available when it terminated.<\/p>\n<p>The default value for <code>mode<\/code> is <code>ProcessStartMode.normal<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:io.Process",
-            "sig": "",
-            "params": [
-                {
-                    "name": "executable",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:convert.Encoding"
                 },
                 {
-                    "name": "arguments",
-                    "type": "dart:core.List<dart:core.String>",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "stdoutEncoding",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.List",
-                        "dart:core.String"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:convert.Encoding"
                 },
                 {
                     "name": "workingDirectory",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Starts a process and runs it to completion. This is a synchronous\ncall and will block until the child process terminates.<\/p>\n<p>The arguments are the same as for <code>Process.run<\/code>.<\/p>\n<p>Returns a <code>ProcessResult<\/code> with the result of running the process,\ni.e., exit code, standard out and standard in.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">external static ProcessResult runSync(\n    String executable, List&lt;String&gt; arguments,\n    {String workingDirectory,\n    Map&lt;String, String&gt; environment,\n    bool includeParentEnvironment: true,\n    bool runInShell: false,\n    Encoding stdoutEncoding: systemEncoding,\n    Encoding stderrEncoding: systemEncoding});<\/code><\/pre>\n    ",
+            "href": "dart-io\/Process\/runSync.html",
+            "isDeprecated": "0",
+            "type": "dart:io.ProcessResult",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:io.Process",
+            "params": [
+                {
+                    "name": "arguments",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.List<dart:core.String>"
                 },
                 {
                     "name": "environment",
-                    "type": "dart:core.Map<dart:core.String<dart:core.String>>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Map",
-                        "dart:core.String",
-                        "dart:core.String"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Map<dart:core.String<dart:core.String>>"
+                },
+                {
+                    "name": "executable",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 },
                 {
                     "name": "includeParentEnvironment",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "runInShell",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "stderrEncoding",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:convert.Encoding"
+                },
+                {
+                    "name": "stdoutEncoding",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:convert.Encoding"
+                },
+                {
+                    "name": "workingDirectory",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Starts a process running the <code>executable<\/code> with the specified\n<code>arguments<\/code>. Returns a <code>Future&lt;Process&gt;<\/code> that completes with a\nProcess instance when the process has been successfully\nstarted. That <a href=\"dart-io\/Process-class.html\">Process<\/a> object can be used to interact with the\nprocess. If the process cannot be started the returned <a href=\"dart-async\/Future-class.html\">Future<\/a>\ncompletes with an exception.<\/p>\n<p>Use <code>workingDirectory<\/code> to set the working directory for the process. Note\nthat the change of directory occurs before executing the process on some\nplatforms, which may have impact when using relative paths for the\nexecutable and the arguments.<\/p>\n<p>Use <code>environment<\/code> to set the environment variables for the process. If not\nset the environment of the parent process is inherited. Currently, only\nUS-ASCII environment variables are supported and errors are likely to occur\nif an environment variable with code-points outside the US-ASCII range is\npassed in.<\/p>\n<p>If <code>includeParentEnvironment<\/code> is <code>true<\/code>, the process's environment will\ninclude the parent process's environment, with <code>environment<\/code> taking\nprecedence. Default is <code>true<\/code>.<\/p>\n<p>If <code>runInShell<\/code> is <code>true<\/code>, the process will be spawned through a system\nshell. On Linux and OS X, <code>\/bin\/sh<\/code> is used, while\n<code>%WINDIR%\\system32\\cmd.exe<\/code> is used on Windows.<\/p>\n<p>Users must read all data coming on the <a href=\"dart-io\/Process\/stdout.html\">stdout<\/a> and <a href=\"dart-io\/Process\/stderr.html\">stderr<\/a>\nstreams of processes started with <code>Process.start<\/code>. If the user\ndoes not read all data on the streams the underlying system\nresources will not be released since there is still pending data.<\/p>\n<p>The following code uses <code>Process.start<\/code> to grep for <code>main<\/code> in the\nfile <code>test.dart<\/code> on Linux.<\/p>\n<pre class=\"language-dart\"><code>Process.start('grep', ['-i', 'main', 'test.dart']).then((process) {\n  stdout.addStream(process.stdout);\n  stderr.addStream(process.stderr);\n});\n<\/code><\/pre>\n<p>If <code>mode<\/code> is <a href=\"dart-io\/ProcessStartMode\/normal-constant.html\">ProcessStartMode.normal<\/a> (the default) a child\nprocess will be started with <code>stdin<\/code>, <code>stdout<\/code> and <code>stderr<\/code>\nconnected.<\/p>\n<p>If <code>mode<\/code> is <a href=\"dart-io\/ProcessStartMode\/detached-constant.html\">ProcessStartMode.detached<\/a> a detached process will\nbe created. A detached process has no connection to its parent,\nand can keep running on its own when the parent dies. The only\ninformation available from a detached process is its <code>pid<\/code>. There\nis no connection to its <code>stdin<\/code>, <code>stdout<\/code> or <code>stderr<\/code>, nor will\nthe process' exit code become available when it terminates.<\/p>\n<p>If <code>mode<\/code> is <a href=\"dart-io\/ProcessStartMode\/detachedWithStdio-constant.html\">ProcessStartMode.detachedWithStdio<\/a> a detached\nprocess will be created where the <code>stdin<\/code>, <code>stdout<\/code> and <code>stderr<\/code>\nare connected. The creator can communicate with the child through\nthese. The detached process will keep running even if these\ncommunication channels are closed. The process' exit code will\nnot become available when it terminated.<\/p>\n<p>The default value for <code>mode<\/code> is <code>ProcessStartMode.normal<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">external static Future&lt;Process&gt; start(\n    String executable, List&lt;String&gt; arguments,\n    {String workingDirectory,\n    Map&lt;String, String&gt; environment,\n    bool includeParentEnvironment: true,\n    bool runInShell: false,\n    ProcessStartMode mode: ProcessStartMode.normal});<\/code><\/pre>\n    ",
+            "href": "dart-io\/Process\/start.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:io.Process>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:io.Process",
+            "params": [
+                {
+                    "name": "arguments",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.List<dart:core.String>"
+                },
+                {
+                    "name": "environment",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Map<dart:core.String<dart:core.String>>"
+                },
+                {
+                    "name": "executable",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                },
+                {
+                    "name": "includeParentEnvironment",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "mode",
-                    "type": "dart:io.ProcessStartMode",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:io.ProcessStartMode"
+                },
+                {
+                    "name": "runInShell",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "workingDirectory",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-io\/Process\/start.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">external static Future&lt;Process&gt; start(\n    String executable, List&lt;String&gt; arguments,\n    {String workingDirectory,\n    Map&lt;String, String&gt; environment,\n    bool includeParentEnvironment: true,\n    bool runInShell: false,\n    ProcessStartMode mode: ProcessStartMode.normal});<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:io.Process"
             ]
         }
     ],
     "props": [
         {
-            "name": "exitCode",
-            "type": "dart:async.Future<dart:core.int>",
-            "types": [
-                "dart:async.Future",
-                "dart:core.int"
-            ],
             "desc": "<p>Returns a <code>Future<\/code> which completes with the exit code of the process\nwhen the process completes.<\/p>\n<p>The handling of exit codes is platform specific.<\/p>\n<p>On Linux and OS X a normal exit code will be a positive value in\nthe range <code>0..255<\/code>. If the process was terminated due to a signal\nthe exit code will be a negative value in the range <code>-255..-1<\/code>,\nwhere the absolute value of the exit code is the signal\nnumber. For example, if a process crashes due to a segmentation\nviolation the exit code will be -11, as the signal SIGSEGV has the\nnumber 11.<\/p>\n<p>On Windows a process can report any 32-bit value as an exit\ncode. When returning the exit code this exit code is turned into\na signed value. Some special values are used to report\ntermination due to some system event. E.g. if a process crashes\ndue to an access violation the 32-bit exit code is <code>0xc0000005<\/code>,\nwhich will be returned as the negative number <code>-1073741819<\/code>. To\nget the original 32-bit value use <code>(0x100000000 + exitCode) &amp;\n0xffffffff<\/code>.<\/p>\n<p>There is no guarantee that <a href=\"dart-io\/Process\/stdout.html\">stdout<\/a> and <a href=\"dart-io\/Process\/stderr.html\">stderr<\/a> have finished reporting\nthe buffered output of the process when the returned future completes.\nTo be sure that all output is captured,\nwait for the done event on the streams.<\/p>\n        ",
-            "memberOf": "dart:io.Process",
-            "isConstant": false,
-            "href": "dart-io\/Process\/exitCode.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;int&gt; get exitCode;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-io\/Process\/exitCode.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:core.int>",
+            "memberOf": "dart:io.Process",
+            "params": []
         },
         {
-            "name": "pid",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>Returns the process id of the process.<\/p>\n        ",
-            "memberOf": "dart:io.Process",
-            "isConstant": false,
-            "href": "dart-io\/Process\/pid.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get pid;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-io\/Process\/pid.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "dart:io.Process",
+            "params": []
         },
         {
-            "name": "stderr",
-            "type": "dart:async.Stream<dart:core.List<dart:core.int>>",
-            "types": [
-                "dart:async.Stream",
-                "dart:core.List",
-                "dart:core.int"
-            ],
             "desc": "<p>Returns the standard error stream of the process as a <code>Stream<\/code>.<\/p>\n        ",
-            "memberOf": "dart:io.Process",
-            "isConstant": false,
-            "href": "dart-io\/Process\/stderr.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;List&lt;int&gt;&gt; get stderr;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "stdin",
-            "type": "dart:io.IOSink",
-            "types": [],
-            "desc": "<p>Returns the standard input stream of the process as an <a href=\"dart-io\/IOSink-class.html\">IOSink<\/a>.<\/p>\n        ",
-            "memberOf": "dart:io.Process",
-            "isConstant": false,
-            "href": "dart-io\/Process\/stdin.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">IOSink get stdin;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "stdout",
+            "href": "dart-io\/Process\/stderr.html",
+            "isDeprecated": "0",
             "type": "dart:async.Stream<dart:core.List<dart:core.int>>",
-            "types": [
-                "dart:async.Stream",
-                "dart:core.List",
-                "dart:core.int"
-            ],
-            "desc": "<p>Returns the standard output stream of the process as a <code>Stream<\/code>.<\/p>\n        ",
             "memberOf": "dart:io.Process",
-            "isConstant": false,
-            "href": "dart-io\/Process\/stdout.html",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns the standard input stream of the process as an <a href=\"dart-io\/IOSink-class.html\">IOSink<\/a>.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">IOSink get stdin;<\/code><\/pre>\n        ",
+            "href": "dart-io\/Process\/stdin.html",
+            "isDeprecated": "0",
+            "type": "dart:io.IOSink",
+            "memberOf": "dart:io.Process",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns the standard output stream of the process as a <code>Stream<\/code>.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;List&lt;int&gt;&gt; get stdout;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-io\/Process\/stdout.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Stream<dart:core.List<dart:core.int>>",
+            "memberOf": "dart:io.Process",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "dart-io\/Process-class.html",
-    "desc": "<p>The means to execute a program.<\/p>\n<p>Use the static <a href=\"dart-io\/Process\/start.html\">start<\/a> and <a href=\"dart-io\/Process\/run.html\">run<\/a> methods to start a new process.\nThe run method executes the process non-interactively to completion.\nIn contrast, the start method allows your code to interact with the\nrunning process.<\/p>\n<h2 id=\"start-a-process-with-the-run-method\">Start a process with the run method<\/h2>\n<p>The following code sample uses the run method to create a process\nthat runs the UNIX command <code>ls<\/code>, which lists the contents of a directory.\nThe run method completes with a <a href=\"dart-io\/ProcessResult-class.html\">ProcessResult<\/a> object when the process\nterminates. This provides access to the output and exit code from the\nprocess. The run method does not return a Process object; this prevents your\ncode from interacting with the running process.<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\n\nmain() {\n  \/\/ List all files in the current directory in UNIX-like systems.\n  Process.run('ls', ['-l']).then((ProcessResult results) {\n    print(results.stdout);\n  });\n}\n<\/code><\/pre>\n<h2 id=\"start-a-process-with-the-start-method\">Start a process with the start method<\/h2>\n<p>The following example uses start to create the process.\nThe start method returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> for a Process object.\nWhen the future completes the process is started and\nyour code can interact with the\nProcess: writing to stdin, listening to stdout, and so on.<\/p>\n<p>The following sample starts the UNIX <code>cat<\/code> utility, which when given no\ncommand-line arguments, echos its input.\nThe program writes to the process's standard input stream\nand prints data from its standard output stream.<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\nimport 'dart:convert';\n\nmain() {\n  Process.start('cat', []).then((Process process) {\n    process.stdout\n        .transform(utf8.decoder)\n        .listen((data) { print(data); });\n    process.stdin.writeln('Hello, world!');\n    process.stdin.writeln('Hello, galaxy!');\n    process.stdin.writeln('Hello, universe!');\n  });\n}\n<\/code><\/pre>\n<h2 id=\"standard-io-streams\">Standard I\/O streams<\/h2>\n<p>As seen in the previous code sample, you can interact with the Process's\nstandard output stream through the getter <a href=\"dart-io\/Process\/stdout.html\">stdout<\/a>,\nand you can interact with the Process's standard input stream through\nthe getter <a href=\"dart-io\/Process\/stdin.html\">stdin<\/a>.\nIn addition, Process provides a getter <a href=\"dart-io\/Process\/stderr.html\">stderr<\/a> for using the Process's\nstandard error stream.<\/p>\n<p>A Process's streams are distinct from the top-level streams\nfor the current program.<\/p>\n<h2 id=\"exit-codes\">Exit codes<\/h2>\n<p>Call the <a href=\"dart-io\/Process\/exitCode.html\">exitCode<\/a> method to get the exit code of the process.\nThe exit code indicates whether the program terminated successfully\n(usually indicated with an exit code of 0) or with an error.<\/p>\n<p>If the start method is used, the exitCode is available through a future\non the Process object (as shown in the example below).\nIf the run method is used, the exitCode is available\nthrough a getter on the ProcessResult instance.<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\n\nmain() {\n  Process.start('ls', ['-l']).then((process) {\n    \/\/ Get the exit code from the new process.\n    process.exitCode.then((exitCode) {\n      print('exit code: $exitCode');\n    });\n  });\n}\n<\/code><\/pre>\n<h2 id=\"other-resources\">Other resources<\/h2>\n<p><a href=\"https:\/\/www.dartlang.org\/dart-by-example\/#dart-io-and-command-line-apps\">Dart by Example<\/a>\nprovides additional task-oriented code samples that show how to use\nvarious API from the <a href=\"dart-io\/dart-io-library.html\">dart:io<\/a> library.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "Process"
+    ]
 }

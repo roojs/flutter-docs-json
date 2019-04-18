@@ -1,164 +1,91 @@
 {
+    "desc": "<p>A <a href=\"package-web_socket_channel_web_socket_channel\/WebSocketChannel-class.html\">WebSocketChannel<\/a> that communicates using a <code>dart:io<\/code> <a href=\"dart-io\/WebSocket-class.html\">WebSocket<\/a>.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "web_socket_channel.io\/IOWebSocketChannel-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "web_socket_channel.io",
     "name": "web_socket_channel.io.IOWebSocketChannel",
+    "shortname": "IOWebSocketChannel",
     "extends": [
         "stream_channel.StreamChannelMixin",
         "dart:core.Object"
     ],
-    "memberOf": "web_socket_channel.io",
     "events": [],
     "methods": [
         {
-            "name": "IOWebSocketChannel",
-            "type": "",
             "desc": "<p>Creates a channel wrapping <code>socket<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">IOWebSocketChannel(WebSocket socket)\n    : _webSocket = socket,\n      stream = socket.handleError(\n          (error) =&gt; throw new WebSocketChannelException.from(error)),\n      sink = new _IOWebSocketSink(socket);<\/code><\/pre>\n    ",
+            "href": "web_socket_channel.io\/IOWebSocketChannel\/IOWebSocketChannel.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "web_socket_channel.io.IOWebSocketChannel",
-            "sig": "",
             "params": [
                 {
                     "name": "socket",
-                    "type": "dart:io.WebSocket",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:io.WebSocket"
                 }
-            ],
-            "isConstructor": true,
-            "href": "web_socket_channel.io\/IOWebSocketChannel\/IOWebSocketChannel.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">IOWebSocketChannel(WebSocket socket)\n    : _webSocket = socket,\n      stream = socket.handleError(\n          (error) =&gt; throw new WebSocketChannelException.from(error)),\n      sink = new _IOWebSocketSink(socket);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "IOWebSocketChannel.connect",
-            "type": "",
-            "desc": "<p>Creates a new WebSocket connection.<\/p>\n<p>Connects to <code>url<\/code> using <a href=\"web_socket_channel.io\/IOWebSocketChannel\/IOWebSocketChannel.connect.html\">WebSocket.connect<\/a> and returns a channel that can\nbe used to communicate over the resulting socket. The <code>url<\/code> may be either\na <a href=\"dart-core\/String-class.html\">String<\/a> or a <a href=\"dart-core\/Uri-class.html\">Uri<\/a>. The <code>protocols<\/code> and <code>headers<\/code> parameters are the\nsame as <a href=\"web_socket_channel.io\/IOWebSocketChannel\/IOWebSocketChannel.connect.html\">WebSocket.connect<\/a>.<\/p>\n<p><code>pingInterval<\/code> controls the interval for sending ping signals. If a ping\nmessage is not answered by a pong message from the peer, the WebSocket is\nassumed disconnected and the connection is closed with a <code>goingAway<\/code> code.\nWhen a ping signal is sent, the pong message must be received within\n<code>pingInterval<\/code>. It defaults to <code>null<\/code>, indicating that ping messages are\ndisabled.<\/p>\n<p>If there's an error connecting, the channel's stream emits a\n<a href=\"package-web_socket_channel_web_socket_channel\/WebSocketChannelException-class.html\">WebSocketChannelException<\/a> wrapping that error and then closes.<\/p>\n    ",
-            "static": false,
-            "memberOf": "web_socket_channel.io.IOWebSocketChannel",
-            "sig": "",
-            "params": [
-                {
-                    "name": "url",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "protocols",
-                    "type": "dart:core.Iterable<dart:core.String>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Iterable",
-                        "dart:core.String"
-                    ]
-                },
-                {
-                    "name": "headers",
-                    "type": "dart:core.Map<dart:core.String>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Map",
-                        "dart:core.String"
-                    ]
-                },
-                {
-                    "name": "pingInterval",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "web_socket_channel.io\/IOWebSocketChannel\/IOWebSocketChannel.connect.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory IOWebSocketChannel.connect(url,\n    {Iterable&lt;String&gt; protocols,\n    Map&lt;String, dynamic&gt; headers,\n    Duration pingInterval}) {\n  var channel;\n  var sinkCompleter = new WebSocketSinkCompleter();\n  var stream = StreamCompleter.fromFuture(\n      WebSocket.connect(url.toString(), headers: headers).then((webSocket) {\n    webSocket.pingInterval = pingInterval;\n    channel._webSocket = webSocket;\n    sinkCompleter.setDestinationSink(new _IOWebSocketSink(webSocket));\n    return webSocket;\n  }).catchError((error) =&gt; throw new WebSocketChannelException.from(error)));\n\n  channel = new IOWebSocketChannel._withoutSocket(stream, sinkCompleter.sink);\n  return channel;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "closeCode",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The <a href=\"https:\/\/tools.ietf.org\/html\/rfc6455#section-7.1.5\">close code<\/a> set when the WebSocket connection is closed.<\/p>\n<p>Before the connection has been closed, this will be <code>null<\/code>.<\/p>\n        ",
-            "memberOf": "web_socket_channel.io.IOWebSocketChannel",
-            "isConstant": false,
-            "href": "web_socket_channel.io\/IOWebSocketChannel\/closeCode.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get closeCode =&gt; _webSocket?.closeCode;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "web_socket_channel.io\/IOWebSocketChannel\/closeCode.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "web_socket_channel.io.IOWebSocketChannel",
+            "params": []
         },
         {
-            "name": "closeReason",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>The <a href=\"https:\/\/tools.ietf.org\/html\/rfc6455#section-7.1.6\">close reason<\/a> set when the WebSocket connection is closed.<\/p>\n<p>Before the connection has been closed, this will be <code>null<\/code>.<\/p>\n        ",
-            "memberOf": "web_socket_channel.io.IOWebSocketChannel",
-            "isConstant": false,
-            "href": "web_socket_channel.io\/IOWebSocketChannel\/closeReason.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get closeReason =&gt; _webSocket?.closeReason;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "protocol",
+            "href": "web_socket_channel.io\/IOWebSocketChannel\/closeReason.html",
+            "isDeprecated": "0",
             "type": "dart:core.String",
-            "types": [],
+            "memberOf": "web_socket_channel.io.IOWebSocketChannel",
+            "params": []
+        },
+        {
             "desc": "<p>The subprotocol selected by the server.<\/p>\n<p>For a client socket, this is initially <code>null<\/code>. After the WebSocket\nconnection is established the value is set to the subprotocol selected by\nthe server. If no subprotocol is negotiated the value will remain <code>null<\/code>.<\/p>\n        ",
-            "memberOf": "web_socket_channel.io.IOWebSocketChannel",
-            "isConstant": false,
-            "href": "web_socket_channel.io\/IOWebSocketChannel\/protocol.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get protocol =&gt; _webSocket?.protocol;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "web_socket_channel.io\/IOWebSocketChannel\/protocol.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "web_socket_channel.io.IOWebSocketChannel",
+            "params": []
         },
         {
-            "name": "sink",
-            "type": "web_socket_channel.WebSocketSink",
-            "types": [],
             "desc": "<p>The sink for sending values to the other endpoint.<\/p>\n<p>This supports additional arguments to <a href=\"package-web_socket_channel_web_socket_channel\/WebSocketSink\/close.html\">WebSocketSink.close<\/a> that provide\nthe remote endpoint reasons for closing the connection.<\/p>\n        ",
-            "memberOf": "web_socket_channel.io.IOWebSocketChannel",
-            "isConstant": false,
-            "href": "web_socket_channel.io\/IOWebSocketChannel\/sink.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final WebSocketSink sink\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "web_socket_channel.io\/IOWebSocketChannel\/sink.html",
+            "isDeprecated": "0",
+            "type": "web_socket_channel.WebSocketSink",
+            "memberOf": "web_socket_channel.io.IOWebSocketChannel",
+            "params": []
         },
         {
-            "name": "stream",
-            "type": "dart:async.Stream",
-            "types": [],
             "desc": "<p>The single-subscription stream that emits values from the other endpoint.<\/p>\n        ",
-            "memberOf": "web_socket_channel.io.IOWebSocketChannel",
-            "isConstant": false,
-            "href": "web_socket_channel.io\/IOWebSocketChannel\/stream.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Stream stream\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "web_socket_channel.io\/IOWebSocketChannel\/stream.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Stream",
+            "memberOf": "web_socket_channel.io.IOWebSocketChannel",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "web_socket_channel.io\/IOWebSocketChannel-class.html",
-    "desc": "<p>A <a href=\"package-web_socket_channel_web_socket_channel\/WebSocketChannel-class.html\">WebSocketChannel<\/a> that communicates using a <code>dart:io<\/code> <a href=\"dart-io\/WebSocket-class.html\">WebSocket<\/a>.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "IOWebSocketChannel"
+    ]
 }

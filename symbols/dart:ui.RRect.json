@@ -1,913 +1,467 @@
 {
-    "name": "dart:ui.RRect",
-    "extends": [],
+    "desc": "<p>An immutable rounded rectangle with the custom radii for all four corners.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "dart-ui\/RRect-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "dart:ui",
+    "name": "dart:ui.RRect",
+    "shortname": "RRect",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "operator ==",
-            "type": "dart:core.bool",
-            "desc": "<p>The equality operator.<\/p>\n<p>The default behavior for all <a href=\"dart-core\/Object-class.html\">Object<\/a>s is to return true if and\nonly if <code>this<\/code> and <code>other<\/code> are the same object.<\/p>\n<p>Override this method to specify a different equality relation on\na class. The overriding method must still be an equivalence relation.\nThat is, it must be:<\/p>\n<ul>\n<li>\n<p>Total: It must return a boolean for all arguments. It should never throw\nor return <code>null<\/code>.<\/p>\n<\/li>\n<li>\n<p>Reflexive: For all objects <code>o<\/code>, <code>o == o<\/code> must be true.<\/p>\n<\/li>\n<li>\n<p>Symmetric: For all objects <code>o1<\/code> and <code>o2<\/code>, <code>o1 == o2<\/code> and <code>o2 == o1<\/code> must\neither both be true, or both be false.<\/p>\n<\/li>\n<li>\n<p>Transitive: For all objects <code>o1<\/code>, <code>o2<\/code>, and <code>o3<\/code>, if <code>o1 == o2<\/code> and\n<code>o2 == o3<\/code> are true, then <code>o1 == o3<\/code> must be true.<\/p>\n<\/li>\n<\/ul>\n<p>The method should also be consistent over time,\nso whether two objects are equal should only change\nif at least one of the objects was modified.<\/p>\n<p>If a subclass overrides the equality operator it should override\nthe <a href=\"dart-ui\/RRect\/hashCode.html\">hashCode<\/a> method as well to maintain consistency.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:ui.RRect",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-ui\/RRect\/operator_equals.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool operator ==(dynamic other) {\n  if (identical(this, other))\n    return true;\n  if (runtimeType != other.runtimeType)\n    return false;\n  final RRect typedOther = other;\n  for (int i = 0; i &lt; _kDataSize; i += 1) {\n    if (_value[i] != typedOther._value[i])\n      return false;\n  }\n  return true;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "contains",
-            "type": "dart:core.bool",
             "desc": "<p>Whether the point specified by the given offset (which is assumed to be\nrelative to the origin) lies inside the rounded rectangle.<\/p>\n<p>This method may allocate (and cache) a copy of the object with normalized\nradii the first time it is called on a particular <a href=\"dart-ui\/RRect-class.html\">RRect<\/a> instance. When\nusing this method, prefer to reuse existing <a href=\"dart-ui\/RRect-class.html\">RRect<\/a>s rather than\nrecreating the object each time.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool contains(Offset point) {\n  if (point.dx &lt; left || point.dx &gt;= right || point.dy &lt; top || point.dy &gt;= bottom)\n    return false; \/\/ outside bounding box\n\n  _scaleRadii();\n\n  double x;\n  double y;\n  double radiusX;\n  double radiusY;\n  \/\/ check whether point is in one of the rounded corner areas\n  \/\/ x, y -&gt; translate to ellipse center\n  if (point.dx &lt; left + _scaled.tlRadiusX &amp;&amp;\n      point.dy &lt; top + _scaled.tlRadiusY) {\n    x = point.dx - left - _scaled.tlRadiusX;\n    y = point.dy - top - _scaled.tlRadiusY;\n    radiusX = _scaled.tlRadiusX;\n    radiusY = _scaled.tlRadiusY;\n  } else if (point.dx &gt; right - _scaled.trRadiusX &amp;&amp;\n             point.dy &lt; top + _scaled.trRadiusY) {\n    x = point.dx - right + _scaled.trRadiusX;\n    y = point.dy - top - _scaled.trRadiusY;\n    radiusX = _scaled.trRadiusX;\n    radiusY = _scaled.trRadiusY;\n  } else if (point.dx &gt; right - _scaled.brRadiusX &amp;&amp;\n             point.dy &gt; bottom - _scaled.brRadiusY) {\n    x = point.dx - right + _scaled.brRadiusX;\n    y = point.dy - bottom + _scaled.brRadiusY;\n    radiusX = _scaled.brRadiusX;\n    radiusY = _scaled.brRadiusY;\n  } else if (point.dx &lt; left + _scaled.blRadiusX &amp;&amp;\n             point.dy &gt; bottom - _scaled.blRadiusY) {\n    x = point.dx - left - _scaled.blRadiusX;\n    y = point.dy - bottom + _scaled.blRadiusY;\n    radiusX = _scaled.blRadiusX;\n    radiusY = _scaled.blRadiusY;\n  } else {\n    return true; \/\/ inside and not within the rounded corner area\n  }\n\n  x = x \/ radiusX;\n  y = y \/ radiusY;\n  \/\/ check if the point is outside the unit circle\n  if (x * x + y * y &gt; 1.0)\n    return false;\n  return true;\n}<\/code><\/pre>\n    ",
+            "href": "dart-ui\/RRect\/contains.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:ui.RRect",
-            "sig": "",
             "params": [
                 {
                     "name": "point",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Offset"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-ui\/RRect\/contains.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool contains(Offset point) {\n  if (point.dx &lt; left || point.dx &gt;= right || point.dy &lt; top || point.dy &gt;= bottom)\n    return false; \/\/ outside bounding box\n\n  _scaleRadii();\n\n  double x;\n  double y;\n  double radiusX;\n  double radiusY;\n  \/\/ check whether point is in one of the rounded corner areas\n  \/\/ x, y -&gt; translate to ellipse center\n  if (point.dx &lt; left + _scaled.tlRadiusX &amp;&amp;\n      point.dy &lt; top + _scaled.tlRadiusY) {\n    x = point.dx - left - _scaled.tlRadiusX;\n    y = point.dy - top - _scaled.tlRadiusY;\n    radiusX = _scaled.tlRadiusX;\n    radiusY = _scaled.tlRadiusY;\n  } else if (point.dx &gt; right - _scaled.trRadiusX &amp;&amp;\n             point.dy &lt; top + _scaled.trRadiusY) {\n    x = point.dx - right + _scaled.trRadiusX;\n    y = point.dy - top - _scaled.trRadiusY;\n    radiusX = _scaled.trRadiusX;\n    radiusY = _scaled.trRadiusY;\n  } else if (point.dx &gt; right - _scaled.brRadiusX &amp;&amp;\n             point.dy &gt; bottom - _scaled.brRadiusY) {\n    x = point.dx - right + _scaled.brRadiusX;\n    y = point.dy - bottom + _scaled.brRadiusY;\n    radiusX = _scaled.brRadiusX;\n    radiusY = _scaled.brRadiusY;\n  } else if (point.dx &lt; left + _scaled.blRadiusX &amp;&amp;\n             point.dy &gt; bottom - _scaled.blRadiusY) {\n    x = point.dx - left - _scaled.blRadiusX;\n    y = point.dy - bottom + _scaled.blRadiusY;\n    radiusX = _scaled.blRadiusX;\n    radiusY = _scaled.blRadiusY;\n  } else {\n    return true; \/\/ inside and not within the rounded corner area\n  }\n\n  x = x \/ radiusX;\n  y = y \/ radiusY;\n  \/\/ check if the point is outside the unit circle\n  if (x * x + y * y &gt; 1.0)\n    return false;\n  return true;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "deflate",
-            "type": "dart:ui.RRect",
             "desc": "<p>Returns a new <a href=\"dart-ui\/RRect-class.html\">RRect<\/a> with edges and radii moved inwards by the given delta.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:ui.RRect",
-            "sig": "",
-            "params": [
-                {
-                    "name": "delta",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-ui\/RRect\/deflate.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RRect deflate(double delta) =&gt; inflate(-delta);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "RRect.fromLTRBAndCorners",
-            "type": "",
-            "desc": "<p>Construct a rounded rectangle from its left, top, right, and bottom edges,\nand topLeft, topRight, bottomRight, and bottomLeft radii.<\/p>\n<p>The corner radii default to <a href=\"dart-ui\/RRect\/zero.html\">Radius.zero<\/a>, i.e. right-angled corners.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:ui.RRect",
-            "sig": "",
-            "params": [
-                {
-                    "name": "left",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "top",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "right",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "bottom",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "topLeft",
-                    "type": "dart:ui.Radius",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "topRight",
-                    "type": "dart:ui.Radius",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "bottomRight",
-                    "type": "dart:ui.Radius",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "bottomLeft",
-                    "type": "dart:ui.Radius",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "dart-ui\/RRect\/RRect.fromLTRBAndCorners.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RRect.fromLTRBAndCorners(\n  double left,\n  double top,\n  double right,\n  double bottom, {\n  Radius topLeft: Radius.zero,\n  Radius topRight: Radius.zero,\n  Radius bottomRight: Radius.zero,\n  Radius bottomLeft: Radius.zero,\n}) {\n  _value\n    ..[0] = left\n    ..[1] = top\n    ..[2] = right\n    ..[3] = bottom\n    ..[4] = topLeft.x\n    ..[5] = topLeft.y\n    ..[6] = topRight.x\n    ..[7] = topRight.y\n    ..[8] = bottomRight.x\n    ..[9] = bottomRight.y\n    ..[10] = bottomLeft.x\n    ..[11] = bottomLeft.y;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "RRect.fromLTRBR",
-            "type": "",
-            "desc": "<p>Construct a rounded rectangle from its left, top, right, and bottom edges,\nand the same radius in each corner.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:ui.RRect",
-            "sig": "",
-            "params": [
-                {
-                    "name": "left",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "top",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "right",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "bottom",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "radius",
-                    "type": "dart:ui.Radius",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "dart-ui\/RRect\/RRect.fromLTRBR.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RRect.fromLTRBR(double left, double top, double right, double bottom,\n                Radius radius) {\n  _value\n    ..[0] = left\n    ..[1] = top\n    ..[2] = right\n    ..[3] = bottom\n    ..[4] = radius.x\n    ..[5] = radius.y\n    ..[6] = radius.x\n    ..[7] = radius.y\n    ..[8] = radius.x\n    ..[9] = radius.y\n    ..[10] = radius.x\n    ..[11] = radius.y;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "RRect.fromLTRBXY",
-            "type": "",
-            "desc": "<p>Construct a rounded rectangle from its left, top, right, and bottom edges,\nand the same radii along its horizontal axis and its vertical axis.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:ui.RRect",
-            "sig": "",
-            "params": [
-                {
-                    "name": "left",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "top",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "right",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "bottom",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "radiusX",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "radiusY",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "dart-ui\/RRect\/RRect.fromLTRBXY.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RRect.fromLTRBXY(double left, double top, double right, double bottom,\n                 double radiusX, double radiusY) {\n  _value\n    ..[0] = left\n    ..[1] = top\n    ..[2] = right\n    ..[3] = bottom\n    ..[4] = radiusX\n    ..[5] = radiusY\n    ..[6] = radiusX\n    ..[7] = radiusY\n    ..[8] = radiusX\n    ..[9] = radiusY\n    ..[10] = radiusX\n    ..[11] = radiusY;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "RRect.fromRectAndCorners",
-            "type": "",
-            "desc": "<p>Construct a rounded rectangle from its bounding box and and topLeft,\ntopRight, bottomRight, and bottomLeft radii.<\/p>\n<p>The corner radii default to <a href=\"dart-ui\/RRect\/zero.html\">Radius.zero<\/a>, i.e. right-angled corners<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:ui.RRect",
-            "sig": "",
-            "params": [
-                {
-                    "name": "rect",
-                    "type": "dart:ui.Rect",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "topLeft",
-                    "type": "dart:ui.Radius",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "topRight",
-                    "type": "dart:ui.Radius",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "bottomRight",
-                    "type": "dart:ui.Radius",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "bottomLeft",
-                    "type": "dart:ui.Radius",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "dart-ui\/RRect\/RRect.fromRectAndCorners.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RRect.fromRectAndCorners(\n  Rect rect,\n  {\n    Radius topLeft: Radius.zero,\n    Radius topRight: Radius.zero,\n    Radius bottomRight: Radius.zero,\n    Radius bottomLeft: Radius.zero\n  }\n) {\n  _value\n    ..[0] = rect.left\n    ..[1] = rect.top\n    ..[2] = rect.right\n    ..[3] = rect.bottom\n    ..[4] = topLeft.x\n    ..[5] = topLeft.y\n    ..[6] = topRight.x\n    ..[7] = topRight.y\n    ..[8] = bottomRight.x\n    ..[9] = bottomRight.y\n    ..[10] = bottomLeft.x\n    ..[11] = bottomLeft.y;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "RRect.fromRectAndRadius",
-            "type": "",
-            "desc": "<p>Construct a rounded rectangle from its bounding box and a radius that is\nthe same in each corner.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:ui.RRect",
-            "sig": "",
-            "params": [
-                {
-                    "name": "rect",
-                    "type": "dart:ui.Rect",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "radius",
-                    "type": "dart:ui.Radius",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "dart-ui\/RRect\/RRect.fromRectAndRadius.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RRect.fromRectAndRadius(Rect rect, Radius radius) {\n  _value\n    ..[0] = rect.left\n    ..[1] = rect.top\n    ..[2] = rect.right\n    ..[3] = rect.bottom\n    ..[4] = radius.x\n    ..[5] = radius.y\n    ..[6] = radius.x\n    ..[7] = radius.y\n    ..[8] = radius.x\n    ..[9] = radius.y\n    ..[10] = radius.x\n    ..[11] = radius.y;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "RRect.fromRectXY",
-            "type": "",
-            "desc": "<p>Construct a rounded rectangle from its bounding box and the same radii\nalong its horizontal axis and its vertical axis.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:ui.RRect",
-            "sig": "",
-            "params": [
-                {
-                    "name": "rect",
-                    "type": "dart:ui.Rect",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "radiusX",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "radiusY",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "dart-ui\/RRect\/RRect.fromRectXY.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RRect.fromRectXY(Rect rect, double radiusX, double radiusY) {\n  _value\n    ..[0] = rect.left\n    ..[1] = rect.top\n    ..[2] = rect.right\n    ..[3] = rect.bottom\n    ..[4] = radiusX\n    ..[5] = radiusY\n    ..[6] = radiusX\n    ..[7] = radiusY\n    ..[8] = radiusX\n    ..[9] = radiusY\n    ..[10] = radiusX\n    ..[11] = radiusY;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "inflate",
+            "href": "dart-ui\/RRect\/deflate.html",
+            "isDeprecated": "0",
             "type": "dart:ui.RRect",
-            "desc": "<p>Returns a new <a href=\"dart-ui\/RRect-class.html\">RRect<\/a> with edges and radii moved outwards by the given\ndelta.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:ui.RRect",
-            "sig": "",
             "params": [
                 {
                     "name": "delta",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-ui\/RRect\/inflate.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RRect inflate(double delta) {\n  return new RRect.fromLTRBAndCorners(\n    _value[0] - delta,\n    _value[1] - delta,\n    _value[2] + delta,\n    _value[3] + delta,\n    topLeft: new Radius.elliptical(\n      _value[4] + delta,\n      _value[5] + delta\n    ),\n    topRight: new Radius.elliptical(\n      _value[6] + delta,\n      _value[7] + delta\n    ),\n    bottomRight: new Radius.elliptical(\n      _value[8] + delta,\n      _value[9] + delta\n    ),\n    bottomLeft: new Radius.elliptical(\n      _value[10] + delta,\n      _value[11] + delta\n    )\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "lerp",
+            "desc": "<p>Returns a new <a href=\"dart-ui\/RRect-class.html\">RRect<\/a> with edges and radii moved outwards by the given\ndelta.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RRect inflate(double delta) {\n  return new RRect.fromLTRBAndCorners(\n    _value[0] - delta,\n    _value[1] - delta,\n    _value[2] + delta,\n    _value[3] + delta,\n    topLeft: new Radius.elliptical(\n      _value[4] + delta,\n      _value[5] + delta\n    ),\n    topRight: new Radius.elliptical(\n      _value[6] + delta,\n      _value[7] + delta\n    ),\n    bottomRight: new Radius.elliptical(\n      _value[8] + delta,\n      _value[9] + delta\n    ),\n    bottomLeft: new Radius.elliptical(\n      _value[10] + delta,\n      _value[11] + delta\n    )\n  );\n}<\/code><\/pre>\n    ",
+            "href": "dart-ui\/RRect\/inflate.html",
+            "isDeprecated": "0",
             "type": "dart:ui.RRect",
-            "desc": "<p>Linearly interpolate between two rounded rectangles.<\/p>\n<p>If either is null, this function substitutes <a href=\"dart-ui\/RRect\/zero.html\">RRect.zero<\/a> instead.<\/p>\n<p>The <code>t<\/code> argument represents position on the timeline, with 0.0 meaning\nthat the interpolation has not started, returning <code>a<\/code> (or something\nequivalent to <code>a<\/code>), 1.0 meaning that the interpolation has finished,\nreturning <code>b<\/code> (or something equivalent to <code>b<\/code>), and values in between\nmeaning that the interpolation is at the relevant point on the timeline\nbetween <code>a<\/code> and <code>b<\/code>. The interpolation can be extrapolated beyond 0.0 and\n1.0, so negative values and values greater than 1.0 are valid (and can\neasily be generated by curves such as <a href=\"animation\/Curves\/elasticInOut-constant.html\">Curves.elasticInOut<\/a>).<\/p>\n<p>Values for <code>t<\/code> are usually obtained from an <a href=\"animation\/Animation-class.html\">Animation&lt;double&gt;<\/a>, such as\nan <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:ui.RRect",
-            "sig": "",
+            "params": [
+                {
+                    "name": "delta",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Linearly interpolate between two rounded rectangles.<\/p>\n<p>If either is null, this function substitutes <a href=\"dart-ui\/RRect\/zero.html\">RRect.zero<\/a> instead.<\/p>\n<p>The <code>t<\/code> argument represents position on the timeline, with 0.0 meaning\nthat the interpolation has not started, returning <code>a<\/code> (or something\nequivalent to <code>a<\/code>), 1.0 meaning that the interpolation has finished,\nreturning <code>b<\/code> (or something equivalent to <code>b<\/code>), and values in between\nmeaning that the interpolation is at the relevant point on the timeline\nbetween <code>a<\/code> and <code>b<\/code>. The interpolation can be extrapolated beyond 0.0 and\n1.0, so negative values and values greater than 1.0 are valid (and can\neasily be generated by curves such as <a href=\"animation\/Curves\/elasticInOut-constant.html\">Curves.elasticInOut<\/a>).<\/p>\n<p>Values for <code>t<\/code> are usually obtained from an <a href=\"animation\/Animation-class.html\">Animation&lt;double&gt;<\/a>, such as\nan <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static RRect lerp(RRect a, RRect b, double t) {\n  assert(t != null);\n  if (a == null &amp;&amp; b == null)\n    return null;\n  if (a == null) {\n    return new RRect._fromList(&lt;double&gt;[\n      b.left * t,\n      b.top * t,\n      b.right * t,\n      b.bottom * t,\n      b.tlRadiusX * t,\n      b.tlRadiusY * t,\n      b.trRadiusX * t,\n      b.trRadiusY * t,\n      b.brRadiusX * t,\n      b.brRadiusY * t,\n      b.blRadiusX * t,\n      b.blRadiusY * t,\n    ]);\n  }\n  if (b == null) {\n    final double k = 1.0 - t;\n    return new RRect._fromList(&lt;double&gt;[\n      a.left * k,\n      a.top * k,\n      a.right * k,\n      a.bottom * k,\n      a.tlRadiusX * k,\n      a.tlRadiusY * k,\n      a.trRadiusX * k,\n      a.trRadiusY * k,\n      a.brRadiusX * k,\n      a.brRadiusY * k,\n      a.blRadiusX * k,\n      a.blRadiusY * k,\n    ]);\n  }\n  return new RRect._fromList(&lt;double&gt;[\n    lerpDouble(a.left, b.left, t),\n    lerpDouble(a.top, b.top, t),\n    lerpDouble(a.right, b.right, t),\n    lerpDouble(a.bottom, b.bottom, t),\n    lerpDouble(a.tlRadiusX, b.tlRadiusX, t),\n    lerpDouble(a.tlRadiusY, b.tlRadiusY, t),\n    lerpDouble(a.trRadiusX, b.trRadiusX, t),\n    lerpDouble(a.trRadiusY, b.trRadiusY, t),\n    lerpDouble(a.brRadiusX, b.brRadiusX, t),\n    lerpDouble(a.brRadiusY, b.brRadiusY, t),\n    lerpDouble(a.blRadiusX, b.blRadiusX, t),\n    lerpDouble(a.blRadiusY, b.blRadiusY, t),\n  ]);\n}<\/code><\/pre>\n    ",
+            "href": "dart-ui\/RRect\/lerp.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.RRect",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:ui.RRect",
             "params": [
                 {
                     "name": "a",
-                    "type": "dart:ui.RRect",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.RRect"
                 },
                 {
                     "name": "b",
-                    "type": "dart:ui.RRect",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.RRect"
                 },
                 {
                     "name": "t",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-ui\/RRect\/lerp.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static RRect lerp(RRect a, RRect b, double t) {\n  assert(t != null);\n  if (a == null &amp;&amp; b == null)\n    return null;\n  if (a == null) {\n    return new RRect._fromList(&lt;double&gt;[\n      b.left * t,\n      b.top * t,\n      b.right * t,\n      b.bottom * t,\n      b.tlRadiusX * t,\n      b.tlRadiusY * t,\n      b.trRadiusX * t,\n      b.trRadiusY * t,\n      b.brRadiusX * t,\n      b.brRadiusY * t,\n      b.blRadiusX * t,\n      b.blRadiusY * t,\n    ]);\n  }\n  if (b == null) {\n    final double k = 1.0 - t;\n    return new RRect._fromList(&lt;double&gt;[\n      a.left * k,\n      a.top * k,\n      a.right * k,\n      a.bottom * k,\n      a.tlRadiusX * k,\n      a.tlRadiusY * k,\n      a.trRadiusX * k,\n      a.trRadiusY * k,\n      a.brRadiusX * k,\n      a.brRadiusY * k,\n      a.blRadiusX * k,\n      a.blRadiusY * k,\n    ]);\n  }\n  return new RRect._fromList(&lt;double&gt;[\n    lerpDouble(a.left, b.left, t),\n    lerpDouble(a.top, b.top, t),\n    lerpDouble(a.right, b.right, t),\n    lerpDouble(a.bottom, b.bottom, t),\n    lerpDouble(a.tlRadiusX, b.tlRadiusX, t),\n    lerpDouble(a.tlRadiusY, b.tlRadiusY, t),\n    lerpDouble(a.trRadiusX, b.trRadiusX, t),\n    lerpDouble(a.trRadiusY, b.trRadiusY, t),\n    lerpDouble(a.brRadiusX, b.brRadiusX, t),\n    lerpDouble(a.brRadiusY, b.brRadiusY, t),\n    lerpDouble(a.blRadiusX, b.blRadiusX, t),\n    lerpDouble(a.blRadiusY, b.blRadiusY, t),\n  ]);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "shift",
-            "type": "dart:ui.RRect",
             "desc": "<p>Returns a new <a href=\"dart-ui\/RRect-class.html\">RRect<\/a> translated by the given offset.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RRect shift(Offset offset) {\n  return new RRect.fromLTRBAndCorners(\n    _value[0] + offset.dx,\n    _value[1] + offset.dy,\n    _value[2] + offset.dx,\n    _value[3] + offset.dy,\n    topLeft: new Radius.elliptical(\n      _value[4],\n      _value[5]\n    ),\n    topRight: new Radius.elliptical(\n      _value[6],\n      _value[7]\n    ),\n    bottomRight: new Radius.elliptical(\n      _value[8],\n      _value[9]\n    ),\n    bottomLeft: new Radius.elliptical(\n      _value[10],\n      _value[11]\n    )\n  );\n}<\/code><\/pre>\n    ",
+            "href": "dart-ui\/RRect\/shift.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.RRect",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:ui.RRect",
-            "sig": "",
             "params": [
                 {
                     "name": "offset",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Offset"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-ui\/RRect\/shift.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">RRect shift(Offset offset) {\n  return new RRect.fromLTRBAndCorners(\n    _value[0] + offset.dx,\n    _value[1] + offset.dy,\n    _value[2] + offset.dx,\n    _value[3] + offset.dy,\n    topLeft: new Radius.elliptical(\n      _value[4],\n      _value[5]\n    ),\n    topRight: new Radius.elliptical(\n      _value[6],\n      _value[7]\n    ),\n    bottomRight: new Radius.elliptical(\n      _value[8],\n      _value[9]\n    ),\n    bottomLeft: new Radius.elliptical(\n      _value[10],\n      _value[11]\n    )\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "toString",
-            "type": "dart:core.String",
             "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() {\n  final String rect = '${left.toStringAsFixed(1)}, '\n                      '${top.toStringAsFixed(1)}, '\n                      '${right.toStringAsFixed(1)}, '\n                      '${bottom.toStringAsFixed(1)}';\n  if (tlRadius == trRadius &amp;&amp;\n      trRadius == brRadius &amp;&amp;\n      brRadius == blRadius) {\n    if (tlRadius.x == tlRadius.y)\n      return 'RRect.fromLTRBR($rect, ${tlRadius.x.toStringAsFixed(1)})';\n    return 'RRect.fromLTRBXY($rect, ${tlRadius.x.toStringAsFixed(1)}, ${tlRadius.y.toStringAsFixed(1)})';\n  }\n  return 'RRect.fromLTRBAndCorners('\n           '$rect, '\n           'topLeft: $tlRadius, '\n           'topRight: $trRadius, '\n           'bottomRight: $brRadius, '\n           'bottomLeft: $blRadius'\n         ')';\n}<\/code><\/pre>\n    ",
+            "href": "dart-ui\/RRect\/toString.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:ui.RRect",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "dart-ui\/RRect\/toString.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() {\n  final String rect = '${left.toStringAsFixed(1)}, '\n                      '${top.toStringAsFixed(1)}, '\n                      '${right.toStringAsFixed(1)}, '\n                      '${bottom.toStringAsFixed(1)}';\n  if (tlRadius == trRadius &amp;&amp;\n      trRadius == brRadius &amp;&amp;\n      brRadius == blRadius) {\n    if (tlRadius.x == tlRadius.y)\n      return 'RRect.fromLTRBR($rect, ${tlRadius.x.toStringAsFixed(1)})';\n    return 'RRect.fromLTRBXY($rect, ${tlRadius.x.toStringAsFixed(1)}, ${tlRadius.y.toStringAsFixed(1)})';\n  }\n  return 'RRect.fromLTRBAndCorners('\n           '$rect, '\n           'topLeft: $tlRadius, '\n           'topRight: $trRadius, '\n           'bottomRight: $brRadius, '\n           'bottomLeft: $blRadius'\n         ')';\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "blRadius",
-            "type": "dart:ui.Radius",
-            "types": [],
             "desc": "<p>The bottom-left <a href=\"dart-ui\/Radius-class.html\">Radius<\/a>.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/blRadius.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Radius get blRadius =&gt; new Radius.elliptical(_value[10], _value[11]);<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/blRadius.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Radius",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "blRadiusX",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The bottom-left horizontal radius.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/blRadiusX.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get blRadiusX =&gt; _value[10];<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/blRadiusX.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "blRadiusY",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The bottom-left vertical radius.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/blRadiusY.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get blRadiusY =&gt; _value[11];<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/blRadiusY.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "bottom",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The offset of the bottom edge of this rectangle from the y axis.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/bottom.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get bottom =&gt; _value[3];<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/bottom.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "brRadius",
-            "type": "dart:ui.Radius",
-            "types": [],
             "desc": "<p>The bottom-right <a href=\"dart-ui\/Radius-class.html\">Radius<\/a>.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/brRadius.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Radius get brRadius =&gt; new Radius.elliptical(_value[8], _value[9]);<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/brRadius.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Radius",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "brRadiusX",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The bottom-right horizontal radius.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/brRadiusX.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get brRadiusX =&gt; _value[8];<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/brRadiusX.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "brRadiusY",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The bottom-right vertical radius.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/brRadiusY.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get brRadiusY =&gt; _value[9];<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/brRadiusY.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "center",
-            "type": "dart:ui.Offset",
-            "types": [],
             "desc": "<p>The offset to the point halfway between the left and right and the top and\nbottom edges of this rectangle.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/center.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Offset get center =&gt; new Offset(left + width \/ 2.0, top + height \/ 2.0);<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/center.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Offset",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "hashCode",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The hash code for this object.<\/p>\n<p>A hash code is a single integer which represents the state of the object\nthat affects <a href=\"dart-ui\/RRect\/operator_equals.html\">operator ==<\/a> comparisons.<\/p>\n<p>All objects have hash codes.\nThe default hash code represents only the identity of the object,\nthe same way as the default <a href=\"dart-ui\/RRect\/operator_equals.html\">operator ==<\/a> implementation only considers objects\nequal if they are identical (see <a href=\"dart-core\/identityHashCode.html\">identityHashCode<\/a>).<\/p>\n<p>If <a href=\"dart-ui\/RRect\/operator_equals.html\">operator ==<\/a> is overridden to use the object state instead,\nthe hash code must also be changed to represent that state.<\/p>\n<p>Hash codes must be the same for objects that are equal to each other\naccording to <a href=\"dart-ui\/RRect\/operator_equals.html\">operator ==<\/a>.\nThe hash code of an object should only change if the object changes\nin a way that affects equality.\nThere are no further requirements for the hash codes.\nThey need not be consistent between executions of the same program\nand there are no distribution guarantees.<\/p>\n<p>Objects that are not equal are allowed to have the same hash code,\nit is even technically allowed that all instances have the same hash code,\nbut if clashes happen too often, it may reduce the efficiency of hash-based\ndata structures like <a href=\"dart-collection\/HashSet-class.html\">HashSet<\/a> or <a href=\"dart-collection\/HashMap-class.html\">HashMap<\/a>.<\/p>\n<p>If a subclass overrides <a href=\"dart-ui\/RRect\/hashCode.html\">hashCode<\/a>, it should override the\n<a href=\"dart-ui\/RRect\/operator_equals.html\">operator ==<\/a> operator as well to maintain consistency.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/hashCode.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get hashCode =&gt; hashList(_value);<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/hashCode.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "height",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The distance between the top and bottom edges of this rectangle.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/height.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get height =&gt; bottom - top;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/height.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "isCircle",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether this rounded rectangle would draw as a circle.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/isCircle.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isCircle =&gt; width == height &amp;&amp; isEllipse;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/isCircle.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "isEllipse",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether this rounded rectangle has no side with a straight section.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/isEllipse.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isEllipse {\n  return tlRadius == trRadius\n      &amp;&amp; trRadius == brRadius\n      &amp;&amp; brRadius == blRadius\n      &amp;&amp; width &lt;= 2.0 * tlRadiusX\n      &amp;&amp; height &lt;= 2.0 * tlRadiusY;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/isEllipse.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "isEmpty",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether this rounded rectangle encloses a non-zero area.\nNegative areas are considered empty.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/isEmpty.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isEmpty =&gt; left &gt;= right || top &gt;= bottom;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/isEmpty.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "isFinite",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether all coordinates of this rounded rectangle are finite.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/isFinite.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isFinite =&gt; left.isFinite &amp;&amp; top.isFinite &amp;&amp; right.isFinite &amp;&amp; bottom.isFinite;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/isFinite.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "isRect",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether this rounded rectangle is a simple rectangle with zero\ncorner radii.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/isRect.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isRect {\n  return (tlRadiusX == 0.0 || tlRadiusY == 0.0) &amp;&amp;\n         (trRadiusX == 0.0 || trRadiusY == 0.0) &amp;&amp;\n         (blRadiusX == 0.0 || blRadiusY == 0.0) &amp;&amp;\n         (brRadiusX == 0.0 || brRadiusY == 0.0);\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "isStadium",
+            "href": "dart-ui\/RRect\/isRect.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "types": [],
+            "memberOf": "dart:ui.RRect",
+            "params": []
+        },
+        {
             "desc": "<p>Whether this rounded rectangle has a side with no straight section.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/isStadium.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isStadium {\n  return tlRadius == trRadius\n      &amp;&amp; trRadius == brRadius\n      &amp;&amp; brRadius == blRadius\n      &amp;&amp; (width &lt;= 2.0 * tlRadiusX || height &lt;= 2.0 * tlRadiusY);\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/isStadium.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "left",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The offset of the left edge of this rectangle from the x axis.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/left.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get left =&gt; _value[0];<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/left.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "longestSide",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The greater of the magnitudes of the <a href=\"dart-ui\/RRect\/width.html\">width<\/a> and the <a href=\"dart-ui\/RRect\/height.html\">height<\/a> of this\nrounded rectangle.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/longestSide.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get longestSide =&gt; math.max(width.abs(), height.abs());<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/longestSide.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "middleRect",
-            "type": "dart:ui.Rect",
-            "types": [],
             "desc": "<p>The rectangle that would be formed using the axis-aligned intersection of\nthe sides of the rectangle, i.e., the rectangle formed from the\ninner-most centers of the ellipses that form the corners. This is the\nintersection of the <a href=\"dart-ui\/RRect\/wideMiddleRect.html\">wideMiddleRect<\/a> and the <a href=\"dart-ui\/RRect\/tallMiddleRect.html\">tallMiddleRect<\/a>. If any of\nthe intersections are void, the resulting <a href=\"dart-ui\/Rect-class.html\">Rect<\/a> will have negative width\nor height.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/middleRect.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect get middleRect {\n  final double leftRadius = math.max(blRadiusX, tlRadiusX);\n  final double topRadius = math.max(tlRadiusY, trRadiusY);\n  final double rightRadius = math.max(trRadiusX, brRadiusX);\n  final double bottomRadius = math.max(brRadiusY, blRadiusY);\n  return new Rect.fromLTRB(\n    left + leftRadius,\n    top + topRadius,\n    right - rightRadius,\n    bottom - bottomRadius\n  );\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/middleRect.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Rect",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "outerRect",
-            "type": "dart:ui.Rect",
-            "types": [],
             "desc": "<p>The bounding box of this rounded rectangle (the rectangle with no rounded corners).<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/outerRect.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect get outerRect =&gt; new Rect.fromLTRB(left, top, right, bottom);<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/outerRect.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Rect",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "right",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The offset of the right edge of this rectangle from the x axis.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/right.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get right =&gt; _value[2];<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/right.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "safeInnerRect",
-            "type": "dart:ui.Rect",
-            "types": [],
             "desc": "<p>The non-rounded rectangle that is constrained by the smaller of the two\ndiagonals, with each diagonal traveling through the middle of the curve\ncorners. The middle of a corner is the intersection of the curve with its\nrespective quadrant bisector.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/safeInnerRect.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect get safeInnerRect {\n  const double kInsetFactor = 0.29289321881; \/\/ 1-cos(pi\/4)\n\n  final double leftRadius = math.max(blRadiusX, tlRadiusX);\n  final double topRadius = math.max(tlRadiusY, trRadiusY);\n  final double rightRadius = math.max(trRadiusX, brRadiusX);\n  final double bottomRadius = math.max(brRadiusY, blRadiusY);\n\n  return new Rect.fromLTRB(\n    left + leftRadius * kInsetFactor,\n    top + topRadius * kInsetFactor,\n    right - rightRadius * kInsetFactor,\n    bottom - bottomRadius * kInsetFactor\n  );\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/safeInnerRect.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Rect",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "shortestSide",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The lesser of the magnitudes of the <a href=\"dart-ui\/RRect\/width.html\">width<\/a> and the <a href=\"dart-ui\/RRect\/height.html\">height<\/a> of this\nrounded rectangle.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/shortestSide.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get shortestSide =&gt; math.min(width.abs(), height.abs());<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/shortestSide.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         },
         {
-            "name": "tallMiddleRect",
-            "type": "dart:ui.Rect",
-            "types": [],
             "desc": "<p>The biggest rectangle that is entirely inside the rounded rectangle and\nhas the full height of the rounded rectangle. If the rounded rectangle\ndoes not have an axis-aligned intersection of its top and bottom side, the\nresulting <a href=\"dart-ui\/Rect-class.html\">Rect<\/a> will have negative width or height.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/tallMiddleRect.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect get tallMiddleRect {\n  final double leftRadius = math.max(blRadiusX, tlRadiusX);\n  final double rightRadius = math.max(trRadiusX, brRadiusX);\n  return new Rect.fromLTRB(\n    left + leftRadius,\n    top,\n    right - rightRadius,\n    bottom\n  );\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "tlRadius",
-            "type": "dart:ui.Radius",
-            "types": [],
-            "desc": "<p>The top-left <a href=\"dart-ui\/Radius-class.html\">Radius<\/a>.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/tlRadius.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Radius get tlRadius =&gt; new Radius.elliptical(_value[4], _value[5]);<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "tlRadiusX",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>The top-left horizontal radius.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/tlRadiusX.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get tlRadiusX =&gt; _value[4];<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "tlRadiusY",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>The top-left vertical radius.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/tlRadiusY.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get tlRadiusY =&gt; _value[5];<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "top",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>The offset of the top edge of this rectangle from the y axis.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/top.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get top =&gt; _value[1];<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "trRadius",
-            "type": "dart:ui.Radius",
-            "types": [],
-            "desc": "<p>The top-right <a href=\"dart-ui\/Radius-class.html\">Radius<\/a>.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/trRadius.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Radius get trRadius =&gt; new Radius.elliptical(_value[6], _value[7]);<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "trRadiusX",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>The top-right horizontal radius.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/trRadiusX.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get trRadiusX =&gt; _value[6];<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "trRadiusY",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>The top-right vertical radius.<\/p>\n        ",
-            "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/trRadiusY.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get trRadiusY =&gt; _value[7];<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "wideMiddleRect",
+            "href": "dart-ui\/RRect\/tallMiddleRect.html",
+            "isDeprecated": "0",
             "type": "dart:ui.Rect",
-            "types": [],
-            "desc": "<p>The biggest rectangle that is entirely inside the rounded rectangle and\nhas the full width of the rounded rectangle. If the rounded rectangle does\nnot have an axis-aligned intersection of its left and right side, the\nresulting <a href=\"dart-ui\/Rect-class.html\">Rect<\/a> will have negative width or height.<\/p>\n        ",
             "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/wideMiddleRect.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect get wideMiddleRect {\n  final double topRadius = math.max(tlRadiusY, trRadiusY);\n  final double bottomRadius = math.max(brRadiusY, blRadiusY);\n  return new Rect.fromLTRB(\n    left,\n    top + topRadius,\n    right,\n    bottom - bottomRadius\n  );\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "width",
+            "desc": "<p>The top-left <a href=\"dart-ui\/Radius-class.html\">Radius<\/a>.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Radius get tlRadius =&gt; new Radius.elliptical(_value[4], _value[5]);<\/code><\/pre>\n        ",
+            "href": "dart-ui\/RRect\/tlRadius.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Radius",
+            "memberOf": "dart:ui.RRect",
+            "params": []
+        },
+        {
+            "desc": "<p>The top-left horizontal radius.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get tlRadiusX =&gt; _value[4];<\/code><\/pre>\n        ",
+            "href": "dart-ui\/RRect\/tlRadiusX.html",
+            "isDeprecated": "0",
             "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>The distance between the left and right edges of this rectangle.<\/p>\n        ",
             "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/width.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get width =&gt; right - left;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "zero",
-            "type": "dart:ui.RRect",
-            "types": [],
-            "desc": "<p>A rounded rectangle with all the values set to zero.<\/p>\n        ",
+            "desc": "<p>The top-left vertical radius.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get tlRadiusY =&gt; _value[5];<\/code><\/pre>\n        ",
+            "href": "dart-ui\/RRect\/tlRadiusY.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
             "memberOf": "dart:ui.RRect",
-            "isConstant": false,
-            "href": "dart-ui\/RRect\/zero.html",
+            "params": []
+        },
+        {
+            "desc": "<p>The offset of the top edge of this rectangle from the y axis.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get top =&gt; _value[1];<\/code><\/pre>\n        ",
+            "href": "dart-ui\/RRect\/top.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
+        },
+        {
+            "desc": "<p>The top-right <a href=\"dart-ui\/Radius-class.html\">Radius<\/a>.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Radius get trRadius =&gt; new Radius.elliptical(_value[6], _value[7]);<\/code><\/pre>\n        ",
+            "href": "dart-ui\/RRect\/trRadius.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Radius",
+            "memberOf": "dart:ui.RRect",
+            "params": []
+        },
+        {
+            "desc": "<p>The top-right horizontal radius.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get trRadiusX =&gt; _value[6];<\/code><\/pre>\n        ",
+            "href": "dart-ui\/RRect\/trRadiusX.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
+        },
+        {
+            "desc": "<p>The top-right vertical radius.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get trRadiusY =&gt; _value[7];<\/code><\/pre>\n        ",
+            "href": "dart-ui\/RRect\/trRadiusY.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
+        },
+        {
+            "desc": "<p>The biggest rectangle that is entirely inside the rounded rectangle and\nhas the full width of the rounded rectangle. If the rounded rectangle does\nnot have an axis-aligned intersection of its left and right side, the\nresulting <a href=\"dart-ui\/Rect-class.html\">Rect<\/a> will have negative width or height.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect get wideMiddleRect {\n  final double topRadius = math.max(tlRadiusY, trRadiusY);\n  final double bottomRadius = math.max(brRadiusY, blRadiusY);\n  return new Rect.fromLTRB(\n    left,\n    top + topRadius,\n    right,\n    bottom - bottomRadius\n  );\n}<\/code><\/pre>\n        ",
+            "href": "dart-ui\/RRect\/wideMiddleRect.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Rect",
+            "memberOf": "dart:ui.RRect",
+            "params": []
+        },
+        {
+            "desc": "<p>The distance between the left and right edges of this rectangle.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get width =&gt; right - left;<\/code><\/pre>\n        ",
+            "href": "dart-ui\/RRect\/width.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "dart:ui.RRect",
+            "params": []
+        },
+        {
+            "desc": "<p>A rounded rectangle with all the values set to zero.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">static final RRect zero = new RRect._()\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-ui\/RRect\/zero.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.RRect",
+            "memberOf": "dart:ui.RRect",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "dart-ui\/RRect-class.html",
-    "desc": "<p>An immutable rounded rectangle with the custom radii for all four corners.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "RRect"
+    ]
 }

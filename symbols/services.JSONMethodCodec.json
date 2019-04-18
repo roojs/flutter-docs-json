@@ -1,172 +1,160 @@
 {
-    "name": "services.JSONMethodCodec",
-    "extends": [],
+    "desc": "<p><a href=\"services\/MethodCodec-class.html\">MethodCodec<\/a> with UTF-8 encoded JSON method calls and result envelopes.<\/p>\n<p>Values supported as method arguments and result payloads are those supported\nby <a href=\"services\/JSONMessageCodec-class.html\">JSONMessageCodec<\/a>.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "services\/JSONMethodCodec-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "services",
+    "name": "services.JSONMethodCodec",
+    "shortname": "JSONMethodCodec",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "JSONMethodCodec",
-            "type": "",
             "desc": "<p>Creates a <a href=\"services\/MethodCodec-class.html\">MethodCodec<\/a> with UTF-8 encoded JSON method calls and result\nenvelopes.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const JSONMethodCodec();<\/code><\/pre>\n    ",
+            "href": "services\/JSONMethodCodec\/JSONMethodCodec.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "services.JSONMethodCodec",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "services\/JSONMethodCodec\/JSONMethodCodec.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const JSONMethodCodec();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "decodeEnvelope",
-            "type": "",
             "desc": "<p>Decodes the specified result <code>envelope<\/code> from binary.<\/p>\n<p>Throws <a href=\"services\/PlatformException-class.html\">PlatformException<\/a>, if <code>envelope<\/code> represents an error, otherwise\nreturns the enveloped result.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndynamic decodeEnvelope(ByteData envelope) {\n  final dynamic decoded = const JSONMessageCodec().decodeMessage(envelope);\n  if (decoded is! List)\n    throw FormatException('Expected envelope List, got $decoded');\n  if (decoded.length == 1)\n    return decoded[0];\n  if (decoded.length == 3\n      &amp;&amp; decoded[0] is String\n      &amp;&amp; (decoded[1] == null || decoded[1] is String))\n    throw PlatformException(\n      code: decoded[0],\n      message: decoded[1],\n      details: decoded[2],\n    );\n  throw FormatException('Invalid envelope: $decoded');\n}<\/code><\/pre>\n    ",
+            "href": "services\/JSONMethodCodec\/decodeEnvelope.html",
+            "isDeprecated": "0",
+            "type": "<dynamic>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "services.JSONMethodCodec",
-            "sig": "",
             "params": [
                 {
                     "name": "envelope",
-                    "type": "dart:typed_data.ByteData",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:typed_data.ByteData"
                 }
-            ],
-            "isConstructor": false,
-            "href": "services\/JSONMethodCodec\/decodeEnvelope.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndynamic decodeEnvelope(ByteData envelope) {\n  final dynamic decoded = const JSONMessageCodec().decodeMessage(envelope);\n  if (decoded is! List)\n    throw FormatException('Expected envelope List, got $decoded');\n  if (decoded.length == 1)\n    return decoded[0];\n  if (decoded.length == 3\n      &amp;&amp; decoded[0] is String\n      &amp;&amp; (decoded[1] == null || decoded[1] is String))\n    throw PlatformException(\n      code: decoded[0],\n      message: decoded[1],\n      details: decoded[2],\n    );\n  throw FormatException('Invalid envelope: $decoded');\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "decodeMethodCall",
-            "type": "services.MethodCall",
             "desc": "<p>Decodes the specified <code>methodCall<\/code> from binary.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nMethodCall decodeMethodCall(ByteData methodCall) {\n  final dynamic decoded = const JSONMessageCodec().decodeMessage(methodCall);\n  if (decoded is! Map)\n    throw FormatException('Expected method call Map, got $decoded');\n  final dynamic method = decoded['method'];\n  final dynamic arguments = decoded['args'];\n  if (method is String)\n    return MethodCall(method, arguments);\n  throw FormatException('Invalid method call: $decoded');\n}<\/code><\/pre>\n    ",
+            "href": "services\/JSONMethodCodec\/decodeMethodCall.html",
+            "isDeprecated": "0",
+            "type": "services.MethodCall",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "services.JSONMethodCodec",
-            "sig": "",
             "params": [
                 {
                     "name": "methodCall",
-                    "type": "dart:typed_data.ByteData",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:typed_data.ByteData"
                 }
-            ],
-            "isConstructor": false,
-            "href": "services\/JSONMethodCodec\/decodeMethodCall.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nMethodCall decodeMethodCall(ByteData methodCall) {\n  final dynamic decoded = const JSONMessageCodec().decodeMessage(methodCall);\n  if (decoded is! Map)\n    throw FormatException('Expected method call Map, got $decoded');\n  final dynamic method = decoded['method'];\n  final dynamic arguments = decoded['args'];\n  if (method is String)\n    return MethodCall(method, arguments);\n  throw FormatException('Invalid method call: $decoded');\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "encodeErrorEnvelope",
-            "type": "dart:typed_data.ByteData",
             "desc": "<p>Encodes an error result into a binary envelope.<\/p>\n<p>The specified error <code>code<\/code>, human-readable error <code>message<\/code>, and error\n<code>details<\/code> correspond to the fields of <a href=\"services\/PlatformException-class.html\">PlatformException<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nByteData encodeErrorEnvelope({ @required String code, String message, dynamic details }) {\n  assert(code != null);\n  return const JSONMessageCodec().encodeMessage(&lt;dynamic&gt;[code, message, details]);\n}<\/code><\/pre>\n    ",
+            "href": "services\/JSONMethodCodec\/encodeErrorEnvelope.html",
+            "isDeprecated": "0",
+            "type": "dart:typed_data.ByteData",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "services.JSONMethodCodec",
-            "sig": "",
             "params": [
                 {
                     "name": "code",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "message",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 },
                 {
                     "name": "details",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
+                },
+                {
+                    "name": "message",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "services\/JSONMethodCodec\/encodeErrorEnvelope.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nByteData encodeErrorEnvelope({ @required String code, String message, dynamic details }) {\n  assert(code != null);\n  return const JSONMessageCodec().encodeMessage(&lt;dynamic&gt;[code, message, details]);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "encodeMethodCall",
-            "type": "dart:typed_data.ByteData",
             "desc": "<p>Encodes the specified <code>methodCall<\/code> into binary.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nByteData encodeMethodCall(MethodCall call) {\n  return const JSONMessageCodec().encodeMessage(&lt;String, dynamic&gt;{\n    'method': call.method,\n    'args': call.arguments,\n  });\n}<\/code><\/pre>\n    ",
+            "href": "services\/JSONMethodCodec\/encodeMethodCall.html",
+            "isDeprecated": "0",
+            "type": "dart:typed_data.ByteData",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "services.JSONMethodCodec",
-            "sig": "",
             "params": [
                 {
                     "name": "call",
-                    "type": "services.MethodCall",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "services.MethodCall"
                 }
-            ],
-            "isConstructor": false,
-            "href": "services\/JSONMethodCodec\/encodeMethodCall.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nByteData encodeMethodCall(MethodCall call) {\n  return const JSONMessageCodec().encodeMessage(&lt;String, dynamic&gt;{\n    'method': call.method,\n    'args': call.arguments,\n  });\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "encodeSuccessEnvelope",
-            "type": "dart:typed_data.ByteData",
             "desc": "<p>Encodes a successful <code>result<\/code> into a binary envelope.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nByteData encodeSuccessEnvelope(dynamic result) {\n  return const JSONMessageCodec().encodeMessage(&lt;dynamic&gt;[result]);\n}<\/code><\/pre>\n    ",
+            "href": "services\/JSONMethodCodec\/encodeSuccessEnvelope.html",
+            "isDeprecated": "0",
+            "type": "dart:typed_data.ByteData",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "services.JSONMethodCodec",
-            "sig": "",
             "params": [
                 {
                     "name": "result",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "services\/JSONMethodCodec\/encodeSuccessEnvelope.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nByteData encodeSuccessEnvelope(dynamic result) {\n  return const JSONMessageCodec().encodeMessage(&lt;dynamic&gt;[result]);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
-    "props": [],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "services\/JSONMethodCodec-class.html",
-    "desc": "<p><a href=\"services\/MethodCodec-class.html\">MethodCodec<\/a> with UTF-8 encoded JSON method calls and result envelopes.<\/p>\n<p>Values supported as method arguments and result payloads are those supported\nby <a href=\"services\/JSONMessageCodec-class.html\">JSONMessageCodec<\/a>.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "JSONMethodCodec"
+    "props": []
 }

@@ -1,5 +1,17 @@
 {
+    "desc": "<p>A widget that manages a set of child widgets with a stack discipline.<\/p>\n<p>Many apps have a navigator near the top of their widget hierarchy in order\nto display their logical history using an <a href=\"widgets\/Overlay-class.html\">Overlay<\/a> with the most recently\nvisited pages visually on top of the older pages. Using this pattern lets\nthe navigator visually transition from one page to another by moving the widgets\naround in the overlay. Similarly, the navigator can be used to show a dialog\nby positioning the dialog widget above the current page.<\/p>\n<h2 id=\"using-the-navigator\">Using the Navigator<\/h2>\n<p>Mobile apps typically reveal their contents via full-screen elements\ncalled \"screens\" or \"pages\". In Flutter these elements are called\nroutes and they're managed by a <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> widget. The navigator\nmanages a stack of <a href=\"widgets\/Route-class.html\">Route<\/a> objects and provides methods for managing\nthe stack, like <a href=\"widgets\/Navigator\/push.html\">Navigator.push<\/a> and <a href=\"widgets\/Navigator\/pop.html\">Navigator.pop<\/a>.<\/p>\n<h3 id=\"displaying-a-full-screen-route\">Displaying a full-screen route<\/h3>\n<p>Although you can create a navigator directly, it's most common to use\nthe navigator created by a <a href=\"widgets\/WidgetsApp-class.html\">WidgetsApp<\/a> or a <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> widget. You\ncan refer to that navigator with <a href=\"widgets\/Navigator\/of.html\">Navigator.of<\/a>.<\/p>\n<p>A <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> is the simplest way to set things up. The <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a>'s\nhome becomes the route at the bottom of the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>'s stack. It is what\nyou see when the app is launched.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">void main() {\n  runApp(MaterialApp(home: MyAppHome()));\n}\n<\/code><\/pre>\n<p>To push a new route on the stack you can create an instance of\n<a href=\"material\/MaterialPageRoute-class.html\">MaterialPageRoute<\/a> with a builder function that creates whatever you\nwant to appear on the screen. For example:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.push(context, MaterialPageRoute&lt;void&gt;(\n  builder: (BuildContext context) {\n    return Scaffold(\n      appBar: AppBar(title: Text('My Page')),\n      body: Center(\n        child: FlatButton(\n          child: Text('POP'),\n          onPressed: () {\n            Navigator.pop(context);\n          },\n        ),\n      ),\n    );\n  },\n));\n<\/code><\/pre>\n<p>The route defines its widget with a builder function instead of a\nchild widget because it will be built and rebuilt in different\ncontexts depending on when it's pushed and popped.<\/p>\n<p>As you can see, the new route can be popped, revealing the app's home\npage, with the Navigator's pop method:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.pop(context);\n<\/code><\/pre>\n<p>It usually isn't necessary to provide a widget that pops the Navigator\nin a route with a <a href=\"material\/Scaffold-class.html\">Scaffold<\/a> because the Scaffold automatically adds a\n'back' button to its AppBar. Pressing the back button causes\n<a href=\"widgets\/Navigator\/pop.html\">Navigator.pop<\/a> to be called. On Android, pressing the system back\nbutton does the same thing.<\/p>\n<h3 id=\"using-named-navigator-routes\">Using named navigator routes<\/h3>\n<p>Mobile apps often manage a large number of routes and it's often\neasiest to refer to them by name. Route names, by convention,\nuse a path-like structure (for example, '\/a\/b\/c').\nThe app's home page route is named '\/' by default.<\/p>\n<p>The <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> can be created\nwith a <code>Map&lt;String, WidgetBuilder&gt;<\/code> which maps from a route's name to\na builder function that will create it. The <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> uses this\nmap to create a value for its navigator's <a href=\"widgets\/Navigator\/onGenerateRoute.html\">onGenerateRoute<\/a> callback.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">void main() {\n  runApp(MaterialApp(\n    home: MyAppHome(), \/\/ becomes the route named '\/'\n    routes: &lt;String, WidgetBuilder&gt; {\n      '\/a': (BuildContext context) =&gt; MyPage(title: 'page A'),\n      '\/b': (BuildContext context) =&gt; MyPage(title: 'page B'),\n      '\/c': (BuildContext context) =&gt; MyPage(title: 'page C'),\n    },\n  ));\n}\n<\/code><\/pre>\n<p>To show a route by name:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.pushNamed(context, '\/b');\n<\/code><\/pre>\n<h3 id=\"routes-can-return-a-value\">Routes can return a value<\/h3>\n<p>When a route is pushed to ask the user for a value, the value can be\nreturned via the <a href=\"widgets\/Navigator\/pop.html\">pop<\/a> method's result parameter.<\/p>\n<p>Methods that push a route return a <a href=\"dart-async\/Future-class.html\">Future<\/a>. The Future resolves when the\nroute is popped and the <a href=\"dart-async\/Future-class.html\">Future<\/a>'s value is the <a href=\"widgets\/Navigator\/pop.html\">pop<\/a> method's <code>result<\/code>\nparameter.<\/p>\n<p>For example if we wanted to ask the user to press 'OK' to confirm an\noperation we could <code>await<\/code> the result of <a href=\"widgets\/Navigator\/push.html\">Navigator.push<\/a>:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">bool value = await Navigator.push(context, MaterialPageRoute&lt;bool&gt;(\n  builder: (BuildContext context) {\n    return Center(\n      child: GestureDetector(\n        child: Text('OK'),\n        onTap: () { Navigator.pop(context, true); }\n      ),\n    );\n  }\n));\n<\/code><\/pre>\n<p>If the user presses 'OK' then value will be true. If the user backs\nout of the route, for example by pressing the Scaffold's back button,\nthe value will be null.<\/p>\n<p>When a route is used to return a value, the route's type parameter must\nmatch the type of <a href=\"widgets\/Navigator\/pop.html\">pop<\/a>'s result. That's why we've used\n<code>MaterialPageRoute&lt;bool&gt;<\/code> instead of <code>MaterialPageRoute&lt;void&gt;<\/code> or just\n<code>MaterialPageRoute<\/code>. (If you prefer to not specify the types, though, that's\nfine too.)<\/p>\n<h3 id=\"popup-routes\">Popup routes<\/h3>\n<p>Routes don't have to obscure the entire screen. <a href=\"widgets\/PopupRoute-class.html\">PopupRoute<\/a>s cover the\nscreen with a <a href=\"widgets\/ModalRoute\/barrierColor.html\">ModalRoute.barrierColor<\/a> that can be only partially opaque to\nallow the current screen to show through. Popup routes are \"modal\" because\nthey block input to the widgets below.<\/p>\n<p>There are functions which create and show popup routes. For\nexample: <a href=\"material\/showDialog.html\">showDialog<\/a>, <a href=\"material\/showMenu.html\">showMenu<\/a>, and <a href=\"material\/showModalBottomSheet.html\">showModalBottomSheet<\/a>. These\nfunctions return their pushed route's Future as described above.\nCallers can await the returned value to take an action when the\nroute is popped, or to discover the route's value.<\/p>\n<p>There are also widgets which create popup routes, like <a href=\"material\/PopupMenuButton-class.html\">PopupMenuButton<\/a> and\n<a href=\"material\/DropdownButton-class.html\">DropdownButton<\/a>. These widgets create internal subclasses of PopupRoute\nand use the Navigator's push and pop methods to show and dismiss them.<\/p>\n<h3 id=\"custom-routes\">Custom routes<\/h3>\n<p>You can create your own subclass of one of the widget library route classes\nlike <a href=\"widgets\/PopupRoute-class.html\">PopupRoute<\/a>, <a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a>, or <a href=\"widgets\/PageRoute-class.html\">PageRoute<\/a>, to control the animated\ntransition employed to show the route, the color and behavior of the route's\nmodal barrier, and other aspects of the route.<\/p>\n<p>The <a href=\"widgets\/PageRouteBuilder-class.html\">PageRouteBuilder<\/a> class makes it possible to define a custom route\nin terms of callbacks. Here's an example that rotates and fades its child\nwhen the route appears or disappears. This route does not obscure the entire\nscreen because it specifies <code>opaque: false<\/code>, just as a popup route does.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.push(context, PageRouteBuilder(\n  opaque: false,\n  pageBuilder: (BuildContext context, _, __) {\n    return Center(child: Text('My PageRoute'));\n  },\n  transitionsBuilder: (___, Animation&lt;double&gt; animation, ____, Widget child) {\n    return FadeTransition(\n      opacity: animation,\n      child: RotationTransition(\n        turns: Tween&lt;double&gt;(begin: 0.5, end: 1.0).animate(animation),\n        child: child,\n      ),\n    );\n  }\n));\n<\/code><\/pre>\n<p>The page route is built in two parts, the \"page\" and the\n\"transitions\". The page becomes a descendant of the child passed to\nthe <code>transitionsBuilder<\/code> function. Typically the page is only built once,\nbecause it doesn't depend on its animation parameters (elided with <code>_<\/code>\nand <code>__<\/code> in this example). The transition is built on every frame\nfor its duration.<\/p>\n<h3 id=\"nesting-navigators\">Nesting Navigators<\/h3>\n<p>An app can use more than one Navigator. Nesting one Navigator below\nanother Navigator can be used to create an \"inner journey\" such as tabbed\nnavigation, user registration, store checkout, or other independent journeys\nthat represent a subsection of your overall application.<\/p>\n<h4 id=\"real-world-example\">Real World Example<\/h4>\n<p>It is standard practice for iOS apps to use tabbed navigation where each\ntab maintains its own navigation history. Therefore, each tab has its own\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a>, creating a kind of \"parallel navigation.\"<\/p>\n<p>In addition to the parallel navigation of the tabs, it is still possible to\nlaunch full-screen pages that completely cover the tabs. For example: an\non-boarding flow, or an alert dialog. Therefore, there must exist a \"root\"\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a> that sits above the tab navigation. As a result, each of the\ntab's <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s are actually nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s sitting below a single\nroot <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>.<\/p>\n<p>The nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s for tabbed navigation sit in <code>WidgetApp<\/code> and\n<a href=\"cupertino\/CupertinoTabView-class.html\">CupertinoTabView<\/a>, so you don't need to worry about nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s\nin this situation, but it's a real world example where nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s\nare used.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <script>var visibleSnippet1 = \"shortSnippet1\";<\/script><button id=\"shortSnippet1Button\" onclick=\"visibleSnippet1 = showSnippet('shortSnippet1', visibleSnippet1);\" selected>Sample<\/button>\n  <button id=\"longSnippet1Button\" onclick=\"visibleSnippet1 = showSnippet('longSnippet1', visibleSnippet1);\">Sample in an App<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\" id=\"shortSnippet1\">\n    <div class=\"snippet-description\">\nThe following example demonstrates how a nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> can be used to\npresent a standalone user registration journey.\n<p>Even though this example uses two <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s to demonstrate nested\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s, a similar result is possible using only a single <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>.<\/p>\n<p>Run this example with <code>flutter run --route=\/signup<\/code> to start it with\nthe signup flow instead of on the home page.\n<\/p>\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(visibleSnippet1);\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\"><code class=\"language-dart\">import 'package:flutter\/material.dart';\n\n\/\/ ...\n\nvoid main() =&gt; runApp(new MyApp());\n\n\/\/ ...\n\nclass MyApp extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Flutter Code Sample for Navigator',\n      \/\/ MaterialApp contains our top-level Navigator\n      initialRoute: '\/',\n      routes: {\n        '\/': (BuildContext context) =&gt; HomePage(),\n        '\/signup': (BuildContext context) =&gt; SignUpPage(),\n      },\n    );\n  }\n}\n\nclass HomePage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return DefaultTextStyle(\n      style: Theme.of(context).textTheme.display1,\n      child: Container(\n        color: Colors.white,\n        alignment: Alignment.center,\n        child: Text('Home Page'),\n      ),\n    );\n  }\n}\n\nclass CollectPersonalInfoPage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return DefaultTextStyle(\n      style: Theme.of(context).textTheme.display1,\n      child: GestureDetector(\n        onTap: () {\n          \/\/ This moves from the personal info page to the credentials page,\n          \/\/ replacing this page with that one.\n          Navigator.of(context)\n            .pushReplacementNamed('signup\/choose_credentials');\n        },\n        child: Container(\n          color: Colors.lightBlue,\n          alignment: Alignment.center,\n          child: Text('Collect Personal Info Page'),\n        ),\n      ),\n    );\n  }\n}\n\nclass ChooseCredentialsPage extends StatelessWidget {\n  const ChooseCredentialsPage({\n    this.onSignupComplete,\n  });\n\n  final VoidCallback onSignupComplete;\n\n  @override\n  Widget build(BuildContext context) {\n    return GestureDetector(\n      onTap: onSignupComplete,\n      child: DefaultTextStyle(\n        style: Theme.of(context).textTheme.display1,\n        child: Container(\n          color: Colors.pinkAccent,\n          alignment: Alignment.center,\n          child: Text('Choose Credentials Page'),\n        ),\n      ),\n    );\n  }\n}\n\nclass SignUpPage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    \/\/ SignUpPage builds its own Navigator which ends up being a nested\n    \/\/ Navigator in our app.\n    return Navigator(\n      initialRoute: 'signup\/personal_info',\n      onGenerateRoute: (RouteSettings settings) {\n        WidgetBuilder builder;\n        switch (settings.name) {\n          case 'signup\/personal_info':\n          \/\/ Assume CollectPersonalInfoPage collects personal info and then\n          \/\/ navigates to 'signup\/choose_credentials'.\n            builder = (BuildContext _) =&gt; CollectPersonalInfoPage();\n            break;\n          case 'signup\/choose_credentials':\n          \/\/ Assume ChooseCredentialsPage collects new credentials and then\n          \/\/ invokes 'onSignupComplete()'.\n            builder = (BuildContext _) =&gt; ChooseCredentialsPage(\n              onSignupComplete: () {\n                \/\/ Referencing Navigator.of(context) from here refers to the\n                \/\/ top level Navigator because SignUpPage is above the\n                \/\/ nested Navigator that it created. Therefore, this pop()\n                \/\/ will pop the entire \"sign up\" journey and return to the\n                \/\/ \"\/\" route, AKA HomePage.\n                Navigator.of(context).pop();\n              },\n            );\n            break;\n          default:\n            throw Exception('Invalid route: ${settings.name}');\n        }\n        return MaterialPageRoute(builder: builder, settings: settings);\n      },\n    );\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n  <div class=\"snippet\" id=\"longSnippet1\" hidden>\n    <div class=\"snippet-description\">To create a sample project with this code snippet, run:<br><span class=\"snippet-create-command\">flutter create --sample=widgets.Navigator.1 mysample<\/span>\n    <\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(visibleSnippet1);\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/ Flutter code sample for widgets.Navigator.1\n\n\/\/ The following example demonstrates how a nested [Navigator] can be used to\n\/\/ present a standalone user registration journey.\n\/\/\n\/\/ Even though this example uses two [Navigator]s to demonstrate nested\n\/\/ [Navigator]s, a similar result is possible using only a single [Navigator].\n\/\/\n\/\/ Run this example with `flutter run --route=\/signup` to start it with\n\/\/ the signup flow instead of on the home page.\n\nimport 'package:flutter\/material.dart';\n\nvoid main() =&gt; runApp(MyApp());\n\nclass MyApp extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Flutter Code Sample for Navigator',\n      \/\/ MaterialApp contains our top-level Navigator\n      initialRoute: '\/',\n      routes: {\n        '\/': (BuildContext context) =&gt; HomePage(),\n        '\/signup': (BuildContext context) =&gt; SignUpPage(),\n      },\n    );\n  }\n}\n\nclass HomePage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return DefaultTextStyle(\n      style: Theme.of(context).textTheme.display1,\n      child: Container(\n        color: Colors.white,\n        alignment: Alignment.center,\n        child: Text('Home Page'),\n      ),\n    );\n  }\n}\n\nclass CollectPersonalInfoPage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return DefaultTextStyle(\n      style: Theme.of(context).textTheme.display1,\n      child: GestureDetector(\n        onTap: () {\n          \/\/ This moves from the personal info page to the credentials page,\n          \/\/ replacing this page with that one.\n          Navigator.of(context)\n              .pushReplacementNamed('signup\/choose_credentials');\n        },\n        child: Container(\n          color: Colors.lightBlue,\n          alignment: Alignment.center,\n          child: Text('Collect Personal Info Page'),\n        ),\n      ),\n    );\n  }\n}\n\nclass ChooseCredentialsPage extends StatelessWidget {\n  const ChooseCredentialsPage({\n    this.onSignupComplete,\n  });\n\n  final VoidCallback onSignupComplete;\n\n  @override\n  Widget build(BuildContext context) {\n    return GestureDetector(\n      onTap: onSignupComplete,\n      child: DefaultTextStyle(\n        style: Theme.of(context).textTheme.display1,\n        child: Container(\n          color: Colors.pinkAccent,\n          alignment: Alignment.center,\n          child: Text('Choose Credentials Page'),\n        ),\n      ),\n    );\n  }\n}\n\nclass SignUpPage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    \/\/ SignUpPage builds its own Navigator which ends up being a nested\n    \/\/ Navigator in our app.\n    return Navigator(\n      initialRoute: 'signup\/personal_info',\n      onGenerateRoute: (RouteSettings settings) {\n        WidgetBuilder builder;\n        switch (settings.name) {\n          case 'signup\/personal_info':\n            \/\/ Assume CollectPersonalInfoPage collects personal info and then\n            \/\/ navigates to 'signup\/choose_credentials'.\n            builder = (BuildContext _) =&gt; CollectPersonalInfoPage();\n            break;\n          case 'signup\/choose_credentials':\n            \/\/ Assume ChooseCredentialsPage collects new credentials and then\n            \/\/ invokes 'onSignupComplete()'.\n            builder = (BuildContext _) =&gt; ChooseCredentialsPage(\n                  onSignupComplete: () {\n                    \/\/ Referencing Navigator.of(context) from here refers to the\n                    \/\/ top level Navigator because SignUpPage is above the\n                    \/\/ nested Navigator that it created. Therefore, this pop()\n                    \/\/ will pop the entire \"sign up\" journey and return to the\n                    \/\/ \"\/\" route, AKA HomePage.\n                    Navigator.of(context).pop();\n                  },\n                );\n            break;\n          default:\n            throw Exception('Invalid route: ${settings.name}');\n        }\n        return MaterialPageRoute(builder: builder, settings: settings);\n      },\n    );\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p><a href=\"widgets\/Navigator\/of.html\">Navigator.of<\/a> operates on the nearest ancestor <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> from the given\n<a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a>. Be sure to provide a <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> below the intended\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a>, especially in large <code>build<\/code> methods where nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s\nare created. The <a href=\"widgets\/Builder-class.html\">Builder<\/a> widget can be used to access a <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> at\na desired location in the widget subtree.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "widgets\/Navigator-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "widgets",
     "name": "widgets.Navigator",
+    "shortname": "Navigator",
     "extends": [
         "widgets.StatefulWidget",
         "widgets.Widget",
@@ -7,792 +19,711 @@
         "foundation.Diagnosticable",
         "dart:core.Object"
     ],
-    "memberOf": "widgets",
     "events": [
         {
-            "name": "onGenerateRoute",
-            "type": "widgets.RouteFactory",
             "desc": "<p>Called to generate a route for a given <a href=\"widgets\/RouteSettings-class.html\">RouteSettings<\/a>.<\/p>\n        ",
-            "static": false,
-            "memberOf": "",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/onGenerateRoute.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final RouteFactory onGenerateRoute\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false,
-            "isConstant": false
+            "href": "widgets\/Navigator\/onGenerateRoute.html",
+            "isDeprecated": "0",
+            "type": "widgets.RouteFactory",
+            "memberOf": "widgets.Navigator",
+            "params": []
         },
         {
-            "name": "onUnknownRoute",
-            "type": "widgets.RouteFactory",
             "desc": "<p>Called when <a href=\"widgets\/Navigator\/onGenerateRoute.html\">onGenerateRoute<\/a> fails to generate a route.<\/p>\n<p>This callback is typically used for error handling. For example, this\ncallback might always generate a \"not found\" page that describes the route\nthat wasn't found.<\/p>\n<p>Unknown routes can arise either from errors in the app or from external\nrequests to push routes, such as from Android intents.<\/p>\n        ",
-            "static": false,
-            "memberOf": "",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/onUnknownRoute.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final RouteFactory onUnknownRoute\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false,
-            "isConstant": false
+            "href": "widgets\/Navigator\/onUnknownRoute.html",
+            "isDeprecated": "0",
+            "type": "widgets.RouteFactory",
+            "memberOf": "widgets.Navigator",
+            "params": []
         }
     ],
     "methods": [
         {
-            "name": "Navigator",
-            "type": "",
             "desc": "<p>Creates a widget that maintains a stack-based history of child widgets.<\/p>\n<p>The <code>onGenerateRoute<\/code> argument must not be null.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Navigator({\n  Key key,\n  this.initialRoute,\n  @required this.onGenerateRoute,\n  this.onUnknownRoute,\n  this.observers = const &lt;NavigatorObserver&gt;[],\n}) : assert(onGenerateRoute != null),\n     super(key: key);<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/Navigator.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
-                    "name": "key",
-                    "type": "foundation.Key",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
                     "name": "initialRoute",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.String"
                 },
                 {
-                    "name": "onGenerateRoute",
-                    "type": "widgets.RouteFactory",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "onUnknownRoute",
-                    "type": "widgets.RouteFactory",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "foundation.Key"
                 },
                 {
                     "name": "observers",
-                    "type": "dart:core.List<widgets.NavigatorObserver>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.List",
-                        "widgets.NavigatorObserver"
-                    ]
-                }
-            ],
-            "isConstructor": true,
-            "href": "widgets\/Navigator\/Navigator.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Navigator({\n  Key key,\n  this.initialRoute,\n  @required this.onGenerateRoute,\n  this.onUnknownRoute,\n  this.observers = const &lt;NavigatorObserver&gt;[],\n}) : assert(onGenerateRoute != null),\n     super(key: key);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "canPop",
-            "type": "dart:core.bool",
-            "desc": "<p>Whether the navigator that most tightly encloses the given context can be\npopped.<\/p>\n<p>The initial route cannot be popped off the navigator, which implies that\nthis function returns true only if popping the navigator would not remove\nthe initial route.<\/p>\n<p>If there is no <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> in scope, returns false.\nSee also:<\/p>\n<ul><li>\n<a href=\"widgets\/Route\/isFirst.html\">Route.isFirst<\/a>, which returns true for routes for which <a href=\"widgets\/Navigator\/canPop.html\">canPop<\/a>\nreturns false.<\/li><\/ul>",
-            "static": false,
-            "memberOf": "widgets.Navigator",
-            "sig": "",
-            "params": [
-                {
-                    "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/canPop.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static bool canPop(BuildContext context) {\n  final NavigatorState navigator = Navigator.of(context, nullOk: true);\n  return navigator != null &amp;&amp; navigator.canPop();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "createState",
-            "type": "widgets.NavigatorState",
-            "desc": "<p>Creates the mutable state for this widget at a given location in the tree.<\/p>\n<p>Subclasses should override this method to return a newly created\ninstance of their associated <a href=\"widgets\/State-class.html\">State<\/a> subclass:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">@override\n_MyState createState() =&gt; _MyState();\n<\/code><\/pre>\n<p>The framework can call this method multiple times over the lifetime of\na <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>. For example, if the widget is inserted into the tree\nin multiple locations, the framework will create a separate <a href=\"widgets\/State-class.html\">State<\/a> object\nfor each location. Similarly, if the widget is removed from the tree and\nlater inserted into the tree again, the framework will call <a href=\"widgets\/Navigator\/createState.html\">createState<\/a>\nagain to create a fresh <a href=\"widgets\/State-class.html\">State<\/a> object, simplifying the lifecycle of\n<a href=\"widgets\/State-class.html\">State<\/a> objects.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Navigator",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/createState.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nNavigatorState createState() =&gt; NavigatorState();<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "maybePop",
-            "type": "dart:async.Future<dart:core.bool>",
-            "desc": "<p>Returns the value of the current route's <a href=\"widgets\/Route\/willPop.html\">Route.willPop<\/a> method for the\nnavigator that most tightly encloses the given context.<\/p>\n<p>This method is typically called before a user-initiated <a href=\"widgets\/Navigator\/pop.html\">pop<\/a>. For example\non Android it's called by the binding for the system's back button.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the current\nroute.\nSee also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/Form-class.html\">Form<\/a>, which provides an <code>onWillPop<\/code> callback that enables the form\nto veto a <a href=\"widgets\/Navigator\/pop.html\">pop<\/a> initiated by the app's back button.<\/li>\n<li>\n<a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a>, which provides a <code>scopedWillPopCallback<\/code> that can be used\nto define the route's <code>willPop<\/code> method.<\/li>\n<\/ul>",
-            "static": false,
-            "memberOf": "widgets.Navigator",
-            "sig": "",
-            "params": [
-                {
-                    "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "dart:core.List<widgets.NavigatorObserver>"
                 },
                 {
-                    "name": "result",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "onGenerateRoute",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.RouteFactory"
+                },
+                {
+                    "name": "onUnknownRoute",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.RouteFactory"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/maybePop.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;bool&gt; maybePop&lt;T extends Object&gt;(BuildContext context, [ T result ]) {\n  return Navigator.of(context).maybePop&lt;T&gt;(result);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:core.bool"
             ]
         },
         {
-            "name": "of",
-            "type": "widgets.NavigatorState",
-            "desc": "<p>The state from the closest instance of this class that encloses the given context.<\/p>\n<p>Typical usage is as follows:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.of(context)\n  ..pop()\n  ..pop()\n  ..pushNamed('\/settings');\n<\/code><\/pre>\n<p>If <code>rootNavigator<\/code> is set to true, the state from the furthest instance of\nthis class is given instead. Useful for pushing contents above all subsequent\ninstances of <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>.<\/p>\n    ",
+            "desc": "<p>Whether the navigator that most tightly encloses the given context can be\npopped.<\/p>\n<p>The initial route cannot be popped off the navigator, which implies that\nthis function returns true only if popping the navigator would not remove\nthe initial route.<\/p>\n<p>If there is no <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> in scope, returns false.\nSee also:<\/p>\n<ul><li>\n<a href=\"widgets\/Route\/isFirst.html\">Route.isFirst<\/a>, which returns true for routes for which <a href=\"widgets\/Navigator\/canPop.html\">canPop<\/a>\nreturns false.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static bool canPop(BuildContext context) {\n  final NavigatorState navigator = Navigator.of(context, nullOk: true);\n  return navigator != null &amp;&amp; navigator.canPop();\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/canPop.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Creates the mutable state for this widget at a given location in the tree.<\/p>\n<p>Subclasses should override this method to return a newly created\ninstance of their associated <a href=\"widgets\/State-class.html\">State<\/a> subclass:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">@override\n_MyState createState() =&gt; _MyState();\n<\/code><\/pre>\n<p>The framework can call this method multiple times over the lifetime of\na <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>. For example, if the widget is inserted into the tree\nin multiple locations, the framework will create a separate <a href=\"widgets\/State-class.html\">State<\/a> object\nfor each location. Similarly, if the widget is removed from the tree and\nlater inserted into the tree again, the framework will call <a href=\"widgets\/Navigator\/createState.html\">createState<\/a>\nagain to create a fresh <a href=\"widgets\/State-class.html\">State<\/a> object, simplifying the lifecycle of\n<a href=\"widgets\/State-class.html\">State<\/a> objects.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nNavigatorState createState() =&gt; NavigatorState();<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/createState.html",
+            "isDeprecated": "0",
+            "type": "widgets.NavigatorState",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Navigator",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns the value of the current route's <a href=\"widgets\/Route\/willPop.html\">Route.willPop<\/a> method for the\nnavigator that most tightly encloses the given context.<\/p>\n<p>This method is typically called before a user-initiated <a href=\"widgets\/Navigator\/pop.html\">pop<\/a>. For example\non Android it's called by the binding for the system's back button.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the current\nroute.\nSee also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/Form-class.html\">Form<\/a>, which provides an <code>onWillPop<\/code> callback that enables the form\nto veto a <a href=\"widgets\/Navigator\/pop.html\">pop<\/a> initiated by the app's back button.<\/li>\n<li>\n<a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a>, which provides a <code>scopedWillPopCallback<\/code> that can be used\nto define the route's <code>willPop<\/code> method.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;bool&gt; maybePop&lt;T extends Object&gt;(BuildContext context, [ T result ]) {\n  return Navigator.of(context).maybePop&lt;T&gt;(result);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/maybePop.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:core.bool>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Navigator",
+            "params": [
+                {
+                    "name": "context",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
-                    "name": "rootNavigator",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "result",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>The state from the closest instance of this class that encloses the given context.<\/p>\n<p>Typical usage is as follows:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.of(context)\n  ..pop()\n  ..pop()\n  ..pushNamed('\/settings');\n<\/code><\/pre>\n<p>If <code>rootNavigator<\/code> is set to true, the state from the furthest instance of\nthis class is given instead. Useful for pushing contents above all subsequent\ninstances of <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static NavigatorState of(\n  BuildContext context, {\n  bool rootNavigator = false,\n  bool nullOk = false,\n}) {\n  final NavigatorState navigator = rootNavigator\n      ? context.rootAncestorStateOfType(const TypeMatcher&lt;NavigatorState&gt;())\n      : context.ancestorStateOfType(const TypeMatcher&lt;NavigatorState&gt;());\n  assert(() {\n    if (navigator == null &amp;&amp; !nullOk) {\n      throw FlutterError(\n        'Navigator operation requested with a context that does not include a Navigator.\\n'\n        'The context used to push or pop routes from the Navigator must be that of a '\n        'widget that is a descendant of a Navigator widget.'\n      );\n    }\n    return true;\n  }());\n  return navigator;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/of.html",
+            "isDeprecated": "0",
+            "type": "widgets.NavigatorState",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Navigator",
+            "params": [
+                {
+                    "name": "context",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
                     "name": "nullOk",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "rootNavigator",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/of.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static NavigatorState of(\n  BuildContext context, {\n  bool rootNavigator = false,\n  bool nullOk = false,\n}) {\n  final NavigatorState navigator = rootNavigator\n      ? context.rootAncestorStateOfType(const TypeMatcher&lt;NavigatorState&gt;())\n      : context.ancestorStateOfType(const TypeMatcher&lt;NavigatorState&gt;());\n  assert(() {\n    if (navigator == null &amp;&amp; !nullOk) {\n      throw FlutterError(\n        'Navigator operation requested with a context that does not include a Navigator.\\n'\n        'The context used to push or pop routes from the Navigator must be that of a '\n        'widget that is a descendant of a Navigator widget.'\n      );\n    }\n    return true;\n  }());\n  return navigator;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "pop",
-            "type": "dart:core.bool",
             "desc": "<p>Pop the top-most route off the navigator that most tightly encloses the\ngiven context.<\/p>\n<p>The current route's <a href=\"widgets\/Route\/didPop.html\">Route.didPop<\/a> method is called first. If that method\nreturns false, then this method returns true but nothing else is changed\n(the route is expected to have popped some internal state; see e.g.\n<a href=\"widgets\/LocalHistoryRoute-mixin.html\">LocalHistoryRoute<\/a>). Otherwise, the rest of this description applies.<\/p>\n<p>If non-null, <code>result<\/code> will be used as the result of the route that is\npopped; the future that had been returned from pushing the popped route\nwill complete with <code>result<\/code>. Routes such as dialogs or popup menus\ntypically use this mechanism to return the value selected by the user to\nthe widget that created their route. The type of <code>result<\/code>, if provided,\nmust match the type argument of the class of the popped route (<code>T<\/code>).<\/p>\n<p>The popped route and the route below it are notified (see <a href=\"widgets\/Route\/didPop.html\">Route.didPop<\/a>,\n<a href=\"widgets\/Route\/didComplete.html\">Route.didComplete<\/a>, and <a href=\"widgets\/Route\/didPopNext.html\">Route.didPopNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didPop.html\">NavigatorObserver.didPop<\/a>).<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the popped route.<\/p>\n<p>Returns true if a route was popped (including if <a href=\"widgets\/Route\/didPop.html\">Route.didPop<\/a> returned\nfalse); returns false if there are no further previous routes.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage for closing a route is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _close() {\n  Navigator.pop(context);\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>A dialog box might be closed with a result:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">void _accept() {\n  Navigator.pop(context, true); \/\/ dialog returns true\n}\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic bool pop&lt;T extends Object&gt;(BuildContext context, [ T result ]) {\n  return Navigator.of(context).pop&lt;T&gt;(result);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/pop.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
                     "name": "result",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/pop.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic bool pop&lt;T extends Object&gt;(BuildContext context, [ T result ]) {\n  return Navigator.of(context).pop&lt;T&gt;(result);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "popAndPushNamed",
-            "type": "dart:async.Future",
             "desc": "<p>Pop the current route off the navigator that most tightly encloses the\ngiven context and push a named route in its place.<\/p>\n<p>If non-null, <code>result<\/code> will be used as the result of the route that is\npopped; the future that had been returned from pushing the popped route\nwill complete with <code>result<\/code>. Routes such as dialogs or popup menus\ntypically use this mechanism to return the value selected by the user to\nthe widget that created their route. The type of <code>result<\/code>, if provided,\nmust match the type argument of the class of the popped route (<code>TO<\/code>).<\/p>\n<p>The route name will be passed to the navigator's <a href=\"widgets\/Navigator\/onGenerateRoute.html\">onGenerateRoute<\/a>\ncallback. The returned route will be pushed into the navigator.<\/p>\n<p>The new route, the old route, and the route below the old route (if any)\nare all notified (see <a href=\"widgets\/Route\/didPop.html\">Route.didPop<\/a>, <a href=\"widgets\/Route\/didComplete.html\">Route.didComplete<\/a>,\n<a href=\"widgets\/Route\/didPopNext.html\">Route.didPopNext<\/a>, <a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a>, and <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any <a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well\n(see <a href=\"widgets\/NavigatorObserver\/didPop.html\">NavigatorObserver.didPop<\/a> and <code>NavigatorObservers.didPush<\/code>). The\nanimations for the pop and the push are performed simultaneously, so the\nroute below may be briefly visible even if both the old route and the new\nroute are opaque (see <a href=\"widgets\/TransitionRoute\/opaque.html\">TransitionRoute.opaque<\/a>).<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/Navigator\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route,\nand <code>TO<\/code> is the return value type of the old route.\nThe provided <code>arguments<\/code> are passed to the pushed route via\n<a href=\"widgets\/RouteSettings\/arguments.html\">RouteSettings.arguments<\/a>. Any object can be passed as <code>arguments<\/code> (e.g. a\n<a href=\"dart-core\/String-class.html\">String<\/a>, <a href=\"dart-core\/int-class.html\">int<\/a>, or an instance of a custom <code>MyRouteArguments<\/code> class).\nOften, a <a href=\"dart-core\/Map-class.html\">Map<\/a> is used to pass key-value pairs.<\/p>\n<p>The <code>arguments<\/code> may be used in <a href=\"widgets\/Navigator\/onGenerateRoute.html\">Navigator.onGenerateRoute<\/a> or\n<a href=\"widgets\/Navigator\/onUnknownRoute.html\">Navigator.onUnknownRoute<\/a> to construct the route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _selectAccessibility() {\n  Navigator.popAndPushNamed(context, '\/settings\/accessibility');\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; popAndPushNamed&lt;T extends Object, TO extends Object&gt;(\n  BuildContext context,\n  String routeName, {\n  TO result,\n  Object arguments,\n }) {\n  return Navigator.of(context).popAndPushNamed&lt;T, TO&gt;(routeName, arguments: arguments, result: result);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/popAndPushNamed.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
-                    "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "arguments",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
+                },
+                {
+                    "name": "context",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
+                },
+                {
+                    "name": "result",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<TO>"
                 },
                 {
                     "name": "routeName",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "result",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arguments",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/popAndPushNamed.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; popAndPushNamed&lt;T extends Object, TO extends Object&gt;(\n  BuildContext context,\n  String routeName, {\n  TO result,\n  Object arguments,\n }) {\n  return Navigator.of(context).popAndPushNamed&lt;T, TO&gt;(routeName, arguments: arguments, result: result);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "popUntil",
-            "type": "",
             "desc": "<p>Calls <a href=\"widgets\/Navigator\/pop.html\">pop<\/a> repeatedly on the navigator that most tightly encloses the\ngiven context until the predicate returns true.<\/p>\n<p>The predicate may be applied to the same route more than once if\n<a href=\"widgets\/Route\/willHandlePopInternally.html\">Route.willHandlePopInternally<\/a> is true.<\/p>\n<p>To pop until a route with a certain name, use the <a href=\"widgets\/RoutePredicate.html\">RoutePredicate<\/a>\nreturned from <a href=\"widgets\/ModalRoute\/withName.html\">ModalRoute.withName<\/a>.<\/p>\n<p>The routes are closed with null as their <code>return<\/code> value.<\/p>\n<p>See <a href=\"widgets\/Navigator\/pop.html\">pop<\/a> for more details of the semantics of popping a route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _logout() {\n  Navigator.popUntil(context, ModalRoute.withName('\/login'));\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static void popUntil(BuildContext context, RoutePredicate predicate) {\n  Navigator.of(context).popUntil(predicate);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/popUntil.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
                     "name": "predicate",
-                    "type": "widgets.RoutePredicate",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.RoutePredicate"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/popUntil.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static void popUntil(BuildContext context, RoutePredicate predicate) {\n  Navigator.of(context).popUntil(predicate);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "push",
-            "type": "dart:async.Future",
             "desc": "<p>Push the given route onto the navigator that most tightly encloses the\ngiven context.<\/p>\n<p>The new route and the previous route (if any) are notified (see\n<a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a> and <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didPush.html\">NavigatorObserver.didPush<\/a>).<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/Navigator\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _openMyPage() {\n  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) =&gt; MyPage()));\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; push&lt;T extends Object&gt;(BuildContext context, Route&lt;T&gt; route) {\n  return Navigator.of(context).push(route);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/push.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
                     "name": "route",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/push.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; push&lt;T extends Object&gt;(BuildContext context, Route&lt;T&gt; route) {\n  return Navigator.of(context).push(route);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "pushAndRemoveUntil",
-            "type": "dart:async.Future",
             "desc": "<p>Push the given route onto the navigator that most tightly encloses the\ngiven context, and then remove all the previous routes until the\n<code>predicate<\/code> returns true.<\/p>\n<p>The predicate may be applied to the same route more than once if\n<a href=\"widgets\/Route\/willHandlePopInternally.html\">Route.willHandlePopInternally<\/a> is true.<\/p>\n<p>To remove routes until a route with a certain name, use the\n<a href=\"widgets\/RoutePredicate.html\">RoutePredicate<\/a> returned from <a href=\"widgets\/ModalRoute\/withName.html\">ModalRoute.withName<\/a>.<\/p>\n<p>To remove all the routes below the pushed route, use a <a href=\"widgets\/RoutePredicate.html\">RoutePredicate<\/a>\nthat always returns false (e.g. <code>(Route&lt;dynamic&gt; route) =&gt; false<\/code>).<\/p>\n<p>The removed routes are removed without being completed, so this method\ndoes not take a return value argument.<\/p>\n<p>The new route and the route below the bottommost removed route (which\nbecomes the route below the new route) are notified (see <a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a>\nand <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<code>NavigatorObservers.didPush<\/code> and <code>NavigatorObservers.didRemove<\/code>). The\nremoved routes are disposed, without being notified, once the new route\nhas finished animating. The futures that had been returned from pushing\nthose routes will not complete.<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/Navigator\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _finishAccountCreation() {\n  Navigator.pushAndRemoveUntil(\n    context,\n    MaterialPageRoute(builder: (BuildContext context) =&gt; MyHomePage()),\n    ModalRoute.withName('\/'),\n  );\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; pushAndRemoveUntil&lt;T extends Object&gt;(BuildContext context, Route&lt;T&gt; newRoute, RoutePredicate predicate) {\n  return Navigator.of(context).pushAndRemoveUntil&lt;T&gt;(newRoute, predicate);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/pushAndRemoveUntil.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
                     "name": "newRoute",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
                 },
                 {
                     "name": "predicate",
-                    "type": "widgets.RoutePredicate",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.RoutePredicate"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/pushAndRemoveUntil.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; pushAndRemoveUntil&lt;T extends Object&gt;(BuildContext context, Route&lt;T&gt; newRoute, RoutePredicate predicate) {\n  return Navigator.of(context).pushAndRemoveUntil&lt;T&gt;(newRoute, predicate);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "pushNamed",
-            "type": "dart:async.Future",
             "desc": "<p>Push a named route onto the navigator that most tightly encloses the given\ncontext.<\/p>\n<p>The route name will be passed to that navigator's <a href=\"widgets\/Navigator\/onGenerateRoute.html\">onGenerateRoute<\/a>\ncallback. The returned route will be pushed into the navigator.<\/p>\n<p>The new route and the previous route (if any) are notified (see\n<a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a> and <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didPush.html\">NavigatorObserver.didPush<\/a>).<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/Navigator\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the route.\nThe provided <code>arguments<\/code> are passed to the pushed route via\n<a href=\"widgets\/RouteSettings\/arguments.html\">RouteSettings.arguments<\/a>. Any object can be passed as <code>arguments<\/code> (e.g. a\n<a href=\"dart-core\/String-class.html\">String<\/a>, <a href=\"dart-core\/int-class.html\">int<\/a>, or an instance of a custom <code>MyRouteArguments<\/code> class).\nOften, a <a href=\"dart-core\/Map-class.html\">Map<\/a> is used to pass key-value pairs.<\/p>\n<p>The <code>arguments<\/code> may be used in <a href=\"widgets\/Navigator\/onGenerateRoute.html\">Navigator.onGenerateRoute<\/a> or\n<a href=\"widgets\/Navigator\/onUnknownRoute.html\">Navigator.onUnknownRoute<\/a> to construct the route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _didPushButton() {\n  Navigator.pushNamed(context, '\/settings');\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following example shows how to pass additional <code>arguments<\/code> to the\nroute:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _showBerlinWeather() {\n  Navigator.pushNamed(\n    context,\n    '\/weather',\n    arguments: &lt;String, String&gt;{\n      'city': 'Berlin',\n      'country': 'Germany',\n    },\n  );\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following example shows how to pass a custom Object to the route:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class WeatherRouteArguments {\n  WeatherRouteArguments({ this.city, this.country });\n  final String city;\n  final String country;\n\n  bool get isGermanCapital {\n    return country == 'Germany' &amp;&amp; city == 'Berlin';\n  }\n}\n\nvoid _showWeather() {\n  Navigator.pushNamed(\n    context,\n    '\/weather',\n    arguments: WeatherRouteArguments(city: 'Berlin', country: 'Germany'),\n  );\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; pushNamed&lt;T extends Object&gt;(\n  BuildContext context,\n  String routeName, {\n  Object arguments,\n }) {\n  return Navigator.of(context).pushNamed&lt;T&gt;(routeName, arguments: arguments);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/pushNamed.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
-                    "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "arguments",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
+                },
+                {
+                    "name": "context",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
                     "name": "routeName",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "arguments",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/pushNamed.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; pushNamed&lt;T extends Object&gt;(\n  BuildContext context,\n  String routeName, {\n  Object arguments,\n }) {\n  return Navigator.of(context).pushNamed&lt;T&gt;(routeName, arguments: arguments);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "pushNamedAndRemoveUntil",
-            "type": "dart:async.Future",
             "desc": "<p>Push the route with the given name onto the navigator that most tightly\nencloses the given context, and then remove all the previous routes until\nthe <code>predicate<\/code> returns true.<\/p>\n<p>The predicate may be applied to the same route more than once if\n<a href=\"widgets\/Route\/willHandlePopInternally.html\">Route.willHandlePopInternally<\/a> is true.<\/p>\n<p>To remove routes until a route with a certain name, use the\n<a href=\"widgets\/RoutePredicate.html\">RoutePredicate<\/a> returned from <a href=\"widgets\/ModalRoute\/withName.html\">ModalRoute.withName<\/a>.<\/p>\n<p>To remove all the routes below the pushed route, use a <a href=\"widgets\/RoutePredicate.html\">RoutePredicate<\/a>\nthat always returns false (e.g. <code>(Route&lt;dynamic&gt; route) =&gt; false<\/code>).<\/p>\n<p>The removed routes are removed without being completed, so this method\ndoes not take a return value argument.<\/p>\n<p>The new route's name (<code>routeName<\/code>) will be passed to the navigator's\n<a href=\"widgets\/Navigator\/onGenerateRoute.html\">onGenerateRoute<\/a> callback. The returned route will be pushed into the\nnavigator.<\/p>\n<p>The new route and the route below the bottommost removed route (which\nbecomes the route below the new route) are notified (see <a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a>\nand <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<code>NavigatorObservers.didPush<\/code> and <code>NavigatorObservers.didRemove<\/code>). The\nremoved routes are disposed, without being notified, once the new route\nhas finished animating. The futures that had been returned from pushing\nthose routes will not complete.<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/Navigator\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route.\nThe provided <code>arguments<\/code> are passed to the pushed route via\n<a href=\"widgets\/RouteSettings\/arguments.html\">RouteSettings.arguments<\/a>. Any object can be passed as <code>arguments<\/code> (e.g. a\n<a href=\"dart-core\/String-class.html\">String<\/a>, <a href=\"dart-core\/int-class.html\">int<\/a>, or an instance of a custom <code>MyRouteArguments<\/code> class).\nOften, a <a href=\"dart-core\/Map-class.html\">Map<\/a> is used to pass key-value pairs.<\/p>\n<p>The <code>arguments<\/code> may be used in <a href=\"widgets\/Navigator\/onGenerateRoute.html\">Navigator.onGenerateRoute<\/a> or\n<a href=\"widgets\/Navigator\/onUnknownRoute.html\">Navigator.onUnknownRoute<\/a> to construct the route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _resetToCalendar() {\n  Navigator.pushNamedAndRemoveUntil(context, '\/calendar', ModalRoute.withName('\/'));\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; pushNamedAndRemoveUntil&lt;T extends Object&gt;(\n  BuildContext context,\n  String newRouteName,\n  RoutePredicate predicate, {\n  Object arguments,\n}) {\n  return Navigator.of(context).pushNamedAndRemoveUntil&lt;T&gt;(newRouteName, predicate, arguments: arguments);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/pushNamedAndRemoveUntil.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
-                    "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "arguments",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
+                },
+                {
+                    "name": "context",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
                     "name": "newRouteName",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 },
                 {
                     "name": "predicate",
-                    "type": "widgets.RoutePredicate",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "arguments",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.RoutePredicate"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/pushNamedAndRemoveUntil.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; pushNamedAndRemoveUntil&lt;T extends Object&gt;(\n  BuildContext context,\n  String newRouteName,\n  RoutePredicate predicate, {\n  Object arguments,\n}) {\n  return Navigator.of(context).pushNamedAndRemoveUntil&lt;T&gt;(newRouteName, predicate, arguments: arguments);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "pushReplacement",
-            "type": "dart:async.Future",
             "desc": "<p>Replace the current route of the navigator that most tightly encloses the\ngiven context by pushing the given route and then disposing the previous\nroute once the new route has finished animating in.<\/p>\n<p>If non-null, <code>result<\/code> will be used as the result of the route that is\nremoved; the future that had been returned from pushing that old route will\ncomplete with <code>result<\/code>. Routes such as dialogs or popup menus typically\nuse this mechanism to return the value selected by the user to the widget\nthat created their route. The type of <code>result<\/code>, if provided, must match\nthe type argument of the class of the old route (<code>TO<\/code>).<\/p>\n<p>The new route and the route below the removed route are notified (see\n<a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a> and <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didReplace.html\">NavigatorObserver.didReplace<\/a>). The removed route is notified once the\nnew route has finished animating (see <a href=\"widgets\/Route\/didComplete.html\">Route.didComplete<\/a>).<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/Navigator\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route,\nand <code>TO<\/code> is the type of the return value of the old route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _completeLogin() {\n  Navigator.pushReplacement(\n      context, MaterialPageRoute(builder: (BuildContext context) =&gt; MyHomePage()));\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; pushReplacement&lt;T extends Object, TO extends Object&gt;(BuildContext context, Route&lt;T&gt; newRoute, { TO result }) {\n  return Navigator.of(context).pushReplacement&lt;T, TO&gt;(newRoute, result: result);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/pushReplacement.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
                     "name": "newRoute",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
                 },
                 {
                     "name": "result",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<TO>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/pushReplacement.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; pushReplacement&lt;T extends Object, TO extends Object&gt;(BuildContext context, Route&lt;T&gt; newRoute, { TO result }) {\n  return Navigator.of(context).pushReplacement&lt;T, TO&gt;(newRoute, result: result);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "pushReplacementNamed",
-            "type": "dart:async.Future",
             "desc": "<p>Replace the current route of the navigator that most tightly encloses the\ngiven context by pushing the route named <code>routeName<\/code> and then disposing\nthe previous route once the new route has finished animating in.<\/p>\n<p>If non-null, <code>result<\/code> will be used as the result of the route that is\nremoved; the future that had been returned from pushing that old route\nwill complete with <code>result<\/code>. Routes such as dialogs or popup menus\ntypically use this mechanism to return the value selected by the user to\nthe widget that created their route. The type of <code>result<\/code>, if provided,\nmust match the type argument of the class of the old route (<code>TO<\/code>).<\/p>\n<p>The route name will be passed to the navigator's <a href=\"widgets\/Navigator\/onGenerateRoute.html\">onGenerateRoute<\/a>\ncallback. The returned route will be pushed into the navigator.<\/p>\n<p>The new route and the route below the removed route are notified (see\n<a href=\"widgets\/Route\/didPush.html\">Route.didPush<\/a> and <a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has any\n<a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didReplace.html\">NavigatorObserver.didReplace<\/a>). The removed route is notified once the\nnew route has finished animating (see <a href=\"widgets\/Route\/didComplete.html\">Route.didComplete<\/a>). The removed\nroute's exit animation is not run (see <a href=\"widgets\/Navigator\/popAndPushNamed.html\">popAndPushNamed<\/a> for a variant\nthat does animated the removed route).<\/p>\n<p>Ongoing gestures within the current route are canceled when a new route is\npushed.<\/p>\n<p>Returns a <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes to the <code>result<\/code> value passed to <a href=\"widgets\/Navigator\/pop.html\">pop<\/a>\nwhen the pushed route is popped off the navigator.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route,\nand <code>TO<\/code> is the type of the return value of the old route.\nThe provided <code>arguments<\/code> are passed to the pushed route via\n<a href=\"widgets\/RouteSettings\/arguments.html\">RouteSettings.arguments<\/a>. Any object can be passed as <code>arguments<\/code> (e.g. a\n<a href=\"dart-core\/String-class.html\">String<\/a>, <a href=\"dart-core\/int-class.html\">int<\/a>, or an instance of a custom <code>MyRouteArguments<\/code> class).\nOften, a <a href=\"dart-core\/Map-class.html\">Map<\/a> is used to pass key-value pairs.<\/p>\n<p>The <code>arguments<\/code> may be used in <a href=\"widgets\/Navigator\/onGenerateRoute.html\">Navigator.onGenerateRoute<\/a> or\n<a href=\"widgets\/Navigator\/onUnknownRoute.html\">Navigator.onUnknownRoute<\/a> to construct the route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nTypical usage is as follows:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">void _switchToBrightness() {\n  Navigator.pushReplacementNamed(context, '\/settings\/brightness');\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; pushReplacementNamed&lt;T extends Object, TO extends Object&gt;(\n  BuildContext context,\n  String routeName, {\n  TO result,\n  Object arguments,\n}) {\n  return Navigator.of(context).pushReplacementNamed&lt;T, TO&gt;(routeName, arguments: arguments, result: result);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/pushReplacementNamed.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
-                    "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "arguments",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
+                },
+                {
+                    "name": "context",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
+                },
+                {
+                    "name": "result",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<TO>"
                 },
                 {
                     "name": "routeName",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "result",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arguments",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/pushReplacementNamed.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic Future&lt;T&gt; pushReplacementNamed&lt;T extends Object, TO extends Object&gt;(\n  BuildContext context,\n  String routeName, {\n  TO result,\n  Object arguments,\n}) {\n  return Navigator.of(context).pushReplacementNamed&lt;T, TO&gt;(routeName, arguments: arguments, result: result);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "removeRoute",
-            "type": "",
             "desc": "<p>Immediately remove <code>route<\/code> from the navigator that most tightly encloses\nthe given context, and <a href=\"widgets\/Route\/dispose.html\">Route.dispose<\/a> it.<\/p>\n<p>The removed route is removed without being completed, so this method does\nnot take a return value argument. No animations are run as a result of\nthis method call.<\/p>\n<p>The routes below and above the removed route are notified (see\n<a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a> and <a href=\"widgets\/Route\/didChangePrevious.html\">Route.didChangePrevious<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>\nhas any <a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didRemove.html\">NavigatorObserver.didRemove<\/a>). The removed route is disposed without\nbeing notified. The future that had been returned from pushing that routes\nwill not complete.<\/p>\n<p>The given <code>route<\/code> must be in the history; this method will throw an\nexception if it is not.<\/p>\n<p>Ongoing gestures within the current route are canceled.\nThis method is used, for example, to instantly dismiss dropdown menus that\nare up when the screen's orientation changes.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static void removeRoute(BuildContext context, Route&lt;dynamic&gt; route) {\n  return Navigator.of(context).removeRoute(route);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/removeRoute.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
                     "name": "route",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/removeRoute.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static void removeRoute(BuildContext context, Route&lt;dynamic&gt; route) {\n  return Navigator.of(context).removeRoute(route);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "removeRouteBelow",
-            "type": "",
             "desc": "<p>Immediately remove a route from the navigator that most tightly encloses\nthe given context, and <a href=\"widgets\/Route\/dispose.html\">Route.dispose<\/a> it. The route to be replaced is the\none below the given <code>anchorRoute<\/code>.<\/p>\n<p>The removed route is removed without being completed, so this method does\nnot take a return value argument. No animations are run as a result of\nthis method call.<\/p>\n<p>The routes below and above the removed route are notified (see\n<a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a> and <a href=\"widgets\/Route\/didChangePrevious.html\">Route.didChangePrevious<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>\nhas any <a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<a href=\"widgets\/NavigatorObserver\/didRemove.html\">NavigatorObserver.didRemove<\/a>). The removed route is disposed without\nbeing notified. The future that had been returned from pushing that routes\nwill not complete.<\/p>\n<p>The given <code>anchorRoute<\/code> must be in the history and must have a route below\nit; this method will throw an exception if it is not or does not.<\/p>\n<p>Ongoing gestures within the current route are canceled.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static void removeRouteBelow(BuildContext context, Route&lt;dynamic&gt; anchorRoute) {\n  return Navigator.of(context).removeRouteBelow(anchorRoute);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/removeRouteBelow.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
-                {
-                    "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
                 {
                     "name": "anchorRoute",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
+                },
+                {
+                    "name": "context",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/removeRouteBelow.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static void removeRouteBelow(BuildContext context, Route&lt;dynamic&gt; anchorRoute) {\n  return Navigator.of(context).removeRouteBelow(anchorRoute);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "replace",
-            "type": "",
             "desc": "<p>Replaces a route on the navigator that most tightly encloses the given\ncontext with a new route.<\/p>\n<p>The old route must not be current visible, as this method skips the\nanimations and therefore the removal would be jarring if it was visible.\nTo replace the top-most route, consider <a href=\"widgets\/Navigator\/pushReplacement.html\">pushReplacement<\/a> instead, which\n<em>does<\/em> animate the new route, and delays removing the old route until the\nnew route has finished animating.<\/p>\n<p>The removed route is removed without being completed, so this method does\nnot take a return value argument.<\/p>\n<p>The new route, the route below the new route (if any), and the route above\nthe new route, are all notified (see <a href=\"widgets\/Route\/didReplace.html\">Route.didReplace<\/a>,\n<a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>, and <a href=\"widgets\/Route\/didChangePrevious.html\">Route.didChangePrevious<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>\nhas any <a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<code>NavigatorObservers.didReplace<\/code>). The removed route is disposed without\nbeing notified. The future that had been returned from pushing that routes\nwill not complete.<\/p>\n<p>This can be useful in combination with <a href=\"widgets\/Navigator\/removeRouteBelow.html\">removeRouteBelow<\/a> when building a\nnon-linear user experience.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route.\nSee also:<\/p>\n<ul><li>\n<a href=\"widgets\/Navigator\/replaceRouteBelow.html\">replaceRouteBelow<\/a>, which is the same but identifies the route to be\nremoved by reference to the route above it, rather than directly.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic void replace&lt;T extends Object&gt;(BuildContext context, { @required Route&lt;dynamic&gt; oldRoute, @required Route&lt;T&gt; newRoute }) {\n  return Navigator.of(context).replace&lt;T&gt;(oldRoute: oldRoute, newRoute: newRoute);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/replace.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
+                },
+                {
+                    "name": "newRoute",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
                 },
                 {
                     "name": "oldRoute",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "newRoute",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/replace.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic void replace&lt;T extends Object&gt;(BuildContext context, { @required Route&lt;dynamic&gt; oldRoute, @required Route&lt;T&gt; newRoute }) {\n  return Navigator.of(context).replace&lt;T&gt;(oldRoute: oldRoute, newRoute: newRoute);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "replaceRouteBelow",
-            "type": "",
             "desc": "<p>Replaces a route on the navigator that most tightly encloses the given\ncontext with a new route. The route to be replaced is the one below the\ngiven <code>anchorRoute<\/code>.<\/p>\n<p>The old route must not be current visible, as this method skips the\nanimations and therefore the removal would be jarring if it was visible.\nTo replace the top-most route, consider <a href=\"widgets\/Navigator\/pushReplacement.html\">pushReplacement<\/a> instead, which\n<em>does<\/em> animate the new route, and delays removing the old route until the\nnew route has finished animating.<\/p>\n<p>The removed route is removed without being completed, so this method does\nnot take a return value argument.<\/p>\n<p>The new route, the route below the new route (if any), and the route above\nthe new route, are all notified (see <a href=\"widgets\/Route\/didReplace.html\">Route.didReplace<\/a>,\n<a href=\"widgets\/Route\/didChangeNext.html\">Route.didChangeNext<\/a>, and <a href=\"widgets\/Route\/didChangePrevious.html\">Route.didChangePrevious<\/a>). If the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>\nhas any <a href=\"widgets\/Navigator\/observers.html\">Navigator.observers<\/a>, they will be notified as well (see\n<code>NavigatorObservers.didReplace<\/code>). The removed route is disposed without\nbeing notified. The future that had been returned from pushing that routes\nwill not complete.<\/p>\n<p>The <code>T<\/code> type argument is the type of the return value of the new route.\nSee also:<\/p>\n<ul><li>\n<a href=\"widgets\/Navigator\/replace.html\">replace<\/a>, which is the same but identifies the route to be removed\ndirectly.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic void replaceRouteBelow&lt;T extends Object&gt;(BuildContext context, { @required Route&lt;dynamic&gt; anchorRoute, Route&lt;T&gt; newRoute }) {\n  return Navigator.of(context).replaceRouteBelow&lt;T&gt;(anchorRoute: anchorRoute, newRoute: newRoute);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Navigator\/replaceRouteBelow.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Navigator",
-            "sig": "",
             "params": [
                 {
-                    "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "anchorRoute",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
                 },
                 {
-                    "name": "anchorRoute",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "context",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
                     "name": "newRoute",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Navigator\/replaceRouteBelow.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic void replaceRouteBelow&lt;T extends Object&gt;(BuildContext context, { @required Route&lt;dynamic&gt; anchorRoute, Route&lt;T&gt; newRoute }) {\n  return Navigator.of(context).replaceRouteBelow&lt;T&gt;(anchorRoute: anchorRoute, newRoute: newRoute);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "type": "",
-            "href": "widgets\/Navigator\/defaultRouteName-constant.html",
-            "desc": "<p>The default name for the <a href=\"widgets\/Navigator\/initialRoute.html\">initialRoute<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/Navigator\/defaultRouteName-constant.html\">dart:ui.Window.defaultRouteName<\/a>, which reflects the route that the\napplication was started with.<\/li><\/ul>",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String defaultRouteName = '\/'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "defaultRouteName",
-            "memberOf": "widgets.Navigator"
-        },
-        {
-            "name": "initialRoute",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>The name of the first route to show.<\/p>\n<p>By default, this defers to <a href=\"widgets\/Navigator\/defaultRouteName-constant.html\">dart:ui.Window.defaultRouteName<\/a>.<\/p>\n<p>If this string contains any <code>\/<\/code> characters, then the string is split on\nthose characters and substrings from the start of the string up to each\nsuch character are, in turn, used as routes to push.<\/p>\n<p>For example, if the route <code>\/stocks\/HOOLI<\/code> was used as the <a href=\"widgets\/Navigator\/initialRoute.html\">initialRoute<\/a>,\nthen the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> would push the following routes on startup: <code>\/<\/code>,\n<code>\/stocks<\/code>, <code>\/stocks\/HOOLI<\/code>. This enables deep linking while allowing the\napplication to maintain a predictable route history.<\/p>\n        ",
-            "memberOf": "widgets.Navigator",
-            "isConstant": false,
-            "href": "widgets\/Navigator\/initialRoute.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String initialRoute\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/Navigator\/initialRoute.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "widgets.Navigator",
+            "params": []
         },
         {
-            "name": "observers",
-            "type": "dart:core.List<widgets.NavigatorObserver>",
-            "types": [
-                "dart:core.List",
-                "widgets.NavigatorObserver"
-            ],
             "desc": "<p>A list of observers for this navigator.<\/p>\n        ",
-            "memberOf": "widgets.Navigator",
-            "isConstant": false,
-            "href": "widgets\/Navigator\/observers.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final List&lt;NavigatorObserver&gt; observers\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/Navigator\/observers.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<widgets.NavigatorObserver>",
+            "memberOf": "widgets.Navigator",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [
-        "widgets.NavigatorState"
-    ],
-    "realImplementors": [
-        "widgets.NavigatorState"
-    ],
-    "cn": [],
-    "href": "widgets\/Navigator-class.html",
-    "desc": "<p>A widget that manages a set of child widgets with a stack discipline.<\/p>\n<p>Many apps have a navigator near the top of their widget hierarchy in order\nto display their logical history using an <a href=\"widgets\/Overlay-class.html\">Overlay<\/a> with the most recently\nvisited pages visually on top of the older pages. Using this pattern lets\nthe navigator visually transition from one page to another by moving the widgets\naround in the overlay. Similarly, the navigator can be used to show a dialog\nby positioning the dialog widget above the current page.<\/p>\n<h2 id=\"using-the-navigator\">Using the Navigator<\/h2>\n<p>Mobile apps typically reveal their contents via full-screen elements\ncalled \"screens\" or \"pages\". In Flutter these elements are called\nroutes and they're managed by a <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> widget. The navigator\nmanages a stack of <a href=\"widgets\/Route-class.html\">Route<\/a> objects and provides methods for managing\nthe stack, like <a href=\"widgets\/Navigator\/push.html\">Navigator.push<\/a> and <a href=\"widgets\/Navigator\/pop.html\">Navigator.pop<\/a>.<\/p>\n<h3 id=\"displaying-a-full-screen-route\">Displaying a full-screen route<\/h3>\n<p>Although you can create a navigator directly, it's most common to use\nthe navigator created by a <a href=\"widgets\/WidgetsApp-class.html\">WidgetsApp<\/a> or a <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> widget. You\ncan refer to that navigator with <a href=\"widgets\/Navigator\/of.html\">Navigator.of<\/a>.<\/p>\n<p>A <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> is the simplest way to set things up. The <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a>'s\nhome becomes the route at the bottom of the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>'s stack. It is what\nyou see when the app is launched.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">void main() {\n  runApp(MaterialApp(home: MyAppHome()));\n}\n<\/code><\/pre>\n<p>To push a new route on the stack you can create an instance of\n<a href=\"material\/MaterialPageRoute-class.html\">MaterialPageRoute<\/a> with a builder function that creates whatever you\nwant to appear on the screen. For example:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.push(context, MaterialPageRoute&lt;void&gt;(\n  builder: (BuildContext context) {\n    return Scaffold(\n      appBar: AppBar(title: Text('My Page')),\n      body: Center(\n        child: FlatButton(\n          child: Text('POP'),\n          onPressed: () {\n            Navigator.pop(context);\n          },\n        ),\n      ),\n    );\n  },\n));\n<\/code><\/pre>\n<p>The route defines its widget with a builder function instead of a\nchild widget because it will be built and rebuilt in different\ncontexts depending on when it's pushed and popped.<\/p>\n<p>As you can see, the new route can be popped, revealing the app's home\npage, with the Navigator's pop method:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.pop(context);\n<\/code><\/pre>\n<p>It usually isn't necessary to provide a widget that pops the Navigator\nin a route with a <a href=\"material\/Scaffold-class.html\">Scaffold<\/a> because the Scaffold automatically adds a\n'back' button to its AppBar. Pressing the back button causes\n<a href=\"widgets\/Navigator\/pop.html\">Navigator.pop<\/a> to be called. On Android, pressing the system back\nbutton does the same thing.<\/p>\n<h3 id=\"using-named-navigator-routes\">Using named navigator routes<\/h3>\n<p>Mobile apps often manage a large number of routes and it's often\neasiest to refer to them by name. Route names, by convention,\nuse a path-like structure (for example, '\/a\/b\/c').\nThe app's home page route is named '\/' by default.<\/p>\n<p>The <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> can be created\nwith a <code>Map&lt;String, WidgetBuilder&gt;<\/code> which maps from a route's name to\na builder function that will create it. The <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> uses this\nmap to create a value for its navigator's <a href=\"widgets\/Navigator\/onGenerateRoute.html\">onGenerateRoute<\/a> callback.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">void main() {\n  runApp(MaterialApp(\n    home: MyAppHome(), \/\/ becomes the route named '\/'\n    routes: &lt;String, WidgetBuilder&gt; {\n      '\/a': (BuildContext context) =&gt; MyPage(title: 'page A'),\n      '\/b': (BuildContext context) =&gt; MyPage(title: 'page B'),\n      '\/c': (BuildContext context) =&gt; MyPage(title: 'page C'),\n    },\n  ));\n}\n<\/code><\/pre>\n<p>To show a route by name:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.pushNamed(context, '\/b');\n<\/code><\/pre>\n<h3 id=\"routes-can-return-a-value\">Routes can return a value<\/h3>\n<p>When a route is pushed to ask the user for a value, the value can be\nreturned via the <a href=\"widgets\/Navigator\/pop.html\">pop<\/a> method's result parameter.<\/p>\n<p>Methods that push a route return a <a href=\"dart-async\/Future-class.html\">Future<\/a>. The Future resolves when the\nroute is popped and the <a href=\"dart-async\/Future-class.html\">Future<\/a>'s value is the <a href=\"widgets\/Navigator\/pop.html\">pop<\/a> method's <code>result<\/code>\nparameter.<\/p>\n<p>For example if we wanted to ask the user to press 'OK' to confirm an\noperation we could <code>await<\/code> the result of <a href=\"widgets\/Navigator\/push.html\">Navigator.push<\/a>:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">bool value = await Navigator.push(context, MaterialPageRoute&lt;bool&gt;(\n  builder: (BuildContext context) {\n    return Center(\n      child: GestureDetector(\n        child: Text('OK'),\n        onTap: () { Navigator.pop(context, true); }\n      ),\n    );\n  }\n));\n<\/code><\/pre>\n<p>If the user presses 'OK' then value will be true. If the user backs\nout of the route, for example by pressing the Scaffold's back button,\nthe value will be null.<\/p>\n<p>When a route is used to return a value, the route's type parameter must\nmatch the type of <a href=\"widgets\/Navigator\/pop.html\">pop<\/a>'s result. That's why we've used\n<code>MaterialPageRoute&lt;bool&gt;<\/code> instead of <code>MaterialPageRoute&lt;void&gt;<\/code> or just\n<code>MaterialPageRoute<\/code>. (If you prefer to not specify the types, though, that's\nfine too.)<\/p>\n<h3 id=\"popup-routes\">Popup routes<\/h3>\n<p>Routes don't have to obscure the entire screen. <a href=\"widgets\/PopupRoute-class.html\">PopupRoute<\/a>s cover the\nscreen with a <a href=\"widgets\/ModalRoute\/barrierColor.html\">ModalRoute.barrierColor<\/a> that can be only partially opaque to\nallow the current screen to show through. Popup routes are \"modal\" because\nthey block input to the widgets below.<\/p>\n<p>There are functions which create and show popup routes. For\nexample: <a href=\"material\/showDialog.html\">showDialog<\/a>, <a href=\"material\/showMenu.html\">showMenu<\/a>, and <a href=\"material\/showModalBottomSheet.html\">showModalBottomSheet<\/a>. These\nfunctions return their pushed route's Future as described above.\nCallers can await the returned value to take an action when the\nroute is popped, or to discover the route's value.<\/p>\n<p>There are also widgets which create popup routes, like <a href=\"material\/PopupMenuButton-class.html\">PopupMenuButton<\/a> and\n<a href=\"material\/DropdownButton-class.html\">DropdownButton<\/a>. These widgets create internal subclasses of PopupRoute\nand use the Navigator's push and pop methods to show and dismiss them.<\/p>\n<h3 id=\"custom-routes\">Custom routes<\/h3>\n<p>You can create your own subclass of one of the widget library route classes\nlike <a href=\"widgets\/PopupRoute-class.html\">PopupRoute<\/a>, <a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a>, or <a href=\"widgets\/PageRoute-class.html\">PageRoute<\/a>, to control the animated\ntransition employed to show the route, the color and behavior of the route's\nmodal barrier, and other aspects of the route.<\/p>\n<p>The <a href=\"widgets\/PageRouteBuilder-class.html\">PageRouteBuilder<\/a> class makes it possible to define a custom route\nin terms of callbacks. Here's an example that rotates and fades its child\nwhen the route appears or disappears. This route does not obscure the entire\nscreen because it specifies <code>opaque: false<\/code>, just as a popup route does.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.push(context, PageRouteBuilder(\n  opaque: false,\n  pageBuilder: (BuildContext context, _, __) {\n    return Center(child: Text('My PageRoute'));\n  },\n  transitionsBuilder: (___, Animation&lt;double&gt; animation, ____, Widget child) {\n    return FadeTransition(\n      opacity: animation,\n      child: RotationTransition(\n        turns: Tween&lt;double&gt;(begin: 0.5, end: 1.0).animate(animation),\n        child: child,\n      ),\n    );\n  }\n));\n<\/code><\/pre>\n<p>The page route is built in two parts, the \"page\" and the\n\"transitions\". The page becomes a descendant of the child passed to\nthe <code>transitionsBuilder<\/code> function. Typically the page is only built once,\nbecause it doesn't depend on its animation parameters (elided with <code>_<\/code>\nand <code>__<\/code> in this example). The transition is built on every frame\nfor its duration.<\/p>\n<h3 id=\"nesting-navigators\">Nesting Navigators<\/h3>\n<p>An app can use more than one Navigator. Nesting one Navigator below\nanother Navigator can be used to create an \"inner journey\" such as tabbed\nnavigation, user registration, store checkout, or other independent journeys\nthat represent a subsection of your overall application.<\/p>\n<h4 id=\"real-world-example\">Real World Example<\/h4>\n<p>It is standard practice for iOS apps to use tabbed navigation where each\ntab maintains its own navigation history. Therefore, each tab has its own\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a>, creating a kind of \"parallel navigation.\"<\/p>\n<p>In addition to the parallel navigation of the tabs, it is still possible to\nlaunch full-screen pages that completely cover the tabs. For example: an\non-boarding flow, or an alert dialog. Therefore, there must exist a \"root\"\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a> that sits above the tab navigation. As a result, each of the\ntab's <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s are actually nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s sitting below a single\nroot <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>.<\/p>\n<p>The nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s for tabbed navigation sit in <code>WidgetApp<\/code> and\n<a href=\"cupertino\/CupertinoTabView-class.html\">CupertinoTabView<\/a>, so you don't need to worry about nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s\nin this situation, but it's a real world example where nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s\nare used.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <script>var visibleSnippet1 = \"shortSnippet1\";<\/script><button id=\"shortSnippet1Button\" onclick=\"visibleSnippet1 = showSnippet('shortSnippet1', visibleSnippet1);\" selected>Sample<\/button>\n  <button id=\"longSnippet1Button\" onclick=\"visibleSnippet1 = showSnippet('longSnippet1', visibleSnippet1);\">Sample in an App<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\" id=\"shortSnippet1\">\n    <div class=\"snippet-description\">\nThe following example demonstrates how a nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> can be used to\npresent a standalone user registration journey.\n<p>Even though this example uses two <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s to demonstrate nested\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s, a similar result is possible using only a single <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>.<\/p>\n<p>Run this example with <code>flutter run --route=\/signup<\/code> to start it with\nthe signup flow instead of on the home page.\n<\/p>\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(visibleSnippet1);\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\"><code class=\"language-dart\">import 'package:flutter\/material.dart';\n\n\/\/ ...\n\nvoid main() =&gt; runApp(new MyApp());\n\n\/\/ ...\n\nclass MyApp extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Flutter Code Sample for Navigator',\n      \/\/ MaterialApp contains our top-level Navigator\n      initialRoute: '\/',\n      routes: {\n        '\/': (BuildContext context) =&gt; HomePage(),\n        '\/signup': (BuildContext context) =&gt; SignUpPage(),\n      },\n    );\n  }\n}\n\nclass HomePage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return DefaultTextStyle(\n      style: Theme.of(context).textTheme.display1,\n      child: Container(\n        color: Colors.white,\n        alignment: Alignment.center,\n        child: Text('Home Page'),\n      ),\n    );\n  }\n}\n\nclass CollectPersonalInfoPage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return DefaultTextStyle(\n      style: Theme.of(context).textTheme.display1,\n      child: GestureDetector(\n        onTap: () {\n          \/\/ This moves from the personal info page to the credentials page,\n          \/\/ replacing this page with that one.\n          Navigator.of(context)\n            .pushReplacementNamed('signup\/choose_credentials');\n        },\n        child: Container(\n          color: Colors.lightBlue,\n          alignment: Alignment.center,\n          child: Text('Collect Personal Info Page'),\n        ),\n      ),\n    );\n  }\n}\n\nclass ChooseCredentialsPage extends StatelessWidget {\n  const ChooseCredentialsPage({\n    this.onSignupComplete,\n  });\n\n  final VoidCallback onSignupComplete;\n\n  @override\n  Widget build(BuildContext context) {\n    return GestureDetector(\n      onTap: onSignupComplete,\n      child: DefaultTextStyle(\n        style: Theme.of(context).textTheme.display1,\n        child: Container(\n          color: Colors.pinkAccent,\n          alignment: Alignment.center,\n          child: Text('Choose Credentials Page'),\n        ),\n      ),\n    );\n  }\n}\n\nclass SignUpPage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    \/\/ SignUpPage builds its own Navigator which ends up being a nested\n    \/\/ Navigator in our app.\n    return Navigator(\n      initialRoute: 'signup\/personal_info',\n      onGenerateRoute: (RouteSettings settings) {\n        WidgetBuilder builder;\n        switch (settings.name) {\n          case 'signup\/personal_info':\n          \/\/ Assume CollectPersonalInfoPage collects personal info and then\n          \/\/ navigates to 'signup\/choose_credentials'.\n            builder = (BuildContext _) =&gt; CollectPersonalInfoPage();\n            break;\n          case 'signup\/choose_credentials':\n          \/\/ Assume ChooseCredentialsPage collects new credentials and then\n          \/\/ invokes 'onSignupComplete()'.\n            builder = (BuildContext _) =&gt; ChooseCredentialsPage(\n              onSignupComplete: () {\n                \/\/ Referencing Navigator.of(context) from here refers to the\n                \/\/ top level Navigator because SignUpPage is above the\n                \/\/ nested Navigator that it created. Therefore, this pop()\n                \/\/ will pop the entire \"sign up\" journey and return to the\n                \/\/ \"\/\" route, AKA HomePage.\n                Navigator.of(context).pop();\n              },\n            );\n            break;\n          default:\n            throw Exception('Invalid route: ${settings.name}');\n        }\n        return MaterialPageRoute(builder: builder, settings: settings);\n      },\n    );\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n  <div class=\"snippet\" id=\"longSnippet1\" hidden>\n    <div class=\"snippet-description\">To create a sample project with this code snippet, run:<br><span class=\"snippet-create-command\">flutter create --sample=widgets.Navigator.1 mysample<\/span>\n    <\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(visibleSnippet1);\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/ Flutter code sample for widgets.Navigator.1\n\n\/\/ The following example demonstrates how a nested [Navigator] can be used to\n\/\/ present a standalone user registration journey.\n\/\/\n\/\/ Even though this example uses two [Navigator]s to demonstrate nested\n\/\/ [Navigator]s, a similar result is possible using only a single [Navigator].\n\/\/\n\/\/ Run this example with `flutter run --route=\/signup` to start it with\n\/\/ the signup flow instead of on the home page.\n\nimport 'package:flutter\/material.dart';\n\nvoid main() =&gt; runApp(MyApp());\n\nclass MyApp extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Flutter Code Sample for Navigator',\n      \/\/ MaterialApp contains our top-level Navigator\n      initialRoute: '\/',\n      routes: {\n        '\/': (BuildContext context) =&gt; HomePage(),\n        '\/signup': (BuildContext context) =&gt; SignUpPage(),\n      },\n    );\n  }\n}\n\nclass HomePage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return DefaultTextStyle(\n      style: Theme.of(context).textTheme.display1,\n      child: Container(\n        color: Colors.white,\n        alignment: Alignment.center,\n        child: Text('Home Page'),\n      ),\n    );\n  }\n}\n\nclass CollectPersonalInfoPage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return DefaultTextStyle(\n      style: Theme.of(context).textTheme.display1,\n      child: GestureDetector(\n        onTap: () {\n          \/\/ This moves from the personal info page to the credentials page,\n          \/\/ replacing this page with that one.\n          Navigator.of(context)\n              .pushReplacementNamed('signup\/choose_credentials');\n        },\n        child: Container(\n          color: Colors.lightBlue,\n          alignment: Alignment.center,\n          child: Text('Collect Personal Info Page'),\n        ),\n      ),\n    );\n  }\n}\n\nclass ChooseCredentialsPage extends StatelessWidget {\n  const ChooseCredentialsPage({\n    this.onSignupComplete,\n  });\n\n  final VoidCallback onSignupComplete;\n\n  @override\n  Widget build(BuildContext context) {\n    return GestureDetector(\n      onTap: onSignupComplete,\n      child: DefaultTextStyle(\n        style: Theme.of(context).textTheme.display1,\n        child: Container(\n          color: Colors.pinkAccent,\n          alignment: Alignment.center,\n          child: Text('Choose Credentials Page'),\n        ),\n      ),\n    );\n  }\n}\n\nclass SignUpPage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    \/\/ SignUpPage builds its own Navigator which ends up being a nested\n    \/\/ Navigator in our app.\n    return Navigator(\n      initialRoute: 'signup\/personal_info',\n      onGenerateRoute: (RouteSettings settings) {\n        WidgetBuilder builder;\n        switch (settings.name) {\n          case 'signup\/personal_info':\n            \/\/ Assume CollectPersonalInfoPage collects personal info and then\n            \/\/ navigates to 'signup\/choose_credentials'.\n            builder = (BuildContext _) =&gt; CollectPersonalInfoPage();\n            break;\n          case 'signup\/choose_credentials':\n            \/\/ Assume ChooseCredentialsPage collects new credentials and then\n            \/\/ invokes 'onSignupComplete()'.\n            builder = (BuildContext _) =&gt; ChooseCredentialsPage(\n                  onSignupComplete: () {\n                    \/\/ Referencing Navigator.of(context) from here refers to the\n                    \/\/ top level Navigator because SignUpPage is above the\n                    \/\/ nested Navigator that it created. Therefore, this pop()\n                    \/\/ will pop the entire \"sign up\" journey and return to the\n                    \/\/ \"\/\" route, AKA HomePage.\n                    Navigator.of(context).pop();\n                  },\n                );\n            break;\n          default:\n            throw Exception('Invalid route: ${settings.name}');\n        }\n        return MaterialPageRoute(builder: builder, settings: settings);\n      },\n    );\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p><a href=\"widgets\/Navigator\/of.html\">Navigator.of<\/a> operates on the nearest ancestor <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> from the given\n<a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a>. Be sure to provide a <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> below the intended\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a>, especially in large <code>build<\/code> methods where nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s\nare created. The <a href=\"widgets\/Builder-class.html\">Builder<\/a> widget can be used to access a <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> at\na desired location in the widget subtree.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "Navigator"
+    ]
 }

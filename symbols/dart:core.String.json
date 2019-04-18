@@ -1,978 +1,662 @@
 {
-    "name": "dart:core.String",
-    "extends": [],
+    "desc": "<p>A sequence of UTF-16 code units.<\/p>\n<p>Strings are mainly used to represent text. A character may be represented by\nmultiple code points, each code point consisting of one or two code\nunits. For example the Papua New Guinea flag character requires four code\nunits to represent two code points, but should be treated like a single\ncharacter: \"\ud83c\uddf5\ud83c\uddec\". Platforms that do not support the flag character may show\nthe letters \"PG\" instead. If the code points are swapped, it instead becomes\nthe Guadeloupe flag \"\ud83c\uddec\ud83c\uddf5\" (\"GP\").<\/p>\n<p>A string can be either single or multiline. Single line strings are\nwritten using matching single or double quotes, and multiline strings are\nwritten using triple quotes. The following are all valid Dart strings:<\/p>\n<pre class=\"language-dart\"><code>'Single quotes';\n\"Double quotes\";\n'Double quotes in \"single\" quotes';\n\"Single quotes in 'double' quotes\";\n\n'''A\nmultiline\nstring''';\n\n\"\"\"\nAnother\nmultiline\nstring\"\"\";\n<\/code><\/pre>\n<p>Strings are immutable. Although you cannot change a string, you can perform\nan operation on a string and assign the result to a new string:<\/p>\n<pre class=\"language-dart\"><code>var string = 'Dart is fun';\nvar newString = string.substring(0, 5);\n<\/code><\/pre>\n<p>You can use the plus (<code>+<\/code>) operator to concatenate strings:<\/p>\n<pre class=\"language-dart\"><code>'Dart ' + 'is ' + 'fun!'; \/\/ 'Dart is fun!'\n<\/code><\/pre>\n<p>You can also use adjacent string literals for concatenation:<\/p>\n<pre class=\"language-dart\"><code>'Dart ' 'is ' 'fun!';    \/\/ 'Dart is fun!'\n<\/code><\/pre>\n<p>You can use <code>${}<\/code> to interpolate the value of Dart expressions\nwithin strings. The curly braces can be omitted when evaluating identifiers:<\/p>\n<pre class=\"language-dart\"><code>string = 'dartlang';\n'$string has ${string.length} letters'; \/\/ 'dartlang has 8 letters'\n<\/code><\/pre>\n<p>A string is represented by a sequence of Unicode UTF-16 code units\naccessible through the <a href=\"dart-core\/String\/codeUnitAt.html\">codeUnitAt<\/a> or the <a href=\"dart-core\/String\/codeUnits.html\">codeUnits<\/a> members:<\/p>\n<pre class=\"language-dart\"><code>string = 'Dart';\nstring.codeUnitAt(0); \/\/ 68\nstring.codeUnits;     \/\/ [68, 97, 114, 116]\n<\/code><\/pre>\n<p>The string representation of code units is accessible through the index\noperator:<\/p>\n<pre class=\"language-dart\"><code>string[0];            \/\/ 'D'\n<\/code><\/pre>\n<p>The characters of a string are encoded in UTF-16. Decoding UTF-16, which\ncombines surrogate pairs, yields Unicode code points. Following a similar\nterminology to Go, we use the name 'rune' for an integer representing a\nUnicode code point. Use the <a href=\"dart-core\/String\/runes.html\">runes<\/a> property to get the runes of a string:<\/p>\n<pre class=\"language-dart\"><code>string.runes.toList(); \/\/ [68, 97, 114, 116]\n<\/code><\/pre>\n<p>For a character outside the Basic Multilingual Plane (plane 0) that is\ncomposed of a surrogate pair, <a href=\"dart-core\/String\/runes.html\">runes<\/a> combines the pair and returns a\nsingle integer.  For example, the Unicode character for a\nmusical G-clef ('\ud834\udd1e') with rune value 0x1D11E consists of a UTF-16 surrogate\npair: <code>0xD834<\/code> and <code>0xDD1E<\/code>. Using <a href=\"dart-core\/String\/codeUnits.html\">codeUnits<\/a> returns the surrogate pair,\nand using <code>runes<\/code> returns their combined value:<\/p>\n<pre class=\"language-dart\"><code>var clef = '\\u{1D11E}';\nclef.codeUnits;         \/\/ [0xD834, 0xDD1E]\nclef.runes.toList();    \/\/ [0x1D11E]\n<\/code><\/pre>\n<p>The String class can not be extended or implemented. Attempting to do so\nyields a compile-time error.<\/p>\n<h2 id=\"other-resources\">Other resources<\/h2>\n<p>See <a href=\"dart-core\/StringBuffer-class.html\">StringBuffer<\/a> to efficiently build a string incrementally. See\n<a href=\"dart-core\/RegExp-class.html\">RegExp<\/a> to work with regular expressions.<\/p>\n<p>Also see:<\/p>\n<ul>\n<li>\n<a href=\"https:\/\/www.dartlang.org\/docs\/cookbook\/#strings\">Dart Cookbook<\/a>\nfor String examples and recipes.<\/li>\n<li><a href=\"https:\/\/www.dartlang.org\/docs\/dart-up-and-running\/ch03.html#strings-and-regular-expressions\">Dart Up and Running<\/a><\/li>\n<\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "dart-core\/String-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "dart:core",
+    "name": "dart:core.String",
+    "shortname": "String",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "operator *",
-            "type": "dart:core.String",
-            "desc": "<p>Creates a new string by concatenating this string with itself a number\nof times.<\/p>\n<p>The result of <code>str * n<\/code> is equivalent to\n<code>str + str + ...<\/code>(n times)<code>... + str<\/code>.<\/p>\n<p>Returns an empty string if <code>times<\/code> is zero or negative.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "times",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/operator_multiply.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String operator *(int times);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "operator +",
-            "type": "dart:core.String",
-            "desc": "<p>Creates a new string by concatenating this string with <code>other<\/code>.<\/p>\n<pre class=\"language-dart\"><code>'dart' + 'lang'; \/\/ 'dartlang'\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/operator_plus.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String operator +(String other);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "operator ==",
-            "type": "dart:core.bool",
-            "desc": "<p>Returns true if other is a <code>String<\/code> with the same sequence of code units.<\/p>\n<p>This method compares each individual code unit of the strings.\nIt does not check for Unicode equivalence.\nFor example, both the following strings represent the string 'Am\u00e9lie',\nbut due to their different encoding, are not equal:<\/p>\n<pre class=\"language-dart\"><code>'Am\\xe9lie' == 'Ame\\u{301}lie'; \/\/ false\n<\/code><\/pre>\n<p>The first string encodes '\u00e9' as a single unicode code unit (also\na single rune), whereas the second string encodes it as 'e' with the\ncombining accent character '\u25cc\u0301'.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/operator_equals.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool operator ==(Object other);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "operator []",
-            "type": "dart:core.String",
-            "desc": "<p>Gets the character (as a single-code-unit <a href=\"dart-core\/String-class.html\">String<\/a>) at the given <code>index<\/code>.<\/p>\n<p>The returned string represents exactly one UTF-16 code unit, which may be\nhalf of a surrogate pair. A single member of a surrogate pair is an\ninvalid UTF-16 string:<\/p>\n<pre class=\"language-dart\"><code>var clef = '\\u{1D11E}';\n\/\/ These represent invalid UTF-16 strings.\nclef[0].codeUnits;      \/\/ [0xD834]\nclef[1].codeUnits;      \/\/ [0xDD1E]\n<\/code><\/pre>\n<p>This method is equivalent to\n<code>new String.fromCharCode(this.codeUnitAt(index))<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "index",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/operator_get.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String operator [](int index);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "codeUnitAt",
-            "type": "dart:core.int",
             "desc": "<p>Returns the 16-bit UTF-16 code unit at the given <code>index<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int codeUnitAt(int index);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/codeUnitAt.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:core.String",
-            "sig": "",
             "params": [
                 {
                     "name": "index",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/codeUnitAt.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int codeUnitAt(int index);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "compareTo",
-            "type": "dart:core.int",
-            "desc": "<p>Compares this string to <code>other<\/code>.<\/p>\n<p>Returns a negative value if <code>this<\/code> is ordered before <code>other<\/code>,\na positive value if <code>this<\/code> is ordered after <code>other<\/code>,\nor zero if <code>this<\/code> and <code>other<\/code> are equivalent.<\/p>\n<p>The ordering is the same as the ordering of the code points at the first\nposition where the two strings differ.\nIf one string is a prefix of the other,\nthen the shorter string is ordered before the longer string.\nIf the strings have exactly the same content, they are equivalent with\nregard to the ordering.\nOrdering does not check for Unicode equivalence.\nThe comparison is case sensitive.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/compareTo.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int compareTo(String other);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "contains",
-            "type": "dart:core.bool",
-            "desc": "<p>Returns true if this string contains a match of <code>other<\/code>:<\/p>\n<pre class=\"language-dart\"><code>var string = 'Dart strings';\nstring.contains('D');                     \/\/ true\nstring.contains(new RegExp(r'[A-Z]'));    \/\/ true\n<\/code><\/pre>\n<p>If <code>startIndex<\/code> is provided, this method matches only at or after that\nindex:<\/p>\n<pre class=\"language-dart\"><code>string.contains('X', 1);                  \/\/ false\nstring.contains(new RegExp(r'[A-Z]'), 1); \/\/ false\n<\/code><\/pre>\n<p><code>startIndex<\/code> must not be negative or greater than <a href=\"dart-core\/String\/length.html\">length<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "dart:core.Pattern",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "startIndex",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/contains.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool contains(Pattern other, [int startIndex = 0]);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "endsWith",
-            "type": "dart:core.bool",
-            "desc": "<p>Returns true if this string ends with <code>other<\/code>. For example:<\/p>\n<pre class=\"language-dart\"><code>'Dart'.endsWith('t'); \/\/ true\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/endsWith.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool endsWith(String other);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "String.fromCharCode",
-            "type": "",
-            "desc": "<p>Allocates a new String for the specified <code>charCode<\/code>.<\/p>\n<p>If the <code>charCode<\/code> can be represented by a single UTF-16 code unit, the new\nstring contains a single code unit. Otherwise, the <a href=\"dart-core\/String\/length.html\">length<\/a> is 2 and\nthe code units form a surrogate pair. See documentation for\n<a href=\"dart-core\/String\/String.fromCharCodes.html\">fromCharCodes<\/a>.<\/p>\n<p>Creating a String with half of a surrogate pair is allowed.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "charCode",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "dart-core\/String\/String.fromCharCode.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">external factory String.fromCharCode(int charCode);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "String.fromCharCodes",
-            "type": "",
-            "desc": "<p>Allocates a new String for the specified <code>charCodes<\/code>.<\/p>\n<p>The <code>charCodes<\/code> can be UTF-16 code units or runes. If a char-code value is\n16-bit, it is copied verbatim:<\/p>\n<pre class=\"language-dart\"><code>new String.fromCharCodes([68]); \/\/ 'D'\n<\/code><\/pre>\n<p>If a char-code value is greater than 16-bits, it is decomposed into a\nsurrogate pair:<\/p>\n<pre class=\"language-dart\"><code>var clef = new String.fromCharCodes([0x1D11E]);\nclef.codeUnitAt(0); \/\/ 0xD834\nclef.codeUnitAt(1); \/\/ 0xDD1E\n<\/code><\/pre>\n<p>If <code>start<\/code> and <code>end<\/code> is provided, only the values of <code>charCodes<\/code>\nat positions from <code>start<\/code> to, but not including, <code>end<\/code>, are used.\nThe <code>start<\/code> and <code>end<\/code> values must satisfy\n<code>0 &lt;= start &lt;= end &lt;= charCodes.length<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "charCodes",
-                    "type": "dart:core.Iterable<dart:core.int>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Iterable",
-                        "dart:core.int"
-                    ]
-                },
-                {
-                    "name": "start",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "end",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "dart-core\/String\/String.fromCharCodes.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">external factory String.fromCharCodes(Iterable&lt;int&gt; charCodes,\n    [int start = 0, int end]);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "String.fromEnvironment",
-            "type": "",
-            "desc": "<p>Returns the string value of the environment declaration <code>name<\/code>.<\/p>\n<p>Environment declarations are provided by the surrounding system compiling\nor running the Dart program. Declarations map a string key to a string\nvalue.<\/p>\n<p>If <code>name<\/code> is not declared in the environment, the result is instead\n<code>defaultValue<\/code>.<\/p>\n<p>Example of getting a value:<\/p>\n<pre class=\"language-dart\"><code>const String.fromEnvironment(\"defaultFloo\", defaultValue: \"no floo\")\n<\/code><\/pre>\n<p>Example of checking whether a declaration is there at all:<\/p>\n<pre class=\"language-dart\"><code>var isDeclared = const String.fromEnvironment(\"maybeDeclared\") != null;\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "name",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "defaultValue",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "dart-core\/String\/String.fromEnvironment.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/ The .fromEnvironment() constructors are special in that we do not want\n\/\/ users to call them using \"new\". We prohibit that by giving them bodies\n\/\/ that throw, even though const constructors are not allowed to have bodies.\n\/\/ Disable those static errors.\n\/\/ignore: const_constructor_with_body\n\/\/ignore: const_factory\nexternal const factory String.fromEnvironment(String name,\n    {String defaultValue});<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "indexOf",
-            "type": "dart:core.int",
-            "desc": "<p>Returns the position of the first match of <code>pattern<\/code> in this string,\nstarting at <code>start<\/code>, inclusive:<\/p>\n<pre class=\"language-dart\"><code>var string = 'Dartisans';\nstring.indexOf('art');                     \/\/ 1\nstring.indexOf(new RegExp(r'[A-Z][a-z]')); \/\/ 0\n<\/code><\/pre>\n<p>Returns -1 if no match is found:<\/p>\n<pre class=\"language-dart\"><code>string.indexOf(new RegExp(r'dart'));       \/\/ -1\n<\/code><\/pre>\n<p><code>start<\/code> must be non-negative and not greater than <a href=\"dart-core\/String\/length.html\">length<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "pattern",
-                    "type": "dart:core.Pattern",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "start",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/indexOf.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int indexOf(Pattern pattern, [int start]);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "lastIndexOf",
-            "type": "dart:core.int",
-            "desc": "<p>Returns the position of the last match <code>pattern<\/code> in this string, searching\nbackward starting at <code>start<\/code>, inclusive:<\/p>\n<pre class=\"language-dart\"><code>var string = 'Dartisans';\nstring.lastIndexOf('a');                    \/\/ 6\nstring.lastIndexOf(new RegExp(r'a(r|n)'));  \/\/ 6\n<\/code><\/pre>\n<p>Returns -1 if <code>pattern<\/code> could not be found in this string.<\/p>\n<pre class=\"language-dart\"><code>string.lastIndexOf(new RegExp(r'DART'));    \/\/ -1\n<\/code><\/pre>\n<p>The <code>start<\/code> must be non-negative and not greater than <a href=\"dart-core\/String\/length.html\">length<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "pattern",
-                    "type": "dart:core.Pattern",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "start",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/lastIndexOf.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int lastIndexOf(Pattern pattern, [int start]);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "padLeft",
-            "type": "dart:core.String",
-            "desc": "<p>Pads this string on the left if it is shorter than <code>width<\/code>.<\/p>\n<p>Return a new string that prepends <code>padding<\/code> onto this string\none time for each position the length is less than <code>width<\/code>.<\/p>\n<p>If <code>width<\/code> is already smaller than or equal to <code>this.length<\/code>,\nno padding is added. A negative <code>width<\/code> is treated as zero.<\/p>\n<p>If <code>padding<\/code> has length different from 1, the result will not\nhave length <code>width<\/code>. This may be useful for cases where the\npadding is a longer string representing a single character, like\n<code>\"&amp;nbsp;\"<\/code> or <code>\"\\u{10002}<\/code>\".\nIn that case, the user should make sure that <code>this.length<\/code> is\nthe correct measure of the strings length.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "width",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "padding",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/padLeft.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String padLeft(int width, [String padding = ' ']);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "padRight",
-            "type": "dart:core.String",
-            "desc": "<p>Pads this string on the right if it is shorter than <code>width<\/code>.<\/p>\n<p>Return a new string that appends <code>padding<\/code> after this string\none time for each position the length is less than <code>width<\/code>.<\/p>\n<p>If <code>width<\/code> is already smaller than or equal to <code>this.length<\/code>,\nno padding is added. A negative <code>width<\/code> is treated as zero.<\/p>\n<p>If <code>padding<\/code> has length different from 1, the result will not\nhave length <code>width<\/code>. This may be useful for cases where the\npadding is a longer string representing a single character, like\n<code>\"&amp;nbsp;\"<\/code> or <code>\"\\u{10002}<\/code>\".\nIn that case, the user should make sure that <code>this.length<\/code> is\nthe correct measure of the strings length.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "width",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "padding",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/padRight.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String padRight(int width, [String padding = ' ']);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "replaceAll",
-            "type": "dart:core.String",
-            "desc": "<p>Replaces all substrings that match <code>from<\/code> with <code>replace<\/code>.<\/p>\n<p>Returns a new string in which the non-overlapping substrings matching\n<code>from<\/code> (the ones iterated by <code>from.allMatches(thisString)<\/code>) are replaced\nby the literal string <code>replace<\/code>.<\/p>\n<pre class=\"language-dart\"><code>'resume'.replaceAll(new RegExp(r'e'), '\u00e9'); \/\/ 'r\u00e9sum\u00e9'\n<\/code><\/pre>\n<p>Notice that the <code>replace<\/code> string is not interpreted. If the replacement\ndepends on the match (for example on a <a href=\"dart-core\/RegExp-class.html\">RegExp<\/a>'s capture groups), use\nthe <a href=\"dart-core\/String\/replaceAllMapped.html\">replaceAllMapped<\/a> method instead.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "from",
-                    "type": "dart:core.Pattern",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "replace",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/replaceAll.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String replaceAll(Pattern from, String replace);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "replaceAllMapped",
-            "type": "dart:core.String",
-            "desc": "<p>Replace all substrings that match <code>from<\/code> by a string computed from the\nmatch.<\/p>\n<p>Returns a new string in which the non-overlapping substrings that match\n<code>from<\/code> (the ones iterated by <code>from.allMatches(thisString)<\/code>) are replaced\nby the result of calling <code>replace<\/code> on the corresponding <a href=\"dart-core\/Match-class.html\">Match<\/a> object.<\/p>\n<p>This can be used to replace matches with new content that depends on the\nmatch, unlike <a href=\"dart-core\/String\/replaceAll.html\">replaceAll<\/a> where the replacement string is always the same.<\/p>\n<p>The <code>replace<\/code> function is called with the <a href=\"dart-core\/Match-class.html\">Match<\/a> generated\nby the pattern, and its result is used as replacement.<\/p>\n<p>The function defined below converts each word in a string to simplified\n'pig latin' using <a href=\"dart-core\/String\/replaceAllMapped.html\">replaceAllMapped<\/a>:<\/p>\n<pre class=\"language-dart\"><code>pigLatin(String words) =&gt; words.replaceAllMapped(\n    new RegExp(r'\\b(\\w*?)([aeiou]\\w*)', caseSensitive: false),\n    (Match m) =&gt; \"${m[2]}${m[1]}${m[1].isEmpty ? 'way' : 'ay'}\");\n\npigLatin('I have a secret now!'); \/\/ 'Iway avehay away ecretsay ownay!'\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "from",
-                    "type": "dart:core.Pattern",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "match",
-                    "type": "dart:core.Match",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "match",
-                    "type": "dart:core.Match",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/replaceAllMapped.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String replaceAllMapped(Pattern from, String replace(Match match));<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "replaceFirst",
-            "type": "dart:core.String",
-            "desc": "<p>Returns a new string in which the first occurrence of <code>from<\/code> in this string\nis replaced with <code>to<\/code>, starting from <code>startIndex<\/code>:<\/p>\n<pre class=\"language-dart\"><code>'0.0001'.replaceFirst(new RegExp(r'0'), ''); \/\/ '.0001'\n'0.0001'.replaceFirst(new RegExp(r'0'), '7', 1); \/\/ '0.7001'\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "from",
-                    "type": "dart:core.Pattern",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "to",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "startIndex",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/replaceFirst.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String replaceFirst(Pattern from, String to, [int startIndex = 0]);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "replaceFirstMapped",
-            "type": "dart:core.String",
-            "desc": "<p>Replace the first occurrence of <code>from<\/code> in this string.<\/p>\n<p>Returns a new string, which is this string\nexcept that the first match of <code>from<\/code>, starting from <code>startIndex<\/code>,\nis replaced by the result of calling <code>replace<\/code> with the match object.<\/p>\n<p>The optional <code>startIndex<\/code> is by default set to 0. If provided, it must be\nan integer in the range <code>[0 .. len]<\/code>, where <code>len<\/code> is this string's length.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "from",
-                    "type": "dart:core.Pattern",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "match",
-                    "type": "dart:core.Match",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "match",
-                    "type": "dart:core.Match",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "startIndex",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/replaceFirstMapped.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String replaceFirstMapped(Pattern from, String replace(Match match),\n    [int startIndex = 0]);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "replaceRange",
-            "type": "dart:core.String",
-            "desc": "<p>Replaces the substring from <code>start<\/code> to <code>end<\/code> with <code>replacement<\/code>.<\/p>\n<p>Returns a new string equivalent to:<\/p>\n<pre class=\"language-dart\"><code>this.substring(0, start) + replacement + this.substring(end)\n<\/code><\/pre>\n<p>The <code>start<\/code> and <code>end<\/code> indices must specify a valid range of this string.\nThat is <code>0 &lt;= start &lt;= end &lt;= this.length<\/code>.\nIf <code>end<\/code> is <code>null<\/code>, it defaults to <a href=\"dart-core\/String\/length.html\">length<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "start",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "end",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "replacement",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/replaceRange.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String replaceRange(int start, int end, String replacement);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "split",
-            "type": "dart:core.List<dart:core.String>",
-            "desc": "<p>Splits the string at matches of <code>pattern<\/code> and returns a list of substrings.<\/p>\n<p>Finds all the matches of <code>pattern<\/code> in this string,\nand returns the list of the substrings between the matches.<\/p>\n<pre class=\"language-dart\"><code>var string = \"Hello world!\";\nstring.split(\" \");                      \/\/ ['Hello', 'world!'];\n<\/code><\/pre>\n<p>Empty matches at the beginning and end of the strings are ignored,\nand so are empty matches right after another match.<\/p>\n<pre class=\"language-dart\"><code>var string = \"abba\";\nstring.split(new RegExp(r\"b*\"));        \/\/ ['a', 'a']\n                                        \/\/ not ['', 'a', 'a', '']\n<\/code><\/pre>\n<p>If this string is empty, the result is an empty list if <code>pattern<\/code> matches\nthe empty string, and it is <code>[\"\"]<\/code> if the pattern doesn't match.<\/p>\n<pre class=\"language-dart\"><code>var string = '';\nstring.split('');                       \/\/ []\nstring.split(\"a\");                      \/\/ ['']\n<\/code><\/pre>\n<p>Splitting with an empty pattern splits the string into single-code unit\nstrings.<\/p>\n<pre class=\"language-dart\"><code>var string = 'Pub';\nstring.split('');                       \/\/ ['P', 'u', 'b']\n\nstring.codeUnits.map((unit) {\n  return new String.fromCharCode(unit);\n}).toList();                            \/\/ ['P', 'u', 'b']\n<\/code><\/pre>\n<p>Splitting happens at UTF-16 code unit boundaries,\nand not at rune boundaries:<\/p>\n<pre class=\"language-dart\"><code>\/\/ String made up of two code units, but one rune.\nstring = '\\u{1D11E}';\nstring.split('').length;                 \/\/ 2 surrogate values\n<\/code><\/pre>\n<p>To get a list of strings containing the individual runes of a string,\nyou should not use split. You can instead map each rune to a string\nas follows:<\/p>\n<pre class=\"language-dart\"><code>string.runes.map((rune) =&gt; new String.fromCharCode(rune)).toList();\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "pattern",
-                    "type": "dart:core.Pattern",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/split.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;String&gt; split(Pattern pattern);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:core.List",
-                "dart:core.String"
             ]
         },
         {
-            "name": "splitMapJoin",
-            "type": "dart:core.String",
-            "desc": "<p>Splits the string, converts its parts, and combines them into a new\nstring.<\/p>\n<p><code>pattern<\/code> is used to split the string into parts and separating matches.<\/p>\n<p>Each match is converted to a string by calling <code>onMatch<\/code>. If <code>onMatch<\/code>\nis omitted, the matched string is used.<\/p>\n<p>Each non-matched part is converted by a call to <code>onNonMatch<\/code>. If\n<code>onNonMatch<\/code> is omitted, the non-matching part is used.<\/p>\n<p>Then all the converted parts are combined into the resulting string.<\/p>\n<pre class=\"language-dart\"><code>'Eats shoots leaves'.splitMapJoin((new RegExp(r'shoots')),\n    onMatch:    (m) =&gt; '${m.group(0)}',\n    onNonMatch: (n) =&gt; '*'); \/\/ *shoots*\n<\/code><\/pre>\n    ",
+            "desc": "<p>Compares this string to <code>other<\/code>.<\/p>\n<p>Returns a negative value if <code>this<\/code> is ordered before <code>other<\/code>,\na positive value if <code>this<\/code> is ordered after <code>other<\/code>,\nor zero if <code>this<\/code> and <code>other<\/code> are equivalent.<\/p>\n<p>The ordering is the same as the ordering of the code points at the first\nposition where the two strings differ.\nIf one string is a prefix of the other,\nthen the shorter string is ordered before the longer string.\nIf the strings have exactly the same content, they are equivalent with\nregard to the ordering.\nOrdering does not check for Unicode equivalence.\nThe comparison is case sensitive.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int compareTo(String other);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/compareTo.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:core.String",
-            "sig": "",
             "params": [
                 {
-                    "name": "pattern",
-                    "type": "dart:core.Pattern",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "other",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "match",
-                    "type": "dart:core.Match",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "match",
-                    "type": "dart:core.Match",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "nonMatch",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "nonMatch",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-core\/String\/splitMapJoin.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String splitMapJoin(Pattern pattern,\n    {String onMatch(Match match), String onNonMatch(String nonMatch)});<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "startsWith",
+            "desc": "<p>Returns true if this string contains a match of <code>other<\/code>:<\/p>\n<pre class=\"language-dart\"><code>var string = 'Dart strings';\nstring.contains('D');                     \/\/ true\nstring.contains(new RegExp(r'[A-Z]'));    \/\/ true\n<\/code><\/pre>\n<p>If <code>startIndex<\/code> is provided, this method matches only at or after that\nindex:<\/p>\n<pre class=\"language-dart\"><code>string.contains('X', 1);                  \/\/ false\nstring.contains(new RegExp(r'[A-Z]'), 1); \/\/ false\n<\/code><\/pre>\n<p><code>startIndex<\/code> must not be negative or greater than <a href=\"dart-core\/String\/length.html\">length<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool contains(Pattern other, [int startIndex = 0]);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/contains.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "desc": "<p>Returns true if this string starts with a match of <code>pattern<\/code>.<\/p>\n<pre class=\"language-dart\"><code>var string = 'Dart';\nstring.startsWith('D');                       \/\/ true\nstring.startsWith(new RegExp(r'[A-Z][a-z]')); \/\/ true\n<\/code><\/pre>\n<p>If <code>index<\/code> is provided, this method checks if the substring starting\nat that index starts with a match of <code>pattern<\/code>:<\/p>\n<pre class=\"language-dart\"><code>string.startsWith('art', 1);                  \/\/ true\nstring.startsWith(new RegExp(r'\\w{3}'));      \/\/ true\n<\/code><\/pre>\n<p><code>index<\/code> must not be negative or greater than <a href=\"dart-core\/String\/length.html\">length<\/a>.<\/p>\n<p>A <a href=\"dart-core\/RegExp-class.html\">RegExp<\/a> containing '^' does not match if the <code>index<\/code> is greater than\nzero. The pattern works on the string as a whole, and does not extract\na substring starting at <code>index<\/code> first:<\/p>\n<pre class=\"language-dart\"><code>string.startsWith(new RegExp(r'^art'), 1);    \/\/ false\nstring.startsWith(new RegExp(r'art'), 1);     \/\/ true\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [
-                {
-                    "name": "pattern",
-                    "type": "dart:core.Pattern",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "index",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
+            "dtype": "method",
             "isConstructor": false,
-            "href": "dart-core\/String\/startsWith.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool startsWith(Pattern pattern, [int index = 0]);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "substring",
-            "type": "dart:core.String",
-            "desc": "<p>Returns the substring of this string that extends from <code>startIndex<\/code>,\ninclusive, to <code>endIndex<\/code>, exclusive.<\/p>\n<pre class=\"language-dart\"><code>var string = 'dartlang';\nstring.substring(1);    \/\/ 'artlang'\nstring.substring(1, 4); \/\/ 'art'\n<\/code><\/pre>\n    ",
             "static": false,
             "memberOf": "dart:core.String",
-            "sig": "",
             "params": [
+                {
+                    "name": "other",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Pattern"
+                },
                 {
                     "name": "startIndex",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns true if this string ends with <code>other<\/code>. For example:<\/p>\n<pre class=\"language-dart\"><code>'Dart'.endsWith('t'); \/\/ true\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool endsWith(String other);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/endsWith.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "other",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns the position of the first match of <code>pattern<\/code> in this string,\nstarting at <code>start<\/code>, inclusive:<\/p>\n<pre class=\"language-dart\"><code>var string = 'Dartisans';\nstring.indexOf('art');                     \/\/ 1\nstring.indexOf(new RegExp(r'[A-Z][a-z]')); \/\/ 0\n<\/code><\/pre>\n<p>Returns -1 if no match is found:<\/p>\n<pre class=\"language-dart\"><code>string.indexOf(new RegExp(r'dart'));       \/\/ -1\n<\/code><\/pre>\n<p><code>start<\/code> must be non-negative and not greater than <a href=\"dart-core\/String\/length.html\">length<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int indexOf(Pattern pattern, [int start]);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/indexOf.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "pattern",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Pattern"
                 },
                 {
-                    "name": "endIndex",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "start",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 }
-            ],
+            ]
+        },
+        {
+            "desc": "<p>Returns the position of the last match <code>pattern<\/code> in this string, searching\nbackward starting at <code>start<\/code>, inclusive:<\/p>\n<pre class=\"language-dart\"><code>var string = 'Dartisans';\nstring.lastIndexOf('a');                    \/\/ 6\nstring.lastIndexOf(new RegExp(r'a(r|n)'));  \/\/ 6\n<\/code><\/pre>\n<p>Returns -1 if <code>pattern<\/code> could not be found in this string.<\/p>\n<pre class=\"language-dart\"><code>string.lastIndexOf(new RegExp(r'DART'));    \/\/ -1\n<\/code><\/pre>\n<p>The <code>start<\/code> must be non-negative and not greater than <a href=\"dart-core\/String\/length.html\">length<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int lastIndexOf(Pattern pattern, [int start]);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/lastIndexOf.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "dart-core\/String\/substring.html",
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "pattern",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Pattern"
+                },
+                {
+                    "name": "start",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Pads this string on the left if it is shorter than <code>width<\/code>.<\/p>\n<p>Return a new string that prepends <code>padding<\/code> onto this string\none time for each position the length is less than <code>width<\/code>.<\/p>\n<p>If <code>width<\/code> is already smaller than or equal to <code>this.length<\/code>,\nno padding is added. A negative <code>width<\/code> is treated as zero.<\/p>\n<p>If <code>padding<\/code> has length different from 1, the result will not\nhave length <code>width<\/code>. This may be useful for cases where the\npadding is a longer string representing a single character, like\n<code>\"&amp;nbsp;\"<\/code> or <code>\"\\u{10002}<\/code>\".\nIn that case, the user should make sure that <code>this.length<\/code> is\nthe correct measure of the strings length.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String padLeft(int width, [String padding = ' ']);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/padLeft.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "padding",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                },
+                {
+                    "name": "width",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Pads this string on the right if it is shorter than <code>width<\/code>.<\/p>\n<p>Return a new string that appends <code>padding<\/code> after this string\none time for each position the length is less than <code>width<\/code>.<\/p>\n<p>If <code>width<\/code> is already smaller than or equal to <code>this.length<\/code>,\nno padding is added. A negative <code>width<\/code> is treated as zero.<\/p>\n<p>If <code>padding<\/code> has length different from 1, the result will not\nhave length <code>width<\/code>. This may be useful for cases where the\npadding is a longer string representing a single character, like\n<code>\"&amp;nbsp;\"<\/code> or <code>\"\\u{10002}<\/code>\".\nIn that case, the user should make sure that <code>this.length<\/code> is\nthe correct measure of the strings length.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String padRight(int width, [String padding = ' ']);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/padRight.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "padding",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                },
+                {
+                    "name": "width",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Replaces all substrings that match <code>from<\/code> with <code>replace<\/code>.<\/p>\n<p>Returns a new string in which the non-overlapping substrings matching\n<code>from<\/code> (the ones iterated by <code>from.allMatches(thisString)<\/code>) are replaced\nby the literal string <code>replace<\/code>.<\/p>\n<pre class=\"language-dart\"><code>'resume'.replaceAll(new RegExp(r'e'), '\u00e9'); \/\/ 'r\u00e9sum\u00e9'\n<\/code><\/pre>\n<p>Notice that the <code>replace<\/code> string is not interpreted. If the replacement\ndepends on the match (for example on a <a href=\"dart-core\/RegExp-class.html\">RegExp<\/a>'s capture groups), use\nthe <a href=\"dart-core\/String\/replaceAllMapped.html\">replaceAllMapped<\/a> method instead.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String replaceAll(Pattern from, String replace);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/replaceAll.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "from",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Pattern"
+                },
+                {
+                    "name": "replace",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Replace all substrings that match <code>from<\/code> by a string computed from the\nmatch.<\/p>\n<p>Returns a new string in which the non-overlapping substrings that match\n<code>from<\/code> (the ones iterated by <code>from.allMatches(thisString)<\/code>) are replaced\nby the result of calling <code>replace<\/code> on the corresponding <a href=\"dart-core\/Match-class.html\">Match<\/a> object.<\/p>\n<p>This can be used to replace matches with new content that depends on the\nmatch, unlike <a href=\"dart-core\/String\/replaceAll.html\">replaceAll<\/a> where the replacement string is always the same.<\/p>\n<p>The <code>replace<\/code> function is called with the <a href=\"dart-core\/Match-class.html\">Match<\/a> generated\nby the pattern, and its result is used as replacement.<\/p>\n<p>The function defined below converts each word in a string to simplified\n'pig latin' using <a href=\"dart-core\/String\/replaceAllMapped.html\">replaceAllMapped<\/a>:<\/p>\n<pre class=\"language-dart\"><code>pigLatin(String words) =&gt; words.replaceAllMapped(\n    new RegExp(r'\\b(\\w*?)([aeiou]\\w*)', caseSensitive: false),\n    (Match m) =&gt; \"${m[2]}${m[1]}${m[1].isEmpty ? 'way' : 'ay'}\");\n\npigLatin('I have a secret now!'); \/\/ 'Iway avehay away ecretsay ownay!'\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String replaceAllMapped(Pattern from, String replace(Match match));<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/replaceAllMapped.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "from",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Pattern"
+                },
+                {
+                    "name": "match",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Match"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns a new string in which the first occurrence of <code>from<\/code> in this string\nis replaced with <code>to<\/code>, starting from <code>startIndex<\/code>:<\/p>\n<pre class=\"language-dart\"><code>'0.0001'.replaceFirst(new RegExp(r'0'), ''); \/\/ '.0001'\n'0.0001'.replaceFirst(new RegExp(r'0'), '7', 1); \/\/ '0.7001'\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String replaceFirst(Pattern from, String to, [int startIndex = 0]);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/replaceFirst.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "from",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Pattern"
+                },
+                {
+                    "name": "startIndex",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                },
+                {
+                    "name": "to",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Replace the first occurrence of <code>from<\/code> in this string.<\/p>\n<p>Returns a new string, which is this string\nexcept that the first match of <code>from<\/code>, starting from <code>startIndex<\/code>,\nis replaced by the result of calling <code>replace<\/code> with the match object.<\/p>\n<p>The optional <code>startIndex<\/code> is by default set to 0. If provided, it must be\nan integer in the range <code>[0 .. len]<\/code>, where <code>len<\/code> is this string's length.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String replaceFirstMapped(Pattern from, String replace(Match match),\n    [int startIndex = 0]);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/replaceFirstMapped.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "from",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Pattern"
+                },
+                {
+                    "name": "match",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Match"
+                },
+                {
+                    "name": "startIndex",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Replaces the substring from <code>start<\/code> to <code>end<\/code> with <code>replacement<\/code>.<\/p>\n<p>Returns a new string equivalent to:<\/p>\n<pre class=\"language-dart\"><code>this.substring(0, start) + replacement + this.substring(end)\n<\/code><\/pre>\n<p>The <code>start<\/code> and <code>end<\/code> indices must specify a valid range of this string.\nThat is <code>0 &lt;= start &lt;= end &lt;= this.length<\/code>.\nIf <code>end<\/code> is <code>null<\/code>, it defaults to <a href=\"dart-core\/String\/length.html\">length<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String replaceRange(int start, int end, String replacement);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/replaceRange.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "end",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                },
+                {
+                    "name": "replacement",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                },
+                {
+                    "name": "start",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Splits the string at matches of <code>pattern<\/code> and returns a list of substrings.<\/p>\n<p>Finds all the matches of <code>pattern<\/code> in this string,\nand returns the list of the substrings between the matches.<\/p>\n<pre class=\"language-dart\"><code>var string = \"Hello world!\";\nstring.split(\" \");                      \/\/ ['Hello', 'world!'];\n<\/code><\/pre>\n<p>Empty matches at the beginning and end of the strings are ignored,\nand so are empty matches right after another match.<\/p>\n<pre class=\"language-dart\"><code>var string = \"abba\";\nstring.split(new RegExp(r\"b*\"));        \/\/ ['a', 'a']\n                                        \/\/ not ['', 'a', 'a', '']\n<\/code><\/pre>\n<p>If this string is empty, the result is an empty list if <code>pattern<\/code> matches\nthe empty string, and it is <code>[\"\"]<\/code> if the pattern doesn't match.<\/p>\n<pre class=\"language-dart\"><code>var string = '';\nstring.split('');                       \/\/ []\nstring.split(\"a\");                      \/\/ ['']\n<\/code><\/pre>\n<p>Splitting with an empty pattern splits the string into single-code unit\nstrings.<\/p>\n<pre class=\"language-dart\"><code>var string = 'Pub';\nstring.split('');                       \/\/ ['P', 'u', 'b']\n\nstring.codeUnits.map((unit) {\n  return new String.fromCharCode(unit);\n}).toList();                            \/\/ ['P', 'u', 'b']\n<\/code><\/pre>\n<p>Splitting happens at UTF-16 code unit boundaries,\nand not at rune boundaries:<\/p>\n<pre class=\"language-dart\"><code>\/\/ String made up of two code units, but one rune.\nstring = '\\u{1D11E}';\nstring.split('').length;                 \/\/ 2 surrogate values\n<\/code><\/pre>\n<p>To get a list of strings containing the individual runes of a string,\nyou should not use split. You can instead map each rune to a string\nas follows:<\/p>\n<pre class=\"language-dart\"><code>string.runes.map((rune) =&gt; new String.fromCharCode(rune)).toList();\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;String&gt; split(Pattern pattern);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/split.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<dart:core.String>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "pattern",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Pattern"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Splits the string, converts its parts, and combines them into a new\nstring.<\/p>\n<p><code>pattern<\/code> is used to split the string into parts and separating matches.<\/p>\n<p>Each match is converted to a string by calling <code>onMatch<\/code>. If <code>onMatch<\/code>\nis omitted, the matched string is used.<\/p>\n<p>Each non-matched part is converted by a call to <code>onNonMatch<\/code>. If\n<code>onNonMatch<\/code> is omitted, the non-matching part is used.<\/p>\n<p>Then all the converted parts are combined into the resulting string.<\/p>\n<pre class=\"language-dart\"><code>'Eats shoots leaves'.splitMapJoin((new RegExp(r'shoots')),\n    onMatch:    (m) =&gt; '${m.group(0)}',\n    onNonMatch: (n) =&gt; '*'); \/\/ *shoots*\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String splitMapJoin(Pattern pattern,\n    {String onMatch(Match match), String onNonMatch(String nonMatch)});<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/splitMapJoin.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "match",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Match"
+                },
+                {
+                    "name": "nonMatch",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                },
+                {
+                    "name": "pattern",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Pattern"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns true if this string starts with a match of <code>pattern<\/code>.<\/p>\n<pre class=\"language-dart\"><code>var string = 'Dart';\nstring.startsWith('D');                       \/\/ true\nstring.startsWith(new RegExp(r'[A-Z][a-z]')); \/\/ true\n<\/code><\/pre>\n<p>If <code>index<\/code> is provided, this method checks if the substring starting\nat that index starts with a match of <code>pattern<\/code>:<\/p>\n<pre class=\"language-dart\"><code>string.startsWith('art', 1);                  \/\/ true\nstring.startsWith(new RegExp(r'\\w{3}'));      \/\/ true\n<\/code><\/pre>\n<p><code>index<\/code> must not be negative or greater than <a href=\"dart-core\/String\/length.html\">length<\/a>.<\/p>\n<p>A <a href=\"dart-core\/RegExp-class.html\">RegExp<\/a> containing '^' does not match if the <code>index<\/code> is greater than\nzero. The pattern works on the string as a whole, and does not extract\na substring starting at <code>index<\/code> first:<\/p>\n<pre class=\"language-dart\"><code>string.startsWith(new RegExp(r'^art'), 1);    \/\/ false\nstring.startsWith(new RegExp(r'art'), 1);     \/\/ true\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool startsWith(Pattern pattern, [int index = 0]);<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/startsWith.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "index",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                },
+                {
+                    "name": "pattern",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Pattern"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns the substring of this string that extends from <code>startIndex<\/code>,\ninclusive, to <code>endIndex<\/code>, exclusive.<\/p>\n<pre class=\"language-dart\"><code>var string = 'dartlang';\nstring.substring(1);    \/\/ 'artlang'\nstring.substring(1, 4); \/\/ 'art'\n<\/code><\/pre>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String substring(int startIndex, [int endIndex]);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "dart-core\/String\/substring.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": [
+                {
+                    "name": "endIndex",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                },
+                {
+                    "name": "startIndex",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                }
+            ]
         },
         {
-            "name": "toLowerCase",
-            "type": "dart:core.String",
             "desc": "<p>Converts all characters in this string to lower case.\nIf the string is already in all lower case, this method returns <code>this<\/code>.<\/p>\n<pre class=\"language-dart\"><code>'ALPHABET'.toLowerCase(); \/\/ 'alphabet'\n'abc'.toLowerCase();      \/\/ 'abc'\n<\/code><\/pre>\n<p>This function uses the language independent Unicode mapping and thus only\nworks in some languages.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "dart-core\/String\/toLowerCase.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/ TODO(floitsch): document better. (See EcmaScript for description).\nString toLowerCase();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "dart-core\/String\/toLowerCase.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": []
         },
         {
-            "name": "toUpperCase",
-            "type": "dart:core.String",
             "desc": "<p>Converts all characters in this string to upper case.\nIf the string is already in all upper case, this method returns <code>this<\/code>.<\/p>\n<pre class=\"language-dart\"><code>'alphabet'.toUpperCase(); \/\/ 'ALPHABET'\n'ABC'.toUpperCase();      \/\/ 'ABC'\n<\/code><\/pre>\n<p>This function uses the language independent Unicode mapping and thus only\nworks in some languages.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "dart-core\/String\/toUpperCase.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/ TODO(floitsch): document better. (See EcmaScript for description).\nString toUpperCase();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "dart-core\/String\/toUpperCase.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": []
         },
         {
-            "name": "trim",
-            "type": "dart:core.String",
             "desc": "<p>Returns the string without any leading and trailing whitespace.<\/p>\n<p>If the string contains leading or trailing whitespace, a new string with no\nleading and no trailing whitespace is returned:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">'\\tDart is fun\\n'.trim(); \/\/ 'Dart is fun'\n<\/code><\/pre>\n<p>Otherwise, the original string itself is returned:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">var str1 = 'Dart';\nvar str2 = str1.trim();\nidentical(str1, str2);    \/\/ true\n<\/code><\/pre>\n<p>Whitespace is defined by the Unicode White_Space property (as defined in\nversion 6.2 or later) and the BOM character, 0xFEFF.<\/p>\n<p>Here is the list of trimmed characters according to Unicode version 6.3:<\/p>\n<pre class=\"language-dart\"><code>    0009..000D    ; White_Space # Cc   &lt;control-0009&gt;..&lt;control-000D&gt;\n    0020          ; White_Space # Zs   SPACE\n    0085          ; White_Space # Cc   &lt;control-0085&gt;\n    00A0          ; White_Space # Zs   NO-BREAK SPACE\n    1680          ; White_Space # Zs   OGHAM SPACE MARK\n    2000..200A    ; White_Space # Zs   EN QUAD..HAIR SPACE\n    2028          ; White_Space # Zl   LINE SEPARATOR\n    2029          ; White_Space # Zp   PARAGRAPH SEPARATOR\n    202F          ; White_Space # Zs   NARROW NO-BREAK SPACE\n    205F          ; White_Space # Zs   MEDIUM MATHEMATICAL SPACE\n    3000          ; White_Space # Zs   IDEOGRAPHIC SPACE\n\n    FEFF          ; BOM                ZERO WIDTH NO_BREAK SPACE\n<\/code><\/pre>\n<p>Some later versions of Unicode do not include U+0085 as a whitespace\ncharacter. Whether it is trimmed depends on the Unicode version\nused by the system.<\/p>\n    ",
-            "static": false,
-            "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "dart-core\/String\/trim.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String trim();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "dart-core\/String\/trim.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "dart:core.String",
+            "params": []
         },
         {
-            "name": "trimLeft",
-            "type": "dart:core.String",
             "desc": "<p>Returns the string without any leading whitespace.<\/p>\n<p>As <a href=\"dart-core\/String\/trim.html\">trim<\/a>, but only removes leading whitespace.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String trimLeft();<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/trimLeft.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "dart-core\/String\/trimLeft.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String trimLeft();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "trimRight",
-            "type": "dart:core.String",
             "desc": "<p>Returns the string without any trailing whitespace.<\/p>\n<p>As <a href=\"dart-core\/String\/trim.html\">trim<\/a>, but only removes trailing whitespace.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String trimRight();<\/code><\/pre>\n    ",
+            "href": "dart-core\/String\/trimRight.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:core.String",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "dart-core\/String\/trimRight.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String trimRight();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "codeUnits",
-            "type": "dart:core.List<dart:core.int>",
-            "types": [
-                "dart:core.List",
-                "dart:core.int"
-            ],
             "desc": "<p>Returns an unmodifiable list of the UTF-16 code units of this string.<\/p>\n        ",
-            "memberOf": "dart:core.String",
-            "isConstant": false,
-            "href": "dart-core\/String\/codeUnits.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;int&gt; get codeUnits;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-core\/String\/codeUnits.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<dart:core.int>",
+            "memberOf": "dart:core.String",
+            "params": []
         },
         {
-            "name": "hashCode",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>Returns a hash code derived from the code units of the string.<\/p>\n<p>This is compatible with <a href=\"dart-core\/String\/operator_equals.html\">operator ==<\/a>. Strings with the same sequence\nof code units have the same hash code.<\/p>\n        ",
-            "memberOf": "dart:core.String",
-            "isConstant": false,
-            "href": "dart-core\/String\/hashCode.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get hashCode;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "isEmpty",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Returns true if this string is empty.<\/p>\n        ",
-            "memberOf": "dart:core.String",
-            "isConstant": false,
-            "href": "dart-core\/String\/isEmpty.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isEmpty;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "isNotEmpty",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Returns true if this string is not empty.<\/p>\n        ",
-            "memberOf": "dart:core.String",
-            "isConstant": false,
-            "href": "dart-core\/String\/isNotEmpty.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isNotEmpty;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "length",
+            "href": "dart-core\/String\/hashCode.html",
+            "isDeprecated": "0",
             "type": "dart:core.int",
-            "types": [],
-            "desc": "<p>The length of the string.<\/p>\n<p>Returns the number of UTF-16 code units in this string. The number\nof <a href=\"dart-core\/String\/runes.html\">runes<\/a> might be fewer, if the string contains characters outside\nthe Basic Multilingual Plane (plane 0):<\/p>\n<pre class=\"language-dart\"><code>'Dart'.length;          \/\/ 4\n'Dart'.runes.length;    \/\/ 4\n\nvar clef = '\\u{1D11E}';\nclef.length;            \/\/ 2\nclef.runes.length;      \/\/ 1\n<\/code><\/pre>\n        ",
             "memberOf": "dart:core.String",
-            "isConstant": false,
-            "href": "dart-core\/String\/length.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get length;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "runes",
-            "type": "dart:core.Runes",
-            "types": [],
-            "desc": "<p>Returns an <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> of Unicode code-points of this string.<\/p>\n<p>If the string contains surrogate pairs, they are combined and returned\nas one integer by this iterator. Unmatched surrogate halves are treated\nlike valid 16-bit code-units.<\/p>\n        ",
+            "desc": "<p>Returns true if this string is empty.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isEmpty;<\/code><\/pre>\n        ",
+            "href": "dart-core\/String\/isEmpty.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
             "memberOf": "dart:core.String",
-            "isConstant": false,
-            "href": "dart-core\/String\/runes.html",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns true if this string is not empty.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isNotEmpty;<\/code><\/pre>\n        ",
+            "href": "dart-core\/String\/isNotEmpty.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "dart:core.String",
+            "params": []
+        },
+        {
+            "desc": "<p>The length of the string.<\/p>\n<p>Returns the number of UTF-16 code units in this string. The number\nof <a href=\"dart-core\/String\/runes.html\">runes<\/a> might be fewer, if the string contains characters outside\nthe Basic Multilingual Plane (plane 0):<\/p>\n<pre class=\"language-dart\"><code>'Dart'.length;          \/\/ 4\n'Dart'.runes.length;    \/\/ 4\n\nvar clef = '\\u{1D11E}';\nclef.length;            \/\/ 2\nclef.runes.length;      \/\/ 1\n<\/code><\/pre>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get length;<\/code><\/pre>\n        ",
+            "href": "dart-core\/String\/length.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "dart:core.String",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns an <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> of Unicode code-points of this string.<\/p>\n<p>If the string contains surrogate pairs, they are combined and returned\nas one integer by this iterator. Unmatched surrogate halves are treated\nlike valid 16-bit code-units.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Runes get runes;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "dart-core\/String\/runes.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Runes",
+            "memberOf": "dart:core.String",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [
-        "convert.HexCodec",
-        "convert.HexDecoder",
-        "convert.HexEncoder",
-        "convert.PercentCodec",
-        "convert.PercentDecoder",
-        "convert.PercentEncoder",
-        "dart:convert.AsciiCodec",
-        "dart:convert.AsciiDecoder",
-        "dart:convert.AsciiEncoder",
-        "dart:convert.Base64Codec",
-        "dart:convert.Base64Decoder",
-        "dart:convert.Base64Encoder",
-        "dart:convert.Encoding",
-        "dart:convert.HtmlEscape",
-        "dart:convert.JsonCodec",
-        "dart:convert.JsonDecoder",
-        "dart:convert.JsonEncoder",
-        "dart:convert.Latin1Codec",
-        "dart:convert.Latin1Decoder",
-        "dart:convert.Latin1Encoder",
-        "dart:convert.LineSplitter",
-        "dart:convert.StringConversionSink",
-        "dart:convert.Utf8Codec",
-        "dart:convert.Utf8Decoder",
-        "dart:convert.Utf8Encoder",
-        "dart:io.SystemEncoding",
-        "foundation.StringProperty",
-        "material.TextFormField",
-        "path.PathMap",
-        "path.PathSet"
-    ],
-    "realImplementors": [
-        "convert.HexCodec",
-        "convert.HexDecoder",
-        "convert.HexEncoder",
-        "convert.PercentCodec",
-        "convert.PercentDecoder",
-        "convert.PercentEncoder",
-        "dart:convert.AsciiCodec",
-        "dart:convert.AsciiDecoder",
-        "dart:convert.AsciiEncoder",
-        "dart:convert.Base64Codec",
-        "dart:convert.Base64Decoder",
-        "dart:convert.Base64Encoder"
-    ],
-    "cn": [],
-    "href": "dart-core\/String-class.html",
-    "desc": "<p>A sequence of UTF-16 code units.<\/p>\n<p>Strings are mainly used to represent text. A character may be represented by\nmultiple code points, each code point consisting of one or two code\nunits. For example the Papua New Guinea flag character requires four code\nunits to represent two code points, but should be treated like a single\ncharacter: \"\ud83c\uddf5\ud83c\uddec\". Platforms that do not support the flag character may show\nthe letters \"PG\" instead. If the code points are swapped, it instead becomes\nthe Guadeloupe flag \"\ud83c\uddec\ud83c\uddf5\" (\"GP\").<\/p>\n<p>A string can be either single or multiline. Single line strings are\nwritten using matching single or double quotes, and multiline strings are\nwritten using triple quotes. The following are all valid Dart strings:<\/p>\n<pre class=\"language-dart\"><code>'Single quotes';\n\"Double quotes\";\n'Double quotes in \"single\" quotes';\n\"Single quotes in 'double' quotes\";\n\n'''A\nmultiline\nstring''';\n\n\"\"\"\nAnother\nmultiline\nstring\"\"\";\n<\/code><\/pre>\n<p>Strings are immutable. Although you cannot change a string, you can perform\nan operation on a string and assign the result to a new string:<\/p>\n<pre class=\"language-dart\"><code>var string = 'Dart is fun';\nvar newString = string.substring(0, 5);\n<\/code><\/pre>\n<p>You can use the plus (<code>+<\/code>) operator to concatenate strings:<\/p>\n<pre class=\"language-dart\"><code>'Dart ' + 'is ' + 'fun!'; \/\/ 'Dart is fun!'\n<\/code><\/pre>\n<p>You can also use adjacent string literals for concatenation:<\/p>\n<pre class=\"language-dart\"><code>'Dart ' 'is ' 'fun!';    \/\/ 'Dart is fun!'\n<\/code><\/pre>\n<p>You can use <code>${}<\/code> to interpolate the value of Dart expressions\nwithin strings. The curly braces can be omitted when evaluating identifiers:<\/p>\n<pre class=\"language-dart\"><code>string = 'dartlang';\n'$string has ${string.length} letters'; \/\/ 'dartlang has 8 letters'\n<\/code><\/pre>\n<p>A string is represented by a sequence of Unicode UTF-16 code units\naccessible through the <a href=\"dart-core\/String\/codeUnitAt.html\">codeUnitAt<\/a> or the <a href=\"dart-core\/String\/codeUnits.html\">codeUnits<\/a> members:<\/p>\n<pre class=\"language-dart\"><code>string = 'Dart';\nstring.codeUnitAt(0); \/\/ 68\nstring.codeUnits;     \/\/ [68, 97, 114, 116]\n<\/code><\/pre>\n<p>The string representation of code units is accessible through the index\noperator:<\/p>\n<pre class=\"language-dart\"><code>string[0];            \/\/ 'D'\n<\/code><\/pre>\n<p>The characters of a string are encoded in UTF-16. Decoding UTF-16, which\ncombines surrogate pairs, yields Unicode code points. Following a similar\nterminology to Go, we use the name 'rune' for an integer representing a\nUnicode code point. Use the <a href=\"dart-core\/String\/runes.html\">runes<\/a> property to get the runes of a string:<\/p>\n<pre class=\"language-dart\"><code>string.runes.toList(); \/\/ [68, 97, 114, 116]\n<\/code><\/pre>\n<p>For a character outside the Basic Multilingual Plane (plane 0) that is\ncomposed of a surrogate pair, <a href=\"dart-core\/String\/runes.html\">runes<\/a> combines the pair and returns a\nsingle integer.  For example, the Unicode character for a\nmusical G-clef ('\ud834\udd1e') with rune value 0x1D11E consists of a UTF-16 surrogate\npair: <code>0xD834<\/code> and <code>0xDD1E<\/code>. Using <a href=\"dart-core\/String\/codeUnits.html\">codeUnits<\/a> returns the surrogate pair,\nand using <code>runes<\/code> returns their combined value:<\/p>\n<pre class=\"language-dart\"><code>var clef = '\\u{1D11E}';\nclef.codeUnits;         \/\/ [0xD834, 0xDD1E]\nclef.runes.toList();    \/\/ [0x1D11E]\n<\/code><\/pre>\n<p>The String class can not be extended or implemented. Attempting to do so\nyields a compile-time error.<\/p>\n<h2 id=\"other-resources\">Other resources<\/h2>\n<p>See <a href=\"dart-core\/StringBuffer-class.html\">StringBuffer<\/a> to efficiently build a string incrementally. See\n<a href=\"dart-core\/RegExp-class.html\">RegExp<\/a> to work with regular expressions.<\/p>\n<p>Also see:<\/p>\n<ul>\n<li>\n<a href=\"https:\/\/www.dartlang.org\/docs\/cookbook\/#strings\">Dart Cookbook<\/a>\nfor String examples and recipes.<\/li>\n<li><a href=\"https:\/\/www.dartlang.org\/docs\/dart-up-and-running\/ch03.html#strings-and-regular-expressions\">Dart Up and Running<\/a><\/li>\n<\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "String"
+    ]
 }

@@ -1,1218 +1,918 @@
 {
-    "name": "collection.MapValueSet",
-    "extends": [],
+    "desc": "<p>Creates a modifiable <a href=\"dart-core\/Set-class.html\">Set<\/a> view of the values of a <a href=\"dart-core\/Map-class.html\">Map<\/a>.<\/p>\n<p>The <code>Set<\/code> view assumes that the keys of the <code>Map<\/code> can be uniquely determined\nfrom the values. The <code>keyForValue<\/code> function passed to the constructor finds\nthe key for a single value. The <code>keyForValue<\/code> function should be consistent\nwith equality. If <code>value1 == value2<\/code> then <code>keyForValue(value1)<\/code> and\n<code>keyForValue(value2)<\/code> should be considered equal keys by the underlying map,\nand vice versa.<\/p>\n<p>Modifying the set will modify the underlying map based on the key returned\nby <code>keyForValue<\/code>.<\/p>\n<p>If the <code>Map<\/code> contents are not compatible with the <code>keyForValue<\/code> function,\nthe set will not work consistently, and may give meaningless responses or do\ninconsistent updates.<\/p>\n<p>This set can, for example, be used on a map from database record IDs to the\nrecords. It exposes the records as a set, and allows for writing both\n<code>recordSet.add(databaseRecord)<\/code> and <code>recordMap[id]<\/code>.<\/p>\n<p>Effectively, the map will act as a kind of index for the set.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-collection_collection\/MapValueSet-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "collection",
+    "name": "collection.MapValueSet",
+    "shortname": "MapValueSet",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "MapValueSet",
-            "type": "",
             "desc": "<p>Creates a new <a href=\"package-collection_collection\/MapValueSet-class.html\">MapValueSet<\/a> based on <code>base<\/code>.<\/p>\n<p><code>keyForValue<\/code> returns the key in the map that should be associated with\nthe given value. The set's notion of equality is identical to the equality\nof the return values of <code>keyForValue<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">MapValueSet(Map&lt;K, V&gt; base, K keyForValue(V value))\n    : _baseMap = base,\n      _keyForValue = keyForValue;<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/MapValueSet.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
             "params": [
                 {
                     "name": "base",
-                    "type": "dart:core.Map",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.Map"
                 },
                 {
                     "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "type": "<V>"
                 }
-            ],
-            "isConstructor": true,
-            "href": "package-collection_collection\/MapValueSet\/MapValueSet.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">MapValueSet(Map&lt;K, V&gt; base, K keyForValue(V value))\n    : _baseMap = base,\n      _keyForValue = keyForValue;<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "add",
-            "type": "dart:core.bool",
             "desc": "<p>Adds <code>value<\/code> to the set.<\/p>\n<p>Returns <code>true<\/code> if <code>value<\/code> (or an equal value) was not yet in the set.\nOtherwise returns <code>false<\/code> and the set is not changed.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>var set = new Set();\nvar time1 = new DateTime.fromMillisecondsSinceEpoch(0);\nvar time2 = new DateTime.fromMillisecondsSinceEpoch(0);\n\/\/ time1 and time2 are equal, but not identical.\nExpect.isTrue(time1 == time2);\nExpect.isFalse(identical(time1, time2));\nset.add(time1);  \/\/ =&gt; true.\n\/\/ A value equal to time2 exists already in the set, and the call to\n\/\/ add doesn't change the set.\nset.add(time2);  \/\/ =&gt; false.\nExpect.isTrue(set.length == 1);\nExpect.isTrue(identical(time1, set.first));\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool add(V value) {\n  K key = _keyForValue(value);\n  bool result = false;\n  _baseMap.putIfAbsent(key, () {\n    result = true;\n    return value;\n  });\n  return result;\n}<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/add.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
             "params": [
                 {
                     "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<V>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/add.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool add(V value) {\n  K key = _keyForValue(value);\n  bool result = false;\n  _baseMap.putIfAbsent(key, () {\n    result = true;\n    return value;\n  });\n  return result;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "addAll",
-            "type": "",
             "desc": "<p>Adds all <code>elements<\/code> to this Set.<\/p>\n<p>Equivalent to adding each element in <code>elements<\/code> using <a href=\"package-collection_collection\/MapValueSet\/add.html\">add<\/a>,\nbut some collections may be able to optimize it.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addAll(Iterable&lt;V&gt; elements) =&gt; elements.forEach(add);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/addAll.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
             "params": [
                 {
                     "name": "elements",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Iterable"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/addAll.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addAll(Iterable&lt;V&gt; elements) =&gt; elements.forEach(add);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "any",
-            "type": "dart:core.bool",
             "desc": "<p>Checks whether any element of this iterable satisfies <code>test<\/code>.<\/p>\n<p>Checks every element in iteration order, and returns <code>true<\/code> if\nany of them make <code>test<\/code> return <code>true<\/code>, otherwise returns false.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/any.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool any(bool test(E element)) =&gt; _base.any(test);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "cast",
-            "type": "dart:core.Set",
-            "desc": "<p>Provides a view of this iterable as an iterable of <code>R<\/code> instances.<\/p>\n<p>If this iterable only contains instances of <code>R<\/code>, all operations\nwill work correctly. If any operation tries to access an element\nthat is not an instance of <code>R<\/code>, the access will throw instead.<\/p>\n<p>When the returned iterable creates a new object that depends on\nthe type <code>R<\/code>, e.g., from <a href=\"package-collection_collection\/MapValueSet\/toList.html\">toList<\/a>, it will have exactly the type <code>R<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/cast.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Set&lt;T&gt; cast&lt;T&gt;() {\n  if (this is Set&lt;T&gt;) {\n    return this as Set&lt;T&gt;;\n  }\n  return Set.castFrom&lt;V, T&gt;(this);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "clear",
-            "type": "",
-            "desc": "<p>Removes all elements in the set.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/clear.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void clear() =&gt; _baseMap.clear();<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "contains",
+            "href": "package-collection_collection\/MapValueSet\/any.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "desc": "<p>Returns true if the collection contains an element equal to <code>element<\/code>.<\/p>\n<p>This operation will check each element in order for being equal to\n<code>element<\/code>, unless it has a more efficient way to find an element\nequal to <code>element<\/code>.<\/p>\n<p>The equality used to determine whether <code>element<\/code> is equal to an element of\nthe iterable defaults to the <a href=\"dart-core\/Object\/operator_equals.html\">Object.==<\/a> of the element.<\/p>\n<p>Some types of iterable may have a different equality used for its elements.\nFor example, a <a href=\"dart-core\/Set-class.html\">Set<\/a> may have a custom equality\n(see <a href=\"dart-core\/Set\/Set.identity.html\">Set.identity<\/a>) that its <code>contains<\/code> uses.\nLikewise the <code>Iterable<\/code> returned by a <a href=\"dart-core\/Map\/keys.html\">Map.keys<\/a> call\nshould use the same equality that the <code>Map<\/code> uses for keys.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
             "params": [
                 {
                     "name": "element",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/contains.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool contains(Object element) {\n  if (element != null &amp;&amp; element is! V) return false;\n  var key = _keyForValue(element as V);\n\n  return _baseMap.containsKey(key);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "containsAll",
-            "type": "dart:core.bool",
-            "desc": "<p>Returns whether this Set contains all the elements of <code>other<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "dart:core.Iterable<dart:core.Object>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Iterable",
-                        "dart:core.Object"
-                    ]
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/containsAll.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool containsAll(Iterable&lt;Object&gt; other) =&gt; other.every(contains);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "difference",
+            "desc": "<p>Provides a view of this iterable as an iterable of <code>R<\/code> instances.<\/p>\n<p>If this iterable only contains instances of <code>R<\/code>, all operations\nwill work correctly. If any operation tries to access an element\nthat is not an instance of <code>R<\/code>, the access will throw instead.<\/p>\n<p>When the returned iterable creates a new object that depends on\nthe type <code>R<\/code>, e.g., from <a href=\"package-collection_collection\/MapValueSet\/toList.html\">toList<\/a>, it will have exactly the type <code>R<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Set&lt;T&gt; cast&lt;T&gt;() {\n  if (this is Set&lt;T&gt;) {\n    return this as Set&lt;T&gt;;\n  }\n  return Set.castFrom&lt;V, T&gt;(this);\n}<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/cast.html",
+            "isDeprecated": "0",
             "type": "dart:core.Set",
-            "desc": "<p>Returns a new set with the the elements of <a href=\"package-collection_collection\/MapValueSet-class.html\">this<\/a> that are not in <code>other<\/code>.<\/p>\n<p>That is, the returned set contains all the elements of this <a href=\"dart-core\/Set-class.html\">Set<\/a> that are\nnot elements of <code>other<\/code> according to <code>other.contains<\/code>.<\/p>\n<p>Note that the returned set will use the default equality operation, which\nmay be different than the equality operation <a href=\"package-collection_collection\/MapValueSet-class.html\">this<\/a> uses.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>Removes all elements in the set.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void clear() =&gt; _baseMap.clear();<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/clear.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns true if the collection contains an element equal to <code>element<\/code>.<\/p>\n<p>This operation will check each element in order for being equal to\n<code>element<\/code>, unless it has a more efficient way to find an element\nequal to <code>element<\/code>.<\/p>\n<p>The equality used to determine whether <code>element<\/code> is equal to an element of\nthe iterable defaults to the <a href=\"dart-core\/Object\/operator_equals.html\">Object.==<\/a> of the element.<\/p>\n<p>Some types of iterable may have a different equality used for its elements.\nFor example, a <a href=\"dart-core\/Set-class.html\">Set<\/a> may have a custom equality\n(see <a href=\"dart-core\/Set\/Set.identity.html\">Set.identity<\/a>) that its <code>contains<\/code> uses.\nLikewise the <code>Iterable<\/code> returned by a <a href=\"dart-core\/Map\/keys.html\">Map.keys<\/a> call\nshould use the same equality that the <code>Map<\/code> uses for keys.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool contains(Object element) {\n  if (element != null &amp;&amp; element is! V) return false;\n  var key = _keyForValue(element as V);\n\n  return _baseMap.containsKey(key);\n}<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/contains.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
+                {
+                    "name": "element",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns whether this Set contains all the elements of <code>other<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool containsAll(Iterable&lt;Object&gt; other) =&gt; other.every(contains);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/containsAll.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
             "params": [
                 {
                     "name": "other",
-                    "type": "dart:core.Set<dart:core.Object>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Set",
-                        "dart:core.Object"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Iterable<dart:core.Object>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/difference.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Set&lt;V&gt; difference(Set&lt;Object&gt; other) =&gt;\n    where((element) =&gt; !other.contains(element)).toSet();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "elementAt",
-            "type": "",
-            "desc": "<p>Returns the <code>index<\/code>th element.<\/p>\n<p>The <code>index<\/code> must be non-negative and less than <a href=\"package-collection_collection\/MapValueSet\/length.html\">length<\/a>.\nIndex zero represents the first element (so <code>iterable.elementAt(0)<\/code> is\nequivalent to <code>iterable.first<\/code>).<\/p>\n<p>May iterate through the elements in iteration order, ignoring the\nfirst <code>index<\/code> elements and then returning the next.\nSome iterables may have more a efficient way to find the element.<\/p>\n    ",
+            "desc": "<p>Returns a new set with the the elements of <a href=\"package-collection_collection\/MapValueSet-class.html\">this<\/a> that are not in <code>other<\/code>.<\/p>\n<p>That is, the returned set contains all the elements of this <a href=\"dart-core\/Set-class.html\">Set<\/a> that are\nnot elements of <code>other<\/code> according to <code>other.contains<\/code>.<\/p>\n<p>Note that the returned set will use the default equality operation, which\nmay be different than the equality operation <a href=\"package-collection_collection\/MapValueSet-class.html\">this<\/a> uses.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Set&lt;V&gt; difference(Set&lt;Object&gt; other) =&gt;\n    where((element) =&gt; !other.contains(element)).toSet();<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/difference.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Set",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
+            "params": [
+                {
+                    "name": "other",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Set<dart:core.Object>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns the <code>index<\/code>th element.<\/p>\n<p>The <code>index<\/code> must be non-negative and less than <a href=\"package-collection_collection\/MapValueSet\/length.html\">length<\/a>.\nIndex zero represents the first element (so <code>iterable.elementAt(0)<\/code> is\nequivalent to <code>iterable.first<\/code>).<\/p>\n<p>May iterate through the elements in iteration order, ignoring the\nfirst <code>index<\/code> elements and then returning the next.\nSome iterables may have more a efficient way to find the element.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">E elementAt(int index) =&gt; _base.elementAt(index);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/elementAt.html",
+            "isDeprecated": "0",
+            "type": "<V>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
             "params": [
                 {
                     "name": "index",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/elementAt.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">E elementAt(int index) =&gt; _base.elementAt(index);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "every",
-            "type": "dart:core.bool",
             "desc": "<p>Checks whether every element of this iterable satisfies <code>test<\/code>.<\/p>\n<p>Checks every element in iteration order, and returns <code>false<\/code> if\nany of them make <code>test<\/code> return <code>false<\/code>, otherwise returns <code>true<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/every.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool every(bool test(E element)) =&gt; _base.every(test);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "expand",
-            "type": "dart:core.Iterable",
-            "desc": "<p>Expands each element of this <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> into zero or more elements.<\/p>\n<p>The resulting Iterable runs through the elements returned\nby <code>f<\/code> for each element of this, in iteration order.<\/p>\n<p>The returned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> is lazy, and calls <code>f<\/code> for each element\nof this every time it's iterated.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>var pairs = [[1, 2], [3, 4]];\nvar flattened = pairs.expand((pair) =&gt; pair).toList();\nprint(flattened); \/\/ =&gt; [1, 2, 3, 4];\n\nvar input = [1, 2, 3];\nvar duplicated = input.expand((i) =&gt; [i, i]).toList();\nprint(duplicated); \/\/ =&gt; [1, 1, 2, 2, 3, 3]\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
+            "href": "package-collection_collection\/MapValueSet\/every.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/expand.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;T&gt; expand&lt;T&gt;(Iterable&lt;T&gt; f(E element)) =&gt; _base.expand(f);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "firstWhere",
-            "type": "",
-            "desc": "<p>Returns the first element that satisfies the given predicate <code>test<\/code>.<\/p>\n<p>Iterates through elements and returns the first to satisfy <code>test<\/code>.<\/p>\n<p>If no element satisfies <code>test<\/code>, the result of invoking the <code>orElse<\/code>\nfunction is returned.\nIf <code>orElse<\/code> is omitted, it defaults to throwing a <a href=\"dart-core\/StateError-class.html\">StateError<\/a>.<\/p>\n    ",
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
             "params": [
                 {
                     "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Expands each element of this <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> into zero or more elements.<\/p>\n<p>The resulting Iterable runs through the elements returned\nby <code>f<\/code> for each element of this, in iteration order.<\/p>\n<p>The returned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> is lazy, and calls <code>f<\/code> for each element\nof this every time it's iterated.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>var pairs = [[1, 2], [3, 4]];\nvar flattened = pairs.expand((pair) =&gt; pair).toList();\nprint(flattened); \/\/ =&gt; [1, 2, 3, 4];\n\nvar input = [1, 2, 3];\nvar duplicated = input.expand((i) =&gt; [i, i]).toList();\nprint(duplicated); \/\/ =&gt; [1, 1, 2, 2, 3, 3]\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;T&gt; expand&lt;T&gt;(Iterable&lt;T&gt; f(E element)) =&gt; _base.expand(f);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/expand.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Iterable",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
                 {
                     "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns the first element that satisfies the given predicate <code>test<\/code>.<\/p>\n<p>Iterates through elements and returns the first to satisfy <code>test<\/code>.<\/p>\n<p>If no element satisfies <code>test<\/code>, the result of invoking the <code>orElse<\/code>\nfunction is returned.\nIf <code>orElse<\/code> is omitted, it defaults to throwing a <a href=\"dart-core\/StateError-class.html\">StateError<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">E firstWhere(bool test(E element), {E orElse()}) =&gt;\n    _base.firstWhere(test, orElse: orElse);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/firstWhere.html",
+            "isDeprecated": "0",
+            "type": "<V>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
+                {
+                    "name": "element",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
                 },
                 {
                     "name": "orElse",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<V>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/firstWhere.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">E firstWhere(bool test(E element), {E orElse()}) =&gt;\n    _base.firstWhere(test, orElse: orElse);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "fold",
-            "type": "",
             "desc": "<p>Reduces a collection to a single value by iteratively combining each\nelement of the collection with an existing value<\/p>\n<p>Uses <code>initialValue<\/code> as the initial value,\nthen iterates through the elements and updates the value with\neach element using the <code>combine<\/code> function, as if by:<\/p>\n<pre class=\"language-dart\"><code>var value = initialValue;\nfor (E element in this) {\n  value = combine(value, element);\n}\nreturn value;\n<\/code><\/pre>\n<p>Example of calculating the sum of an iterable:<\/p>\n<pre class=\"language-dart\"><code>iterable.fold(0, (prev, element) =&gt; prev + element);\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">T fold&lt;T&gt;(T initialValue, T combine(T previousValue, E element)) =&gt;\n    _base.fold(initialValue, combine);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/fold.html",
+            "isDeprecated": "0",
+            "type": "<T>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
             "params": [
                 {
-                    "name": "initialValue",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "element",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
                 },
                 {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "initialValue",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
                 },
                 {
                     "name": "previousValue",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<T>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/fold.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">T fold&lt;T&gt;(T initialValue, T combine(T previousValue, E element)) =&gt;\n    _base.fold(initialValue, combine);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "followedBy",
-            "type": "dart:core.Iterable",
             "desc": "<p>Returns the lazy concatentation of this iterable and <code>other<\/code>.<\/p>\n<p>The returned iterable will provide the same elements as this iterable,\nand, after that, the elements of <code>other<\/code>, in the same order as in the\noriginal iterables.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/followedBy.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;E&gt; followedBy(Iterable&lt;E&gt; other) =&gt; _base.followedBy(other);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "forEach",
-            "type": "",
-            "desc": "<p>Applies the function <code>f<\/code> to each element of this collection in iteration\norder.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
+            "href": "package-collection_collection\/MapValueSet\/followedBy.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Iterable",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/forEach.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void forEach(void f(E element)) =&gt; _base.forEach(f);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "intersection",
-            "type": "dart:core.Set",
-            "desc": "<p>Returns a new set which is the intersection between <a href=\"package-collection_collection\/MapValueSet-class.html\">this<\/a> and <code>other<\/code>.<\/p>\n<p>That is, the returned set contains all the elements of this <a href=\"dart-core\/Set-class.html\">Set<\/a> that are\nalso elements of <code>other<\/code> according to <code>other.contains<\/code>.<\/p>\n<p>Note that the returned set will use the default equality operation, which\nmay be different than the equality operation <a href=\"package-collection_collection\/MapValueSet-class.html\">this<\/a> uses.<\/p>\n    ",
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
             "params": [
                 {
                     "name": "other",
-                    "type": "dart:core.Set<dart:core.Object>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Set",
-                        "dart:core.Object"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Iterable"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/intersection.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Set&lt;V&gt; intersection(Set&lt;Object&gt; other) =&gt; where(other.contains).toSet();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "join",
-            "type": "dart:core.String",
-            "desc": "<p>Converts each element to a <a href=\"dart-core\/String-class.html\">String<\/a> and concatenates the strings.<\/p>\n<p>Iterates through elements of this iterable,\nconverts each one to a <a href=\"dart-core\/String-class.html\">String<\/a> by calling <a href=\"package-collection_collection\/MapValueSet\/toString.html\">Object.toString<\/a>,\nand then concatenates the strings, with the\n<code>separator<\/code> string interleaved between the elements.<\/p>\n    ",
+            "desc": "<p>Applies the function <code>f<\/code> to each element of this collection in iteration\norder.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void forEach(void f(E element)) =&gt; _base.forEach(f);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/forEach.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
+            "params": [
+                {
+                    "name": "element",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns a new set which is the intersection between <a href=\"package-collection_collection\/MapValueSet-class.html\">this<\/a> and <code>other<\/code>.<\/p>\n<p>That is, the returned set contains all the elements of this <a href=\"dart-core\/Set-class.html\">Set<\/a> that are\nalso elements of <code>other<\/code> according to <code>other.contains<\/code>.<\/p>\n<p>Note that the returned set will use the default equality operation, which\nmay be different than the equality operation <a href=\"package-collection_collection\/MapValueSet-class.html\">this<\/a> uses.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Set&lt;V&gt; intersection(Set&lt;Object&gt; other) =&gt; where(other.contains).toSet();<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/intersection.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Set",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
+                {
+                    "name": "other",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Set<dart:core.Object>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Converts each element to a <a href=\"dart-core\/String-class.html\">String<\/a> and concatenates the strings.<\/p>\n<p>Iterates through elements of this iterable,\nconverts each one to a <a href=\"dart-core\/String-class.html\">String<\/a> by calling <a href=\"package-collection_collection\/MapValueSet\/toString.html\">Object.toString<\/a>,\nand then concatenates the strings, with the\n<code>separator<\/code> string interleaved between the elements.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String join([String separator = \"\"]) =&gt; _base.join(separator);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/join.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
             "params": [
                 {
                     "name": "separator",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/join.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String join([String separator = \"\"]) =&gt; _base.join(separator);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "lastWhere",
-            "type": "",
             "desc": "<p>Returns the last element that satisfies the given predicate <code>test<\/code>.<\/p>\n<p>An iterable that can access its elements directly may check its\nelements in any order (for example a list starts by checking the\nlast element and then moves towards the start of the list).\nThe default implementation iterates elements in iteration order,\nchecks <code>test(element)<\/code> for each,\nand finally returns that last one that matched.<\/p>\n<p>If no element satisfies <code>test<\/code>, the result of invoking the <code>orElse<\/code>\nfunction is returned.\nIf <code>orElse<\/code> is omitted, it defaults to throwing a <a href=\"dart-core\/StateError-class.html\">StateError<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "orElse",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/lastWhere.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">E lastWhere(bool test(E element), {E orElse()}) =&gt;\n    _base.lastWhere(test, orElse: orElse);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "lookup",
-            "type": "",
-            "desc": "<p>If an object equal to <code>object<\/code> is in the set, return it.<\/p>\n<p>Checks whether <code>object<\/code> is in the set, like <a href=\"package-collection_collection\/MapValueSet\/contains.html\">contains<\/a>, and if so,\nreturns the object in the set, otherwise returns <code>null<\/code>.<\/p>\n<p>If the equality relation used by the set is not identity,\nthen the returned object may not be <em>identical<\/em> to <code>object<\/code>.\nSome set implementations may not be able to implement this method.\nIf the <a href=\"package-collection_collection\/MapValueSet\/contains.html\">contains<\/a> method is computed,\nrather than being based on an actual object instance,\nthen there may not be a specific object instance representing the\nset element.<\/p>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/lastWhere.html",
+            "isDeprecated": "0",
+            "type": "<V>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
             "params": [
                 {
                     "name": "element",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/lookup.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">V lookup(Object element) {\n  if (element != null &amp;&amp; element is! V) return null;\n  var key = _keyForValue(element as V);\n\n  return _baseMap[key];\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "map",
-            "type": "dart:core.Iterable",
-            "desc": "<p>Returns a new lazy <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> with elements that are created by\ncalling <code>f<\/code> on each element of this <code>Iterable<\/code> in iteration order.<\/p>\n<p>This method returns a view of the mapped elements. As long as the\nreturned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> is not iterated over, the supplied function <code>f<\/code> will\nnot be invoked. The transformed elements will not be cached. Iterating\nmultiple times over the returned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> will invoke the supplied\nfunction <code>f<\/code> multiple times on the same element.<\/p>\n<p>Methods on the returned iterable are allowed to omit calling <code>f<\/code>\non any element where the result isn't needed.\nFor example, <a href=\"package-collection_collection\/MapValueSet\/elementAt.html\">elementAt<\/a> may call <code>f<\/code> only once.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/map.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;T&gt; map&lt;T&gt;(T f(E element)) =&gt; _base.map(f);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "reduce",
-            "type": "",
-            "desc": "<p>Reduces a collection to a single value by iteratively combining elements\nof the collection using the provided function.<\/p>\n<p>The iterable must have at least one element.\nIf it has only one element, that element is returned.<\/p>\n<p>Otherwise this method starts with the first element from the iterator,\nand then combines it with the remaining elements in iteration order,\nas if by:<\/p>\n<pre class=\"language-dart\"><code>E value = iterable.first;\niterable.skip(1).forEach((element) {\n  value = combine(value, element);\n});\nreturn value;\n<\/code><\/pre>\n<p>Example of calculating the sum of an iterable:<\/p>\n<pre class=\"language-dart\"><code>iterable.reduce((value, element) =&gt; value + element);\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/reduce.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">E reduce(E combine(E value, E element)) =&gt; _base.reduce(combine);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "remove",
-            "type": "dart:core.bool",
-            "desc": "<p>Removes <code>value<\/code> from the set. Returns true if <code>value<\/code> was\nin the set. Returns false otherwise. The method has no effect\nif <code>value<\/code> value was not in the set.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "element",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/remove.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool remove(Object element) {\n  if (element != null &amp;&amp; element is! V) return false;\n  var key = _keyForValue(element as V);\n\n  if (!_baseMap.containsKey(key)) return false;\n  _baseMap.remove(key);\n  return true;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "removeAll",
-            "type": "",
-            "desc": "<p>Removes each element of <code>elements<\/code> from this set.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "elements",
-                    "type": "dart:core.Iterable<dart:core.Object>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Iterable",
-                        "dart:core.Object"
-                    ]
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/removeAll.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeAll(Iterable&lt;Object&gt; elements) =&gt; elements.forEach(remove);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "removeWhere",
-            "type": "",
-            "desc": "<p>Removes all elements of this set that satisfy <code>test<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/removeWhere.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeWhere(bool test(V element)) {\n  var toRemove = [];\n  _baseMap.forEach((key, value) {\n    if (test(value)) toRemove.add(key);\n  });\n  toRemove.forEach(_baseMap.remove);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "retainAll",
-            "type": "",
-            "desc": "<p>Removes all elements of this set that are not elements in <code>elements<\/code>.<\/p>\n<p>Checks for each element of <code>elements<\/code> whether there is an element in this\nset that is equal to it (according to <code>this.contains<\/code>), and if so, the\nequal element in this set is retained, and elements that are not equal\nto any element in <code>elements<\/code> are removed.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "elements",
-                    "type": "dart:core.Iterable<dart:core.Object>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Iterable",
-                        "dart:core.Object"
-                    ]
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/retainAll.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void retainAll(Iterable&lt;Object&gt; elements) {\n  var valuesToRetain = new Set&lt;V&gt;.identity();\n  for (var element in elements) {\n    if (element != null &amp;&amp; element is! V) continue;\n    var key = _keyForValue(element as V);\n\n    if (!_baseMap.containsKey(key)) continue;\n    valuesToRetain.add(_baseMap[key]);\n  }\n\n  var keysToRemove = [];\n  _baseMap.forEach((k, v) {\n    if (!valuesToRetain.contains(v)) keysToRemove.add(k);\n  });\n  keysToRemove.forEach(_baseMap.remove);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "retainWhere",
-            "type": "",
-            "desc": "<p>Removes all elements of this set that fail to satisfy <code>test<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/retainWhere.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void retainWhere(bool test(V element)) =&gt;\n    removeWhere((element) =&gt; !test(element));<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "retype",
-            "type": "dart:core.Set",
-            "desc": "",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/retype.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@deprecated\nSet&lt;T&gt; retype&lt;T&gt;() =&gt; Set.castFrom&lt;V, T&gt;(this);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "singleWhere",
-            "type": "",
-            "desc": "<p>Returns the single element that satisfies <code>test<\/code>.<\/p>\n<p>Checks elements to see if <code>test(element)<\/code> returns true.\nIf exactly one element satisfies <code>test<\/code>, that element is returned.\nIf more than one matching element is found, throws <a href=\"dart-core\/StateError-class.html\">StateError<\/a>.\nIf no matching element is found, returns the result of <code>orElse<\/code>.\nIf <code>orElse<\/code> is omitted, it defaults to throwing a <a href=\"dart-core\/StateError-class.html\">StateError<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
                 },
                 {
                     "name": "orElse",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<V>"
                 }
-            ],
+            ]
+        },
+        {
+            "desc": "<p>If an object equal to <code>object<\/code> is in the set, return it.<\/p>\n<p>Checks whether <code>object<\/code> is in the set, like <a href=\"package-collection_collection\/MapValueSet\/contains.html\">contains<\/a>, and if so,\nreturns the object in the set, otherwise returns <code>null<\/code>.<\/p>\n<p>If the equality relation used by the set is not identity,\nthen the returned object may not be <em>identical<\/em> to <code>object<\/code>.\nSome set implementations may not be able to implement this method.\nIf the <a href=\"package-collection_collection\/MapValueSet\/contains.html\">contains<\/a> method is computed,\nrather than being based on an actual object instance,\nthen there may not be a specific object instance representing the\nset element.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">V lookup(Object element) {\n  if (element != null &amp;&amp; element is! V) return null;\n  var key = _keyForValue(element as V);\n\n  return _baseMap[key];\n}<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/lookup.html",
+            "isDeprecated": "0",
+            "type": "<V>",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/singleWhere.html",
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
+                {
+                    "name": "element",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns a new lazy <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> with elements that are created by\ncalling <code>f<\/code> on each element of this <code>Iterable<\/code> in iteration order.<\/p>\n<p>This method returns a view of the mapped elements. As long as the\nreturned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> is not iterated over, the supplied function <code>f<\/code> will\nnot be invoked. The transformed elements will not be cached. Iterating\nmultiple times over the returned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> will invoke the supplied\nfunction <code>f<\/code> multiple times on the same element.<\/p>\n<p>Methods on the returned iterable are allowed to omit calling <code>f<\/code>\non any element where the result isn't needed.\nFor example, <a href=\"package-collection_collection\/MapValueSet\/elementAt.html\">elementAt<\/a> may call <code>f<\/code> only once.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;T&gt; map&lt;T&gt;(T f(E element)) =&gt; _base.map(f);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/map.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Iterable",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
+                {
+                    "name": "element",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Reduces a collection to a single value by iteratively combining elements\nof the collection using the provided function.<\/p>\n<p>The iterable must have at least one element.\nIf it has only one element, that element is returned.<\/p>\n<p>Otherwise this method starts with the first element from the iterator,\nand then combines it with the remaining elements in iteration order,\nas if by:<\/p>\n<pre class=\"language-dart\"><code>E value = iterable.first;\niterable.skip(1).forEach((element) {\n  value = combine(value, element);\n});\nreturn value;\n<\/code><\/pre>\n<p>Example of calculating the sum of an iterable:<\/p>\n<pre class=\"language-dart\"><code>iterable.reduce((value, element) =&gt; value + element);\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">E reduce(E combine(E value, E element)) =&gt; _base.reduce(combine);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/reduce.html",
+            "isDeprecated": "0",
+            "type": "<V>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
+                {
+                    "name": "element",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
+                },
+                {
+                    "name": "value",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Removes <code>value<\/code> from the set. Returns true if <code>value<\/code> was\nin the set. Returns false otherwise. The method has no effect\nif <code>value<\/code> value was not in the set.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool remove(Object element) {\n  if (element != null &amp;&amp; element is! V) return false;\n  var key = _keyForValue(element as V);\n\n  if (!_baseMap.containsKey(key)) return false;\n  _baseMap.remove(key);\n  return true;\n}<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/remove.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
+                {
+                    "name": "element",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Removes each element of <code>elements<\/code> from this set.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeAll(Iterable&lt;Object&gt; elements) =&gt; elements.forEach(remove);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/removeAll.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
+                {
+                    "name": "elements",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Iterable<dart:core.Object>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Removes all elements of this set that satisfy <code>test<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeWhere(bool test(V element)) {\n  var toRemove = [];\n  _baseMap.forEach((key, value) {\n    if (test(value)) toRemove.add(key);\n  });\n  toRemove.forEach(_baseMap.remove);\n}<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/removeWhere.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
+                {
+                    "name": "element",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<V>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Removes all elements of this set that are not elements in <code>elements<\/code>.<\/p>\n<p>Checks for each element of <code>elements<\/code> whether there is an element in this\nset that is equal to it (according to <code>this.contains<\/code>), and if so, the\nequal element in this set is retained, and elements that are not equal\nto any element in <code>elements<\/code> are removed.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void retainAll(Iterable&lt;Object&gt; elements) {\n  var valuesToRetain = new Set&lt;V&gt;.identity();\n  for (var element in elements) {\n    if (element != null &amp;&amp; element is! V) continue;\n    var key = _keyForValue(element as V);\n\n    if (!_baseMap.containsKey(key)) continue;\n    valuesToRetain.add(_baseMap[key]);\n  }\n\n  var keysToRemove = [];\n  _baseMap.forEach((k, v) {\n    if (!valuesToRetain.contains(v)) keysToRemove.add(k);\n  });\n  keysToRemove.forEach(_baseMap.remove);\n}<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/retainAll.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
+                {
+                    "name": "elements",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Iterable<dart:core.Object>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Removes all elements of this set that fail to satisfy <code>test<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void retainWhere(bool test(V element)) =&gt;\n    removeWhere((element) =&gt; !test(element));<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/retainWhere.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
+                {
+                    "name": "element",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<V>"
+                }
+            ]
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@deprecated\nSet&lt;T&gt; retype&lt;T&gt;() =&gt; Set.castFrom&lt;V, T&gt;(this);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/retype.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Set",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns the single element that satisfies <code>test<\/code>.<\/p>\n<p>Checks elements to see if <code>test(element)<\/code> returns true.\nIf exactly one element satisfies <code>test<\/code>, that element is returned.\nIf more than one matching element is found, throws <a href=\"dart-core\/StateError-class.html\">StateError<\/a>.\nIf no matching element is found, returns the result of <code>orElse<\/code>.\nIf <code>orElse<\/code> is omitted, it defaults to throwing a <a href=\"dart-core\/StateError-class.html\">StateError<\/a>.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">E singleWhere(bool test(E element), {E orElse()}) {\n  return _base.singleWhere(test, orElse: orElse);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "href": "package-collection_collection\/MapValueSet\/singleWhere.html",
+            "isDeprecated": "0",
+            "type": "<V>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
+                {
+                    "name": "element",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
+                },
+                {
+                    "name": "orElse",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<V>"
+                }
+            ]
         },
         {
-            "name": "skip",
-            "type": "dart:core.Iterable",
             "desc": "<p>Returns an <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> that provides all but the first <a href=\"quiver.iterables\/count.html\">count<\/a> elements.<\/p>\n<p>When the returned iterable is iterated, it starts iterating over <code>this<\/code>,\nfirst skipping past the initial <a href=\"quiver.iterables\/count.html\">count<\/a> elements.\nIf <code>this<\/code> has fewer than <code>count<\/code> elements, then the resulting Iterable is\nempty.\nAfter that, the remaining elements are iterated in the same order as\nin this iterable.<\/p>\n<p>Some iterables may be able to find later elements without first iterating\nthrough earlier elements, for example when iterating a <a href=\"dart-core\/List-class.html\">List<\/a>.\nSuch iterables are allowed to ignore the initial skipped elements.<\/p>\n<p>The <a href=\"quiver.iterables\/count.html\">count<\/a> must not be negative.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "n",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/skip.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;E&gt; skip(int n) =&gt; _base.skip(n);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "skipWhile",
+            "href": "package-collection_collection\/MapValueSet\/skip.html",
+            "isDeprecated": "0",
             "type": "dart:core.Iterable",
-            "desc": "<p>Returns an <code>Iterable<\/code> that skips leading elements while <code>test<\/code> is satisfied.<\/p>\n<p>The filtering happens lazily. Every new <a href=\"dart-core\/Iterator-class.html\">Iterator<\/a> of the returned\niterable iterates over all elements of <code>this<\/code>.<\/p>\n<p>The returned iterable provides elements by iterating this iterable,\nbut skipping over all initial elements where <code>test(element)<\/code> returns\ntrue. If all elements satisfy <code>test<\/code> the resulting iterable is empty,\notherwise it iterates the remaining elements in their original order,\nstarting with the first element for which <code>test(element)<\/code> returns <code>false<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
+            "dtype": "method",
             "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/skipWhile.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;E&gt; skipWhile(bool test(E value)) =&gt; _base.skipWhile(test);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "take",
-            "type": "dart:core.Iterable",
-            "desc": "<p>Returns a lazy iterable of the <a href=\"quiver.iterables\/count.html\">count<\/a> first elements of this iterable.<\/p>\n<p>The returned <code>Iterable<\/code> may contain fewer than <code>count<\/code> elements, if <code>this<\/code>\ncontains fewer than <code>count<\/code> elements.<\/p>\n<p>The elements can be computed by stepping through <a href=\"package-collection_collection\/MapValueSet\/iterator.html\">iterator<\/a> until <a href=\"quiver.iterables\/count.html\">count<\/a>\nelements have been seen.<\/p>\n<p>The <code>count<\/code> must not be negative.<\/p>\n    ",
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
             "params": [
                 {
                     "name": "n",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/take.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;E&gt; take(int n) =&gt; _base.take(n);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "takeWhile",
+            "desc": "<p>Returns an <code>Iterable<\/code> that skips leading elements while <code>test<\/code> is satisfied.<\/p>\n<p>The filtering happens lazily. Every new <a href=\"dart-core\/Iterator-class.html\">Iterator<\/a> of the returned\niterable iterates over all elements of <code>this<\/code>.<\/p>\n<p>The returned iterable provides elements by iterating this iterable,\nbut skipping over all initial elements where <code>test(element)<\/code> returns\ntrue. If all elements satisfy <code>test<\/code> the resulting iterable is empty,\notherwise it iterates the remaining elements in their original order,\nstarting with the first element for which <code>test(element)<\/code> returns <code>false<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;E&gt; skipWhile(bool test(E value)) =&gt; _base.skipWhile(test);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/skipWhile.html",
+            "isDeprecated": "0",
             "type": "dart:core.Iterable",
-            "desc": "<p>Returns a lazy iterable of the leading elements satisfying <code>test<\/code>.<\/p>\n<p>The filtering happens lazily. Every new iterator of the returned\niterable starts iterating over the elements of <code>this<\/code>.<\/p>\n<p>The elements can be computed by stepping through <a href=\"package-collection_collection\/MapValueSet\/iterator.html\">iterator<\/a> until an\nelement is found where <code>test(element)<\/code> is false. At that point,\nthe returned iterable stops (its <code>moveNext()<\/code> returns false).<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
             "params": [
                 {
                     "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/takeWhile.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;E&gt; takeWhile(bool test(E value)) =&gt; _base.takeWhile(test);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "toList",
-            "type": "dart:core.List",
-            "desc": "<p>Creates a <a href=\"dart-core\/List-class.html\">List<\/a> containing the elements of this <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>.<\/p>\n<p>The elements are in iteration order.\nThe list is fixed-length if <code>growable<\/code> is false.<\/p>\n    ",
+            "desc": "<p>Returns a lazy iterable of the <a href=\"quiver.iterables\/count.html\">count<\/a> first elements of this iterable.<\/p>\n<p>The returned <code>Iterable<\/code> may contain fewer than <code>count<\/code> elements, if <code>this<\/code>\ncontains fewer than <code>count<\/code> elements.<\/p>\n<p>The elements can be computed by stepping through <a href=\"package-collection_collection\/MapValueSet\/iterator.html\">iterator<\/a> until <a href=\"quiver.iterables\/count.html\">count<\/a>\nelements have been seen.<\/p>\n<p>The <code>count<\/code> must not be negative.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;E&gt; take(int n) =&gt; _base.take(n);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/take.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Iterable",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
+            "params": [
+                {
+                    "name": "n",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns a lazy iterable of the leading elements satisfying <code>test<\/code>.<\/p>\n<p>The filtering happens lazily. Every new iterator of the returned\niterable starts iterating over the elements of <code>this<\/code>.<\/p>\n<p>The elements can be computed by stepping through <a href=\"package-collection_collection\/MapValueSet\/iterator.html\">iterator<\/a> until an\nelement is found where <code>test(element)<\/code> is false. At that point,\nthe returned iterable stops (its <code>moveNext()<\/code> returns false).<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;E&gt; takeWhile(bool test(E value)) =&gt; _base.takeWhile(test);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/takeWhile.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Iterable",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": [
+                {
+                    "name": "value",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Creates a <a href=\"dart-core\/List-class.html\">List<\/a> containing the elements of this <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>.<\/p>\n<p>The elements are in iteration order.\nThe list is fixed-length if <code>growable<\/code> is false.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;E&gt; toList({bool growable: true}) =&gt; _base.toList(growable: growable);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/toList.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
             "params": [
                 {
                     "name": "growable",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/toList.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;E&gt; toList({bool growable: true}) =&gt; _base.toList(growable: growable);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "toSet",
-            "type": "dart:core.Set",
             "desc": "<p>Creates a <a href=\"dart-core\/Set-class.html\">Set<\/a> containing the same elements as this iterable.<\/p>\n<p>The set may contain fewer elements than the iterable,\nif the iterable contains an element more than once,\nor it contains one or more elements that are equal.\nThe order of the elements in the set is not guaranteed to be the same\nas for the iterable.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/toSet.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Set&lt;E&gt; toSet() =&gt; _base.toSet();<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "toString",
-            "type": "dart:core.String",
-            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
-            "static": false,
-            "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/toString.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() =&gt; toSet().toString();<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "union",
+            "href": "package-collection_collection\/MapValueSet\/toSet.html",
+            "isDeprecated": "0",
             "type": "dart:core.Set",
-            "desc": "<p>Returns a new set which contains all the elements of <a href=\"package-collection_collection\/MapValueSet-class.html\">this<\/a> and <code>other<\/code>.<\/p>\n<p>That is, the returned set contains all the elements of this <a href=\"dart-core\/Set-class.html\">Set<\/a> and all\nthe elements of <code>other<\/code>.<\/p>\n<p>Note that the returned set will use the default equality operation, which\nmay be different than the equality operation <a href=\"package-collection_collection\/MapValueSet-class.html\">this<\/a> uses.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() =&gt; toSet().toString();<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/toString.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns a new set which contains all the elements of <a href=\"package-collection_collection\/MapValueSet-class.html\">this<\/a> and <code>other<\/code>.<\/p>\n<p>That is, the returned set contains all the elements of this <a href=\"dart-core\/Set-class.html\">Set<\/a> and all\nthe elements of <code>other<\/code>.<\/p>\n<p>Note that the returned set will use the default equality operation, which\nmay be different than the equality operation <a href=\"package-collection_collection\/MapValueSet-class.html\">this<\/a> uses.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Set&lt;V&gt; union(Set&lt;V&gt; other) =&gt; toSet()..addAll(other);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/union.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Set",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "collection.MapValueSet",
             "params": [
                 {
                     "name": "other",
-                    "type": "dart:core.Set",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Set"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/union.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Set&lt;V&gt; union(Set&lt;V&gt; other) =&gt; toSet()..addAll(other);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "where",
-            "type": "dart:core.Iterable",
             "desc": "<p>Returns a new lazy <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> with all elements that satisfy the\npredicate <code>test<\/code>.<\/p>\n<p>The matching elements have the same order in the returned iterable\nas they have in <a href=\"package-collection_collection\/MapValueSet\/iterator.html\">iterator<\/a>.<\/p>\n<p>This method returns a view of the mapped elements.\nAs long as the returned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> is not iterated over,\nthe supplied function <code>test<\/code> will not be invoked.\nIterating will not cache results, and thus iterating multiple times over\nthe returned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> may invoke the supplied\nfunction <code>test<\/code> multiple times on the same element.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;E&gt; where(bool test(E element)) =&gt; _base.where(test);<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/where.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Iterable",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
             "params": [
                 {
                     "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "element",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<E>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/where.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;E&gt; where(bool test(E element)) =&gt; _base.where(test);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "whereType",
-            "type": "dart:core.Iterable",
             "desc": "<p>Returns a new lazy <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> with all elements that have type <code>T<\/code>.<\/p>\n<p>The matching elements have the same order in the returned iterable\nas they have in <a href=\"package-collection_collection\/MapValueSet\/iterator.html\">iterator<\/a>.<\/p>\n<p>This method returns a view of the mapped elements.\nIterating will not cache results, and thus iterating multiple times over\nthe returned <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> may yield different results,\nif the underlying elements change between iterations.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;T&gt; whereType&lt;T&gt;() =&gt; _base.whereType&lt;T&gt;();<\/code><\/pre>\n    ",
+            "href": "package-collection_collection\/MapValueSet\/whereType.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Iterable",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "collection.MapValueSet",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-collection_collection\/MapValueSet\/whereType.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Iterable&lt;T&gt; whereType&lt;T&gt;() =&gt; _base.whereType&lt;T&gt;();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "first",
-            "type": "",
-            "types": [],
-            "desc": "<p>Returns the first element.<\/p>\n<p>Throws a <a href=\"dart-core\/StateError-class.html\">StateError<\/a> if <code>this<\/code> is empty.\nOtherwise returns the first element in the iteration order,\nequivalent to <code>this.elementAt(0)<\/code>.<\/p>\n        ",
-            "memberOf": "collection.MapValueSet",
-            "isConstant": false,
-            "href": "package-collection_collection\/MapValueSet\/first.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">E get first =&gt; _base.first;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "isEmpty",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Returns <code>true<\/code> if there are no elements in this collection.<\/p>\n<p>May be computed by checking if <code>iterator.moveNext()<\/code> returns <code>false<\/code>.<\/p>\n        ",
-            "memberOf": "collection.MapValueSet",
-            "isConstant": false,
-            "href": "package-collection_collection\/MapValueSet\/isEmpty.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isEmpty =&gt; _baseMap.isEmpty;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "isNotEmpty",
+            "href": "package-collection_collection\/MapValueSet\/isEmpty.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "types": [],
+            "memberOf": "collection.MapValueSet",
+            "params": []
+        },
+        {
             "desc": "<p>Returns true if there is at least one element in this collection.<\/p>\n<p>May be computed by checking if <code>iterator.moveNext()<\/code> returns <code>true<\/code>.<\/p>\n        ",
-            "memberOf": "collection.MapValueSet",
-            "isConstant": false,
-            "href": "package-collection_collection\/MapValueSet\/isNotEmpty.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isNotEmpty =&gt; _baseMap.isNotEmpty;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-collection_collection\/MapValueSet\/isNotEmpty.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "collection.MapValueSet",
+            "params": []
         },
         {
-            "name": "iterator",
-            "type": "dart:core.Iterator",
-            "types": [],
             "desc": "<p>Returns a new <code>Iterator<\/code> that allows iterating the elements of this\n<code>Iterable<\/code>.<\/p>\n<p>Iterable classes may specify the iteration order of their elements\n(for example <a href=\"dart-core\/List-class.html\">List<\/a> always iterate in index order),\nor they may leave it unspecified (for example a hash-based <a href=\"dart-core\/Set-class.html\">Set<\/a>\nmay iterate in any order).<\/p>\n<p>Each time <code>iterator<\/code> is read, it returns a new iterator,\nwhich can be used to iterate through all the elements again.\nThe iterators of the same iterable can be stepped through independently,\nbut should return the same elements in the same order,\nas long as the underlying collection isn't changed.<\/p>\n<p>Modifying the collection may cause new iterators to produce\ndifferent elements, and may change the order of existing elements.\nA <a href=\"dart-core\/List-class.html\">List<\/a> specifies its iteration order precisely,\nso modifying the list changes the iteration order predictably.\nA hash-based <a href=\"dart-core\/Set-class.html\">Set<\/a> may change its iteration order completely\nwhen adding a new element to the set.<\/p>\n<p>Modifying the underlying collection after creating the new iterator\nmay cause an error the next time <a href=\"dart-core\/Iterator\/moveNext.html\">Iterator.moveNext<\/a> is called\non that iterator.\nAny <em>modifiable<\/em> iterable class should specify which operations will\nbreak iteration.<\/p>\n        ",
-            "memberOf": "collection.MapValueSet",
-            "isConstant": false,
-            "href": "package-collection_collection\/MapValueSet\/iterator.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Iterator&lt;E&gt; get iterator =&gt; _base.iterator;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "last",
-            "type": "",
-            "types": [],
-            "desc": "<p>Returns the last element.<\/p>\n<p>Throws a <a href=\"dart-core\/StateError-class.html\">StateError<\/a> if <code>this<\/code> is empty.\nOtherwise may iterate through the elements and returns the last one\nseen.\nSome iterables may have more efficient ways to find the last element\n(for example a list can directly access the last element,\nwithout iterating through the previous ones).<\/p>\n        ",
+            "href": "package-collection_collection\/MapValueSet\/iterator.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Iterator",
             "memberOf": "collection.MapValueSet",
-            "isConstant": false,
-            "href": "package-collection_collection\/MapValueSet\/last.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">E get last =&gt; _base.last;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "length",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>Returns the number of elements in <a href=\"package-collection_collection\/MapValueSet-class.html\">this<\/a>.<\/p>\n<p>Counting all elements may involve iterating through all elements and can\ntherefore be slow.\nSome iterables have a more efficient way to find the number of elements.<\/p>\n        ",
-            "memberOf": "collection.MapValueSet",
-            "isConstant": false,
-            "href": "package-collection_collection\/MapValueSet\/length.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get length =&gt; _baseMap.length;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "single",
-            "type": "",
-            "types": [],
-            "desc": "<p>Checks that this iterable has only one element, and returns that element.<\/p>\n<p>Throws a <a href=\"dart-core\/StateError-class.html\">StateError<\/a> if <code>this<\/code> is empty or has more than one element.<\/p>\n        ",
+            "href": "package-collection_collection\/MapValueSet\/length.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
             "memberOf": "collection.MapValueSet",
-            "isConstant": false,
-            "href": "package-collection_collection\/MapValueSet\/single.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">E get single =&gt; _base.single;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-collection_collection\/MapValueSet-class.html",
-    "desc": "<p>Creates a modifiable <a href=\"dart-core\/Set-class.html\">Set<\/a> view of the values of a <a href=\"dart-core\/Map-class.html\">Map<\/a>.<\/p>\n<p>The <code>Set<\/code> view assumes that the keys of the <code>Map<\/code> can be uniquely determined\nfrom the values. The <code>keyForValue<\/code> function passed to the constructor finds\nthe key for a single value. The <code>keyForValue<\/code> function should be consistent\nwith equality. If <code>value1 == value2<\/code> then <code>keyForValue(value1)<\/code> and\n<code>keyForValue(value2)<\/code> should be considered equal keys by the underlying map,\nand vice versa.<\/p>\n<p>Modifying the set will modify the underlying map based on the key returned\nby <code>keyForValue<\/code>.<\/p>\n<p>If the <code>Map<\/code> contents are not compatible with the <code>keyForValue<\/code> function,\nthe set will not work consistently, and may give meaningless responses or do\ninconsistent updates.<\/p>\n<p>This set can, for example, be used on a map from database record IDs to the\nrecords. It exposes the records as a set, and allows for writing both\n<code>recordSet.add(databaseRecord)<\/code> and <code>recordMap[id]<\/code>.<\/p>\n<p>Effectively, the map will act as a kind of index for the set.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "MapValueSet"
+    ]
 }

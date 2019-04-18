@@ -1,5 +1,17 @@
 {
+    "desc": "<p>This class converts strings to their UTF-8 code units (a list of\nunsigned 8-bit integers).<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "dart-convert\/Utf8Encoder-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "dart:convert",
     "name": "dart:convert.Utf8Encoder",
+    "shortname": "Utf8Encoder",
     "extends": [
         "dart:core.int",
         "dart:core.List",
@@ -11,141 +23,104 @@
         "dart:async.StreamTransformerBase",
         "dart:core.Object"
     ],
-    "memberOf": "dart:convert",
     "events": [],
     "methods": [
         {
-            "name": "Utf8Encoder",
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Utf8Encoder();<\/code><\/pre>\n    ",
+            "href": "dart-convert\/Utf8Encoder\/Utf8Encoder.html",
+            "isDeprecated": "0",
             "type": "",
-            "desc": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "dart:convert.Utf8Encoder",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "dart-convert\/Utf8Encoder\/Utf8Encoder.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Utf8Encoder();<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "bind",
-            "type": "dart:async.Stream<dart:core.List<dart:core.int>>",
             "desc": "<p>Transforms the provided <code>stream<\/code>.<\/p>\n<p>Returns a new stream with events that are computed from events of the\nprovided <code>stream<\/code>.<\/p>\n<p>The <a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a> interface is completely generic,\nso it cannot say what subclasses do.\nEach <a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a> should document clearly how it transforms the\nstream (on the class or variable used to access the transformer),\nas well as any differences from the following typical behavior:<\/p>\n<ul>\n<li>When the returned stream is listened to, it starts listening to the\ninput <code>stream<\/code>.<\/li>\n<li>Subscriptions of the returned stream forward (in a reasonable time)\na <a href=\"dart-async\/StreamSubscription\/pause.html\">StreamSubscription.pause<\/a> call to the subscription of the input\n<code>stream<\/code>.<\/li>\n<li>Similarly, canceling a subscription of the returned stream eventually\n(in reasonable time) cancels the subscription of the input <code>stream<\/code>.<\/li>\n<\/ul>\n<p>\"Reasonable time\" depends on the transformer and stream. Some transformers,\nlike a \"timeout\" transformer, might make these operations depend on a\nduration. Others might not delay them at all, or just by a microtask.<\/p>\n<p>Transformers are free to handle errors in any way.\nA transformer implementation may choose to propagate errors,\nor convert them to other events, or ignore them completely,\nbut if errors are ignored, it should be documented explicitly.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;List&lt;int&gt;&gt; bind(Stream&lt;String&gt; stream) =&gt; super.bind(stream);<\/code><\/pre>\n    ",
+            "href": "dart-convert\/Utf8Encoder\/bind.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Stream<dart:core.List<dart:core.int>>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:convert.Utf8Encoder",
-            "sig": "",
             "params": [
                 {
                     "name": "stream",
-                    "type": "dart:async.Stream<dart:core.String>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:async.Stream",
-                        "dart:core.String"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:async.Stream<dart:core.String>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-convert\/Utf8Encoder\/bind.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;List&lt;int&gt;&gt; bind(Stream&lt;String&gt; stream) =&gt; super.bind(stream);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Stream",
-                "dart:core.List",
-                "dart:core.int"
             ]
         },
         {
-            "name": "convert",
-            "type": "dart:core.List<dart:core.int>",
             "desc": "<p>Converts <code>string<\/code> to its UTF-8 code units (a list of\nunsigned 8-bit integers).<\/p>\n<p>If <code>start<\/code> and <code>end<\/code> are provided, only the substring\n<code>string.substring(start, end)<\/code> is converted.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;int&gt; convert(String string, [int start = 0, int end]) {\n  var stringLength = string.length;\n  end = RangeError.checkValidRange(start, end, stringLength);\n  var length = end - start;\n  if (length == 0) return Uint8List(0);\n  \/\/ Create a new encoder with a length that is guaranteed to be big enough.\n  \/\/ A single code unit uses at most 3 bytes, a surrogate pair at most 4.\n  var encoder = _Utf8Encoder.withBufferSize(length * 3);\n  var endPosition = encoder._fillBuffer(string, start, end);\n  assert(endPosition &gt;= end - 1);\n  if (endPosition != end) {\n    \/\/ Encoding skipped the last code unit.\n    \/\/ That can only happen if the last code unit is a leadsurrogate.\n    \/\/ Force encoding of the lead surrogate by itself.\n    var lastCodeUnit = string.codeUnitAt(end - 1);\n    assert(_isLeadSurrogate(lastCodeUnit));\n    \/\/ We use a non-surrogate as `nextUnit` so that _writeSurrogate just\n    \/\/ writes the lead-surrogate.\n    var wasCombined = encoder._writeSurrogate(lastCodeUnit, 0);\n    assert(!wasCombined);\n  }\n  return encoder._buffer.sublist(0, encoder._bufferIndex);\n}<\/code><\/pre>\n    ",
+            "href": "dart-convert\/Utf8Encoder\/convert.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<dart:core.int>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:convert.Utf8Encoder",
-            "sig": "",
             "params": [
                 {
-                    "name": "string",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "end",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 },
                 {
                     "name": "start",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 },
                 {
-                    "name": "end",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "string",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-convert\/Utf8Encoder\/convert.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;int&gt; convert(String string, [int start = 0, int end]) {\n  var stringLength = string.length;\n  end = RangeError.checkValidRange(start, end, stringLength);\n  var length = end - start;\n  if (length == 0) return Uint8List(0);\n  \/\/ Create a new encoder with a length that is guaranteed to be big enough.\n  \/\/ A single code unit uses at most 3 bytes, a surrogate pair at most 4.\n  var encoder = _Utf8Encoder.withBufferSize(length * 3);\n  var endPosition = encoder._fillBuffer(string, start, end);\n  assert(endPosition &gt;= end - 1);\n  if (endPosition != end) {\n    \/\/ Encoding skipped the last code unit.\n    \/\/ That can only happen if the last code unit is a leadsurrogate.\n    \/\/ Force encoding of the lead surrogate by itself.\n    var lastCodeUnit = string.codeUnitAt(end - 1);\n    assert(_isLeadSurrogate(lastCodeUnit));\n    \/\/ We use a non-surrogate as `nextUnit` so that _writeSurrogate just\n    \/\/ writes the lead-surrogate.\n    var wasCombined = encoder._writeSurrogate(lastCodeUnit, 0);\n    assert(!wasCombined);\n  }\n  return encoder._buffer.sublist(0, encoder._bufferIndex);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:core.List",
-                "dart:core.int"
             ]
         },
         {
-            "name": "startChunkedConversion",
-            "type": "dart:convert.StringConversionSink",
             "desc": "<p>Starts a chunked conversion.<\/p>\n<p>The converter works more efficiently if the given <code>sink<\/code> is a\n<a href=\"dart-convert\/ByteConversionSink-class.html\">ByteConversionSink<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StringConversionSink startChunkedConversion(Sink&lt;List&lt;int&gt;&gt; sink) {\n  return _Utf8EncoderSink(\n      sink is ByteConversionSink ? sink : ByteConversionSink.from(sink));\n}<\/code><\/pre>\n    ",
+            "href": "dart-convert\/Utf8Encoder\/startChunkedConversion.html",
+            "isDeprecated": "0",
+            "type": "dart:convert.StringConversionSink",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "dart:convert.Utf8Encoder",
-            "sig": "",
             "params": [
                 {
                     "name": "sink",
-                    "type": "dart:core.Sink<dart:core.List<dart:core.int>>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Sink",
-                        "dart:core.List",
-                        "dart:core.int"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Sink<dart:core.List<dart:core.int>>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "dart-convert\/Utf8Encoder\/startChunkedConversion.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StringConversionSink startChunkedConversion(Sink&lt;List&lt;int&gt;&gt; sink) {\n  return _Utf8EncoderSink(\n      sink is ByteConversionSink ? sink : ByteConversionSink.from(sink));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
-    "props": [],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "dart-convert\/Utf8Encoder-class.html",
-    "desc": "<p>This class converts strings to their UTF-8 code units (a list of\nunsigned 8-bit integers).<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "Utf8Encoder"
+    "props": []
 }

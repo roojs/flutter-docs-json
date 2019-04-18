@@ -1,611 +1,507 @@
 {
+    "desc": "<p>A controller for an animation.<\/p>\n<p>This class lets you perform tasks such as:<\/p>\n<ul>\n<li>Play an animation <a href=\"animation\/AnimationController\/forward.html\">forward<\/a> or in <a href=\"animation\/AnimationController\/reverse.html\">reverse<\/a>, or <a href=\"animation\/AnimationController\/stop.html\">stop<\/a> an animation.<\/li>\n<li>Set the animation to a specific <a href=\"animation\/AnimationController\/value.html\">value<\/a>.<\/li>\n<li>Define the <a href=\"animation\/AnimationController\/upperBound.html\">upperBound<\/a> and <a href=\"animation\/AnimationController\/lowerBound.html\">lowerBound<\/a> values of an animation.<\/li>\n<li>Create a <a href=\"animation\/AnimationController\/fling.html\">fling<\/a> animation effect using a physics simulation.<\/li>\n<\/ul>\n<p>By default, an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> linearly produces values that range\nfrom 0.0 to 1.0, during a given duration. The animation controller generates\na new value whenever the device running your app is ready to display a new\nframe (typically, this rate is around 60 values per second).<\/p>\n<h2 id=\"ticker-providers\">Ticker providers<\/h2>\n<p>An <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> needs a <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a>, which is configured using\nthe <code>vsync<\/code> argument on the constructor.<\/p>\n<p>The <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> interface describes a factory for <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> objects. A\n<a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> is an object that knows how to register itself with the\n<a href=\"scheduler\/SchedulerBinding-mixin.html\">SchedulerBinding<\/a> and fires a callback every frame. The\n<a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> class uses a <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> to step through the animation\nthat it controls.<\/p>\n<p>If an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> is being created from a <a href=\"widgets\/State-class.html\">State<\/a>, then the State\ncan use the <a href=\"widgets\/TickerProviderStateMixin-mixin.html\">TickerProviderStateMixin<\/a> and <a href=\"widgets\/SingleTickerProviderStateMixin-mixin.html\">SingleTickerProviderStateMixin<\/a>\nclasses to implement the <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> interface. The\n<a href=\"widgets\/TickerProviderStateMixin-mixin.html\">TickerProviderStateMixin<\/a> class always works for this purpose; the\n<a href=\"widgets\/SingleTickerProviderStateMixin-mixin.html\">SingleTickerProviderStateMixin<\/a> is slightly more efficient in the case of\nthe class only ever needing one <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> (e.g. if the class creates only a\nsingle <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> during its entire lifetime).<\/p>\n<p>The widget test framework <a href=\"flutter_test\/WidgetTester-class.html\">WidgetTester<\/a> object can be used as a ticker\nprovider in the context of tests. In other contexts, you will have to either\npass a <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> from a higher level (e.g. indirectly from a <a href=\"widgets\/State-class.html\">State<\/a>\nthat mixes in <a href=\"widgets\/TickerProviderStateMixin-mixin.html\">TickerProviderStateMixin<\/a>), or create a custom\n<a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> subclass.<\/p>\n<h2 id=\"life-cycle\">Life cycle<\/h2>\n<p>An <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> should be <a href=\"animation\/AnimationController\/dispose.html\">dispose<\/a>d when it is no longer needed.\nThis reduces the likelihood of leaks. When used with a <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>, it\nis common for an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> to be created in the\n<a href=\"widgets\/State\/initState.html\">State.initState<\/a> method and then disposed in the <a href=\"animation\/AnimationController\/dispose.html\">State.dispose<\/a> method.<\/p>\n<h2 id=\"using-futures-with-animationcontroller\">Using <a href=\"dart-async\/Future-class.html\">Future<\/a>s with <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>\n<\/h2>\n<p>The methods that start animations return a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> object which\ncompletes when the animation completes successfully, and never throws an\nerror; if the animation is canceled, the future never completes. This object\nalso has a <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a> property which returns a future that\ncompletes when the animation completes successfully, and completes with an\nerror when the animation is aborted.<\/p>\n<p>This can be used to write code such as the <code>fadeOutAndUpdateState<\/code> method\nbelow.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nHere is a stateful <code>Foo<\/code> widget. Its <a href=\"widgets\/State-class.html\">State<\/a> uses the\n<a href=\"widgets\/SingleTickerProviderStateMixin-mixin.html\">SingleTickerProviderStateMixin<\/a> to implement the necessary\n<a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a>, creating its controller in the <code>initState<\/code> method and\ndisposing of it in the <a href=\"animation\/AnimationController\/dispose.html\">dispose<\/a> method. The duration of the controller is\nconfigured from a property in the <code>Foo<\/code> widget; as that changes, the\n<code>didUpdateWidget<\/code> method is used to update the controller.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class Foo extends StatefulWidget {\n  Foo({ Key key, this.duration }) : super(key: key);\n\n  final Duration duration;\n\n  @override\n  _FooState createState() =&gt; _FooState();\n}\n\nclass _FooState extends State&lt;Foo&gt; with SingleTickerProviderStateMixin {\n  AnimationController _controller;\n\n  @override\n  void initState() {\n    super.initState();\n    _controller = AnimationController(\n      vsync: this, \/\/ the SingleTickerProviderStateMixin\n      duration: widget.duration,\n    );\n  }\n\n  @override\n  void didUpdateWidget(Foo oldWidget) {\n    super.didUpdateWidget(oldWidget);\n    _controller.duration = widget.duration;\n  }\n\n  @override\n  void dispose() {\n    _controller.dispose();\n    super.dispose();\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return Container(); \/\/ ...\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following method (for a <a href=\"widgets\/State-class.html\">State<\/a> subclass) drives two animation\ncontrollers using Dart's asynchronous syntax for awaiting <a href=\"dart-async\/Future-class.html\">Future<\/a> objects:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">Future&lt;void&gt; fadeOutAndUpdateState() async {\n  try {\n    await fadeAnimationController.forward().orCancel;\n    await sizeAnimationController.forward().orCancel;\n    setState(() {\n      dismissed = true;\n    });\n  } on TickerCanceled {\n    \/\/ the animation got canceled, probably because we were disposed\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>The assumption in the code above is that the animation controllers are being\ndisposed in the <a href=\"widgets\/State-class.html\">State<\/a> subclass' override of the <a href=\"animation\/AnimationController\/dispose.html\">State.dispose<\/a> method.\nSince disposing the controller cancels the animation (raising a\n<a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> exception), the code here can skip verifying whether\n<a href=\"widgets\/State\/mounted.html\">State.mounted<\/a> is still true at each step. (Again, this assumes that the\ncontrollers are created in <a href=\"widgets\/State\/initState.html\">State.initState<\/a> and disposed in\n<a href=\"animation\/AnimationController\/dispose.html\">State.dispose<\/a>, as described in the previous section.)<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"animation\/Tween-class.html\">Tween<\/a>, the base class for converting an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> to a\nrange of values of other types.<\/li><\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "animation\/AnimationController-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "animation",
     "name": "animation.AnimationController",
+    "shortname": "AnimationController",
     "extends": [
         "dart:core.double",
         "animation.Animation",
         "foundation.Listenable",
         "dart:core.Object"
     ],
-    "memberOf": "animation",
     "events": [],
     "methods": [
         {
-            "name": "AnimationController",
-            "type": "",
             "desc": "<p>Creates an animation controller.<\/p>\n<ul>\n<li>\n<p><code>value<\/code> is the initial value of the animation. If defaults to the lower\nbound.<\/p>\n<\/li>\n<li>\n<p><code>duration<\/code> is the length of time this animation should last.<\/p>\n<\/li>\n<li>\n<p><code>debugLabel<\/code> is a string to help identify this animation during\ndebugging (used by <a href=\"animation\/Animation\/toString.html\">toString<\/a>).<\/p>\n<\/li>\n<li>\n<p><code>lowerBound<\/code> is the smallest value this animation can obtain and the\nvalue at which this animation is deemed to be dismissed. It cannot be\nnull.<\/p>\n<\/li>\n<li>\n<p><code>upperBound<\/code> is the largest value this animation can obtain and the\nvalue at which this animation is deemed to be completed. It cannot be\nnull.<\/p>\n<\/li>\n<li>\n<p><code>vsync<\/code> is the <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> for the current context. It can be\nchanged by calling <a href=\"animation\/AnimationController\/resync.html\">resync<\/a>. It is required and must not be null. See\n<a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> for advice on obtaining a ticker provider.<\/p>\n<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">AnimationController({\n  double value,\n  this.duration,\n  this.debugLabel,\n  this.lowerBound = 0.0,\n  this.upperBound = 1.0,\n  this.animationBehavior = AnimationBehavior.normal,\n  @required TickerProvider vsync,\n}) : assert(lowerBound != null),\n     assert(upperBound != null),\n     assert(upperBound &gt;= lowerBound),\n     assert(vsync != null),\n     _direction = _AnimationDirection.forward {\n  _ticker = vsync.createTicker(_tick);\n  _internalSetValue(value ?? lowerBound);\n}<\/code><\/pre>\n    ",
+            "href": "animation\/AnimationController\/AnimationController.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "animation.AnimationController",
-            "sig": "",
             "params": [
                 {
-                    "name": "value",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "animationBehavior",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "duration",
-                    "type": "dart:core.Duration",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "animation.AnimationBehavior"
                 },
                 {
                     "name": "debugLabel",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.String"
+                },
+                {
+                    "name": "duration",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.Duration"
                 },
                 {
                     "name": "lowerBound",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
                 },
                 {
                     "name": "upperBound",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
                 },
                 {
-                    "name": "animationBehavior",
-                    "type": "animation.AnimationBehavior",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "value",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
                 },
                 {
                     "name": "vsync",
-                    "type": "scheduler.TickerProvider",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "scheduler.TickerProvider"
                 }
-            ],
-            "isConstructor": true,
-            "href": "animation\/AnimationController\/AnimationController.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">AnimationController({\n  double value,\n  this.duration,\n  this.debugLabel,\n  this.lowerBound = 0.0,\n  this.upperBound = 1.0,\n  this.animationBehavior = AnimationBehavior.normal,\n  @required TickerProvider vsync,\n}) : assert(lowerBound != null),\n     assert(upperBound != null),\n     assert(upperBound &gt;= lowerBound),\n     assert(vsync != null),\n     _direction = _AnimationDirection.forward {\n  _ticker = vsync.createTicker(_tick);\n  _internalSetValue(value ?? lowerBound);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "animateBack",
-            "type": "scheduler.TickerFuture",
             "desc": "<p>Drives the animation from its current value to target.<\/p>\n<p>Returns a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> that completes when the animation is complete.<\/p>\n<p>The most recently returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>, if any, is marked as having been\ncanceled, meaning the future never completes and its <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>\nderivative future completes with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> error.<\/p>\n<p>During the animation, <a href=\"animation\/AnimationController\/status.html\">status<\/a> is reported as <a href=\"animation\/AnimationController\/reverse.html\">AnimationStatus.reverse<\/a>\nregardless of whether <code>target<\/code> &lt; <a href=\"animation\/AnimationController\/value.html\">value<\/a> or not. At the end of the\nanimation, when <code>target<\/code> is reached, <a href=\"animation\/AnimationController\/status.html\">status<\/a> is reported as\n<a href=\"animation\/AnimationStatus-class.html\">AnimationStatus.dismissed<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "animation.AnimationController",
-            "sig": "",
-            "params": [
-                {
-                    "name": "target",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "duration",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "curve",
-                    "type": "animation.Curve",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "animation\/AnimationController\/animateBack.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture animateBack(double target, { Duration duration, Curve curve = Curves.linear }) {\n  assert(\n    _ticker != null,\n    'AnimationController.animateBack() called after AnimationController.dispose()\\n'\n    'AnimationController methods should not be used after calling dispose.'\n  );\n  _direction = _AnimationDirection.reverse;\n  return _animateToInternal(target, duration: duration, curve: curve);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "animateTo",
+            "href": "animation\/AnimationController\/animateBack.html",
+            "isDeprecated": "0",
             "type": "scheduler.TickerFuture",
-            "desc": "<p>Drives the animation from its current value to target.<\/p>\n<p>Returns a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> that completes when the animation is complete.<\/p>\n<p>The most recently returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>, if any, is marked as having been\ncanceled, meaning the future never completes and its <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>\nderivative future completes with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> error.<\/p>\n<p>During the animation, <a href=\"animation\/AnimationController\/status.html\">status<\/a> is reported as <a href=\"animation\/AnimationController\/forward.html\">AnimationStatus.forward<\/a>\nregardless of whether <code>target<\/code> &gt; <a href=\"animation\/AnimationController\/value.html\">value<\/a> or not. At the end of the\nanimation, when <code>target<\/code> is reached, <a href=\"animation\/AnimationController\/status.html\">status<\/a> is reported as\n<a href=\"animation\/AnimationStatus-class.html\">AnimationStatus.completed<\/a>.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "animation.AnimationController",
-            "sig": "",
             "params": [
                 {
-                    "name": "target",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "curve",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "animation.Curve"
                 },
                 {
                     "name": "duration",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Duration"
                 },
                 {
-                    "name": "curve",
-                    "type": "animation.Curve",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "target",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 }
-            ],
-            "isConstructor": false,
-            "href": "animation\/AnimationController\/animateTo.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture animateTo(double target, { Duration duration, Curve curve = Curves.linear }) {\n  assert(\n    _ticker != null,\n    'AnimationController.animateTo() called after AnimationController.dispose()\\n'\n    'AnimationController methods should not be used after calling dispose.'\n  );\n  _direction = _AnimationDirection.forward;\n  return _animateToInternal(target, duration: duration, curve: curve);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "animateWith",
+            "desc": "<p>Drives the animation from its current value to target.<\/p>\n<p>Returns a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> that completes when the animation is complete.<\/p>\n<p>The most recently returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>, if any, is marked as having been\ncanceled, meaning the future never completes and its <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>\nderivative future completes with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> error.<\/p>\n<p>During the animation, <a href=\"animation\/AnimationController\/status.html\">status<\/a> is reported as <a href=\"animation\/AnimationController\/forward.html\">AnimationStatus.forward<\/a>\nregardless of whether <code>target<\/code> &gt; <a href=\"animation\/AnimationController\/value.html\">value<\/a> or not. At the end of the\nanimation, when <code>target<\/code> is reached, <a href=\"animation\/AnimationController\/status.html\">status<\/a> is reported as\n<a href=\"animation\/AnimationStatus-class.html\">AnimationStatus.completed<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture animateTo(double target, { Duration duration, Curve curve = Curves.linear }) {\n  assert(\n    _ticker != null,\n    'AnimationController.animateTo() called after AnimationController.dispose()\\n'\n    'AnimationController methods should not be used after calling dispose.'\n  );\n  _direction = _AnimationDirection.forward;\n  return _animateToInternal(target, duration: duration, curve: curve);\n}<\/code><\/pre>\n    ",
+            "href": "animation\/AnimationController\/animateTo.html",
+            "isDeprecated": "0",
             "type": "scheduler.TickerFuture",
-            "desc": "<p>Drives the animation according to the given simulation.<\/p>\n<p>Returns a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> that completes when the animation is complete.<\/p>\n<p>The most recently returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>, if any, is marked as having been\ncanceled, meaning the future never completes and its <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>\nderivative future completes with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> error.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "animation.AnimationController",
-            "sig": "",
+            "params": [
+                {
+                    "name": "curve",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "animation.Curve"
+                },
+                {
+                    "name": "duration",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Duration"
+                },
+                {
+                    "name": "target",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Drives the animation according to the given simulation.<\/p>\n<p>Returns a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> that completes when the animation is complete.<\/p>\n<p>The most recently returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>, if any, is marked as having been\ncanceled, meaning the future never completes and its <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>\nderivative future completes with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> error.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture animateWith(Simulation simulation) {\n  assert(\n    _ticker != null,\n    'AnimationController.animateWith() called after AnimationController.dispose()\\n'\n    'AnimationController methods should not be used after calling dispose.'\n  );\n  stop();\n  return _startSimulation(simulation);\n}<\/code><\/pre>\n    ",
+            "href": "animation\/AnimationController\/animateWith.html",
+            "isDeprecated": "0",
+            "type": "scheduler.TickerFuture",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "animation.AnimationController",
             "params": [
                 {
                     "name": "simulation",
-                    "type": "physics.Simulation",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "physics.Simulation"
                 }
-            ],
-            "isConstructor": false,
-            "href": "animation\/AnimationController\/animateWith.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture animateWith(Simulation simulation) {\n  assert(\n    _ticker != null,\n    'AnimationController.animateWith() called after AnimationController.dispose()\\n'\n    'AnimationController methods should not be used after calling dispose.'\n  );\n  stop();\n  return _startSimulation(simulation);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "dispose",
-            "type": "",
             "desc": "<p>Release the resources used by this object. The object is no longer usable\nafter this method is called.<\/p>\n<p>The most recently returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>, if any, is marked as having been\ncanceled, meaning the future never completes and its <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>\nderivative future completes with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> error.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  assert(() {\n    if (_ticker == null) {\n      throw FlutterError(\n        'AnimationController.dispose() called more than once.\\n'\n        'A given $runtimeType cannot be disposed more than once.\\n'\n        'The following $runtimeType object was disposed multiple times:\\n'\n        '  $this'\n      );\n    }\n    return true;\n  }());\n  _ticker.dispose();\n  _ticker = null;\n  super.dispose();\n}<\/code><\/pre>\n    ",
+            "href": "animation\/AnimationController\/dispose.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "animation.AnimationController",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "animation\/AnimationController\/dispose.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  assert(() {\n    if (_ticker == null) {\n      throw FlutterError(\n        'AnimationController.dispose() called more than once.\\n'\n        'A given $runtimeType cannot be disposed more than once.\\n'\n        'The following $runtimeType object was disposed multiple times:\\n'\n        '  $this'\n      );\n    }\n    return true;\n  }());\n  _ticker.dispose();\n  _ticker = null;\n  super.dispose();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "params": []
         },
         {
-            "name": "fling",
-            "type": "scheduler.TickerFuture",
             "desc": "<p>Drives the animation with a critically damped spring (within <a href=\"animation\/AnimationController\/lowerBound.html\">lowerBound<\/a>\nand <a href=\"animation\/AnimationController\/upperBound.html\">upperBound<\/a>) and initial velocity.<\/p>\n<p>If velocity is positive, the animation will complete, otherwise it will\ndismiss.<\/p>\n<p>Returns a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> that completes when the animation is complete.<\/p>\n<p>The most recently returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>, if any, is marked as having been\ncanceled, meaning the future never completes and its <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>\nderivative future completes with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> error.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture fling({ double velocity = 1.0, AnimationBehavior animationBehavior }) {\n  _direction = velocity &lt; 0.0 ? _AnimationDirection.reverse : _AnimationDirection.forward;\n  final double target = velocity &lt; 0.0 ? lowerBound - _kFlingTolerance.distance\n                                       : upperBound + _kFlingTolerance.distance;\n  double scale = 1.0;\n  final AnimationBehavior behavior = animationBehavior ?? this.animationBehavior;\n  if (SemanticsBinding.instance.disableAnimations) {\n    switch (behavior) {\n      case AnimationBehavior.normal:\n        \/\/ TODO(jonahwilliams): determine a better process for setting velocity.\n        \/\/ the value below was arbitrarily chosen because it worked for the drawer widget.\n        scale = 200.0;\n        break;\n      case AnimationBehavior.preserve:\n        break;\n    }\n  }\n  final Simulation simulation = SpringSimulation(_kFlingSpringDescription, value, target, velocity * scale)\n    ..tolerance = _kFlingTolerance;\n  return animateWith(simulation);\n}<\/code><\/pre>\n    ",
+            "href": "animation\/AnimationController\/fling.html",
+            "isDeprecated": "0",
+            "type": "scheduler.TickerFuture",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "animation.AnimationController",
-            "sig": "",
             "params": [
                 {
-                    "name": "velocity",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "animationBehavior",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "animation.AnimationBehavior"
                 },
                 {
-                    "name": "animationBehavior",
-                    "type": "animation.AnimationBehavior",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "velocity",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 }
-            ],
-            "isConstructor": false,
-            "href": "animation\/AnimationController\/fling.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture fling({ double velocity = 1.0, AnimationBehavior animationBehavior }) {\n  _direction = velocity &lt; 0.0 ? _AnimationDirection.reverse : _AnimationDirection.forward;\n  final double target = velocity &lt; 0.0 ? lowerBound - _kFlingTolerance.distance\n                                       : upperBound + _kFlingTolerance.distance;\n  double scale = 1.0;\n  final AnimationBehavior behavior = animationBehavior ?? this.animationBehavior;\n  if (SemanticsBinding.instance.disableAnimations) {\n    switch (behavior) {\n      case AnimationBehavior.normal:\n        \/\/ TODO(jonahwilliams): determine a better process for setting velocity.\n        \/\/ the value below was arbitrarily chosen because it worked for the drawer widget.\n        scale = 200.0;\n        break;\n      case AnimationBehavior.preserve:\n        break;\n    }\n  }\n  final Simulation simulation = SpringSimulation(_kFlingSpringDescription, value, target, velocity * scale)\n    ..tolerance = _kFlingTolerance;\n  return animateWith(simulation);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "forward",
-            "type": "scheduler.TickerFuture",
             "desc": "<p>Starts running this animation forwards (towards the end).<\/p>\n<p>Returns a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> that completes when the animation is complete.<\/p>\n<p>The most recently returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>, if any, is marked as having been\ncanceled, meaning the future never completes and its <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>\nderivative future completes with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> error.<\/p>\n<p>During the animation, <a href=\"animation\/AnimationController\/status.html\">status<\/a> is reported as <a href=\"animation\/AnimationController\/forward.html\">AnimationStatus.forward<\/a>,\nwhich switches to <a href=\"animation\/AnimationStatus-class.html\">AnimationStatus.completed<\/a> when <a href=\"animation\/AnimationController\/upperBound.html\">upperBound<\/a> is\nreached at the end of the animation.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture forward({ double from }) {\n  assert(() {\n    if (duration == null) {\n      throw FlutterError(\n        'AnimationController.forward() called with no default Duration.\\n'\n        'The \"duration\" property should be set, either in the constructor or later, before '\n        'calling the forward() function.'\n      );\n    }\n    return true;\n  }());\n  assert(\n    _ticker != null,\n    'AnimationController.forward() called after AnimationController.dispose()\\n'\n    'AnimationController methods should not be used after calling dispose.'\n  );\n  _direction = _AnimationDirection.forward;\n  if (from != null)\n    value = from;\n  return _animateToInternal(upperBound);\n}<\/code><\/pre>\n    ",
+            "href": "animation\/AnimationController\/forward.html",
+            "isDeprecated": "0",
+            "type": "scheduler.TickerFuture",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "animation.AnimationController",
-            "sig": "",
             "params": [
                 {
                     "name": "from",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 }
-            ],
-            "isConstructor": false,
-            "href": "animation\/AnimationController\/forward.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture forward({ double from }) {\n  assert(() {\n    if (duration == null) {\n      throw FlutterError(\n        'AnimationController.forward() called with no default Duration.\\n'\n        'The \"duration\" property should be set, either in the constructor or later, before '\n        'calling the forward() function.'\n      );\n    }\n    return true;\n  }());\n  assert(\n    _ticker != null,\n    'AnimationController.forward() called after AnimationController.dispose()\\n'\n    'AnimationController methods should not be used after calling dispose.'\n  );\n  _direction = _AnimationDirection.forward;\n  if (from != null)\n    value = from;\n  return _animateToInternal(upperBound);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "repeat",
-            "type": "scheduler.TickerFuture",
             "desc": "<p>Starts running this animation in the forward direction, and\nrestarts the animation when it completes.<\/p>\n<p>Defaults to repeating between the <a href=\"animation\/AnimationController\/lowerBound.html\">lowerBound<\/a> and <a href=\"animation\/AnimationController\/upperBound.html\">upperBound<\/a> of the\n<a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> when no explicit value is set for <code>min<\/code> and <code>max<\/code>.<\/p>\n<p>With <code>reverse<\/code> set to true, instead of always starting over at <code>min<\/code>\nthe value will alternate between <code>min<\/code> and <code>max<\/code> values on each repeat.<\/p>\n<p>Returns a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> that never completes. The <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a> future\ncompletes with an error when the animation is stopped (e.g. with <a href=\"animation\/AnimationController\/stop.html\">stop<\/a>).<\/p>\n<p>The most recently returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>, if any, is marked as having been\ncanceled, meaning the future never completes and its <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>\nderivative future completes with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> error.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture repeat({ double min, double max, bool reverse = false, Duration period }) {\n  min ??= lowerBound;\n  max ??= upperBound;\n  period ??= duration;\n  assert(() {\n    if (period == null) {\n      throw FlutterError(\n        'AnimationController.repeat() called without an explicit period and with no default Duration.\\n'\n        'Either the \"period\" argument to the repeat() method should be provided, or the '\n        '\"duration\" property should be set, either in the constructor or later, before '\n        'calling the repeat() function.'\n      );\n    }\n    return true;\n  }());\n  assert(max &gt;= min);\n  assert(max &lt;= upperBound &amp;&amp; min &gt;= lowerBound);\n  assert(reverse != null);\n  return animateWith(_RepeatingSimulation(_value, min, max, reverse, period));\n}<\/code><\/pre>\n    ",
+            "href": "animation\/AnimationController\/repeat.html",
+            "isDeprecated": "0",
+            "type": "scheduler.TickerFuture",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "animation.AnimationController",
-            "sig": "",
             "params": [
                 {
-                    "name": "min",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
                     "name": "max",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 },
                 {
-                    "name": "reverse",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "min",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 },
                 {
                     "name": "period",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Duration"
+                },
+                {
+                    "name": "reverse",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 }
-            ],
-            "isConstructor": false,
-            "href": "animation\/AnimationController\/repeat.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture repeat({ double min, double max, bool reverse = false, Duration period }) {\n  min ??= lowerBound;\n  max ??= upperBound;\n  period ??= duration;\n  assert(() {\n    if (period == null) {\n      throw FlutterError(\n        'AnimationController.repeat() called without an explicit period and with no default Duration.\\n'\n        'Either the \"period\" argument to the repeat() method should be provided, or the '\n        '\"duration\" property should be set, either in the constructor or later, before '\n        'calling the repeat() function.'\n      );\n    }\n    return true;\n  }());\n  assert(max &gt;= min);\n  assert(max &lt;= upperBound &amp;&amp; min &gt;= lowerBound);\n  assert(reverse != null);\n  return animateWith(_RepeatingSimulation(_value, min, max, reverse, period));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "reset",
-            "type": "",
             "desc": "<p>Sets the controller's value to <a href=\"animation\/AnimationController\/lowerBound.html\">lowerBound<\/a>, stopping the animation (if\nin progress), and resetting to its beginning point, or dismissed state.<\/p>\n<p>The most recently returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>, if any, is marked as having been\ncanceled, meaning the future never completes and its <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>\nderivative future completes with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> error.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"animation\/AnimationController\/value.html\">value<\/a>, which can be explicitly set to a specific value as desired.<\/li>\n<li>\n<a href=\"animation\/AnimationController\/forward.html\">forward<\/a>, which starts the animation in the forward direction.<\/li>\n<li>\n<a href=\"animation\/AnimationController\/stop.html\">stop<\/a>, which aborts the animation without changing its value or status\nand without dispatching any notifications other than completing or\ncanceling the <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void reset() {\n  value = lowerBound;\n}<\/code><\/pre>\n    ",
+            "href": "animation\/AnimationController\/reset.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "animation.AnimationController",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "animation\/AnimationController\/reset.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void reset() {\n  value = lowerBound;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "params": []
         },
         {
-            "name": "resync",
-            "type": "",
             "desc": "<p>Recreates the <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> with the new <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void resync(TickerProvider vsync) {\n  final Ticker oldTicker = _ticker;\n  _ticker = vsync.createTicker(_tick);\n  _ticker.absorbTicker(oldTicker);\n}<\/code><\/pre>\n    ",
+            "href": "animation\/AnimationController\/resync.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "animation.AnimationController",
-            "sig": "",
             "params": [
                 {
                     "name": "vsync",
-                    "type": "scheduler.TickerProvider",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "scheduler.TickerProvider"
                 }
-            ],
-            "isConstructor": false,
-            "href": "animation\/AnimationController\/resync.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void resync(TickerProvider vsync) {\n  final Ticker oldTicker = _ticker;\n  _ticker = vsync.createTicker(_tick);\n  _ticker.absorbTicker(oldTicker);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "reverse",
-            "type": "scheduler.TickerFuture",
             "desc": "<p>Starts running this animation in reverse (towards the beginning).<\/p>\n<p>Returns a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> that completes when the animation is dismissed.<\/p>\n<p>The most recently returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a>, if any, is marked as having been\ncanceled, meaning the future never completes and its <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a>\nderivative future completes with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> error.<\/p>\n<p>During the animation, <a href=\"animation\/AnimationController\/status.html\">status<\/a> is reported as <a href=\"animation\/AnimationController\/reverse.html\">AnimationStatus.reverse<\/a>,\nwhich switches to <a href=\"animation\/AnimationStatus-class.html\">AnimationStatus.dismissed<\/a> when <a href=\"animation\/AnimationController\/lowerBound.html\">lowerBound<\/a> is\nreached at the end of the animation.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture reverse({ double from }) {\n  assert(() {\n    if (duration == null) {\n      throw FlutterError(\n        'AnimationController.reverse() called with no default Duration.\\n'\n        'The \"duration\" property should be set, either in the constructor or later, before '\n        'calling the reverse() function.'\n      );\n    }\n    return true;\n  }());\n  assert(\n    _ticker != null,\n    'AnimationController.reverse() called after AnimationController.dispose()\\n'\n    'AnimationController methods should not be used after calling dispose.'\n  );\n  _direction = _AnimationDirection.reverse;\n  if (from != null)\n    value = from;\n  return _animateToInternal(lowerBound);\n}<\/code><\/pre>\n    ",
+            "href": "animation\/AnimationController\/reverse.html",
+            "isDeprecated": "0",
+            "type": "scheduler.TickerFuture",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "animation.AnimationController",
-            "sig": "",
             "params": [
                 {
                     "name": "from",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 }
-            ],
-            "isConstructor": false,
-            "href": "animation\/AnimationController\/reverse.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TickerFuture reverse({ double from }) {\n  assert(() {\n    if (duration == null) {\n      throw FlutterError(\n        'AnimationController.reverse() called with no default Duration.\\n'\n        'The \"duration\" property should be set, either in the constructor or later, before '\n        'calling the reverse() function.'\n      );\n    }\n    return true;\n  }());\n  assert(\n    _ticker != null,\n    'AnimationController.reverse() called after AnimationController.dispose()\\n'\n    'AnimationController methods should not be used after calling dispose.'\n  );\n  _direction = _AnimationDirection.reverse;\n  if (from != null)\n    value = from;\n  return _animateToInternal(lowerBound);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "stop",
-            "type": "",
             "desc": "<p>Stops running this animation.<\/p>\n<p>This does not trigger any notifications. The animation stops in its\ncurrent state.<\/p>\n<p>By default, the most recently returned <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> is marked as having\nbeen canceled, meaning the future never completes and its\n<a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a> derivative future completes with a <a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a>\nerror. By passing the <code>canceled<\/code> argument with the value false, this is\nreversed, and the futures complete successfully.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"animation\/AnimationController\/reset.html\">reset<\/a>, which stops the animation and resets it to the <a href=\"animation\/AnimationController\/lowerBound.html\">lowerBound<\/a>,\nand which does send notifications.<\/li>\n<li>\n<a href=\"animation\/AnimationController\/forward.html\">forward<\/a>, <a href=\"animation\/AnimationController\/reverse.html\">reverse<\/a>, <a href=\"animation\/AnimationController\/animateTo.html\">animateTo<\/a>, <a href=\"animation\/AnimationController\/animateWith.html\">animateWith<\/a>, <a href=\"animation\/AnimationController\/fling.html\">fling<\/a>, and <a href=\"animation\/AnimationController\/repeat.html\">repeat<\/a>,\nwhich restart the animation controller.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void stop({ bool canceled = true }) {\n  assert(\n    _ticker != null,\n    'AnimationController.stop() called after AnimationController.dispose()\\n'\n    'AnimationController methods should not be used after calling dispose.'\n  );\n  _simulation = null;\n  _lastElapsedDuration = null;\n  _ticker.stop(canceled: canceled);\n}<\/code><\/pre>\n    ",
+            "href": "animation\/AnimationController\/stop.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "animation.AnimationController",
-            "sig": "",
             "params": [
                 {
                     "name": "canceled",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 }
-            ],
-            "isConstructor": false,
-            "href": "animation\/AnimationController\/stop.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void stop({ bool canceled = true }) {\n  assert(\n    _ticker != null,\n    'AnimationController.stop() called after AnimationController.dispose()\\n'\n    'AnimationController methods should not be used after calling dispose.'\n  );\n  _simulation = null;\n  _lastElapsedDuration = null;\n  _ticker.stop(canceled: canceled);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "toStringDetails",
-            "type": "dart:core.String",
             "desc": "<p>Provides a string describing the status of this object, but not including\ninformation about the object itself.<\/p>\n<p>This function is used by <a href=\"animation\/Animation\/toString.html\">Animation.toString<\/a> so that <a href=\"animation\/Animation-class.html\">Animation<\/a>\nsubclasses can provide additional details while ensuring all <a href=\"animation\/Animation-class.html\">Animation<\/a>\nsubclasses have a consistent <a href=\"animation\/Animation\/toString.html\">toString<\/a> style.<\/p>\n<p>The result of this function includes an icon describing the status of this\n<a href=\"animation\/Animation-class.html\">Animation<\/a> object:<\/p>\n<ul>\n<li>\"\u25b6\": <a href=\"animation\/AnimationController\/forward.html\">AnimationStatus.forward<\/a> (<a href=\"animation\/AnimationController\/value.html\">value<\/a> increasing)<\/li>\n<li>\"\u25c0\": <a href=\"animation\/AnimationController\/reverse.html\">AnimationStatus.reverse<\/a> (<a href=\"animation\/AnimationController\/value.html\">value<\/a> decreasing)<\/li>\n<li>\"\u23ed\": <a href=\"animation\/AnimationStatus-class.html\">AnimationStatus.completed<\/a> (<a href=\"animation\/AnimationController\/value.html\">value<\/a> == 1.0)<\/li>\n<li>\"\u23ee\": <a href=\"animation\/AnimationStatus-class.html\">AnimationStatus.dismissed<\/a> (<a href=\"animation\/AnimationController\/value.html\">value<\/a> == 0.0)<\/li>\n<\/ul>",
-            "static": false,
-            "memberOf": "animation.AnimationController",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "animation\/AnimationController\/toStringDetails.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toStringDetails() {\n  final String paused = isAnimating ? '' : '; paused';\n  final String ticker = _ticker == null ? '; DISPOSED' : (_ticker.muted ? '; silenced' : '');\n  final String label = debugLabel == null ? '' : '; for $debugLabel';\n  final String more = '${super.toStringDetails()} ${value.toStringAsFixed(3)}';\n  return '$more$paused$ticker$label';\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "AnimationController.unbounded",
-            "type": "",
-            "desc": "<p>Creates an animation controller with no upper or lower bound for its value.<\/p>\n<ul>\n<li>\n<p><code>value<\/code> is the initial value of the animation.<\/p>\n<\/li>\n<li>\n<p><code>duration<\/code> is the length of time this animation should last.<\/p>\n<\/li>\n<li>\n<p><code>debugLabel<\/code> is a string to help identify this animation during\ndebugging (used by <a href=\"animation\/Animation\/toString.html\">toString<\/a>).<\/p>\n<\/li>\n<li>\n<p><code>vsync<\/code> is the <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> for the current context. It can be\nchanged by calling <a href=\"animation\/AnimationController\/resync.html\">resync<\/a>. It is required and must not be null. See\n<a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> for advice on obtaining a ticker provider.<\/p>\n<\/li>\n<\/ul>\n<p>This constructor is most useful for animations that will be driven using a\nphysics simulation, especially when the physics simulation has no\npre-determined bounds.<\/p>\n    ",
+            "href": "animation\/AnimationController\/toStringDetails.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "animation.AnimationController",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "duration",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "debugLabel",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "vsync",
-                    "type": "scheduler.TickerProvider",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "animationBehavior",
-                    "type": "animation.AnimationBehavior",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "animation\/AnimationController\/AnimationController.unbounded.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">AnimationController.unbounded({\n  double value = 0.0,\n  this.duration,\n  this.debugLabel,\n  @required TickerProvider vsync,\n  this.animationBehavior = AnimationBehavior.preserve,\n}) : assert(value != null),\n     assert(vsync != null),\n     lowerBound = double.negativeInfinity,\n     upperBound = double.infinity,\n     _direction = _AnimationDirection.forward {\n  _ticker = vsync.createTicker(_tick);\n  _internalSetValue(value);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "animationBehavior",
-            "type": "animation.AnimationBehavior",
-            "types": [],
             "desc": "<p>The behavior of the controller when <a href=\"dart-ui\/AccessibilityFeatures\/disableAnimations.html\">AccessibilityFeatures.disableAnimations<\/a>\nis true.<\/p>\n<p>Defaults to <a href=\"animation\/AnimationBehavior-class.html\">AnimationBehavior.normal<\/a> for the <a href=\"animation\/AnimationController\/AnimationController.html\">new AnimationController<\/a>\nconstructor, and <a href=\"animation\/AnimationBehavior-class.html\">AnimationBehavior.preserve<\/a> for the\n<a href=\"animation\/AnimationController\/AnimationController.unbounded.html\">new AnimationController.unbounded<\/a> constructor.<\/p>\n        ",
-            "memberOf": "animation.AnimationController",
-            "isConstant": false,
-            "href": "animation\/AnimationController\/animationBehavior.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final AnimationBehavior animationBehavior\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "animation\/AnimationController\/animationBehavior.html",
+            "isDeprecated": "0",
+            "type": "animation.AnimationBehavior",
+            "memberOf": "animation.AnimationController",
+            "params": []
         },
         {
-            "name": "debugLabel",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>A label that is used in the <a href=\"animation\/Animation\/toString.html\">toString<\/a> output. Intended to aid with\nidentifying animation controller instances in debug output.<\/p>\n        ",
-            "memberOf": "animation.AnimationController",
-            "isConstant": false,
-            "href": "animation\/AnimationController\/debugLabel.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String debugLabel\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "animation\/AnimationController\/debugLabel.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "animation.AnimationController",
+            "params": []
         },
         {
-            "name": "duration",
-            "type": "dart:core.Duration",
-            "types": [],
             "desc": "<p>The length of time this animation should last.<\/p>\n        ",
-            "memberOf": "animation.AnimationController",
-            "isConstant": false,
-            "href": "animation\/AnimationController\/duration.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Duration duration\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "isAnimating",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether this animation is currently animating in either the forward or reverse direction.<\/p>\n<p>This is separate from whether it is actively ticking. An animation\ncontroller's ticker might get muted, in which case the animation\ncontroller's callbacks will no longer fire even though time is continuing\nto pass. See <a href=\"scheduler\/Ticker\/muted.html\">Ticker.muted<\/a> and <a href=\"widgets\/TickerMode-class.html\">TickerMode<\/a>.<\/p>\n        ",
-            "memberOf": "animation.AnimationController",
-            "isConstant": false,
-            "href": "animation\/AnimationController\/isAnimating.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isAnimating =&gt; _ticker != null &amp;&amp; _ticker.isActive;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "lastElapsedDuration",
+            "href": "animation\/AnimationController\/duration.html",
+            "isDeprecated": "0",
             "type": "dart:core.Duration",
-            "types": [],
+            "memberOf": "animation.AnimationController",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether this animation is currently animating in either the forward or reverse direction.<\/p>\n<p>This is separate from whether it is actively ticking. An animation\ncontroller's ticker might get muted, in which case the animation\ncontroller's callbacks will no longer fire even though time is continuing\nto pass. See <a href=\"scheduler\/Ticker\/muted.html\">Ticker.muted<\/a> and <a href=\"widgets\/TickerMode-class.html\">TickerMode<\/a>.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isAnimating =&gt; _ticker != null &amp;&amp; _ticker.isActive;<\/code><\/pre>\n        ",
+            "href": "animation\/AnimationController\/isAnimating.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "animation.AnimationController",
+            "params": []
+        },
+        {
             "desc": "<p>The amount of time that has passed between the time the animation started\nand the most recent tick of the animation.<\/p>\n<p>If the controller is not animating, the last elapsed duration is null.<\/p>\n        ",
-            "memberOf": "animation.AnimationController",
-            "isConstant": false,
-            "href": "animation\/AnimationController\/lastElapsedDuration.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Duration get lastElapsedDuration =&gt; _lastElapsedDuration;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "animation\/AnimationController\/lastElapsedDuration.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Duration",
+            "memberOf": "animation.AnimationController",
+            "params": []
         },
         {
-            "name": "lowerBound",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The value at which this animation is deemed to be dismissed.<\/p>\n        ",
-            "memberOf": "animation.AnimationController",
-            "isConstant": false,
-            "href": "animation\/AnimationController\/lowerBound.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double lowerBound\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "animation\/AnimationController\/lowerBound.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "animation.AnimationController",
+            "params": []
         },
         {
-            "name": "status",
-            "type": "animation.AnimationStatus",
-            "types": [],
             "desc": "<p>The current status of this animation.<\/p>\n        ",
-            "memberOf": "animation.AnimationController",
-            "isConstant": false,
-            "href": "animation\/AnimationController\/status.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAnimationStatus get status =&gt; _status;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "animation\/AnimationController\/status.html",
+            "isDeprecated": "0",
+            "type": "animation.AnimationStatus",
+            "memberOf": "animation.AnimationController",
+            "params": []
         },
         {
-            "name": "upperBound",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The value at which this animation is deemed to be completed.<\/p>\n        ",
-            "memberOf": "animation.AnimationController",
-            "isConstant": false,
-            "href": "animation\/AnimationController\/upperBound.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double upperBound\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "animation\/AnimationController\/upperBound.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "animation.AnimationController",
+            "params": []
         },
         {
-            "name": "value",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The current value of the animation.<\/p>\n<p>Setting this value notifies all the listeners that the value\nchanged.<\/p>\n<p>Setting this value also stops the controller if it is currently\nrunning; if this happens, it also notifies all the status\nlisteners.<\/p>\n        ",
-            "memberOf": "animation.AnimationController",
-            "isConstant": false,
-            "href": "animation\/AnimationController\/value.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\ndouble get value =&gt; _value;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "velocity",
+            "href": "animation\/AnimationController\/value.html",
+            "isDeprecated": "0",
             "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>The rate of change of <a href=\"animation\/AnimationController\/value.html\">value<\/a> per second.<\/p>\n<p>If <a href=\"animation\/AnimationController\/isAnimating.html\">isAnimating<\/a> is false, then <a href=\"animation\/AnimationController\/value.html\">value<\/a> is not changing and the rate of\nchange is zero.<\/p>\n        ",
             "memberOf": "animation.AnimationController",
-            "isConstant": false,
-            "href": "animation\/AnimationController\/velocity.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get velocity {\n  if (!isAnimating)\n    return 0.0;\n  return _simulation.dx(lastElapsedDuration.inMicroseconds.toDouble() \/ Duration.microsecondsPerSecond);\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "view",
-            "type": "animation.Animation<dart:core.double>",
-            "types": [
-                "animation.Animation",
-                "dart:core.double"
-            ],
-            "desc": "<p>Returns an <a href=\"animation\/Animation-class.html\">Animation&lt;double&gt;<\/a> for this animation controller, so that a\npointer to this object can be passed around without allowing users of that\npointer to mutate the <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> state.<\/p>\n        ",
+            "desc": "<p>The rate of change of <a href=\"animation\/AnimationController\/value.html\">value<\/a> per second.<\/p>\n<p>If <a href=\"animation\/AnimationController\/isAnimating.html\">isAnimating<\/a> is false, then <a href=\"animation\/AnimationController\/value.html\">value<\/a> is not changing and the rate of\nchange is zero.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get velocity {\n  if (!isAnimating)\n    return 0.0;\n  return _simulation.dx(lastElapsedDuration.inMicroseconds.toDouble() \/ Duration.microsecondsPerSecond);\n}<\/code><\/pre>\n        ",
+            "href": "animation\/AnimationController\/velocity.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
             "memberOf": "animation.AnimationController",
-            "isConstant": false,
-            "href": "animation\/AnimationController\/view.html",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns an <a href=\"animation\/Animation-class.html\">Animation&lt;double&gt;<\/a> for this animation controller, so that a\npointer to this object can be passed around without allowing users of that\npointer to mutate the <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> state.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Animation&lt;double&gt; get view =&gt; this;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "animation\/AnimationController\/view.html",
+            "isDeprecated": "0",
+            "type": "animation.Animation<dart:core.double>",
+            "memberOf": "animation.AnimationController",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "animation\/AnimationController-class.html",
-    "desc": "<p>A controller for an animation.<\/p>\n<p>This class lets you perform tasks such as:<\/p>\n<ul>\n<li>Play an animation <a href=\"animation\/AnimationController\/forward.html\">forward<\/a> or in <a href=\"animation\/AnimationController\/reverse.html\">reverse<\/a>, or <a href=\"animation\/AnimationController\/stop.html\">stop<\/a> an animation.<\/li>\n<li>Set the animation to a specific <a href=\"animation\/AnimationController\/value.html\">value<\/a>.<\/li>\n<li>Define the <a href=\"animation\/AnimationController\/upperBound.html\">upperBound<\/a> and <a href=\"animation\/AnimationController\/lowerBound.html\">lowerBound<\/a> values of an animation.<\/li>\n<li>Create a <a href=\"animation\/AnimationController\/fling.html\">fling<\/a> animation effect using a physics simulation.<\/li>\n<\/ul>\n<p>By default, an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> linearly produces values that range\nfrom 0.0 to 1.0, during a given duration. The animation controller generates\na new value whenever the device running your app is ready to display a new\nframe (typically, this rate is around 60 values per second).<\/p>\n<h2 id=\"ticker-providers\">Ticker providers<\/h2>\n<p>An <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> needs a <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a>, which is configured using\nthe <code>vsync<\/code> argument on the constructor.<\/p>\n<p>The <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> interface describes a factory for <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> objects. A\n<a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> is an object that knows how to register itself with the\n<a href=\"scheduler\/SchedulerBinding-mixin.html\">SchedulerBinding<\/a> and fires a callback every frame. The\n<a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> class uses a <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> to step through the animation\nthat it controls.<\/p>\n<p>If an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> is being created from a <a href=\"widgets\/State-class.html\">State<\/a>, then the State\ncan use the <a href=\"widgets\/TickerProviderStateMixin-mixin.html\">TickerProviderStateMixin<\/a> and <a href=\"widgets\/SingleTickerProviderStateMixin-mixin.html\">SingleTickerProviderStateMixin<\/a>\nclasses to implement the <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> interface. The\n<a href=\"widgets\/TickerProviderStateMixin-mixin.html\">TickerProviderStateMixin<\/a> class always works for this purpose; the\n<a href=\"widgets\/SingleTickerProviderStateMixin-mixin.html\">SingleTickerProviderStateMixin<\/a> is slightly more efficient in the case of\nthe class only ever needing one <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> (e.g. if the class creates only a\nsingle <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> during its entire lifetime).<\/p>\n<p>The widget test framework <a href=\"flutter_test\/WidgetTester-class.html\">WidgetTester<\/a> object can be used as a ticker\nprovider in the context of tests. In other contexts, you will have to either\npass a <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> from a higher level (e.g. indirectly from a <a href=\"widgets\/State-class.html\">State<\/a>\nthat mixes in <a href=\"widgets\/TickerProviderStateMixin-mixin.html\">TickerProviderStateMixin<\/a>), or create a custom\n<a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> subclass.<\/p>\n<h2 id=\"life-cycle\">Life cycle<\/h2>\n<p>An <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> should be <a href=\"animation\/AnimationController\/dispose.html\">dispose<\/a>d when it is no longer needed.\nThis reduces the likelihood of leaks. When used with a <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>, it\nis common for an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> to be created in the\n<a href=\"widgets\/State\/initState.html\">State.initState<\/a> method and then disposed in the <a href=\"animation\/AnimationController\/dispose.html\">State.dispose<\/a> method.<\/p>\n<h2 id=\"using-futures-with-animationcontroller\">Using <a href=\"dart-async\/Future-class.html\">Future<\/a>s with <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>\n<\/h2>\n<p>The methods that start animations return a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> object which\ncompletes when the animation completes successfully, and never throws an\nerror; if the animation is canceled, the future never completes. This object\nalso has a <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a> property which returns a future that\ncompletes when the animation completes successfully, and completes with an\nerror when the animation is aborted.<\/p>\n<p>This can be used to write code such as the <code>fadeOutAndUpdateState<\/code> method\nbelow.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nHere is a stateful <code>Foo<\/code> widget. Its <a href=\"widgets\/State-class.html\">State<\/a> uses the\n<a href=\"widgets\/SingleTickerProviderStateMixin-mixin.html\">SingleTickerProviderStateMixin<\/a> to implement the necessary\n<a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a>, creating its controller in the <code>initState<\/code> method and\ndisposing of it in the <a href=\"animation\/AnimationController\/dispose.html\">dispose<\/a> method. The duration of the controller is\nconfigured from a property in the <code>Foo<\/code> widget; as that changes, the\n<code>didUpdateWidget<\/code> method is used to update the controller.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class Foo extends StatefulWidget {\n  Foo({ Key key, this.duration }) : super(key: key);\n\n  final Duration duration;\n\n  @override\n  _FooState createState() =&gt; _FooState();\n}\n\nclass _FooState extends State&lt;Foo&gt; with SingleTickerProviderStateMixin {\n  AnimationController _controller;\n\n  @override\n  void initState() {\n    super.initState();\n    _controller = AnimationController(\n      vsync: this, \/\/ the SingleTickerProviderStateMixin\n      duration: widget.duration,\n    );\n  }\n\n  @override\n  void didUpdateWidget(Foo oldWidget) {\n    super.didUpdateWidget(oldWidget);\n    _controller.duration = widget.duration;\n  }\n\n  @override\n  void dispose() {\n    _controller.dispose();\n    super.dispose();\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return Container(); \/\/ ...\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following method (for a <a href=\"widgets\/State-class.html\">State<\/a> subclass) drives two animation\ncontrollers using Dart's asynchronous syntax for awaiting <a href=\"dart-async\/Future-class.html\">Future<\/a> objects:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">Future&lt;void&gt; fadeOutAndUpdateState() async {\n  try {\n    await fadeAnimationController.forward().orCancel;\n    await sizeAnimationController.forward().orCancel;\n    setState(() {\n      dismissed = true;\n    });\n  } on TickerCanceled {\n    \/\/ the animation got canceled, probably because we were disposed\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>The assumption in the code above is that the animation controllers are being\ndisposed in the <a href=\"widgets\/State-class.html\">State<\/a> subclass' override of the <a href=\"animation\/AnimationController\/dispose.html\">State.dispose<\/a> method.\nSince disposing the controller cancels the animation (raising a\n<a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> exception), the code here can skip verifying whether\n<a href=\"widgets\/State\/mounted.html\">State.mounted<\/a> is still true at each step. (Again, this assumes that the\ncontrollers are created in <a href=\"widgets\/State\/initState.html\">State.initState<\/a> and disposed in\n<a href=\"animation\/AnimationController\/dispose.html\">State.dispose<\/a>, as described in the previous section.)<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"animation\/Tween-class.html\">Tween<\/a>, the base class for converting an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> to a\nrange of values of other types.<\/li><\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "AnimationController"
+    ]
 }

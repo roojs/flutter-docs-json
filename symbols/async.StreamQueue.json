@@ -1,294 +1,232 @@
 {
-    "name": "async.StreamQueue",
-    "extends": [],
+    "desc": "<p>An asynchronous pull-based interface for accessing stream events.<\/p>\n<p>Wraps a stream and makes individual events available on request.<\/p>\n<p>You can request (and reserve) one or more events from the stream,\nand after all previous requests have been fulfilled, stream events\ngo towards fulfilling your request.<\/p>\n<p>For example, if you ask for <a href=\"package-async_async\/StreamQueue\/next.html\">next<\/a> two times, the returned futures\nwill be completed by the next two unrequested events from the stream.<\/p>\n<p>The stream subscription is paused when there are no active\nrequests.<\/p>\n<p>Some streams, including broadcast streams, will buffer\nevents while paused, so waiting too long between requests may\ncause memory bloat somewhere else.<\/p>\n<p>This is similar to, but more convenient than, a <a href=\"dart-async\/StreamIterator-class.html\">StreamIterator<\/a>.\nA <code>StreamIterator<\/code> requires you to manually check when a new event is\navailable and you can only access the value of that event until you\ncheck for the next one. A <code>StreamQueue<\/code> allows you to request, for example,\nthree events at a time, either individually, as a group using <a href=\"package-async_async\/StreamQueue\/take.html\">take<\/a>\nor <a href=\"package-async_async\/StreamQueue\/skip.html\">skip<\/a>, or in any combination.<\/p>\n<p>You can also ask to have the <a href=\"package-async_async\/StreamQueue\/rest.html\">rest<\/a> of the stream provided as\na new stream. This allows, for example, taking the first event\nout of a stream and continuing to use the rest of the stream as a stream.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>var events = new StreamQueue&lt;String&gt;(someStreamOfLines);\nvar first = await events.next;\nwhile (first.startsWith('#')) {\n  \/\/ Skip comments.\n  first = await events.next;\n}\n\nif (first.startsWith(MAGIC_MARKER)) {\n  var headerCount =\n      first.parseInt(first.substring(MAGIC_MARKER.length + 1));\n  handleMessage(headers: await events.take(headerCount),\n                body: events.rest);\n  return;\n}\n\/\/ Error handling.\n<\/code><\/pre>\n<p>When you need no further events the <code>StreamQueue<\/code> should be closed\nusing <a href=\"package-async_async\/StreamQueue\/cancel.html\">cancel<\/a>. This releases the underlying stream subscription.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-async_async\/StreamQueue-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "async",
+    "name": "async.StreamQueue",
+    "shortname": "StreamQueue",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "StreamQueue",
-            "type": "",
             "desc": "<p>Create a <code>StreamQueue<\/code> of the events of <code>source<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory StreamQueue(Stream&lt;T&gt; source) = _StreamQueue&lt;T&gt;;<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamQueue\/StreamQueue.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "async.StreamQueue",
-            "sig": "",
             "params": [
                 {
                     "name": "source",
-                    "type": "dart:async.Stream",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:async.Stream"
                 }
-            ],
-            "isConstructor": true,
-            "href": "package-async_async\/StreamQueue\/StreamQueue.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory StreamQueue(Stream&lt;T&gt; source) = _StreamQueue&lt;T&gt;;<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "cancel",
-            "type": "dart:async.Future",
             "desc": "<p>Cancels the underlying event source.<\/p>\n<p>If <code>immediate<\/code> is <code>false<\/code> (the default), the cancel operation waits until\nall previously requested events have been processed, then it cancels the\nsubscription providing the events.<\/p>\n<p>If <code>immediate<\/code> is <code>true<\/code>, the source is instead canceled\nimmediately. Any pending events are completed as though the underlying\nstream had closed.<\/p>\n<p>The returned future completes with the result of calling\n<code>cancel<\/code>.<\/p>\n<p>After calling <code>cancel<\/code>, no further events can be requested.\nNone of <a href=\"package-async_async\/StreamQueue\/lookAhead.html\">lookAhead<\/a>, <a href=\"package-async_async\/StreamQueue\/next.html\">next<\/a>, <a href=\"package-async_async\/StreamQueue\/peek.html\">peek<\/a>, <a href=\"package-async_async\/StreamQueue\/rest.html\">rest<\/a>, <a href=\"package-async_async\/StreamQueue\/skip.html\">skip<\/a>, <a href=\"package-async_async\/StreamQueue\/take.html\">take<\/a> or <a href=\"package-async_async\/StreamQueue\/cancel.html\">cancel<\/a>\nmay be called again.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future cancel({bool immediate: false}) {\n  if (_isClosed) throw _failClosed();\n  _isClosed = true;\n\n  if (!immediate) {\n    var request = new _CancelRequest&lt;T&gt;(this);\n    _addRequest(request);\n    return request.future;\n  }\n\n  if (_isDone &amp;&amp; _eventQueue.isEmpty) return new Future.value();\n  return _cancel();\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamQueue\/cancel.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.StreamQueue",
-            "sig": "",
             "params": [
                 {
                     "name": "immediate",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamQueue\/cancel.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future cancel({bool immediate: false}) {\n  if (_isClosed) throw _failClosed();\n  _isClosed = true;\n\n  if (!immediate) {\n    var request = new _CancelRequest&lt;T&gt;(this);\n    _addRequest(request);\n    return request.future;\n  }\n\n  if (_isDone &amp;&amp; _eventQueue.isEmpty) return new Future.value();\n  return _cancel();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "cancelable",
-            "type": "async.CancelableOperation",
             "desc": "<p>Passes a copy of this queue to <code>callback<\/code>, and updates this queue to match\nthe copy's position once <code>callback<\/code> completes.<\/p>\n<p>If the returned <a href=\"package-async_async\/CancelableOperation-class.html\">CancelableOperation<\/a> is canceled, this queue instead\ncontinues as though <a href=\"package-async_async\/StreamQueue\/cancelable.html\">cancelable<\/a> hadn't been called. Otherwise, it emits\nthe same value or error as <code>callback<\/code>.<\/p>\n<p>See also <a href=\"package-async_async\/StreamQueue\/startTransaction.html\">startTransaction<\/a> and <a href=\"package-async_async\/StreamQueue\/withTransaction.html\">withTransaction<\/a>.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">final _stdinQueue = new StreamQueue(stdin);\n\n\/\/\/ Returns an operation that completes when the user sends a line to\n\/\/\/ standard input.\n\/\/\/\n\/\/\/ If the operation is canceled, stops waiting for user input.\nCancelableOperation&lt;String&gt; nextStdinLine() =&gt;\n    _stdinQueue.cancelable((queue) =&gt; queue.next);\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "async.StreamQueue",
-            "sig": "",
-            "params": [
-                {
-                    "name": "queue",
-                    "type": "async.StreamQueue",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "queue",
-                    "type": "async.StreamQueue",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamQueue\/cancelable.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">CancelableOperation&lt;S&gt; cancelable&lt;S&gt;(\n    Future&lt;S&gt; callback(StreamQueue&lt;T&gt; queue)) {\n  var transaction = startTransaction();\n  var completer = new CancelableCompleter&lt;S&gt;(onCancel: () {\n    transaction.reject();\n  });\n\n  var queue = transaction.newQueue();\n  completer.complete(callback(queue).whenComplete(() {\n    if (!completer.isCanceled) transaction.commit(queue);\n  }));\n\n  return completer.operation;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "package-async_async\/StreamQueue\/cancelable.html",
+            "isDeprecated": "0",
+            "type": "async.CancelableOperation",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "async.StreamQueue",
+            "params": [
+                {
+                    "name": "queue",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "async.StreamQueue"
+                }
+            ]
         },
         {
-            "name": "lookAhead",
-            "type": "dart:async.Future<dart:core.List>",
             "desc": "<p>Look at the next <code>count<\/code> data events without consuming them.<\/p>\n<p>Works like <a href=\"package-async_async\/StreamQueue\/take.html\">take<\/a> except that the events are left in the queue.\nIf one of the next <code>count<\/code> events is an error, the returned future\ncompletes with this error, and the error is still left in the queue.<\/p>\n    ",
-            "static": false,
-            "memberOf": "async.StreamQueue",
-            "sig": "",
-            "params": [
-                {
-                    "name": "count",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamQueue\/lookAhead.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;List&lt;T&gt;&gt; lookAhead(int count) {\n  if (count &lt; 0) throw new RangeError.range(count, 0, null, \"count\");\n  if (!_isClosed) {\n    var request = new _LookAheadRequest&lt;T&gt;(count);\n    _addRequest(request);\n    return request.future;\n  }\n  throw _failClosed();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:core.List"
-            ]
-        },
-        {
-            "name": "skip",
-            "type": "dart:async.Future<dart:core.int>",
-            "desc": "<p>Skips the next <code>count<\/code> <em>data<\/em> events.<\/p>\n<p>The <code>count<\/code> must be non-negative.<\/p>\n<p>When successful, this is equivalent to using <a href=\"package-async_async\/StreamQueue\/take.html\">take<\/a>\nand ignoring the result.<\/p>\n<p>If an error occurs before <code>count<\/code> data events have been skipped,\nthe returned future completes with that error instead.<\/p>\n<p>If the stream closes before <code>count<\/code> data events,\nthe remaining unskipped event count is returned.\nIf the returned future completes with the integer <code>0<\/code>,\nthen all events were succssfully skipped. If the value\nis greater than zero then the stream ended early.<\/p>\n    ",
-            "static": false,
-            "memberOf": "async.StreamQueue",
-            "sig": "",
-            "params": [
-                {
-                    "name": "count",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamQueue\/skip.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;int&gt; skip(int count) {\n  if (count &lt; 0) throw new RangeError.range(count, 0, null, \"count\");\n  if (!_isClosed) {\n    var request = new _SkipRequest&lt;T&gt;(count);\n    _addRequest(request);\n    return request.future;\n  }\n  throw _failClosed();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:core.int"
-            ]
-        },
-        {
-            "name": "startTransaction",
-            "type": "async.StreamQueueTransaction",
-            "desc": "<p>Requests a transaction that can conditionally consume events.<\/p>\n<p>The transaction can create copies of this queue at the current position\nusing <a href=\"package-async_async\/StreamQueueTransaction\/newQueue.html\">StreamQueueTransaction.newQueue<\/a>. Each of these queues is\nindependent of one another and of the parent queue. The transaction\nfinishes when one of two methods is called:<\/p>\n<ul>\n<li>\n<p><a href=\"package-async_async\/StreamQueueTransaction\/commit.html\">StreamQueueTransaction.commit<\/a> updates the parent queue's position to\nmatch that of one of the copies.<\/p>\n<\/li>\n<li>\n<p><a href=\"package-async_async\/StreamQueueTransaction\/reject.html\">StreamQueueTransaction.reject<\/a> causes the parent queue to continue as\nthough <a href=\"package-async_async\/StreamQueue\/startTransaction.html\">startTransaction<\/a> hadn't been called.<\/p>\n<\/li>\n<\/ul>\n<p>Until the transaction finishes, this queue won't emit any events.<\/p>\n<p>See also <a href=\"package-async_async\/StreamQueue\/withTransaction.html\">withTransaction<\/a> and <a href=\"package-async_async\/StreamQueue\/cancelable.html\">cancelable<\/a>.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">\/\/\/ Consumes all empty lines from the beginning of [lines].\nFuture consumeEmptyLines(StreamQueue&lt;String&gt; lines) async {\n  while (await lines.hasNext) {\n    var transaction = lines.startTransaction();\n    var queue = transaction.newQueue();\n    if ((await queue.next).isNotEmpty) {\n      transaction.reject();\n      return;\n    } else {\n      transaction.commit(queue);\n    }\n  }\n}\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "async.StreamQueue",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamQueue\/startTransaction.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamQueueTransaction&lt;T&gt; startTransaction() {\n  if (_isClosed) throw _failClosed();\n\n  var request = new _TransactionRequest(this);\n  _addRequest(request);\n  return request.transaction;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "take",
+            "href": "package-async_async\/StreamQueue\/lookAhead.html",
+            "isDeprecated": "0",
             "type": "dart:async.Future<dart:core.List>",
-            "desc": "<p>Requests the next <code>count<\/code> data events as a list.<\/p>\n<p>The <code>count<\/code> must be non-negative.<\/p>\n<p>Equivalent to calling <a href=\"package-async_async\/StreamQueue\/next.html\">next<\/a> <code>count<\/code> times and\nstoring the data values in a list.<\/p>\n<p>If an error occurs before <code>count<\/code> data events has\nbeen collected, the returned future completes with\nthat error instead.<\/p>\n<p>If the stream closes before <code>count<\/code> data events,\nthe returned future completes with the list\nof data collected so far. That is, the returned\nlist may have fewer than <code>count<\/code> elements.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.StreamQueue",
-            "sig": "",
             "params": [
                 {
                     "name": "count",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamQueue\/take.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;List&lt;T&gt;&gt; take(int count) {\n  if (count &lt; 0) throw new RangeError.range(count, 0, null, \"count\");\n  if (!_isClosed) {\n    var request = new _TakeRequest&lt;T&gt;(count);\n    _addRequest(request);\n    return request.future;\n  }\n  throw _failClosed();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:core.List"
             ]
         },
         {
-            "name": "withTransaction",
-            "type": "dart:async.Future<dart:core.bool>",
-            "desc": "<p>Passes a copy of this queue to <code>callback<\/code>, and updates this queue to match\nthe copy's position if <code>callback<\/code> returns <code>true<\/code>.<\/p>\n<p>This queue won't emit any events until <code>callback<\/code> returns. If it returns\n<code>false<\/code>, this queue continues as though <a href=\"package-async_async\/StreamQueue\/withTransaction.html\">withTransaction<\/a> hadn't been\ncalled. If it throws an error, this updates this queue to match the copy's\nposition and throws the error from the returned <code>Future<\/code>.<\/p>\n<p>Returns the same value as <code>callback<\/code>.<\/p>\n<p>See also <a href=\"package-async_async\/StreamQueue\/startTransaction.html\">startTransaction<\/a> and <a href=\"package-async_async\/StreamQueue\/cancelable.html\">cancelable<\/a>.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">\/\/\/ Consumes all empty lines from the beginning of [lines].\nFuture consumeEmptyLines(StreamQueue&lt;String&gt; lines) async {\n  while (await lines.hasNext) {\n    \/\/ Consume a line if it's empty, otherwise return.\n    if (!await lines.withTransaction(\n        (queue) async =&gt; (await queue.next).isEmpty)) {\n      return;\n    }\n  }\n}\n<\/code><\/pre>\n    ",
+            "desc": "<p>Skips the next <code>count<\/code> <em>data<\/em> events.<\/p>\n<p>The <code>count<\/code> must be non-negative.<\/p>\n<p>When successful, this is equivalent to using <a href=\"package-async_async\/StreamQueue\/take.html\">take<\/a>\nand ignoring the result.<\/p>\n<p>If an error occurs before <code>count<\/code> data events have been skipped,\nthe returned future completes with that error instead.<\/p>\n<p>If the stream closes before <code>count<\/code> data events,\nthe remaining unskipped event count is returned.\nIf the returned future completes with the integer <code>0<\/code>,\nthen all events were succssfully skipped. If the value\nis greater than zero then the stream ended early.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;int&gt; skip(int count) {\n  if (count &lt; 0) throw new RangeError.range(count, 0, null, \"count\");\n  if (!_isClosed) {\n    var request = new _SkipRequest&lt;T&gt;(count);\n    _addRequest(request);\n    return request.future;\n  }\n  throw _failClosed();\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamQueue\/skip.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:core.int>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "async.StreamQueue",
-            "sig": "",
+            "params": [
+                {
+                    "name": "count",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Requests a transaction that can conditionally consume events.<\/p>\n<p>The transaction can create copies of this queue at the current position\nusing <a href=\"package-async_async\/StreamQueueTransaction\/newQueue.html\">StreamQueueTransaction.newQueue<\/a>. Each of these queues is\nindependent of one another and of the parent queue. The transaction\nfinishes when one of two methods is called:<\/p>\n<ul>\n<li>\n<p><a href=\"package-async_async\/StreamQueueTransaction\/commit.html\">StreamQueueTransaction.commit<\/a> updates the parent queue's position to\nmatch that of one of the copies.<\/p>\n<\/li>\n<li>\n<p><a href=\"package-async_async\/StreamQueueTransaction\/reject.html\">StreamQueueTransaction.reject<\/a> causes the parent queue to continue as\nthough <a href=\"package-async_async\/StreamQueue\/startTransaction.html\">startTransaction<\/a> hadn't been called.<\/p>\n<\/li>\n<\/ul>\n<p>Until the transaction finishes, this queue won't emit any events.<\/p>\n<p>See also <a href=\"package-async_async\/StreamQueue\/withTransaction.html\">withTransaction<\/a> and <a href=\"package-async_async\/StreamQueue\/cancelable.html\">cancelable<\/a>.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">\/\/\/ Consumes all empty lines from the beginning of [lines].\nFuture consumeEmptyLines(StreamQueue&lt;String&gt; lines) async {\n  while (await lines.hasNext) {\n    var transaction = lines.startTransaction();\n    var queue = transaction.newQueue();\n    if ((await queue.next).isNotEmpty) {\n      transaction.reject();\n      return;\n    } else {\n      transaction.commit(queue);\n    }\n  }\n}\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamQueueTransaction&lt;T&gt; startTransaction() {\n  if (_isClosed) throw _failClosed();\n\n  var request = new _TransactionRequest(this);\n  _addRequest(request);\n  return request.transaction;\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamQueue\/startTransaction.html",
+            "isDeprecated": "0",
+            "type": "async.StreamQueueTransaction",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "async.StreamQueue",
+            "params": []
+        },
+        {
+            "desc": "<p>Requests the next <code>count<\/code> data events as a list.<\/p>\n<p>The <code>count<\/code> must be non-negative.<\/p>\n<p>Equivalent to calling <a href=\"package-async_async\/StreamQueue\/next.html\">next<\/a> <code>count<\/code> times and\nstoring the data values in a list.<\/p>\n<p>If an error occurs before <code>count<\/code> data events has\nbeen collected, the returned future completes with\nthat error instead.<\/p>\n<p>If the stream closes before <code>count<\/code> data events,\nthe returned future completes with the list\nof data collected so far. That is, the returned\nlist may have fewer than <code>count<\/code> elements.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;List&lt;T&gt;&gt; take(int count) {\n  if (count &lt; 0) throw new RangeError.range(count, 0, null, \"count\");\n  if (!_isClosed) {\n    var request = new _TakeRequest&lt;T&gt;(count);\n    _addRequest(request);\n    return request.future;\n  }\n  throw _failClosed();\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamQueue\/take.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:core.List>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "async.StreamQueue",
+            "params": [
+                {
+                    "name": "count",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Passes a copy of this queue to <code>callback<\/code>, and updates this queue to match\nthe copy's position if <code>callback<\/code> returns <code>true<\/code>.<\/p>\n<p>This queue won't emit any events until <code>callback<\/code> returns. If it returns\n<code>false<\/code>, this queue continues as though <a href=\"package-async_async\/StreamQueue\/withTransaction.html\">withTransaction<\/a> hadn't been\ncalled. If it throws an error, this updates this queue to match the copy's\nposition and throws the error from the returned <code>Future<\/code>.<\/p>\n<p>Returns the same value as <code>callback<\/code>.<\/p>\n<p>See also <a href=\"package-async_async\/StreamQueue\/startTransaction.html\">startTransaction<\/a> and <a href=\"package-async_async\/StreamQueue\/cancelable.html\">cancelable<\/a>.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">\/\/\/ Consumes all empty lines from the beginning of [lines].\nFuture consumeEmptyLines(StreamQueue&lt;String&gt; lines) async {\n  while (await lines.hasNext) {\n    \/\/ Consume a line if it's empty, otherwise return.\n    if (!await lines.withTransaction(\n        (queue) async =&gt; (await queue.next).isEmpty)) {\n      return;\n    }\n  }\n}\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;bool&gt; withTransaction(Future&lt;bool&gt; callback(StreamQueue&lt;T&gt; queue)) {\n  var transaction = startTransaction();\n\n  \/\/\/ Avoid async\/await to ensure that [startTransaction] is called\n  \/\/\/ synchronously and so ends up in the right place in the request queue.\n  var queue = transaction.newQueue();\n  return callback(queue).then((result) {\n    if (result) {\n      transaction.commit(queue);\n    } else {\n      transaction.reject();\n    }\n    return result;\n  }, onError: (error) {\n    transaction.commit(queue);\n    throw error;\n  });\n}<\/code><\/pre>\n    ",
+            "href": "package-async_async\/StreamQueue\/withTransaction.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:core.bool>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "async.StreamQueue",
             "params": [
                 {
                     "name": "queue",
-                    "type": "async.StreamQueue",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:async.Future",
-                        "dart:core.bool"
-                    ]
-                },
-                {
-                    "name": "queue",
-                    "type": "async.StreamQueue",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "async.StreamQueue"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-async_async\/StreamQueue\/withTransaction.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;bool&gt; withTransaction(Future&lt;bool&gt; callback(StreamQueue&lt;T&gt; queue)) {\n  var transaction = startTransaction();\n\n  \/\/\/ Avoid async\/await to ensure that [startTransaction] is called\n  \/\/\/ synchronously and so ends up in the right place in the request queue.\n  var queue = transaction.newQueue();\n  return callback(queue).then((result) {\n    if (result) {\n      transaction.commit(queue);\n    } else {\n      transaction.reject();\n    }\n    return result;\n  }, onError: (error) {\n    transaction.commit(queue);\n    throw error;\n  });\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:core.bool"
             ]
         }
     ],
     "props": [
         {
-            "name": "eventsDispatched",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The number of events dispatched by this queue.<\/p>\n<p>This counts error events. It doesn't count done events, or events\ndispatched to a stream returned by <a href=\"package-async_async\/StreamQueue\/rest.html\">rest<\/a>.<\/p>\n        ",
-            "memberOf": "async.StreamQueue",
-            "isConstant": false,
-            "href": "package-async_async\/StreamQueue\/eventsDispatched.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get eventsDispatched =&gt; _eventsReceived - _eventQueue.length;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-async_async\/StreamQueue\/eventsDispatched.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "async.StreamQueue",
+            "params": []
         },
         {
-            "name": "hasNext",
-            "type": "dart:async.Future<dart:core.bool>",
-            "types": [
-                "dart:async.Future",
-                "dart:core.bool"
-            ],
             "desc": "<p>Asks if the stream has any more events.<\/p>\n<p>Returns a future that completes with <code>true<\/code> if the stream has any\nmore events, whether data or error.\nIf the stream closes without producing any more events, the returned\nfuture completes with <code>false<\/code>.<\/p>\n<p>Can be used before using <a href=\"package-async_async\/StreamQueue\/next.html\">next<\/a> to avoid getting an error in the\nfuture returned by <code>next<\/code> in the case where there are no more events.\nAnother alternative is to use <code>take(1)<\/code> which returns either zero or\none events.<\/p>\n        ",
-            "memberOf": "async.StreamQueue",
-            "isConstant": false,
-            "href": "package-async_async\/StreamQueue\/hasNext.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;bool&gt; get hasNext {\n  if (!_isClosed) {\n    var hasNextRequest = new _HasNextRequest&lt;T&gt;();\n    _addRequest(hasNextRequest);\n    return hasNextRequest.future;\n  }\n  throw _failClosed();\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-async_async\/StreamQueue\/hasNext.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:core.bool>",
+            "memberOf": "async.StreamQueue",
+            "params": []
         },
         {
-            "name": "next",
-            "type": "dart:async.Future",
-            "types": [],
             "desc": "<p>Requests the next (yet unrequested) event from the stream.<\/p>\n<p>When the requested event arrives, the returned future is completed with\nthe event.\nIf the event is a data event, the returned future completes\nwith its value.\nIf the event is an error event, the returned future completes with\nits error and stack trace.\nIf the stream closes before an event arrives, the returned future\ncompletes with a <a href=\"dart-core\/StateError-class.html\">StateError<\/a>.<\/p>\n<p>It's possible to have several pending <a href=\"package-async_async\/StreamQueue\/next.html\">next<\/a> calls (or other requests),\nand they will be completed in the order they were requested, by the\nfirst events that were not consumed by previous requeusts.<\/p>\n        ",
-            "memberOf": "async.StreamQueue",
-            "isConstant": false,
-            "href": "package-async_async\/StreamQueue\/next.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; get next {\n  if (!_isClosed) {\n    var nextRequest = new _NextRequest&lt;T&gt;();\n    _addRequest(nextRequest);\n    return nextRequest.future;\n  }\n  throw _failClosed();\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "peek",
+            "href": "package-async_async\/StreamQueue\/next.html",
+            "isDeprecated": "0",
             "type": "dart:async.Future",
-            "types": [],
-            "desc": "<p>Looks at the next (yet unrequested) event from the stream.<\/p>\n<p>Like <a href=\"package-async_async\/StreamQueue\/next.html\">next<\/a> except that the event is not consumed.\nIf the next event is an error event, it stays in the queue.<\/p>\n        ",
             "memberOf": "async.StreamQueue",
-            "isConstant": false,
-            "href": "package-async_async\/StreamQueue\/peek.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; get peek {\n  if (!_isClosed) {\n    var nextRequest = new _PeekRequest&lt;T&gt;();\n    _addRequest(nextRequest);\n    return nextRequest.future;\n  }\n  throw _failClosed();\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "rest",
-            "type": "dart:async.Stream",
-            "types": [],
-            "desc": "<p>Returns a stream of all the remaning events of the source stream.<\/p>\n<p>All requested <a href=\"package-async_async\/StreamQueue\/next.html\">next<\/a>, <a href=\"package-async_async\/StreamQueue\/skip.html\">skip<\/a> or <a href=\"package-async_async\/StreamQueue\/take.html\">take<\/a> operations are completed\nfirst, and then any remaining events are provided as events of\nthe returned stream.<\/p>\n<p>Using <code>rest<\/code> closes this stream queue. After getting the\n<code>rest<\/code> the caller may no longer request other events, like\nafter calling <a href=\"package-async_async\/StreamQueue\/cancel.html\">cancel<\/a>.<\/p>\n        ",
+            "desc": "<p>Looks at the next (yet unrequested) event from the stream.<\/p>\n<p>Like <a href=\"package-async_async\/StreamQueue\/next.html\">next<\/a> except that the event is not consumed.\nIf the next event is an error event, it stays in the queue.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;T&gt; get peek {\n  if (!_isClosed) {\n    var nextRequest = new _PeekRequest&lt;T&gt;();\n    _addRequest(nextRequest);\n    return nextRequest.future;\n  }\n  throw _failClosed();\n}<\/code><\/pre>\n        ",
+            "href": "package-async_async\/StreamQueue\/peek.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
             "memberOf": "async.StreamQueue",
-            "isConstant": false,
-            "href": "package-async_async\/StreamQueue\/rest.html",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns a stream of all the remaning events of the source stream.<\/p>\n<p>All requested <a href=\"package-async_async\/StreamQueue\/next.html\">next<\/a>, <a href=\"package-async_async\/StreamQueue\/skip.html\">skip<\/a> or <a href=\"package-async_async\/StreamQueue\/take.html\">take<\/a> operations are completed\nfirst, and then any remaining events are provided as events of\nthe returned stream.<\/p>\n<p>Using <code>rest<\/code> closes this stream queue. After getting the\n<code>rest<\/code> the caller may no longer request other events, like\nafter calling <a href=\"package-async_async\/StreamQueue\/cancel.html\">cancel<\/a>.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; get rest {\n  if (_isClosed) {\n    throw _failClosed();\n  }\n  var request = new _RestRequest&lt;T&gt;(this);\n  _isClosed = true;\n  _addRequest(request);\n  return request.stream;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-async_async\/StreamQueue\/rest.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Stream",
+            "memberOf": "async.StreamQueue",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-async_async\/StreamQueue-class.html",
-    "desc": "<p>An asynchronous pull-based interface for accessing stream events.<\/p>\n<p>Wraps a stream and makes individual events available on request.<\/p>\n<p>You can request (and reserve) one or more events from the stream,\nand after all previous requests have been fulfilled, stream events\ngo towards fulfilling your request.<\/p>\n<p>For example, if you ask for <a href=\"package-async_async\/StreamQueue\/next.html\">next<\/a> two times, the returned futures\nwill be completed by the next two unrequested events from the stream.<\/p>\n<p>The stream subscription is paused when there are no active\nrequests.<\/p>\n<p>Some streams, including broadcast streams, will buffer\nevents while paused, so waiting too long between requests may\ncause memory bloat somewhere else.<\/p>\n<p>This is similar to, but more convenient than, a <a href=\"dart-async\/StreamIterator-class.html\">StreamIterator<\/a>.\nA <code>StreamIterator<\/code> requires you to manually check when a new event is\navailable and you can only access the value of that event until you\ncheck for the next one. A <code>StreamQueue<\/code> allows you to request, for example,\nthree events at a time, either individually, as a group using <a href=\"package-async_async\/StreamQueue\/take.html\">take<\/a>\nor <a href=\"package-async_async\/StreamQueue\/skip.html\">skip<\/a>, or in any combination.<\/p>\n<p>You can also ask to have the <a href=\"package-async_async\/StreamQueue\/rest.html\">rest<\/a> of the stream provided as\na new stream. This allows, for example, taking the first event\nout of a stream and continuing to use the rest of the stream as a stream.<\/p>\n<p>Example:<\/p>\n<pre class=\"language-dart\"><code>var events = new StreamQueue&lt;String&gt;(someStreamOfLines);\nvar first = await events.next;\nwhile (first.startsWith('#')) {\n  \/\/ Skip comments.\n  first = await events.next;\n}\n\nif (first.startsWith(MAGIC_MARKER)) {\n  var headerCount =\n      first.parseInt(first.substring(MAGIC_MARKER.length + 1));\n  handleMessage(headers: await events.take(headerCount),\n                body: events.rest);\n  return;\n}\n\/\/ Error handling.\n<\/code><\/pre>\n<p>When you need no further events the <code>StreamQueue<\/code> should be closed\nusing <a href=\"package-async_async\/StreamQueue\/cancel.html\">cancel<\/a>. This releases the underlying stream subscription.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "StreamQueue"
+    ]
 }

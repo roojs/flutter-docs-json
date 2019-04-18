@@ -1,158 +1,145 @@
 {
+    "desc": "<p>A composited layer that maps a backend texture to a rectangle.<\/p>\n<p>Backend textures are images that can be applied (mapped) to an area of the\nFlutter view. They are created, managed, and updated using a\nplatform-specific texture registry. This is typically done by a plugin\nthat integrates with host platform video player, camera, or OpenGL APIs,\nor similar image sources.<\/p>\n<p>A texture layer refers to its backend texture using an integer ID. Texture\nIDs are obtained from the texture registry and are scoped to the Flutter\nview. Texture IDs may be reused after deregistration, at the discretion\nof the registry. The use of texture IDs currently unknown to the registry\nwill silently result in a blank rectangle.<\/p>\n<p>Once inserted into the layer tree, texture layers are repainted autonomously\nas dictated by the backend (e.g. on arrival of a video frame). Such\nrepainting generally does not involve executing Dart code.<\/p>\n<p>Texture layers are always leaves in the layer tree.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"https:\/\/docs.flutter.io\/javadoc\/io\/flutter\/view\/TextureRegistry.html\">docs.flutter.io\/javadoc\/io\/flutter\/view\/TextureRegistry.html<\/a>\nfor how to create and manage backend textures on Android.<\/li>\n<li>\n<a href=\"https:\/\/docs.flutter.io\/objcdoc\/Protocols\/FlutterTextureRegistry.html\">docs.flutter.io\/objcdoc\/Protocols\/FlutterTextureRegistry.html<\/a>\nfor how to create and manage backend textures on iOS.<\/li>\n<\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "rendering\/TextureLayer-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "rendering",
     "name": "rendering.TextureLayer",
+    "shortname": "TextureLayer",
     "extends": [
         "rendering.Layer",
         "foundation.AbstractNode",
         "dart:core.Object"
     ],
-    "memberOf": "rendering",
     "events": [],
     "methods": [
         {
-            "name": "TextureLayer",
-            "type": "",
             "desc": "<p>Creates a texture layer bounded by <code>rect<\/code> and with backend texture\nidentified by <code>textureId<\/code>, if <code>freeze<\/code> is true new texture frames will not be\npopulated to the texture.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TextureLayer({\n  @required this.rect,\n  @required this.textureId,\n  this.freeze = false,\n}) : assert(rect != null),\n     assert(textureId != null);<\/code><\/pre>\n    ",
+            "href": "rendering\/TextureLayer\/TextureLayer.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "rendering.TextureLayer",
-            "sig": "",
             "params": [
                 {
-                    "name": "rect",
-                    "type": "dart:ui.Rect",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "freeze",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "rect",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.Rect"
                 },
                 {
                     "name": "textureId",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "freeze",
-                    "type": "dart:core.bool",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "dart:core.int"
                 }
-            ],
-            "isConstructor": true,
-            "href": "rendering\/TextureLayer\/TextureLayer.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TextureLayer({\n  @required this.rect,\n  @required this.textureId,\n  this.freeze = false,\n}) : assert(rect != null),\n     assert(textureId != null);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "addToScene",
-            "type": "dart:ui.EngineLayer",
             "desc": "<p>Override this method to upload this layer to the engine.<\/p>\n<p>Return the engine layer for retained rendering. When there's no\ncorresponding engine layer, null is returned.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nui.EngineLayer addToScene(ui.SceneBuilder builder, [ Offset layerOffset = Offset.zero ]) {\n  final Rect shiftedRect = rect.shift(layerOffset);\n  builder.addTexture(\n    textureId,\n    offset: shiftedRect.topLeft,\n    width: shiftedRect.width,\n    height: shiftedRect.height,\n    freeze: freeze,\n  );\n  return null; \/\/ this does not return an engine layer yet.\n}<\/code><\/pre>\n    ",
+            "href": "rendering\/TextureLayer\/addToScene.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.EngineLayer",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.TextureLayer",
-            "sig": "",
             "params": [
                 {
                     "name": "builder",
-                    "type": "dart:ui.SceneBuilder",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.SceneBuilder"
                 },
                 {
                     "name": "layerOffset",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Offset"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/TextureLayer\/addToScene.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nui.EngineLayer addToScene(ui.SceneBuilder builder, [ Offset layerOffset = Offset.zero ]) {\n  final Rect shiftedRect = rect.shift(layerOffset);\n  builder.addTexture(\n    textureId,\n    offset: shiftedRect.topLeft,\n    width: shiftedRect.width,\n    height: shiftedRect.height,\n    freeze: freeze,\n  );\n  return null; \/\/ this does not return an engine layer yet.\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "find",
-            "type": "",
             "desc": "<p>Returns the value of <code>S<\/code> that corresponds to the point described by\n<code>regionOffset<\/code>.<\/p>\n<p>Returns null if no matching region is found.<\/p>\n<p>The main way for a value to be assigned here is by pushing an\n<a href=\"rendering\/AnnotatedRegionLayer-class.html\">AnnotatedRegionLayer<\/a> into the layer tree.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/AnnotatedRegionLayer-class.html\">AnnotatedRegionLayer<\/a>, for placing values in the layer tree.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nS find&lt;S&gt;(Offset regionOffset) =&gt; null;<\/code><\/pre>\n    ",
+            "href": "rendering\/TextureLayer\/find.html",
+            "isDeprecated": "0",
+            "type": "<S>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "rendering.TextureLayer",
-            "sig": "",
             "params": [
                 {
                     "name": "regionOffset",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Offset"
                 }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/TextureLayer\/find.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nS find&lt;S&gt;(Offset regionOffset) =&gt; null;<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "name": "freeze",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>When true the texture that will not be updated with new frames.<\/p>\n<p>This is used when resizing an embedded  Android views: When resizing\nthere is a short period during which the framework cannot tell\nif the newest texture frame has the previous or new size, to workaround this\nthe framework \"freezes\" the texture just before resizing the Android view and unfreezes\nit when it is certain that a frame with the new size is ready.<\/p>\n        ",
-            "memberOf": "rendering.TextureLayer",
-            "isConstant": false,
-            "href": "rendering\/TextureLayer\/freeze.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool freeze\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/TextureLayer\/freeze.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "rendering.TextureLayer",
+            "params": []
         },
         {
-            "name": "rect",
-            "type": "dart:ui.Rect",
-            "types": [],
             "desc": "<p>Bounding rectangle of this layer.<\/p>\n        ",
-            "memberOf": "rendering.TextureLayer",
-            "isConstant": false,
-            "href": "rendering\/TextureLayer\/rect.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Rect rect\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/TextureLayer\/rect.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Rect",
+            "memberOf": "rendering.TextureLayer",
+            "params": []
         },
         {
-            "name": "textureId",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The identity of the backend texture.<\/p>\n        ",
-            "memberOf": "rendering.TextureLayer",
-            "isConstant": false,
-            "href": "rendering\/TextureLayer\/textureId.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int textureId\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "rendering\/TextureLayer\/textureId.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "rendering.TextureLayer",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "rendering\/TextureLayer-class.html",
-    "desc": "<p>A composited layer that maps a backend texture to a rectangle.<\/p>\n<p>Backend textures are images that can be applied (mapped) to an area of the\nFlutter view. They are created, managed, and updated using a\nplatform-specific texture registry. This is typically done by a plugin\nthat integrates with host platform video player, camera, or OpenGL APIs,\nor similar image sources.<\/p>\n<p>A texture layer refers to its backend texture using an integer ID. Texture\nIDs are obtained from the texture registry and are scoped to the Flutter\nview. Texture IDs may be reused after deregistration, at the discretion\nof the registry. The use of texture IDs currently unknown to the registry\nwill silently result in a blank rectangle.<\/p>\n<p>Once inserted into the layer tree, texture layers are repainted autonomously\nas dictated by the backend (e.g. on arrival of a video frame). Such\nrepainting generally does not involve executing Dart code.<\/p>\n<p>Texture layers are always leaves in the layer tree.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"https:\/\/docs.flutter.io\/javadoc\/io\/flutter\/view\/TextureRegistry.html\">docs.flutter.io\/javadoc\/io\/flutter\/view\/TextureRegistry.html<\/a>\nfor how to create and manage backend textures on Android.<\/li>\n<li>\n<a href=\"https:\/\/docs.flutter.io\/objcdoc\/Protocols\/FlutterTextureRegistry.html\">docs.flutter.io\/objcdoc\/Protocols\/FlutterTextureRegistry.html<\/a>\nfor how to create and manage backend textures on iOS.<\/li>\n<\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "TextureLayer"
+    ]
 }

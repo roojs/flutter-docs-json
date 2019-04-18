@@ -1,223 +1,200 @@
 {
+    "desc": "<p>Base class for those that manage the loading of <a href=\"dart-ui\/Image-class.html\">dart:ui.Image<\/a> objects for\n<a href=\"painting\/ImageStream-class.html\">ImageStream<\/a>s.<\/p>\n<p><code>ImageStreamListener<\/code> objects are rarely constructed directly. Generally, an\n<a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> subclass will return an <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a> and automatically\nconfigure it with the right <a href=\"painting\/ImageStreamCompleter-class.html\">ImageStreamCompleter<\/a> when possible.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "painting\/ImageStreamCompleter-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "painting",
     "name": "painting.ImageStreamCompleter",
+    "shortname": "ImageStreamCompleter",
     "extends": [
         "foundation.Diagnosticable",
         "dart:core.Object"
     ],
-    "memberOf": "painting",
     "events": [],
     "methods": [
         {
-            "name": "ImageStreamCompleter",
+            "desc": null,
+            "example": null,
+            "href": "painting\/ImageStreamCompleter\/ImageStreamCompleter.html",
+            "isDeprecated": "0",
             "type": "",
-            "desc": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "painting.ImageStreamCompleter",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "painting\/ImageStreamCompleter\/ImageStreamCompleter.html",
-            "example": "",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "addListener",
-            "type": "",
             "desc": "<p>Adds a listener callback that is called whenever a new concrete <a href=\"painting\/ImageInfo-class.html\">ImageInfo<\/a>\nobject is available or an error is reported. If a concrete image is\nalready available, or if an error has been already reported, this object\nwill call the listener or error listener synchronously.<\/p>\n<p>If the <a href=\"painting\/ImageStreamCompleter-class.html\">ImageStreamCompleter<\/a> completes multiple images over its lifetime,\nthis listener will fire multiple times.<\/p>\n<p>The listener will be passed a flag indicating whether a synchronous call\noccurred. If the listener is added within a render object paint function,\nthen use this flag to avoid calling <a href=\"rendering\/RenderObject\/markNeedsPaint.html\">RenderObject.markNeedsPaint<\/a> during\na paint.<\/p>\n<p>An <a href=\"painting\/ImageErrorListener.html\">ImageErrorListener<\/a> can also optionally be added along with the\n<code>listener<\/code>. If an error occurred, <code>onError<\/code> will be called instead of\n<code>listener<\/code>.<\/p>\n<p>If a <code>listener<\/code> or <code>onError<\/code> handler is registered multiple times, then it\nwill be called multiple times when the image stream completes (whether\nbecause a new image is available or because an error occurs,\nrespectively). In general, registering a listener multiple times is\ndiscouraged because <a href=\"painting\/ImageStreamCompleter\/removeListener.html\">removeListener<\/a> will remove the first instance that\nwas added, even if it was added with a different <code>onError<\/code> than the\nintended paired <code>addListener<\/code> call.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addListener(ImageListener listener, { ImageErrorListener onError }) {\n  _listeners.add(_ImageListenerPair(listener, onError));\n  if (_currentImage != null) {\n    try {\n      listener(_currentImage, true);\n    } catch (exception, stack) {\n      reportError(\n        context: 'by a synchronously-called image listener',\n        exception: exception,\n        stack: stack,\n      );\n    }\n  }\n  if (_currentError != null &amp;&amp; onError != null) {\n    try {\n      onError(_currentError.exception, _currentError.stack);\n    } catch (exception, stack) {\n      FlutterError.reportError(\n        FlutterErrorDetails(\n          exception: exception,\n          library: 'image resource service',\n          context: 'by a synchronously-called image error listener',\n          stack: stack,\n        ),\n      );\n    }\n  }\n}<\/code><\/pre>\n    ",
+            "href": "painting\/ImageStreamCompleter\/addListener.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.ImageStreamCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "listener",
-                    "type": "painting.ImageListener",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageListener"
                 },
                 {
                     "name": "onError",
-                    "type": "painting.ImageErrorListener",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageErrorListener"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/ImageStreamCompleter\/addListener.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addListener(ImageListener listener, { ImageErrorListener onError }) {\n  _listeners.add(_ImageListenerPair(listener, onError));\n  if (_currentImage != null) {\n    try {\n      listener(_currentImage, true);\n    } catch (exception, stack) {\n      reportError(\n        context: 'by a synchronously-called image listener',\n        exception: exception,\n        stack: stack,\n      );\n    }\n  }\n  if (_currentError != null &amp;&amp; onError != null) {\n    try {\n      onError(_currentError.exception, _currentError.stack);\n    } catch (exception, stack) {\n      FlutterError.reportError(\n        FlutterErrorDetails(\n          exception: exception,\n          library: 'image resource service',\n          context: 'by a synchronously-called image error listener',\n          stack: stack,\n        ),\n      );\n    }\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "debugFillProperties",
-            "type": "",
             "desc": "<p>Accumulates a list of strings describing the object's state. Subclasses\nshould override this to have their information included in <a href=\"foundation\/Diagnosticable\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder description) {\n  super.debugFillProperties(description);\n  description.add(DiagnosticsProperty&lt;ImageInfo&gt;('current', _currentImage, ifNull: 'unresolved', showName: false));\n  description.add(ObjectFlagProperty&lt;List&lt;_ImageListenerPair&gt;&gt;(\n    'listeners',\n    _listeners,\n    ifPresent: '${_listeners?.length} listener${_listeners?.length == 1 ? \"\" : \"s\" }',\n  ));\n}<\/code><\/pre>\n    ",
+            "href": "painting\/ImageStreamCompleter\/debugFillProperties.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.ImageStreamCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "description",
-                    "type": "foundation.DiagnosticPropertiesBuilder",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "foundation.DiagnosticPropertiesBuilder"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/ImageStreamCompleter\/debugFillProperties.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder description) {\n  super.debugFillProperties(description);\n  description.add(DiagnosticsProperty&lt;ImageInfo&gt;('current', _currentImage, ifNull: 'unresolved', showName: false));\n  description.add(ObjectFlagProperty&lt;List&lt;_ImageListenerPair&gt;&gt;(\n    'listeners',\n    _listeners,\n    ifPresent: '${_listeners?.length} listener${_listeners?.length == 1 ? \"\" : \"s\" }',\n  ));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "removeListener",
-            "type": "",
             "desc": "<p>Stop listening for new concrete <a href=\"painting\/ImageInfo-class.html\">ImageInfo<\/a> objects and errors from\nits associated <a href=\"painting\/ImageErrorListener.html\">ImageErrorListener<\/a>.<\/p>\n<p>If <code>listener<\/code> has been added multiple times, this removes the first\ninstance of the listener, along with the <code>onError<\/code> listener that was\nregistered with that first instance. This might not be the instance that\nthe <code>addListener<\/code> corresponding to this <code>removeListener<\/code> had added.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeListener(ImageListener listener) {\n  for (int i = 0; i &lt; _listeners.length; i += 1) {\n    if (_listeners[i].listener == listener) {\n      _listeners.removeAt(i);\n      break;\n    }\n  }\n}<\/code><\/pre>\n    ",
+            "href": "painting\/ImageStreamCompleter\/removeListener.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.ImageStreamCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "listener",
-                    "type": "painting.ImageListener",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageListener"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/ImageStreamCompleter\/removeListener.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeListener(ImageListener listener) {\n  for (int i = 0; i &lt; _listeners.length; i += 1) {\n    if (_listeners[i].listener == listener) {\n      _listeners.removeAt(i);\n      break;\n    }\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "reportError",
-            "type": "",
             "desc": "<p>Calls all the registered error listeners to notify them of an error that\noccurred while resolving the image.<\/p>\n<p>If no error listeners are attached, a <a href=\"foundation\/FlutterError-class.html\">FlutterError<\/a> will be reported\ninstead.<\/p>\n<p>The <code>context<\/code> should be a string describing where the error was caught, in\na form that will make sense in English when following the word \"thrown\",\nas in \"thrown while obtaining the image from the network\" (for the context\n\"while obtaining the image from the network\").<\/p>\n<p>The <code>exception<\/code> is the error being reported; the <code>stack<\/code> is the\n<a href=\"dart-core\/StackTrace-class.html\">StackTrace<\/a> associated with the exception.<\/p>\n<p>The <code>informationCollector<\/code> is a callback (of type <a href=\"foundation\/InformationCollector.html\">InformationCollector<\/a>)\nthat is called when the exception is used by <a href=\"painting\/ImageStreamCompleter\/reportError.html\">FlutterError.reportError<\/a>.\nIt is used to obtain further details to include in the logs, which may be\nexpensive to collect, and thus should only be collected if the error is to\nbe logged in the first place.<\/p>\n<p>The <code>silent<\/code> argument causes the exception to not be reported to the logs\nin release builds, if passed to <a href=\"painting\/ImageStreamCompleter\/reportError.html\">FlutterError.reportError<\/a>. (It is still\nsent to error handlers.) It should be set to true if the error is one that\nis expected to be encountered in release builds, for example network\nerrors. That way, logs on end-user devices will not have spurious\nmessages, but errors during development will still be reported.<\/p>\n<p>See <a href=\"foundation\/FlutterErrorDetails-class.html\">FlutterErrorDetails<\/a> for further details on these values.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid reportError({\n  String context,\n  dynamic exception,\n  StackTrace stack,\n  InformationCollector informationCollector,\n  bool silent = false,\n}) {\n  _currentError = FlutterErrorDetails(\n    exception: exception,\n    stack: stack,\n    library: 'image resource service',\n    context: context,\n    informationCollector: informationCollector,\n    silent: silent,\n  );\n\n  final List&lt;ImageErrorListener&gt; localErrorListeners =\n    _listeners.map&lt;ImageErrorListener&gt;(\n      (_ImageListenerPair listenerPair) =&gt; listenerPair.errorListener\n    ).where(\n      (ImageErrorListener errorListener) =&gt; errorListener != null\n    ).toList();\n\n  if (localErrorListeners.isEmpty) {\n    FlutterError.reportError(_currentError);\n  } else {\n    for (ImageErrorListener errorListener in localErrorListeners) {\n      try {\n        errorListener(exception, stack);\n      } catch (exception, stack) {\n        FlutterError.reportError(\n          FlutterErrorDetails(\n            context: 'when reporting an error to an image listener',\n            library: 'image resource service',\n            exception: exception,\n            stack: stack,\n          ),\n        );\n      }\n    }\n  }\n}<\/code><\/pre>\n    ",
+            "href": "painting\/ImageStreamCompleter\/reportError.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.ImageStreamCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "context",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 },
                 {
                     "name": "exception",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "stack",
-                    "type": "dart:core.StackTrace",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 },
                 {
                     "name": "informationCollector",
-                    "type": "foundation.InformationCollector",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "foundation.InformationCollector"
                 },
                 {
                     "name": "silent",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "stack",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.StackTrace"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/ImageStreamCompleter\/reportError.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid reportError({\n  String context,\n  dynamic exception,\n  StackTrace stack,\n  InformationCollector informationCollector,\n  bool silent = false,\n}) {\n  _currentError = FlutterErrorDetails(\n    exception: exception,\n    stack: stack,\n    library: 'image resource service',\n    context: context,\n    informationCollector: informationCollector,\n    silent: silent,\n  );\n\n  final List&lt;ImageErrorListener&gt; localErrorListeners =\n    _listeners.map&lt;ImageErrorListener&gt;(\n      (_ImageListenerPair listenerPair) =&gt; listenerPair.errorListener\n    ).where(\n      (ImageErrorListener errorListener) =&gt; errorListener != null\n    ).toList();\n\n  if (localErrorListeners.isEmpty) {\n    FlutterError.reportError(_currentError);\n  } else {\n    for (ImageErrorListener errorListener in localErrorListeners) {\n      try {\n        errorListener(exception, stack);\n      } catch (exception, stack) {\n        FlutterError.reportError(\n          FlutterErrorDetails(\n            context: 'when reporting an error to an image listener',\n            library: 'image resource service',\n            exception: exception,\n            stack: stack,\n          ),\n        );\n      }\n    }\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "setImage",
-            "type": "",
             "desc": "<p>Calls all the registered listeners to notify them of a new image.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid setImage(ImageInfo image) {\n  _currentImage = image;\n  if (_listeners.isEmpty)\n    return;\n  final List&lt;ImageListener&gt; localListeners = _listeners.map&lt;ImageListener&gt;(\n    (_ImageListenerPair listenerPair) =&gt; listenerPair.listener\n  ).toList();\n  for (ImageListener listener in localListeners) {\n    try {\n      listener(image, false);\n    } catch (exception, stack) {\n      reportError(\n        context: 'by an image listener',\n        exception: exception,\n        stack: stack,\n      );\n    }\n  }\n}<\/code><\/pre>\n    ",
+            "href": "painting\/ImageStreamCompleter\/setImage.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.ImageStreamCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "image",
-                    "type": "painting.ImageInfo",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageInfo"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/ImageStreamCompleter\/setImage.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid setImage(ImageInfo image) {\n  _currentImage = image;\n  if (_listeners.isEmpty)\n    return;\n  final List&lt;ImageListener&gt; localListeners = _listeners.map&lt;ImageListener&gt;(\n    (_ImageListenerPair listenerPair) =&gt; listenerPair.listener\n  ).toList();\n  for (ImageListener listener in localListeners) {\n    try {\n      listener(image, false);\n    } catch (exception, stack) {\n      reportError(\n        context: 'by an image listener',\n        exception: exception,\n        stack: stack,\n      );\n    }\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "name": "hasListeners",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether any listeners are currently registered.<\/p>\n<p>Clients should not depend on this value for their behavior, because having\none listener's logic change when another listener happens to start or stop\nlistening will lead to extremely hard-to-track bugs. Subclasses might use\nthis information to determine whether to do any work when there are no\nlisteners, however; for example, <a href=\"painting\/MultiFrameImageStreamCompleter-class.html\">MultiFrameImageStreamCompleter<\/a> uses it\nto determine when to iterate through frames of an animated image.<\/p>\n<p>Typically this is used by overriding <a href=\"painting\/ImageStreamCompleter\/addListener.html\">addListener<\/a>, checking if\n<a href=\"painting\/ImageStreamCompleter\/hasListeners.html\">hasListeners<\/a> is false before calling <code>super.addListener()<\/code>, and if so,\nstarting whatever work is needed to determine when to call\n<code>notifyListeners<\/code>; and similarly, by overriding <a href=\"painting\/ImageStreamCompleter\/removeListener.html\">removeListener<\/a>, checking\nif <a href=\"painting\/ImageStreamCompleter\/hasListeners.html\">hasListeners<\/a> is false after calling <code>super.removeListener()<\/code>, and if\nso, stopping that same work.<\/p>\n        ",
-            "memberOf": "painting.ImageStreamCompleter",
-            "isConstant": false,
-            "href": "painting\/ImageStreamCompleter\/hasListeners.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool get hasListeners =&gt; _listeners.isNotEmpty;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "painting\/ImageStreamCompleter\/hasListeners.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "painting.ImageStreamCompleter",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [
-        "painting.MultiFrameImageStreamCompleter",
-        "painting.OneFrameImageStreamCompleter"
-    ],
-    "realImplementors": [
-        "painting.MultiFrameImageStreamCompleter",
-        "painting.OneFrameImageStreamCompleter"
-    ],
-    "cn": [],
-    "href": "painting\/ImageStreamCompleter-class.html",
-    "desc": "<p>Base class for those that manage the loading of <a href=\"dart-ui\/Image-class.html\">dart:ui.Image<\/a> objects for\n<a href=\"painting\/ImageStream-class.html\">ImageStream<\/a>s.<\/p>\n<p><code>ImageStreamListener<\/code> objects are rarely constructed directly. Generally, an\n<a href=\"painting\/ImageProvider-class.html\">ImageProvider<\/a> subclass will return an <a href=\"painting\/ImageStream-class.html\">ImageStream<\/a> and automatically\nconfigure it with the right <a href=\"painting\/ImageStreamCompleter-class.html\">ImageStreamCompleter<\/a> when possible.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "ImageStreamCompleter"
+    ]
 }

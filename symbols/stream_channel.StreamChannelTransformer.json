@@ -1,124 +1,95 @@
 {
-    "name": "stream_channel.StreamChannelTransformer",
-    "extends": [],
+    "desc": "<p>A <a href=\"package-stream_channel_stream_channel\/StreamChannelTransformer-class.html\">StreamChannelTransformer<\/a> transforms the events being passed to and\nemitted by a <a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a>.<\/p>\n<p>This works on the same principle as <a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a> and\n<a href=\"package-async_async\/StreamSinkTransformer-class.html\">StreamSinkTransformer<\/a>. Each transformer defines a <a href=\"package-stream_channel_stream_channel\/StreamChannelTransformer\/bind.html\">bind<\/a> method that takes\nin the original <a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a> and returns the transformed version.<\/p>\n<p>Transformers must be able to have <a href=\"package-stream_channel_stream_channel\/StreamChannelTransformer\/bind.html\">bind<\/a> called multiple times. If a\nsubclass implements <a href=\"package-stream_channel_stream_channel\/StreamChannelTransformer\/bind.html\">bind<\/a> explicitly, it should be sure that the returned\nstream follows the second stream channel guarantee: closing the sink causes\nthe stream to close before it emits any more events. This guarantee is\ninvalidated when an asynchronous gap is added between the original stream's\nevent dispatch and the returned stream's, for example by transforming it\nwith a <a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a>. The guarantee can be easily preserved using\n<a href=\"package-stream_channel_stream_channel\/StreamChannel\/StreamChannel.withCloseGuarantee.html\">StreamChannel.withCloseGuarantee<\/a>.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-stream_channel_stream_channel\/StreamChannelTransformer-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "stream_channel",
+    "name": "stream_channel.StreamChannelTransformer",
+    "shortname": "StreamChannelTransformer",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "StreamChannelTransformer",
-            "type": "",
             "desc": "<p>Creates a <a href=\"package-stream_channel_stream_channel\/StreamChannelTransformer-class.html\">StreamChannelTransformer<\/a> from existing stream and sink\ntransformers.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const StreamChannelTransformer(\n    this._streamTransformer, this._sinkTransformer);<\/code><\/pre>\n    ",
+            "href": "package-stream_channel_stream_channel\/StreamChannelTransformer\/StreamChannelTransformer.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "stream_channel.StreamChannelTransformer",
-            "sig": "",
             "params": [
                 {
-                    "name": "_streamTransformer",
-                    "type": "dart:async.StreamTransformer",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "_sinkTransformer",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "async.StreamSinkTransformer"
                 },
                 {
-                    "name": "_sinkTransformer",
-                    "type": "async.StreamSinkTransformer",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "_streamTransformer",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:async.StreamTransformer"
                 }
-            ],
-            "isConstructor": true,
-            "href": "package-stream_channel_stream_channel\/StreamChannelTransformer\/StreamChannelTransformer.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const StreamChannelTransformer(\n    this._streamTransformer, this._sinkTransformer);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "bind",
-            "type": "stream_channel.StreamChannel",
             "desc": "<p>Transforms the events sent to and emitted by <code>channel<\/code>.<\/p>\n<p>Creates a new channel. When events are passed to the returned channel's\nsink, the transformer will transform them and pass the transformed\nversions to <code>channel.sink<\/code>. When events are emitted from the\n<code>channel.straem<\/code>, the transformer will transform them and pass the\ntransformed versions to the returned channel's stream.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;S&gt; bind(StreamChannel&lt;T&gt; channel) =&gt;\n    new StreamChannel&lt;S&gt;.withCloseGuarantee(\n        channel.stream.transform(_streamTransformer),\n        _sinkTransformer.bind(channel.sink));<\/code><\/pre>\n    ",
+            "href": "package-stream_channel_stream_channel\/StreamChannelTransformer\/bind.html",
+            "isDeprecated": "0",
+            "type": "stream_channel.StreamChannel",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "stream_channel.StreamChannelTransformer",
-            "sig": "",
             "params": [
                 {
                     "name": "channel",
-                    "type": "stream_channel.StreamChannel",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "stream_channel.StreamChannel"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-stream_channel_stream_channel\/StreamChannelTransformer\/bind.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;S&gt; bind(StreamChannel&lt;T&gt; channel) =&gt;\n    new StreamChannel&lt;S&gt;.withCloseGuarantee(\n        channel.stream.transform(_streamTransformer),\n        _sinkTransformer.bind(channel.sink));<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "StreamChannelTransformer.fromCodec",
-            "type": "",
-            "desc": "<p>Creates a <a href=\"package-stream_channel_stream_channel\/StreamChannelTransformer-class.html\">StreamChannelTransformer<\/a> from a codec's encoder and decoder.<\/p>\n<p>All input to the inner channel's sink is encoded using <a href=\"dart-convert\/Codec\/encoder.html\">Codec.encoder<\/a>,\nand all output from its stream is decoded using <a href=\"dart-convert\/Codec\/decoder.html\">Codec.decoder<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "stream_channel.StreamChannelTransformer",
-            "sig": "",
-            "params": [
-                {
-                    "name": "codec",
-                    "type": "dart:convert.Codec",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "package-stream_channel_stream_channel\/StreamChannelTransformer\/StreamChannelTransformer.fromCodec.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannelTransformer.fromCodec(Codec&lt;S, T&gt; codec)\n    : this(codec.decoder,\n          new StreamSinkTransformer.fromStreamTransformer(codec.encoder));<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "typed",
-            "type": "stream_channel.StreamChannelTransformer",
             "desc": "<p>Creates a wrapper that coerces the type of <code>transformer<\/code>.<\/p>\n<p>This soundly converts a <a href=\"package-stream_channel_stream_channel\/StreamChannelTransformer-class.html\">StreamChannelTransformer<\/a> to a\n<code>StreamChannelTransformer&lt;S, T&gt;<\/code>, regardless of its original generic type,\nby asserting that the events emitted by the transformed channel's stream\nare instances of <code>T<\/code> whenever they're provided. If they're not, the stream\nthrows a <a href=\"dart-core\/CastError-class.html\">CastError<\/a>. This also means that calls to <a href=\"dart-async\/EventSink\/add.html\">StreamSink.add<\/a> on\nthe transformed channel's sink may throw a <a href=\"dart-core\/CastError-class.html\">CastError<\/a> if the argument\ntype doesn't match the reified type of the sink.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static StreamChannelTransformer&lt;S, T&gt; typed&lt;S, T&gt;(\n        StreamChannelTransformer transformer) =&gt;\n    transformer is StreamChannelTransformer&lt;S, T&gt;\n        ? transformer\n        : new TypeSafeStreamChannelTransformer(transformer);<\/code><\/pre>\n    ",
+            "href": "package-stream_channel_stream_channel\/StreamChannelTransformer\/typed.html",
+            "isDeprecated": "0",
+            "type": "stream_channel.StreamChannelTransformer",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "stream_channel.StreamChannelTransformer",
-            "sig": "",
             "params": [
                 {
                     "name": "transformer",
-                    "type": "stream_channel.StreamChannelTransformer",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "stream_channel.StreamChannelTransformer"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-stream_channel_stream_channel\/StreamChannelTransformer\/typed.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static StreamChannelTransformer&lt;S, T&gt; typed&lt;S, T&gt;(\n        StreamChannelTransformer transformer) =&gt;\n    transformer is StreamChannelTransformer&lt;S, T&gt;\n        ? transformer\n        : new TypeSafeStreamChannelTransformer(transformer);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
-    "props": [],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-stream_channel_stream_channel\/StreamChannelTransformer-class.html",
-    "desc": "<p>A <a href=\"package-stream_channel_stream_channel\/StreamChannelTransformer-class.html\">StreamChannelTransformer<\/a> transforms the events being passed to and\nemitted by a <a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a>.<\/p>\n<p>This works on the same principle as <a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a> and\n<a href=\"package-async_async\/StreamSinkTransformer-class.html\">StreamSinkTransformer<\/a>. Each transformer defines a <a href=\"package-stream_channel_stream_channel\/StreamChannelTransformer\/bind.html\">bind<\/a> method that takes\nin the original <a href=\"package-stream_channel_stream_channel\/StreamChannel-class.html\">StreamChannel<\/a> and returns the transformed version.<\/p>\n<p>Transformers must be able to have <a href=\"package-stream_channel_stream_channel\/StreamChannelTransformer\/bind.html\">bind<\/a> called multiple times. If a\nsubclass implements <a href=\"package-stream_channel_stream_channel\/StreamChannelTransformer\/bind.html\">bind<\/a> explicitly, it should be sure that the returned\nstream follows the second stream channel guarantee: closing the sink causes\nthe stream to close before it emits any more events. This guarantee is\ninvalidated when an asynchronous gap is added between the original stream's\nevent dispatch and the returned stream's, for example by transforming it\nwith a <a href=\"dart-async\/StreamTransformer-class.html\">StreamTransformer<\/a>. The guarantee can be easily preserved using\n<a href=\"package-stream_channel_stream_channel\/StreamChannel\/StreamChannel.withCloseGuarantee.html\">StreamChannel.withCloseGuarantee<\/a>.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "StreamChannelTransformer"
+    "props": []
 }

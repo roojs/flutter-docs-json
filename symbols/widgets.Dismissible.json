@@ -1,5 +1,17 @@
 {
+    "desc": "<p>A widget that can be dismissed by dragging in the indicated <a href=\"widgets\/Dismissible\/direction.html\">direction<\/a>.<\/p>\n<p>Dragging or flinging this widget in the <a href=\"widgets\/DismissDirection-class.html\">DismissDirection<\/a> causes the child\nto slide out of view. Following the slide animation, if <a href=\"widgets\/Dismissible\/resizeDuration.html\">resizeDuration<\/a> is\nnon-null, the Dismissible widget animates its height (or width, whichever is\nperpendicular to the dismiss direction) to zero over the <a href=\"widgets\/Dismissible\/resizeDuration.html\">resizeDuration<\/a>.<\/p>\n<p>Backgrounds can be used to implement the \"leave-behind\" idiom. If a background\nis specified it is stacked behind the Dismissible's child and is exposed when\nthe child moves.<\/p>\n<p>The widget calls the <a href=\"widgets\/Dismissible\/onDismissed.html\">onDismissed<\/a> callback either after its size has\ncollapsed to zero (if <a href=\"widgets\/Dismissible\/resizeDuration.html\">resizeDuration<\/a> is non-null) or immediately after\nthe slide animation (if <a href=\"widgets\/Dismissible\/resizeDuration.html\">resizeDuration<\/a> is null). If the Dismissible is a\nlist item, it must have a key that distinguishes it from the other items and\nits <a href=\"widgets\/Dismissible\/onDismissed.html\">onDismissed<\/a> callback must remove the item from the list.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "widgets\/Dismissible-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "widgets",
     "name": "widgets.Dismissible",
+    "shortname": "Dismissible",
     "extends": [
         "widgets.StatefulWidget",
         "widgets.Widget",
@@ -7,317 +19,260 @@
         "foundation.Diagnosticable",
         "dart:core.Object"
     ],
-    "memberOf": "widgets",
     "events": [
         {
-            "name": "onDismissed",
-            "type": "widgets.DismissDirectionCallback",
-            "desc": "<p>Called when the widget has been dismissed, after finishing resizing.<\/p>\n        ",
-            "static": false,
-            "memberOf": "",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Dismissible\/onDismissed.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final DismissDirectionCallback onDismissed\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false,
-            "isConstant": false
+            "desc": "<p>Gives the app an opportunity to confirm or veto a pending dismissal.<\/p>\n<p>If the returned Future<bool> completes true, then this widget will be\ndismissed, otherwise it will be moved back to its original location.<\/bool><\/p>\n<p>If the returned Future<bool> completes to false or null the <a href=\"widgets\/Dismissible\/onResize.html\">onResize<\/a>\nand <a href=\"widgets\/Dismissible\/onDismissed.html\">onDismissed<\/a> callbacks will not run.<\/bool><\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final ConfirmDismissCallback confirmDismiss\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/Dismissible\/confirmDismiss.html",
+            "isDeprecated": "0",
+            "type": "widgets.ConfirmDismissCallback",
+            "memberOf": "widgets.Dismissible",
+            "params": []
         },
         {
-            "name": "onResize",
-            "type": "dart:ui.VoidCallback",
+            "desc": "<p>Called when the widget has been dismissed, after finishing resizing.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final DismissDirectionCallback onDismissed\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/Dismissible\/onDismissed.html",
+            "isDeprecated": "0",
+            "type": "widgets.DismissDirectionCallback",
+            "memberOf": "widgets.Dismissible",
+            "params": []
+        },
+        {
             "desc": "<p>Called when the widget changes size (i.e., when contracting before being dismissed).<\/p>\n        ",
-            "static": false,
-            "memberOf": "",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Dismissible\/onResize.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final VoidCallback onResize\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false,
-            "isConstant": false
+            "href": "widgets\/Dismissible\/onResize.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.VoidCallback",
+            "memberOf": "widgets.Dismissible",
+            "params": []
         }
     ],
     "methods": [
         {
-            "name": "Dismissible",
-            "type": "",
             "desc": "<p>Creates a widget that can be dismissed.<\/p>\n<p>The <code>key<\/code> argument must not be null because <a href=\"widgets\/Dismissible-class.html\">Dismissible<\/a>s are commonly\nused in lists and removed from the list when dismissed. Without keys, the\ndefault behavior is to sync widgets based on their index in the list,\nwhich means the item after the dismissed item would be synced with the\nstate of the dismissed item. Using keys causes the widgets to sync\naccording to their keys and avoids this pitfall.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Dismissible({\n  @required Key key,\n  @required this.child,\n  this.background,\n  this.secondaryBackground,\n  this.confirmDismiss,\n  this.onResize,\n  this.onDismissed,\n  this.direction = DismissDirection.horizontal,\n  this.resizeDuration = const Duration(milliseconds: 300),\n  this.dismissThresholds = const &lt;DismissDirection, double&gt;{},\n  this.movementDuration = const Duration(milliseconds: 200),\n  this.crossAxisEndOffset = 0.0,\n  this.dragStartBehavior = DragStartBehavior.start,\n}) : assert(key != null),\n     assert(secondaryBackground != null ? background != null : true),\n     assert(dragStartBehavior != null),\n     super(key: key);<\/code><\/pre>\n    ",
+            "href": "widgets\/Dismissible\/Dismissible.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "widgets.Dismissible",
-            "sig": "",
             "params": [
                 {
-                    "name": "key",
-                    "type": "foundation.Key",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "background",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.Widget"
                 },
                 {
                     "name": "child",
-                    "type": "widgets.Widget",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "background",
-                    "type": "widgets.Widget",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "secondaryBackground",
-                    "type": "widgets.Widget",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "widgets.Widget"
                 },
                 {
                     "name": "confirmDismiss",
-                    "type": "widgets.ConfirmDismissCallback",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "onResize",
-                    "type": "dart:ui.VoidCallback",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "onDismissed",
-                    "type": "widgets.DismissDirectionCallback",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "direction",
-                    "type": "widgets.DismissDirection",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "resizeDuration",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "dismissThresholds",
-                    "type": "dart:core.Map<widgets.DismissDirection<dart:core.double>>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.Map",
-                        "widgets.DismissDirection",
-                        "dart:core.double"
-                    ]
-                },
-                {
-                    "name": "movementDuration",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "widgets.ConfirmDismissCallback"
                 },
                 {
                     "name": "crossAxisEndOffset",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
+                },
+                {
+                    "name": "direction",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.DismissDirection"
+                },
+                {
+                    "name": "dismissThresholds",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.Map<widgets.DismissDirection<dart:core.double>>"
                 },
                 {
                     "name": "dragStartBehavior",
-                    "type": "gestures.DragStartBehavior",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "gestures.DragStartBehavior"
+                },
+                {
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "foundation.Key"
+                },
+                {
+                    "name": "movementDuration",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.Duration"
+                },
+                {
+                    "name": "onDismissed",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.DismissDirectionCallback"
+                },
+                {
+                    "name": "onResize",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:ui.VoidCallback"
+                },
+                {
+                    "name": "resizeDuration",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.Duration"
+                },
+                {
+                    "name": "secondaryBackground",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.Widget"
                 }
-            ],
-            "isConstructor": true,
-            "href": "widgets\/Dismissible\/Dismissible.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Dismissible({\n  @required Key key,\n  @required this.child,\n  this.background,\n  this.secondaryBackground,\n  this.confirmDismiss,\n  this.onResize,\n  this.onDismissed,\n  this.direction = DismissDirection.horizontal,\n  this.resizeDuration = const Duration(milliseconds: 300),\n  this.dismissThresholds = const &lt;DismissDirection, double&gt;{},\n  this.movementDuration = const Duration(milliseconds: 200),\n  this.crossAxisEndOffset = 0.0,\n  this.dragStartBehavior = DragStartBehavior.start,\n}) : assert(key != null),\n     assert(secondaryBackground != null ? background != null : true),\n     assert(dragStartBehavior != null),\n     super(key: key);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "createState",
-            "type": "",
             "desc": "<p>Creates the mutable state for this widget at a given location in the tree.<\/p>\n<p>Subclasses should override this method to return a newly created\ninstance of their associated <a href=\"widgets\/State-class.html\">State<\/a> subclass:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">@override\n_MyState createState() =&gt; _MyState();\n<\/code><\/pre>\n<p>The framework can call this method multiple times over the lifetime of\na <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>. For example, if the widget is inserted into the tree\nin multiple locations, the framework will create a separate <a href=\"widgets\/State-class.html\">State<\/a> object\nfor each location. Similarly, if the widget is removed from the tree and\nlater inserted into the tree again, the framework will call <a href=\"widgets\/Dismissible\/createState.html\">createState<\/a>\nagain to create a fresh <a href=\"widgets\/State-class.html\">State<\/a> object, simplifying the lifecycle of\n<a href=\"widgets\/State-class.html\">State<\/a> objects.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\n_DismissibleState createState() =&gt; _DismissibleState();<\/code><\/pre>\n    ",
+            "href": "widgets\/Dismissible\/createState.html",
+            "isDeprecated": "0",
+            "type": "<_DismissibleState>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Dismissible",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Dismissible\/createState.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\n_DismissibleState createState() =&gt; _DismissibleState();<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "background",
-            "type": "widgets.Widget",
-            "types": [],
             "desc": "<p>A widget that is stacked behind the child. If secondaryBackground is also\nspecified then this widget only appears when the child has been dragged\ndown or to the right.<\/p>\n        ",
-            "memberOf": "widgets.Dismissible",
-            "isConstant": false,
-            "href": "widgets\/Dismissible\/background.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Widget background\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/Dismissible\/background.html",
+            "isDeprecated": "0",
+            "type": "widgets.Widget",
+            "memberOf": "widgets.Dismissible",
+            "params": []
         },
         {
-            "name": "child",
-            "type": "widgets.Widget",
-            "types": [],
             "desc": "<p>The widget below this widget in the tree.<\/p>\n<p>This widget can only have one child. To lay out multiple children, let this\nwidget's child be a widget such as <a href=\"widgets\/Row-class.html\">Row<\/a>, <a href=\"widgets\/Column-class.html\">Column<\/a>, or <a href=\"widgets\/Stack-class.html\">Stack<\/a>, which have a\n<code>children<\/code> property, and then provide the children to that widget.<\/p>\n        ",
-            "memberOf": "widgets.Dismissible",
-            "isConstant": false,
-            "href": "widgets\/Dismissible\/child.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Widget child\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "confirmDismiss",
-            "type": "widgets.ConfirmDismissCallback",
-            "types": [],
-            "desc": "<p>Gives the app an opportunity to confirm or veto a pending dismissal.<\/p>\n<p>If the returned Future<bool> completes true, then this widget will be\ndismissed, otherwise it will be moved back to its original location.<\/bool><\/p>\n<p>If the returned Future<bool> completes to false or null the <a href=\"widgets\/Dismissible\/onResize.html\">onResize<\/a>\nand <a href=\"widgets\/Dismissible\/onDismissed.html\">onDismissed<\/a> callbacks will not run.<\/bool><\/p>\n        ",
-            "memberOf": "widgets.Dismissible",
-            "isConstant": false,
-            "href": "widgets\/Dismissible\/confirmDismiss.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final ConfirmDismissCallback confirmDismiss\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "crossAxisEndOffset",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>Defines the end offset across the main axis after the card is dismissed.<\/p>\n<p>If non-zero value is given then widget moves in cross direction depending on whether\nit is positive or negative.<\/p>\n        ",
-            "memberOf": "widgets.Dismissible",
-            "isConstant": false,
-            "href": "widgets\/Dismissible\/crossAxisEndOffset.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double crossAxisEndOffset\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "direction",
-            "type": "widgets.DismissDirection",
-            "types": [],
-            "desc": "<p>The direction in which the widget can be dismissed.<\/p>\n        ",
-            "memberOf": "widgets.Dismissible",
-            "isConstant": false,
-            "href": "widgets\/Dismissible\/direction.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final DismissDirection direction\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "dismissThresholds",
-            "type": "dart:core.Map<widgets.DismissDirection<dart:core.double>>",
-            "types": [
-                "dart:core.Map",
-                "widgets.DismissDirection",
-                "dart:core.double"
-            ],
-            "desc": "<p>The offset threshold the item has to be dragged in order to be considered\ndismissed.<\/p>\n<p>Represented as a fraction, e.g. if it is 0.4 (the default), then the item\nhas to be dragged at least 40% towards one direction to be considered\ndismissed. Clients can define different thresholds for each dismiss\ndirection.<\/p>\n<p>Flinging is treated as being equivalent to dragging almost to 1.0, so\nflinging can dismiss an item past any threshold less than 1.0.<\/p>\n<p>See also <a href=\"widgets\/Dismissible\/direction.html\">direction<\/a>, which controls the directions in which the items can\nbe dismissed. Setting a threshold of 1.0 (or greater) prevents a drag in\nthe given <a href=\"widgets\/DismissDirection-class.html\">DismissDirection<\/a> even if it would be allowed by the\n<a href=\"widgets\/Dismissible\/direction.html\">direction<\/a> property.<\/p>\n        ",
-            "memberOf": "widgets.Dismissible",
-            "isConstant": false,
-            "href": "widgets\/Dismissible\/dismissThresholds.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Map&lt;DismissDirection, double&gt; dismissThresholds\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "dragStartBehavior",
-            "type": "gestures.DragStartBehavior",
-            "types": [],
-            "desc": "<p>Determines the way that drag start behavior is handled.<\/p>\n<p>If set to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a>, the drag gesture used to dismiss a\ndismissible will begin upon the detection of a drag gesture. If set to\n<a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.down<\/a> it will begin when a down event is first detected.<\/p>\n<p>In general, setting this to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a> will make drag\nanimation smoother and setting it to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.down<\/a> will make\ndrag behavior feel slightly more reactive.<\/p>\n<p>By default, the drag start behavior is <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/Dismissible\/dragStartBehavior.html\">DragGestureRecognizer.dragStartBehavior<\/a>, which gives an example for the different behaviors.<\/li><\/ul>",
-            "memberOf": "widgets.Dismissible",
-            "isConstant": false,
-            "href": "widgets\/Dismissible\/dragStartBehavior.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final DragStartBehavior dragStartBehavior\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "movementDuration",
-            "type": "dart:core.Duration",
-            "types": [],
-            "desc": "<p>Defines the duration for card to dismiss or to come back to original position if not dismissed.<\/p>\n        ",
-            "memberOf": "widgets.Dismissible",
-            "isConstant": false,
-            "href": "widgets\/Dismissible\/movementDuration.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Duration movementDuration\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "resizeDuration",
-            "type": "dart:core.Duration",
-            "types": [],
-            "desc": "<p>The amount of time the widget will spend contracting before <a href=\"widgets\/Dismissible\/onDismissed.html\">onDismissed<\/a> is called.<\/p>\n<p>If null, the widget will not contract and <a href=\"widgets\/Dismissible\/onDismissed.html\">onDismissed<\/a> will be called\nimmediately after the widget is dismissed.<\/p>\n        ",
-            "memberOf": "widgets.Dismissible",
-            "isConstant": false,
-            "href": "widgets\/Dismissible\/resizeDuration.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Duration resizeDuration\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "secondaryBackground",
+            "href": "widgets\/Dismissible\/child.html",
+            "isDeprecated": "0",
             "type": "widgets.Widget",
-            "types": [],
-            "desc": "<p>A widget that is stacked behind the child and is exposed when the child\nhas been dragged up or to the left. It may only be specified when background\nhas also been specified.<\/p>\n        ",
             "memberOf": "widgets.Dismissible",
-            "isConstant": false,
-            "href": "widgets\/Dismissible\/secondaryBackground.html",
+            "params": []
+        },
+        {
+            "desc": "<p>Defines the end offset across the main axis after the card is dismissed.<\/p>\n<p>If non-zero value is given then widget moves in cross direction depending on whether\nit is positive or negative.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final double crossAxisEndOffset\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/Dismissible\/crossAxisEndOffset.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "widgets.Dismissible",
+            "params": []
+        },
+        {
+            "desc": "<p>The direction in which the widget can be dismissed.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final DismissDirection direction\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/Dismissible\/direction.html",
+            "isDeprecated": "0",
+            "type": "widgets.DismissDirection",
+            "memberOf": "widgets.Dismissible",
+            "params": []
+        },
+        {
+            "desc": "<p>The offset threshold the item has to be dragged in order to be considered\ndismissed.<\/p>\n<p>Represented as a fraction, e.g. if it is 0.4 (the default), then the item\nhas to be dragged at least 40% towards one direction to be considered\ndismissed. Clients can define different thresholds for each dismiss\ndirection.<\/p>\n<p>Flinging is treated as being equivalent to dragging almost to 1.0, so\nflinging can dismiss an item past any threshold less than 1.0.<\/p>\n<p>See also <a href=\"widgets\/Dismissible\/direction.html\">direction<\/a>, which controls the directions in which the items can\nbe dismissed. Setting a threshold of 1.0 (or greater) prevents a drag in\nthe given <a href=\"widgets\/DismissDirection-class.html\">DismissDirection<\/a> even if it would be allowed by the\n<a href=\"widgets\/Dismissible\/direction.html\">direction<\/a> property.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Map&lt;DismissDirection, double&gt; dismissThresholds\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/Dismissible\/dismissThresholds.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Map<widgets.DismissDirection<dart:core.double>>",
+            "memberOf": "widgets.Dismissible",
+            "params": []
+        },
+        {
+            "desc": "<p>Determines the way that drag start behavior is handled.<\/p>\n<p>If set to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a>, the drag gesture used to dismiss a\ndismissible will begin upon the detection of a drag gesture. If set to\n<a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.down<\/a> it will begin when a down event is first detected.<\/p>\n<p>In general, setting this to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a> will make drag\nanimation smoother and setting it to <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.down<\/a> will make\ndrag behavior feel slightly more reactive.<\/p>\n<p>By default, the drag start behavior is <a href=\"gestures\/DragStartBehavior-class.html\">DragStartBehavior.start<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/Dismissible\/dragStartBehavior.html\">DragGestureRecognizer.dragStartBehavior<\/a>, which gives an example for the different behaviors.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final DragStartBehavior dragStartBehavior\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/Dismissible\/dragStartBehavior.html",
+            "isDeprecated": "0",
+            "type": "gestures.DragStartBehavior",
+            "memberOf": "widgets.Dismissible",
+            "params": []
+        },
+        {
+            "desc": "<p>Defines the duration for card to dismiss or to come back to original position if not dismissed.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Duration movementDuration\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/Dismissible\/movementDuration.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Duration",
+            "memberOf": "widgets.Dismissible",
+            "params": []
+        },
+        {
+            "desc": "<p>The amount of time the widget will spend contracting before <a href=\"widgets\/Dismissible\/onDismissed.html\">onDismissed<\/a> is called.<\/p>\n<p>If null, the widget will not contract and <a href=\"widgets\/Dismissible\/onDismissed.html\">onDismissed<\/a> will be called\nimmediately after the widget is dismissed.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Duration resizeDuration\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/Dismissible\/resizeDuration.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Duration",
+            "memberOf": "widgets.Dismissible",
+            "params": []
+        },
+        {
+            "desc": "<p>A widget that is stacked behind the child and is exposed when the child\nhas been dragged up or to the left. It may only be specified when background\nhas also been specified.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Widget secondaryBackground\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/Dismissible\/secondaryBackground.html",
+            "isDeprecated": "0",
+            "type": "widgets.Widget",
+            "memberOf": "widgets.Dismissible",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "widgets\/Dismissible-class.html",
-    "desc": "<p>A widget that can be dismissed by dragging in the indicated <a href=\"widgets\/Dismissible\/direction.html\">direction<\/a>.<\/p>\n<p>Dragging or flinging this widget in the <a href=\"widgets\/DismissDirection-class.html\">DismissDirection<\/a> causes the child\nto slide out of view. Following the slide animation, if <a href=\"widgets\/Dismissible\/resizeDuration.html\">resizeDuration<\/a> is\nnon-null, the Dismissible widget animates its height (or width, whichever is\nperpendicular to the dismiss direction) to zero over the <a href=\"widgets\/Dismissible\/resizeDuration.html\">resizeDuration<\/a>.<\/p>\n<p>Backgrounds can be used to implement the \"leave-behind\" idiom. If a background\nis specified it is stacked behind the Dismissible's child and is exposed when\nthe child moves.<\/p>\n<p>The widget calls the <a href=\"widgets\/Dismissible\/onDismissed.html\">onDismissed<\/a> callback either after its size has\ncollapsed to zero (if <a href=\"widgets\/Dismissible\/resizeDuration.html\">resizeDuration<\/a> is non-null) or immediately after\nthe slide animation (if <a href=\"widgets\/Dismissible\/resizeDuration.html\">resizeDuration<\/a> is null). If the Dismissible is a\nlist item, it must have a key that distinguishes it from the other items and\nits <a href=\"widgets\/Dismissible\/onDismissed.html\">onDismissed<\/a> callback must remove the item from the list.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "Dismissible"
+    ]
 }

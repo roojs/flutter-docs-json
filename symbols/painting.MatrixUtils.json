@@ -1,270 +1,259 @@
 {
-    "name": "painting.MatrixUtils",
-    "extends": [],
+    "desc": "<p>Utility functions for working with matrices.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "painting\/MatrixUtils-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "painting",
+    "name": "painting.MatrixUtils",
+    "shortname": "MatrixUtils",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "createCylindricalProjectionTransform",
-            "type": "vector_math_64.Matrix4",
             "desc": "<p>Create a transformation matrix which mimics the effects of tangentially\nwrapping the plane on which this transform is applied around a cylinder\nand then looking at the cylinder from a point outside the cylinder.<\/p>\n<p>The <code>radius<\/code> simulates the radius of the cylinder the plane is being\nwrapped onto. If the transformation is applied to a 0-dimensional dot\ninstead of a plane, the dot would simply translate by +\/- <code>radius<\/code> pixels\nalong the <code>orientation<\/code> <a href=\"painting\/Axis-class.html\">Axis<\/a> when rotating from 0 to +\/- 90 degrees.<\/p>\n<p>A positive radius means the object is closest at 0 <code>angle<\/code> and a negative\nradius means the object is closest at \u03c0 <code>angle<\/code> or 180 degrees.<\/p>\n<p>The <code>angle<\/code> argument is the difference in angle in radians between the\nobject and the viewing point. A positive <code>angle<\/code> on a positive <code>radius<\/code>\nmoves the object up when <code>orientation<\/code> is vertical and right when\nhorizontal.<\/p>\n<p>The transformation is always done such that a 0 <code>angle<\/code> keeps the\ntransformed object at exactly the same size as before regardless of\n<code>radius<\/code> and <code>perspective<\/code> when <code>radius<\/code> is positive.<\/p>\n<p>The <code>perspective<\/code> argument is a number between 0 and 1 where 0 means\nlooking at the object from infinitely far with an infinitely narrow field\nof view and 1 means looking at the object from infinitely close with an\ninfinitely wide field of view. Defaults to a sane but arbitrary 0.001.<\/p>\n<p>The <code>orientation<\/code> is the direction of the rotation axis.<\/p>\n<p>Because the viewing position is a point, it's never possible to see the\nouter side of the cylinder at or past +\/- \u03c0 \/ 2 or 90 degrees and it's\nalmost always possible to end up seeing the inner side of the cylinder\nor the back side of the transformed plane before \u03c0 \/ 2 when perspective &gt; 0.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Matrix4 createCylindricalProjectionTransform({\n  @required double radius,\n  @required double angle,\n  double perspective = 0.001,\n  Axis orientation = Axis.vertical,\n}) {\n  assert(radius != null);\n  assert(angle != null);\n  assert(perspective &gt;= 0 &amp;&amp; perspective &lt;= 1.0);\n  assert(orientation != null);\n\n  \/\/ Pre-multiplied matrix of a projection matrix and a view matrix.\n  \/\/\n  \/\/ Projection matrix is a simplified perspective matrix\n  \/\/ http:\/\/web.iitd.ac.in\/~hegde\/cad\/lecture\/L9_persproj.pdf\n  \/\/ in the form of\n  \/\/ [[1.0, 0.0, 0.0, 0.0],\n  \/\/  [0.0, 1.0, 0.0, 0.0],\n  \/\/  [0.0, 0.0, 1.0, 0.0],\n  \/\/  [0.0, 0.0, -perspective, 1.0]]\n  \/\/\n  \/\/ View matrix is a simplified camera view matrix.\n  \/\/ Basically re-scales to keep object at original size at angle = 0 at\n  \/\/ any radius in the form of\n  \/\/ [[1.0, 0.0, 0.0, 0.0],\n  \/\/  [0.0, 1.0, 0.0, 0.0],\n  \/\/  [0.0, 0.0, 1.0, -radius],\n  \/\/  [0.0, 0.0, 0.0, 1.0]]\n  Matrix4 result = Matrix4.identity()\n      ..setEntry(3, 2, -perspective)\n      ..setEntry(2, 3, -radius)\n      ..setEntry(3, 3, perspective * radius + 1.0);\n\n  \/\/ Model matrix by first translating the object from the origin of the world\n  \/\/ by radius in the z axis and then rotating against the world.\n  result *= (\n      orientation == Axis.horizontal\n          ? Matrix4.rotationY(angle)\n          : Matrix4.rotationX(angle)\n  ) * Matrix4.translationValues(0.0, 0.0, radius);\n\n  \/\/ Essentially perspective * view * model.\n  return result;\n}<\/code><\/pre>\n    ",
+            "href": "painting\/MatrixUtils\/createCylindricalProjectionTransform.html",
+            "isDeprecated": "0",
+            "type": "vector_math_64.Matrix4",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.MatrixUtils",
-            "sig": "",
             "params": [
                 {
-                    "name": "radius",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
                     "name": "angle",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "perspective",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 },
                 {
                     "name": "orientation",
-                    "type": "painting.Axis",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "painting\/MatrixUtils\/createCylindricalProjectionTransform.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Matrix4 createCylindricalProjectionTransform({\n  @required double radius,\n  @required double angle,\n  double perspective = 0.001,\n  Axis orientation = Axis.vertical,\n}) {\n  assert(radius != null);\n  assert(angle != null);\n  assert(perspective &gt;= 0 &amp;&amp; perspective &lt;= 1.0);\n  assert(orientation != null);\n\n  \/\/ Pre-multiplied matrix of a projection matrix and a view matrix.\n  \/\/\n  \/\/ Projection matrix is a simplified perspective matrix\n  \/\/ http:\/\/web.iitd.ac.in\/~hegde\/cad\/lecture\/L9_persproj.pdf\n  \/\/ in the form of\n  \/\/ [[1.0, 0.0, 0.0, 0.0],\n  \/\/  [0.0, 1.0, 0.0, 0.0],\n  \/\/  [0.0, 0.0, 1.0, 0.0],\n  \/\/  [0.0, 0.0, -perspective, 1.0]]\n  \/\/\n  \/\/ View matrix is a simplified camera view matrix.\n  \/\/ Basically re-scales to keep object at original size at angle = 0 at\n  \/\/ any radius in the form of\n  \/\/ [[1.0, 0.0, 0.0, 0.0],\n  \/\/  [0.0, 1.0, 0.0, 0.0],\n  \/\/  [0.0, 0.0, 1.0, -radius],\n  \/\/  [0.0, 0.0, 0.0, 1.0]]\n  Matrix4 result = Matrix4.identity()\n      ..setEntry(3, 2, -perspective)\n      ..setEntry(2, 3, -radius)\n      ..setEntry(3, 3, perspective * radius + 1.0);\n\n  \/\/ Model matrix by first translating the object from the origin of the world\n  \/\/ by radius in the z axis and then rotating against the world.\n  result *= (\n      orientation == Axis.horizontal\n          ? Matrix4.rotationY(angle)\n          : Matrix4.rotationX(angle)\n  ) * Matrix4.translationValues(0.0, 0.0, radius);\n\n  \/\/ Essentially perspective * view * model.\n  return result;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "getAsScale",
-            "type": "dart:core.double",
-            "desc": "<p>Returns the given <code>transform<\/code> matrix as a <a href=\"dart-core\/double-class.html\">double<\/a> describing a uniform\nscale, if the matrix is nothing but a symmetric 2D scale transform.<\/p>\n<p>Otherwise, returns null.<\/p>\n    ",
-            "static": false,
-            "memberOf": "painting.MatrixUtils",
-            "sig": "",
-            "params": [
-                {
-                    "name": "transform",
-                    "type": "vector_math_64.Matrix4",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "painting\/MatrixUtils\/getAsScale.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static double getAsScale(Matrix4 transform) {\n  assert(transform != null);\n  final Float64List values = transform.storage;\n  \/\/ Values are stored in column-major order.\n  if (values[1] == 0.0 &amp;&amp; \/\/ col 1 (value 0 is the scale)\n      values[2] == 0.0 &amp;&amp;\n      values[3] == 0.0 &amp;&amp;\n      values[4] == 0.0 &amp;&amp; \/\/ col 2 (value 5 is the scale)\n      values[6] == 0.0 &amp;&amp;\n      values[7] == 0.0 &amp;&amp;\n      values[8] == 0.0 &amp;&amp; \/\/ col 3\n      values[9] == 0.0 &amp;&amp;\n      values[10] == 1.0 &amp;&amp;\n      values[11] == 0.0 &amp;&amp;\n      values[12] == 0.0 &amp;&amp; \/\/ col 4\n      values[13] == 0.0 &amp;&amp;\n      values[14] == 0.0 &amp;&amp;\n      values[15] == 1.0 &amp;&amp;\n      values[0] == values[5]) { \/\/ uniform scale\n    return values[0];\n  }\n  return null;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "getAsTranslation",
-            "type": "dart:ui.Offset",
-            "desc": "<p>Returns the given <code>transform<\/code> matrix as an <a href=\"dart-ui\/Offset-class.html\">Offset<\/a>, if the matrix is\nnothing but a 2D translation.<\/p>\n<p>Otherwise, returns null.<\/p>\n    ",
-            "static": false,
-            "memberOf": "painting.MatrixUtils",
-            "sig": "",
-            "params": [
-                {
-                    "name": "transform",
-                    "type": "vector_math_64.Matrix4",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "painting\/MatrixUtils\/getAsTranslation.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Offset getAsTranslation(Matrix4 transform) {\n  assert(transform != null);\n  final Float64List values = transform.storage;\n  \/\/ Values are stored in column-major order.\n  if (values[0] == 1.0 &amp;&amp; \/\/ col 1\n      values[1] == 0.0 &amp;&amp;\n      values[2] == 0.0 &amp;&amp;\n      values[3] == 0.0 &amp;&amp;\n      values[4] == 0.0 &amp;&amp; \/\/ col 2\n      values[5] == 1.0 &amp;&amp;\n      values[6] == 0.0 &amp;&amp;\n      values[7] == 0.0 &amp;&amp;\n      values[8] == 0.0 &amp;&amp; \/\/ col 3\n      values[9] == 0.0 &amp;&amp;\n      values[10] == 1.0 &amp;&amp;\n      values[11] == 0.0 &amp;&amp;\n      values[14] == 0.0 &amp;&amp; \/\/ bottom of col 4 (values 12 and 13 are the x and y offsets)\n      values[15] == 1.0) {\n    return Offset(values[12], values[13]);\n  }\n  return null;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "inverseTransformRect",
-            "type": "dart:ui.Rect",
-            "desc": "<p>Returns a rect that bounds the result of applying the inverse of the given\nmatrix as a perspective transform to the given rect.<\/p>\n<p>This function assumes the given rect is in the plane with z equals 0.0.\nThe transformed rect is then projected back into the plane with z equals\n0.0 before computing its bounding rect.<\/p>\n    ",
-            "static": false,
-            "memberOf": "painting.MatrixUtils",
-            "sig": "",
-            "params": [
-                {
-                    "name": "transform",
-                    "type": "vector_math_64.Matrix4",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.Axis"
                 },
                 {
-                    "name": "rect",
-                    "type": "dart:ui.Rect",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "perspective",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                },
+                {
+                    "name": "radius",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 }
-            ],
+            ]
+        },
+        {
+            "desc": "<p>Returns the given <code>transform<\/code> matrix as a <a href=\"dart-core\/double-class.html\">double<\/a> describing a uniform\nscale, if the matrix is nothing but a symmetric 2D scale transform.<\/p>\n<p>Otherwise, returns null.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static double getAsScale(Matrix4 transform) {\n  assert(transform != null);\n  final Float64List values = transform.storage;\n  \/\/ Values are stored in column-major order.\n  if (values[1] == 0.0 &amp;&amp; \/\/ col 1 (value 0 is the scale)\n      values[2] == 0.0 &amp;&amp;\n      values[3] == 0.0 &amp;&amp;\n      values[4] == 0.0 &amp;&amp; \/\/ col 2 (value 5 is the scale)\n      values[6] == 0.0 &amp;&amp;\n      values[7] == 0.0 &amp;&amp;\n      values[8] == 0.0 &amp;&amp; \/\/ col 3\n      values[9] == 0.0 &amp;&amp;\n      values[10] == 1.0 &amp;&amp;\n      values[11] == 0.0 &amp;&amp;\n      values[12] == 0.0 &amp;&amp; \/\/ col 4\n      values[13] == 0.0 &amp;&amp;\n      values[14] == 0.0 &amp;&amp;\n      values[15] == 1.0 &amp;&amp;\n      values[0] == values[5]) { \/\/ uniform scale\n    return values[0];\n  }\n  return null;\n}<\/code><\/pre>\n    ",
+            "href": "painting\/MatrixUtils\/getAsScale.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "painting\/MatrixUtils\/inverseTransformRect.html",
+            "static": false,
+            "memberOf": "painting.MatrixUtils",
+            "params": [
+                {
+                    "name": "transform",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_64.Matrix4"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns the given <code>transform<\/code> matrix as an <a href=\"dart-ui\/Offset-class.html\">Offset<\/a>, if the matrix is\nnothing but a 2D translation.<\/p>\n<p>Otherwise, returns null.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Offset getAsTranslation(Matrix4 transform) {\n  assert(transform != null);\n  final Float64List values = transform.storage;\n  \/\/ Values are stored in column-major order.\n  if (values[0] == 1.0 &amp;&amp; \/\/ col 1\n      values[1] == 0.0 &amp;&amp;\n      values[2] == 0.0 &amp;&amp;\n      values[3] == 0.0 &amp;&amp;\n      values[4] == 0.0 &amp;&amp; \/\/ col 2\n      values[5] == 1.0 &amp;&amp;\n      values[6] == 0.0 &amp;&amp;\n      values[7] == 0.0 &amp;&amp;\n      values[8] == 0.0 &amp;&amp; \/\/ col 3\n      values[9] == 0.0 &amp;&amp;\n      values[10] == 1.0 &amp;&amp;\n      values[11] == 0.0 &amp;&amp;\n      values[14] == 0.0 &amp;&amp; \/\/ bottom of col 4 (values 12 and 13 are the x and y offsets)\n      values[15] == 1.0) {\n    return Offset(values[12], values[13]);\n  }\n  return null;\n}<\/code><\/pre>\n    ",
+            "href": "painting\/MatrixUtils\/getAsTranslation.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Offset",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "painting.MatrixUtils",
+            "params": [
+                {
+                    "name": "transform",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_64.Matrix4"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns a rect that bounds the result of applying the inverse of the given\nmatrix as a perspective transform to the given rect.<\/p>\n<p>This function assumes the given rect is in the plane with z equals 0.0.\nThe transformed rect is then projected back into the plane with z equals\n0.0 before computing its bounding rect.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Rect inverseTransformRect(Matrix4 transform, Rect rect) {\n  assert(rect != null);\n  assert(transform.determinant != 0.0);\n  if (isIdentity(transform))\n    return rect;\n  transform = Matrix4.copy(transform)..invert();\n  return transformRect(transform, rect);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "isIdentity",
-            "type": "dart:core.bool",
-            "desc": "<p>Whether the given matrix is the identity matrix.<\/p>\n    ",
-            "static": false,
-            "memberOf": "painting.MatrixUtils",
-            "sig": "",
-            "params": [
-                {
-                    "name": "a",
-                    "type": "vector_math_64.Matrix4",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
+            "href": "painting\/MatrixUtils\/inverseTransformRect.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Rect",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "painting\/MatrixUtils\/isIdentity.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static bool isIdentity(Matrix4 a) {\n  assert(a != null);\n  return a.storage[0] == 1.0 \/\/ col 1\n      &amp;&amp; a.storage[1] == 0.0\n      &amp;&amp; a.storage[2] == 0.0\n      &amp;&amp; a.storage[3] == 0.0\n      &amp;&amp; a.storage[4] == 0.0 \/\/ col 2\n      &amp;&amp; a.storage[5] == 1.0\n      &amp;&amp; a.storage[6] == 0.0\n      &amp;&amp; a.storage[7] == 0.0\n      &amp;&amp; a.storage[8] == 0.0 \/\/ col 3\n      &amp;&amp; a.storage[9] == 0.0\n      &amp;&amp; a.storage[10] == 1.0\n      &amp;&amp; a.storage[11] == 0.0\n      &amp;&amp; a.storage[12] == 0.0 \/\/ col 4\n      &amp;&amp; a.storage[13] == 0.0\n      &amp;&amp; a.storage[14] == 0.0\n      &amp;&amp; a.storage[15] == 1.0;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "matrixEquals",
-            "type": "dart:core.bool",
-            "desc": "<p>Returns true if the given matrices are exactly equal, and false\notherwise. Null values are assumed to be the identity matrix.<\/p>\n    ",
             "static": false,
             "memberOf": "painting.MatrixUtils",
-            "sig": "",
+            "params": [
+                {
+                    "name": "rect",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Rect"
+                },
+                {
+                    "name": "transform",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_64.Matrix4"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Whether the given matrix is the identity matrix.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static bool isIdentity(Matrix4 a) {\n  assert(a != null);\n  return a.storage[0] == 1.0 \/\/ col 1\n      &amp;&amp; a.storage[1] == 0.0\n      &amp;&amp; a.storage[2] == 0.0\n      &amp;&amp; a.storage[3] == 0.0\n      &amp;&amp; a.storage[4] == 0.0 \/\/ col 2\n      &amp;&amp; a.storage[5] == 1.0\n      &amp;&amp; a.storage[6] == 0.0\n      &amp;&amp; a.storage[7] == 0.0\n      &amp;&amp; a.storage[8] == 0.0 \/\/ col 3\n      &amp;&amp; a.storage[9] == 0.0\n      &amp;&amp; a.storage[10] == 1.0\n      &amp;&amp; a.storage[11] == 0.0\n      &amp;&amp; a.storage[12] == 0.0 \/\/ col 4\n      &amp;&amp; a.storage[13] == 0.0\n      &amp;&amp; a.storage[14] == 0.0\n      &amp;&amp; a.storage[15] == 1.0;\n}<\/code><\/pre>\n    ",
+            "href": "painting\/MatrixUtils\/isIdentity.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "painting.MatrixUtils",
             "params": [
                 {
                     "name": "a",
-                    "type": "vector_math_64.Matrix4",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_64.Matrix4"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns true if the given matrices are exactly equal, and false\notherwise. Null values are assumed to be the identity matrix.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static bool matrixEquals(Matrix4 a, Matrix4 b) {\n  if (identical(a, b))\n    return true;\n  assert(a != null || b != null);\n  if (a == null)\n    return isIdentity(b);\n  if (b == null)\n    return isIdentity(a);\n  assert(a != null &amp;&amp; b != null);\n  return a.storage[0] == b.storage[0]\n      &amp;&amp; a.storage[1] == b.storage[1]\n      &amp;&amp; a.storage[2] == b.storage[2]\n      &amp;&amp; a.storage[3] == b.storage[3]\n      &amp;&amp; a.storage[4] == b.storage[4]\n      &amp;&amp; a.storage[5] == b.storage[5]\n      &amp;&amp; a.storage[6] == b.storage[6]\n      &amp;&amp; a.storage[7] == b.storage[7]\n      &amp;&amp; a.storage[8] == b.storage[8]\n      &amp;&amp; a.storage[9] == b.storage[9]\n      &amp;&amp; a.storage[10] == b.storage[10]\n      &amp;&amp; a.storage[11] == b.storage[11]\n      &amp;&amp; a.storage[12] == b.storage[12]\n      &amp;&amp; a.storage[13] == b.storage[13]\n      &amp;&amp; a.storage[14] == b.storage[14]\n      &amp;&amp; a.storage[15] == b.storage[15];\n}<\/code><\/pre>\n    ",
+            "href": "painting\/MatrixUtils\/matrixEquals.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "painting.MatrixUtils",
+            "params": [
+                {
+                    "name": "a",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_64.Matrix4"
                 },
                 {
                     "name": "b",
-                    "type": "vector_math_64.Matrix4",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_64.Matrix4"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/MatrixUtils\/matrixEquals.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static bool matrixEquals(Matrix4 a, Matrix4 b) {\n  if (identical(a, b))\n    return true;\n  assert(a != null || b != null);\n  if (a == null)\n    return isIdentity(b);\n  if (b == null)\n    return isIdentity(a);\n  assert(a != null &amp;&amp; b != null);\n  return a.storage[0] == b.storage[0]\n      &amp;&amp; a.storage[1] == b.storage[1]\n      &amp;&amp; a.storage[2] == b.storage[2]\n      &amp;&amp; a.storage[3] == b.storage[3]\n      &amp;&amp; a.storage[4] == b.storage[4]\n      &amp;&amp; a.storage[5] == b.storage[5]\n      &amp;&amp; a.storage[6] == b.storage[6]\n      &amp;&amp; a.storage[7] == b.storage[7]\n      &amp;&amp; a.storage[8] == b.storage[8]\n      &amp;&amp; a.storage[9] == b.storage[9]\n      &amp;&amp; a.storage[10] == b.storage[10]\n      &amp;&amp; a.storage[11] == b.storage[11]\n      &amp;&amp; a.storage[12] == b.storage[12]\n      &amp;&amp; a.storage[13] == b.storage[13]\n      &amp;&amp; a.storage[14] == b.storage[14]\n      &amp;&amp; a.storage[15] == b.storage[15];\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "transformPoint",
-            "type": "dart:ui.Offset",
             "desc": "<p>Applies the given matrix as a perspective transform to the given point.<\/p>\n<p>This function assumes the given point has a z-coordinate of 0.0. The\nz-coordinate of the result is ignored.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Offset transformPoint(Matrix4 transform, Offset point) {\n  final Vector3 position3 = Vector3(point.dx, point.dy, 0.0);\n  final Vector3 transformed3 = transform.perspectiveTransform(position3);\n  return Offset(transformed3.x, transformed3.y);\n}<\/code><\/pre>\n    ",
+            "href": "painting\/MatrixUtils\/transformPoint.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Offset",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.MatrixUtils",
-            "sig": "",
             "params": [
-                {
-                    "name": "transform",
-                    "type": "vector_math_64.Matrix4",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
                 {
                     "name": "point",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "painting\/MatrixUtils\/transformPoint.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Offset transformPoint(Matrix4 transform, Offset point) {\n  final Vector3 position3 = Vector3(point.dx, point.dy, 0.0);\n  final Vector3 transformed3 = transform.perspectiveTransform(position3);\n  return Offset(transformed3.x, transformed3.y);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "transformRect",
-            "type": "dart:ui.Rect",
-            "desc": "<p>Returns a rect that bounds the result of applying the given matrix as a\nperspective transform to the given rect.<\/p>\n<p>This function assumes the given rect is in the plane with z equals 0.0.\nThe transformed rect is then projected back into the plane with z equals\n0.0 before computing its bounding rect.<\/p>\n    ",
-            "static": false,
-            "memberOf": "painting.MatrixUtils",
-            "sig": "",
-            "params": [
-                {
-                    "name": "transform",
-                    "type": "vector_math_64.Matrix4",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Offset"
                 },
                 {
-                    "name": "rect",
-                    "type": "dart:ui.Rect",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "transform",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_64.Matrix4"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/MatrixUtils\/transformRect.html",
+            ]
+        },
+        {
+            "desc": "<p>Returns a rect that bounds the result of applying the given matrix as a\nperspective transform to the given rect.<\/p>\n<p>This function assumes the given rect is in the plane with z equals 0.0.\nThe transformed rect is then projected back into the plane with z equals\n0.0 before computing its bounding rect.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static Rect transformRect(Matrix4 transform, Rect rect) {\n  final Offset point1 = transformPoint(transform, rect.topLeft);\n  final Offset point2 = transformPoint(transform, rect.topRight);\n  final Offset point3 = transformPoint(transform, rect.bottomLeft);\n  final Offset point4 = transformPoint(transform, rect.bottomRight);\n  return Rect.fromLTRB(\n      _min4(point1.dx, point2.dx, point3.dx, point4.dx),\n      _min4(point1.dy, point2.dy, point3.dy, point4.dy),\n      _max4(point1.dx, point2.dx, point3.dx, point4.dx),\n      _max4(point1.dy, point2.dy, point3.dy, point4.dy),\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "painting\/MatrixUtils\/transformRect.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Rect",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "painting.MatrixUtils",
+            "params": [
+                {
+                    "name": "rect",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.Rect"
+                },
+                {
+                    "name": "transform",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "vector_math_64.Matrix4"
+                }
+            ]
         }
     ],
-    "props": [],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "painting\/MatrixUtils-class.html",
-    "desc": "<p>Utility functions for working with matrices.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "MatrixUtils"
+    "props": []
 }

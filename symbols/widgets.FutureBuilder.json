@@ -1,5 +1,17 @@
 {
+    "desc": "<p>Widget that builds itself based on the latest snapshot of interaction with\na <a href=\"dart-async\/Future-class.html\">Future<\/a>.<\/p>\n<p>The <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> must have been obtained earlier, e.g. during <a href=\"widgets\/State\/initState.html\">State.initState<\/a>,\n<code>State.didUpdateConfig<\/code>, or <a href=\"widgets\/State\/didChangeDependencies.html\">State.didChangeDependencies<\/a>. It must not be\ncreated during the <a href=\"widgets\/State\/build.html\">State.build<\/a> or <a href=\"widgets\/StatelessWidget\/build.html\">StatelessWidget.build<\/a> method call when\nconstructing the <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a>. If the <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> is created at the same\ntime as the <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a>, then every time the <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a>'s parent is\nrebuilt, the asynchronous task will be restarted.<\/p>\n<p>A general guideline is to assume that every <code>build<\/code> method could get called\nevery frame, and to treat omitted calls as an optimization.<\/p>\n<h2 id=\"timing\">Timing<\/h2>\n<p>Widget rebuilding is scheduled by the completion of the future, using\n<a href=\"widgets\/State\/setState.html\">State.setState<\/a>, but is otherwise decoupled from the timing of the future.\nThe <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> callback is called at the discretion of the Flutter pipeline, and\nwill thus receive a timing-dependent sub-sequence of the snapshots that\nrepresent the interaction with the future.<\/p>\n<p>A side-effect of this is that providing a new but already-completed future\nto a <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a> will result in a single frame in the\n<a href=\"widgets\/ConnectionState-class.html\">ConnectionState.waiting<\/a> state. This is because there is no way to\nsynchronously determine that a <a href=\"dart-async\/Future-class.html\">Future<\/a> has already completed.<\/p>\n<h2 id=\"builder-contract\">Builder contract<\/h2>\n<p>For a future that completes successfully with data, assuming <a href=\"widgets\/FutureBuilder\/initialData.html\">initialData<\/a>\nis null, the <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> will be called with either both or only the latter of\nthe following snapshots:<\/p>\n<ul>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.waiting, null)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.done, 'some data')<\/code><\/li>\n<\/ul>\n<p>If that same future instead completed with an error, the <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> would be\ncalled with either both or only the latter of:<\/p>\n<ul>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.waiting, null)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;String&gt;.withError(ConnectionState.done, 'some error')<\/code><\/li>\n<\/ul>\n<p>The initial snapshot data can be controlled by specifying <a href=\"widgets\/FutureBuilder\/initialData.html\">initialData<\/a>. You\nwould use this facility to ensure that if the <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> is invoked before\nthe future completes, the snapshot carries data of your choice rather than\nthe default null value.<\/p>\n<p>The data and error fields of the snapshot change only as the connection\nstate field transitions from <code>waiting<\/code> to <code>done<\/code>, and they will be retained\nwhen changing the <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a> configuration to another future. If the\nold future has already completed successfully with data as above, changing\nconfiguration to a new future results in snapshot pairs of the form:<\/p>\n<ul>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.none, 'data of first future')<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.waiting, 'data of second future')<\/code><\/li>\n<\/ul>\n<p>In general, the latter will be produced only when the new future is\nnon-null, and the former only when the old future is non-null.<\/p>\n<p>A <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a> behaves identically to a <a href=\"widgets\/StreamBuilder-class.html\">StreamBuilder<\/a> configured with\n<code>future?.asStream()<\/code>, except that snapshots with <code>ConnectionState.active<\/code>\nmay appear for the latter, depending on how the stream is implemented.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis sample shows a <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a> configuring a text label to show the\nstate of an asynchronous calculation returning a string. Assume the\n<code>_calculation<\/code> field is set by pressing a button elsewhere in the UI.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">FutureBuilder&lt;String&gt;(\n  future: _calculation, \/\/ a previously-obtained Future&lt;String&gt; or null\n  builder: (BuildContext context, AsyncSnapshot&lt;String&gt; snapshot) {\n    switch (snapshot.connectionState) {\n      case ConnectionState.none:\n        return Text('Press button to start.');\n      case ConnectionState.active:\n      case ConnectionState.waiting:\n        return Text('Awaiting result...');\n      case ConnectionState.done:\n        if (snapshot.hasError)\n          return Text('Error: ${snapshot.error}');\n        return Text('Result: ${snapshot.data}');\n    }\n    return null; \/\/ unreachable\n  },\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "widgets\/FutureBuilder-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "widgets",
     "name": "widgets.FutureBuilder",
+    "shortname": "FutureBuilder",
     "extends": [
         "widgets.StatefulWidget",
         "widgets.Widget",
@@ -7,125 +19,89 @@
         "foundation.Diagnosticable",
         "dart:core.Object"
     ],
-    "memberOf": "widgets",
-    "events": [],
+    "events": [
+        {
+            "desc": "<p>The build strategy currently used by this builder.<\/p>\n<p>The builder is provided with an <a href=\"widgets\/AsyncSnapshot-class.html\">AsyncSnapshot<\/a> object whose\n<a href=\"widgets\/AsyncSnapshot\/connectionState.html\">AsyncSnapshot.connectionState<\/a> property will be one of the following\nvalues:<\/p>\n<ul>\n<li>\n<p><a href=\"widgets\/ConnectionState-class.html\">ConnectionState.none<\/a>: <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> is null. The <a href=\"widgets\/AsyncSnapshot\/data.html\">AsyncSnapshot.data<\/a> will\nbe set to <a href=\"widgets\/FutureBuilder\/initialData.html\">initialData<\/a>, unless a future has previously completed, in\nwhich case the previous result persists.<\/p>\n<\/li>\n<li>\n<p><a href=\"widgets\/ConnectionState-class.html\">ConnectionState.waiting<\/a>: <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> is not null, but has not yet\ncompleted. The <a href=\"widgets\/AsyncSnapshot\/data.html\">AsyncSnapshot.data<\/a> will be set to <a href=\"widgets\/FutureBuilder\/initialData.html\">initialData<\/a>,\nunless a future has previously completed, in which case the previous\nresult persists.<\/p>\n<\/li>\n<li>\n<p><a href=\"widgets\/ConnectionState-class.html\">ConnectionState.done<\/a>: <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> is not null, and has completed. If the\nfuture completed successfully, the <a href=\"widgets\/AsyncSnapshot\/data.html\">AsyncSnapshot.data<\/a> will be set to\nthe value to which the future completed. If it completed with an error,\n<a href=\"widgets\/AsyncSnapshot\/hasError.html\">AsyncSnapshot.hasError<\/a> will be true and <a href=\"widgets\/AsyncSnapshot\/error.html\">AsyncSnapshot.error<\/a> will be\nset to the error object.<\/p>\n<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final AsyncWidgetBuilder&lt;T&gt; builder\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/FutureBuilder\/builder.html",
+            "isDeprecated": "0",
+            "type": "widgets.AsyncWidgetBuilder",
+            "memberOf": "widgets.FutureBuilder",
+            "params": []
+        }
+    ],
     "methods": [
         {
-            "name": "FutureBuilder",
-            "type": "",
             "desc": "<p>Creates a widget that builds itself based on the latest snapshot of\ninteraction with a <a href=\"dart-async\/Future-class.html\">Future<\/a>.<\/p>\n<p>The <code>builder<\/code> must not be null.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const FutureBuilder({\n  Key key,\n  this.future,\n  this.initialData,\n  @required this.builder,\n}) : assert(builder != null),\n     super(key: key);<\/code><\/pre>\n    ",
+            "href": "widgets\/FutureBuilder\/FutureBuilder.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "widgets.FutureBuilder",
-            "sig": "",
             "params": [
                 {
-                    "name": "key",
-                    "type": "foundation.Key",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "builder",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.AsyncWidgetBuilder"
                 },
                 {
                     "name": "future",
-                    "type": "dart:async.Future",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:async.Future"
                 },
                 {
                     "name": "initialData",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "<T>"
                 },
                 {
-                    "name": "builder",
-                    "type": "widgets.AsyncWidgetBuilder",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "key",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "foundation.Key"
                 }
-            ],
-            "isConstructor": true,
-            "href": "widgets\/FutureBuilder\/FutureBuilder.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const FutureBuilder({\n  Key key,\n  this.future,\n  this.initialData,\n  @required this.builder,\n}) : assert(builder != null),\n     super(key: key);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "createState",
-            "type": "widgets.State<widgets.FutureBuilder>",
             "desc": "<p>Creates the mutable state for this widget at a given location in the tree.<\/p>\n<p>Subclasses should override this method to return a newly created\ninstance of their associated <a href=\"widgets\/State-class.html\">State<\/a> subclass:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">@override\n_MyState createState() =&gt; _MyState();\n<\/code><\/pre>\n<p>The framework can call this method multiple times over the lifetime of\na <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>. For example, if the widget is inserted into the tree\nin multiple locations, the framework will create a separate <a href=\"widgets\/State-class.html\">State<\/a> object\nfor each location. Similarly, if the widget is removed from the tree and\nlater inserted into the tree again, the framework will call <a href=\"widgets\/FutureBuilder\/createState.html\">createState<\/a>\nagain to create a fresh <a href=\"widgets\/State-class.html\">State<\/a> object, simplifying the lifecycle of\n<a href=\"widgets\/State-class.html\">State<\/a> objects.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nState&lt;FutureBuilder&lt;T&gt;&gt; createState() =&gt; _FutureBuilderState&lt;T&gt;();<\/code><\/pre>\n    ",
+            "href": "widgets\/FutureBuilder\/createState.html",
+            "isDeprecated": "0",
+            "type": "widgets.State<widgets.FutureBuilder>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.FutureBuilder",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/FutureBuilder\/createState.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nState&lt;FutureBuilder&lt;T&gt;&gt; createState() =&gt; _FutureBuilderState&lt;T&gt;();<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "widgets.State",
-                "widgets.FutureBuilder"
-            ]
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "builder",
-            "type": "widgets.AsyncWidgetBuilder",
-            "types": [],
-            "desc": "<p>The build strategy currently used by this builder.<\/p>\n<p>The builder is provided with an <a href=\"widgets\/AsyncSnapshot-class.html\">AsyncSnapshot<\/a> object whose\n<a href=\"widgets\/AsyncSnapshot\/connectionState.html\">AsyncSnapshot.connectionState<\/a> property will be one of the following\nvalues:<\/p>\n<ul>\n<li>\n<p><a href=\"widgets\/ConnectionState-class.html\">ConnectionState.none<\/a>: <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> is null. The <a href=\"widgets\/AsyncSnapshot\/data.html\">AsyncSnapshot.data<\/a> will\nbe set to <a href=\"widgets\/FutureBuilder\/initialData.html\">initialData<\/a>, unless a future has previously completed, in\nwhich case the previous result persists.<\/p>\n<\/li>\n<li>\n<p><a href=\"widgets\/ConnectionState-class.html\">ConnectionState.waiting<\/a>: <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> is not null, but has not yet\ncompleted. The <a href=\"widgets\/AsyncSnapshot\/data.html\">AsyncSnapshot.data<\/a> will be set to <a href=\"widgets\/FutureBuilder\/initialData.html\">initialData<\/a>,\nunless a future has previously completed, in which case the previous\nresult persists.<\/p>\n<\/li>\n<li>\n<p><a href=\"widgets\/ConnectionState-class.html\">ConnectionState.done<\/a>: <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> is not null, and has completed. If the\nfuture completed successfully, the <a href=\"widgets\/AsyncSnapshot\/data.html\">AsyncSnapshot.data<\/a> will be set to\nthe value to which the future completed. If it completed with an error,\n<a href=\"widgets\/AsyncSnapshot\/hasError.html\">AsyncSnapshot.hasError<\/a> will be true and <a href=\"widgets\/AsyncSnapshot\/error.html\">AsyncSnapshot.error<\/a> will be\nset to the error object.<\/p>\n<\/li>\n<\/ul>",
-            "memberOf": "widgets.FutureBuilder",
-            "isConstant": false,
-            "href": "widgets\/FutureBuilder\/builder.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final AsyncWidgetBuilder&lt;T&gt; builder\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "future",
-            "type": "dart:async.Future",
-            "types": [],
             "desc": "<p>The asynchronous computation to which this builder is currently connected,\npossibly null.<\/p>\n<p>If no future has yet completed, including in the case where <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> is\nnull, the data provided to the <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> will be set to <a href=\"widgets\/FutureBuilder\/initialData.html\">initialData<\/a>.<\/p>\n        ",
-            "memberOf": "widgets.FutureBuilder",
-            "isConstant": false,
-            "href": "widgets\/FutureBuilder\/future.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Future&lt;T&gt; future\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "initialData",
-            "type": "",
-            "types": [],
-            "desc": "<p>The data that will be used to create the snapshots provided until a\nnon-null <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> has completed.<\/p>\n<p>If the future completes with an error, the data in the <a href=\"widgets\/AsyncSnapshot-class.html\">AsyncSnapshot<\/a>\nprovided to the <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> will become null, regardless of <a href=\"widgets\/FutureBuilder\/initialData.html\">initialData<\/a>.\n(The error itself will be available in <a href=\"widgets\/AsyncSnapshot\/error.html\">AsyncSnapshot.error<\/a>, and\n<a href=\"widgets\/AsyncSnapshot\/hasError.html\">AsyncSnapshot.hasError<\/a> will be true.)<\/p>\n        ",
+            "href": "widgets\/FutureBuilder\/future.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
             "memberOf": "widgets.FutureBuilder",
-            "isConstant": false,
-            "href": "widgets\/FutureBuilder\/initialData.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final T initialData\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "widgets\/FutureBuilder-class.html",
-    "desc": "<p>Widget that builds itself based on the latest snapshot of interaction with\na <a href=\"dart-async\/Future-class.html\">Future<\/a>.<\/p>\n<p>The <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> must have been obtained earlier, e.g. during <a href=\"widgets\/State\/initState.html\">State.initState<\/a>,\n<code>State.didUpdateConfig<\/code>, or <a href=\"widgets\/State\/didChangeDependencies.html\">State.didChangeDependencies<\/a>. It must not be\ncreated during the <a href=\"widgets\/State\/build.html\">State.build<\/a> or <a href=\"widgets\/StatelessWidget\/build.html\">StatelessWidget.build<\/a> method call when\nconstructing the <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a>. If the <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> is created at the same\ntime as the <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a>, then every time the <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a>'s parent is\nrebuilt, the asynchronous task will be restarted.<\/p>\n<p>A general guideline is to assume that every <code>build<\/code> method could get called\nevery frame, and to treat omitted calls as an optimization.<\/p>\n<h2 id=\"timing\">Timing<\/h2>\n<p>Widget rebuilding is scheduled by the completion of the future, using\n<a href=\"widgets\/State\/setState.html\">State.setState<\/a>, but is otherwise decoupled from the timing of the future.\nThe <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> callback is called at the discretion of the Flutter pipeline, and\nwill thus receive a timing-dependent sub-sequence of the snapshots that\nrepresent the interaction with the future.<\/p>\n<p>A side-effect of this is that providing a new but already-completed future\nto a <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a> will result in a single frame in the\n<a href=\"widgets\/ConnectionState-class.html\">ConnectionState.waiting<\/a> state. This is because there is no way to\nsynchronously determine that a <a href=\"dart-async\/Future-class.html\">Future<\/a> has already completed.<\/p>\n<h2 id=\"builder-contract\">Builder contract<\/h2>\n<p>For a future that completes successfully with data, assuming <a href=\"widgets\/FutureBuilder\/initialData.html\">initialData<\/a>\nis null, the <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> will be called with either both or only the latter of\nthe following snapshots:<\/p>\n<ul>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.waiting, null)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.done, 'some data')<\/code><\/li>\n<\/ul>\n<p>If that same future instead completed with an error, the <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> would be\ncalled with either both or only the latter of:<\/p>\n<ul>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.waiting, null)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;String&gt;.withError(ConnectionState.done, 'some error')<\/code><\/li>\n<\/ul>\n<p>The initial snapshot data can be controlled by specifying <a href=\"widgets\/FutureBuilder\/initialData.html\">initialData<\/a>. You\nwould use this facility to ensure that if the <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> is invoked before\nthe future completes, the snapshot carries data of your choice rather than\nthe default null value.<\/p>\n<p>The data and error fields of the snapshot change only as the connection\nstate field transitions from <code>waiting<\/code> to <code>done<\/code>, and they will be retained\nwhen changing the <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a> configuration to another future. If the\nold future has already completed successfully with data as above, changing\nconfiguration to a new future results in snapshot pairs of the form:<\/p>\n<ul>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.none, 'data of first future')<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.waiting, 'data of second future')<\/code><\/li>\n<\/ul>\n<p>In general, the latter will be produced only when the new future is\nnon-null, and the former only when the old future is non-null.<\/p>\n<p>A <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a> behaves identically to a <a href=\"widgets\/StreamBuilder-class.html\">StreamBuilder<\/a> configured with\n<code>future?.asStream()<\/code>, except that snapshots with <code>ConnectionState.active<\/code>\nmay appear for the latter, depending on how the stream is implemented.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis sample shows a <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a> configuring a text label to show the\nstate of an asynchronous calculation returning a string. Assume the\n<code>_calculation<\/code> field is set by pressing a button elsewhere in the UI.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">FutureBuilder&lt;String&gt;(\n  future: _calculation, \/\/ a previously-obtained Future&lt;String&gt; or null\n  builder: (BuildContext context, AsyncSnapshot&lt;String&gt; snapshot) {\n    switch (snapshot.connectionState) {\n      case ConnectionState.none:\n        return Text('Press button to start.');\n      case ConnectionState.active:\n      case ConnectionState.waiting:\n        return Text('Awaiting result...');\n      case ConnectionState.done:\n        if (snapshot.hasError)\n          return Text('Error: ${snapshot.error}');\n        return Text('Result: ${snapshot.data}');\n    }\n    return null; \/\/ unreachable\n  },\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "FutureBuilder"
+    ]
 }

@@ -1,957 +1,803 @@
 {
+    "desc": "<p>An instantiation of a <a href=\"widgets\/Widget-class.html\">Widget<\/a> at a particular location in the tree.<\/p>\n<p>Widgets describe how to configure a subtree but the same widget can be used\nto configure multiple subtrees simultaneously because widgets are immutable.\nAn <a href=\"widgets\/Element-class.html\">Element<\/a> represents the use of a widget to configure a specific location\nin the tree. Over time, the widget associated with a given element can\nchange, for example, if the parent widget rebuilds and creates a new widget\nfor this location.<\/p>\n<p>Elements form a tree. Most elements have a unique child, but some widgets\n(e.g., subclasses of <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a>) can have multiple children.<\/p>\n<p>Elements have the following lifecycle:<\/p>\n<ul>\n<li>The framework creates an element by calling <a href=\"widgets\/Widget\/createElement.html\">Widget.createElement<\/a> on the\nwidget that will be used as the element's initial configuration.<\/li>\n<li>The framework calls <a href=\"widgets\/Element\/mount.html\">mount<\/a> to add the newly created element to the tree\nat a given slot in a given parent. The <a href=\"widgets\/Element\/mount.html\">mount<\/a> method is responsible for\ninflating any child widgets and calling <a href=\"widgets\/Element\/attachRenderObject.html\">attachRenderObject<\/a> as\nnecessary to attach any associated render objects to the render tree.<\/li>\n<li>At this point, the element is considered \"active\" and might appear on\nscreen.<\/li>\n<li>At some point, the parent might decide to change the widget used to\nconfigure this element, for example because the parent rebuilt with new\nstate. When this happens, the framework will call <a href=\"widgets\/Element\/update.html\">update<\/a> with the new\nwidget. The new widget will always have the same <a href=\"dart-core\/Object\/runtimeType.html\">runtimeType<\/a> and key as\nold widget. If the parent wishes to change the <a href=\"dart-core\/Object\/runtimeType.html\">runtimeType<\/a> or key of\nthe widget at this location in the tree, can do so by unmounting this\nelement and inflating the new widget at this location.<\/li>\n<li>At some point, an ancestor might decide to remove this element (or an\nintermediate ancestor) from the tree, which the ancestor does by calling\n<a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a> on itself. Deactivating the intermediate ancestor will\nremove that element's render object from the render tree and add this\nelement to the <a href=\"widgets\/Element\/owner.html\">owner<\/a>'s list of inactive elements, causing the framework\nto call <a href=\"widgets\/Element\/deactivate.html\">deactivate<\/a> on this element.<\/li>\n<li>At this point, the element is considered \"inactive\" and will not appear\non screen. An element can remain in the inactive state only until\nthe end of the current animation frame. At the end of the animation\nframe, any elements that are still inactive will be unmounted.<\/li>\n<li>If the element gets reincorporated into the tree (e.g., because it or one\nof its ancestors has a global key that is reused), the framework will\nremove the element from the <a href=\"widgets\/Element\/owner.html\">owner<\/a>'s list of inactive elements, call\n<a href=\"widgets\/Element\/activate.html\">activate<\/a> on the element, and reattach the element's render object to\nthe render tree. (At this point, the element is again considered \"active\"\nand might appear on screen.)<\/li>\n<li>If the element does not get reincorporated into the tree by the end of\nthe current animation frame, the framework will call <a href=\"widgets\/Element\/unmount.html\">unmount<\/a> on the\nelement.<\/li>\n<li>At this point, the element is considered \"defunct\" and will not be\nincorporated into the tree in the future.<\/li>\n<\/ul>",
+    "dtype": "class",
+    "example": null,
+    "href": "widgets\/Element-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "widgets",
     "name": "widgets.Element",
+    "shortname": "Element",
     "extends": [
         "foundation.DiagnosticableTree",
         "foundation.Diagnosticable",
         "dart:core.Object"
     ],
-    "memberOf": "widgets",
     "events": [],
     "methods": [
         {
-            "name": "operator ==",
-            "type": "dart:core.bool",
-            "desc": "<p>The equality operator.<\/p>\n<p>The default behavior for all <a href=\"dart-core\/Object-class.html\">Object<\/a>s is to return true if and\nonly if <code>this<\/code> and <code>other<\/code> are the same object.<\/p>\n<p>Override this method to specify a different equality relation on\na class. The overriding method must still be an equivalence relation.\nThat is, it must be:<\/p>\n<ul>\n<li>\n<p>Total: It must return a boolean for all arguments. It should never throw\nor return <code>null<\/code>.<\/p>\n<\/li>\n<li>\n<p>Reflexive: For all objects <code>o<\/code>, <code>o == o<\/code> must be true.<\/p>\n<\/li>\n<li>\n<p>Symmetric: For all objects <code>o1<\/code> and <code>o2<\/code>, <code>o1 == o2<\/code> and <code>o2 == o1<\/code> must\neither both be true, or both be false.<\/p>\n<\/li>\n<li>\n<p>Transitive: For all objects <code>o1<\/code>, <code>o2<\/code>, and <code>o3<\/code>, if <code>o1 == o2<\/code> and\n<code>o2 == o3<\/code> are true, then <code>o1 == o3<\/code> must be true.<\/p>\n<\/li>\n<\/ul>\n<p>The method should also be consistent over time,\nso whether two objects are equal should only change\nif at least one of the objects was modified.<\/p>\n<p>If a subclass overrides the equality operator it should override\nthe <a href=\"widgets\/Element\/hashCode.html\">hashCode<\/a> method as well to maintain consistency.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/operator_equals.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool operator ==(Object other) =&gt; identical(this, other);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "Element",
-            "type": "",
             "desc": "<p>Creates an element that uses the given widget as its configuration.<\/p>\n<p>Typically called by an override of <a href=\"widgets\/Widget\/createElement.html\">Widget.createElement<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Element(Widget widget)\n  : assert(widget != null),\n    _widget = widget;<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/Element.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "widgets.Element",
-            "sig": "",
             "params": [
                 {
                     "name": "widget",
-                    "type": "widgets.Widget",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "widgets\/Element\/Element.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Element(Widget widget)\n  : assert(widget != null),\n    _widget = widget;<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "activate",
-            "type": "",
-            "desc": "<p>Transition from the \"inactive\" to the \"active\" lifecycle state.<\/p>\n<p>The framework calls this method when a previously deactivated element has\nbeen reincorporated into the tree. The framework does not call this method\nthe first time an element becomes active (i.e., from the \"initial\"\nlifecycle state). Instead, the framework calls <a href=\"widgets\/Element\/mount.html\">mount<\/a> in that situation.<\/p>\n<p>See the lifecycle documentation for <a href=\"widgets\/Element-class.html\">Element<\/a> for additional information.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Element\/activate.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid activate() {\n  assert(_debugLifecycleState == _ElementLifecycle.inactive);\n  assert(widget != null);\n  assert(owner != null);\n  assert(depth != null);\n  assert(!_active);\n  final bool hadDependencies = (_dependencies != null &amp;&amp; _dependencies.isNotEmpty) || _hadUnsatisfiedDependencies;\n  _active = true;\n  \/\/ We unregistered our dependencies in deactivate, but never cleared the list.\n  \/\/ Since we're going to be reused, let's clear our list now.\n  _dependencies?.clear();\n  _hadUnsatisfiedDependencies = false;\n  _updateInheritance();\n  assert(() { _debugLifecycleState = _ElementLifecycle.active; return true; }());\n  if (_dirty)\n    owner.scheduleBuildFor(this);\n  if (hadDependencies)\n    didChangeDependencies();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "ancestorInheritedElementForWidgetOfExactType",
-            "type": "widgets.InheritedElement",
-            "desc": "<p>Obtains the element corresponding to the nearest widget of the given type,\nwhich must be the type of a concrete <a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> subclass.<\/p>\n<p>Calling this method is O(1) with a small constant factor.<\/p>\n<p>This method does not establish a relationship with the target in the way\nthat <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> does.<\/p>\n<p>This method should not be called from <a href=\"widgets\/State\/dispose.html\">State.dispose<\/a> because the element\ntree is no longer stable at that time. To refer to an ancestor from that\nmethod, save a reference to the ancestor by calling\n<a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> in <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a>. It is\nsafe to use this method from <a href=\"widgets\/Element\/deactivate.html\">State.deactivate<\/a>, which is called whenever\nthe widget is removed from the tree.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [
-                {
-                    "name": "targetType",
-                    "type": "dart:core.Type",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "widgets.Widget"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/ancestorInheritedElementForWidgetOfExactType.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nInheritedElement ancestorInheritedElementForWidgetOfExactType(Type targetType) {\n  assert(_debugCheckStateIsActiveForAncestorLookup());\n  final InheritedElement ancestor = _inheritedWidgets == null ? null : _inheritedWidgets[targetType];\n  return ancestor;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "ancestorRenderObjectOfType",
-            "type": "rendering.RenderObject",
-            "desc": "<p>Returns the <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> object of the nearest ancestor <a href=\"widgets\/RenderObjectWidget-class.html\">RenderObjectWidget<\/a> widget\nthat matches the given <a href=\"widgets\/TypeMatcher-class.html\">TypeMatcher<\/a>.<\/p>\n<p>This should not be used from build methods, because the build context will\nnot be rebuilt if the value that would be returned by this method changes.\nIn general, <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> is more appropriate for such\ncases. This method is useful only in esoteric cases where a widget needs\nto cause an ancestor to change its layout or paint behavior. For example,\nit is used by <a href=\"material\/Material-class.html\">Material<\/a> so that <a href=\"material\/InkWell-class.html\">InkWell<\/a> widgets can trigger the ink\nsplash on the <a href=\"material\/Material-class.html\">Material<\/a>'s actual render object.<\/p>\n<p>Calling this method is relatively expensive (O(N) in the depth of the\ntree). Only call this method if the distance from this widget to the\ndesired ancestor is known to be small and bounded.<\/p>\n<p>This method should not be called from <a href=\"widgets\/Element\/deactivate.html\">State.deactivate<\/a> or <a href=\"widgets\/State\/dispose.html\">State.dispose<\/a>\nbecause the widget tree is no longer stable at that time. To refer to\nan ancestor from one of those methods, save a reference to the ancestor\nby calling <a href=\"widgets\/Element\/ancestorRenderObjectOfType.html\">ancestorRenderObjectOfType<\/a> in <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [
-                {
-                    "name": "matcher",
-                    "type": "widgets.TypeMatcher",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/ancestorRenderObjectOfType.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nRenderObject ancestorRenderObjectOfType(TypeMatcher matcher) {\n  assert(_debugCheckStateIsActiveForAncestorLookup());\n  Element ancestor = _parent;\n  while (ancestor != null) {\n    if (ancestor is RenderObjectElement &amp;&amp; matcher.check(ancestor.renderObject))\n      break;\n    ancestor = ancestor._parent;\n  }\n  final RenderObjectElement renderObjectAncestor = ancestor;\n  return renderObjectAncestor?.renderObject;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "ancestorStateOfType",
-            "type": "widgets.State<widgets.StatefulWidget>",
-            "desc": "<p>Returns the <a href=\"widgets\/State-class.html\">State<\/a> object of the nearest ancestor <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> widget\nthat matches the given <a href=\"widgets\/TypeMatcher-class.html\">TypeMatcher<\/a>.<\/p>\n<p>This should not be used from build methods, because the build context will\nnot be rebuilt if the value that would be returned by this method changes.\nIn general, <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> is more appropriate for such\ncases. This method is useful for changing the state of an ancestor widget in\na one-off manner, for example, to cause an ancestor scrolling list to\nscroll this build context's widget into view, or to move the focus in\nresponse to user interaction.<\/p>\n<p>In general, though, consider using a callback that triggers a stateful\nchange in the ancestor rather than using the imperative style implied by\nthis method. This will usually lead to more maintainable and reusable code\nsince it decouples widgets from each other.<\/p>\n<p>Calling this method is relatively expensive (O(N) in the depth of the\ntree). Only call this method if the distance from this widget to the\ndesired ancestor is known to be small and bounded.<\/p>\n<p>This method should not be called from <a href=\"widgets\/Element\/deactivate.html\">State.deactivate<\/a> or <a href=\"widgets\/State\/dispose.html\">State.dispose<\/a>\nbecause the widget tree is no longer stable at that time. To refer to\nan ancestor from one of those methods, save a reference to the ancestor\nby calling <a href=\"widgets\/Element\/ancestorStateOfType.html\">ancestorStateOfType<\/a> in <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a>.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">ScrollableState scrollable = context.ancestorStateOfType(\n  const TypeMatcher&lt;ScrollableState&gt;(),\n);<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [
-                {
-                    "name": "matcher",
-                    "type": "widgets.TypeMatcher",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/ancestorStateOfType.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nState ancestorStateOfType(TypeMatcher matcher) {\n  assert(_debugCheckStateIsActiveForAncestorLookup());\n  Element ancestor = _parent;\n  while (ancestor != null) {\n    if (ancestor is StatefulElement &amp;&amp; matcher.check(ancestor.state))\n      break;\n    ancestor = ancestor._parent;\n  }\n  final StatefulElement statefulAncestor = ancestor;\n  return statefulAncestor?.state;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "widgets.State",
-                "widgets.StatefulWidget"
             ]
         },
         {
-            "name": "ancestorWidgetOfExactType",
-            "type": "widgets.Widget",
-            "desc": "<p>Returns the nearest ancestor widget of the given type, which must be the\ntype of a concrete <a href=\"widgets\/Widget-class.html\">Widget<\/a> subclass.<\/p>\n<p>In general, <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> is more useful, since inherited\nwidgets will trigger consumers to rebuild when they change. This method is\nappropriate when used in interaction event handlers (e.g. gesture\ncallbacks) or for performing one-off tasks such as asserting that you have\nor don't have a widget of a specific type as an ancestor. The return value\nof a Widget's build method should not depend on the value returned by this\nmethod, because the build context will not rebuild if the return value of\nthis method changes. This could lead to a situation where data used in the\nbuild method changes, but the widget is not rebuilt.<\/p>\n<p>Calling this method is relatively expensive (O(N) in the depth of the\ntree). Only call this method if the distance from this widget to the\ndesired ancestor is known to be small and bounded.<\/p>\n<p>This method should not be called from <a href=\"widgets\/Element\/deactivate.html\">State.deactivate<\/a> or <a href=\"widgets\/State\/dispose.html\">State.dispose<\/a>\nbecause the widget tree is no longer stable at that time. To refer to\nan ancestor from one of those methods, save a reference to the ancestor\nby calling <a href=\"widgets\/Element\/ancestorWidgetOfExactType.html\">ancestorWidgetOfExactType<\/a> in <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a>.<\/p>\n    ",
+            "desc": "<p>Transition from the \"inactive\" to the \"active\" lifecycle state.<\/p>\n<p>The framework calls this method when a previously deactivated element has\nbeen reincorporated into the tree. The framework does not call this method\nthe first time an element becomes active (i.e., from the \"initial\"\nlifecycle state). Instead, the framework calls <a href=\"widgets\/Element\/mount.html\">mount<\/a> in that situation.<\/p>\n<p>See the lifecycle documentation for <a href=\"widgets\/Element-class.html\">Element<\/a> for additional information.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid activate() {\n  assert(_debugLifecycleState == _ElementLifecycle.inactive);\n  assert(widget != null);\n  assert(owner != null);\n  assert(depth != null);\n  assert(!_active);\n  final bool hadDependencies = (_dependencies != null &amp;&amp; _dependencies.isNotEmpty) || _hadUnsatisfiedDependencies;\n  _active = true;\n  \/\/ We unregistered our dependencies in deactivate, but never cleared the list.\n  \/\/ Since we're going to be reused, let's clear our list now.\n  _dependencies?.clear();\n  _hadUnsatisfiedDependencies = false;\n  _updateInheritance();\n  assert(() { _debugLifecycleState = _ElementLifecycle.active; return true; }());\n  if (_dirty)\n    owner.scheduleBuildFor(this);\n  if (hadDependencies)\n    didChangeDependencies();\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/activate.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Element",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>Obtains the element corresponding to the nearest widget of the given type,\nwhich must be the type of a concrete <a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> subclass.<\/p>\n<p>Calling this method is O(1) with a small constant factor.<\/p>\n<p>This method does not establish a relationship with the target in the way\nthat <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> does.<\/p>\n<p>This method should not be called from <a href=\"widgets\/State\/dispose.html\">State.dispose<\/a> because the element\ntree is no longer stable at that time. To refer to an ancestor from that\nmethod, save a reference to the ancestor by calling\n<a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> in <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a>. It is\nsafe to use this method from <a href=\"widgets\/Element\/deactivate.html\">State.deactivate<\/a>, which is called whenever\nthe widget is removed from the tree.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nInheritedElement ancestorInheritedElementForWidgetOfExactType(Type targetType) {\n  assert(_debugCheckStateIsActiveForAncestorLookup());\n  final InheritedElement ancestor = _inheritedWidgets == null ? null : _inheritedWidgets[targetType];\n  return ancestor;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/ancestorInheritedElementForWidgetOfExactType.html",
+            "isDeprecated": "0",
+            "type": "widgets.InheritedElement",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
             "params": [
                 {
                     "name": "targetType",
-                    "type": "dart:core.Type",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Type"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/ancestorWidgetOfExactType.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nWidget ancestorWidgetOfExactType(Type targetType) {\n  assert(_debugCheckStateIsActiveForAncestorLookup());\n  Element ancestor = _parent;\n  while (ancestor != null &amp;&amp; ancestor.widget.runtimeType != targetType)\n    ancestor = ancestor._parent;\n  return ancestor?.widget;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "attachRenderObject",
-            "type": "",
-            "desc": "<p>Add <a href=\"widgets\/Element\/renderObject.html\">renderObject<\/a> to the render tree at the location specified by <a href=\"widgets\/Element\/slot.html\">slot<\/a>.<\/p>\n<p>The default implementation of this function simply calls\n<a href=\"widgets\/Element\/attachRenderObject.html\">attachRenderObject<\/a> recursively on its child. The\n<a href=\"widgets\/Element\/attachRenderObject.html\">RenderObjectElement.attachRenderObject<\/a> override does the actual work of\nadding <a href=\"widgets\/Element\/renderObject.html\">renderObject<\/a> to the render tree.<\/p>\n    ",
+            "desc": "<p>Returns the <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> object of the nearest ancestor <a href=\"widgets\/RenderObjectWidget-class.html\">RenderObjectWidget<\/a> widget\nthat matches the given <a href=\"widgets\/TypeMatcher-class.html\">TypeMatcher<\/a>.<\/p>\n<p>This should not be used from build methods, because the build context will\nnot be rebuilt if the value that would be returned by this method changes.\nIn general, <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> is more appropriate for such\ncases. This method is useful only in esoteric cases where a widget needs\nto cause an ancestor to change its layout or paint behavior. For example,\nit is used by <a href=\"material\/Material-class.html\">Material<\/a> so that <a href=\"material\/InkWell-class.html\">InkWell<\/a> widgets can trigger the ink\nsplash on the <a href=\"material\/Material-class.html\">Material<\/a>'s actual render object.<\/p>\n<p>Calling this method is relatively expensive (O(N) in the depth of the\ntree). Only call this method if the distance from this widget to the\ndesired ancestor is known to be small and bounded.<\/p>\n<p>This method should not be called from <a href=\"widgets\/Element\/deactivate.html\">State.deactivate<\/a> or <a href=\"widgets\/State\/dispose.html\">State.dispose<\/a>\nbecause the widget tree is no longer stable at that time. To refer to\nan ancestor from one of those methods, save a reference to the ancestor\nby calling <a href=\"widgets\/Element\/ancestorRenderObjectOfType.html\">ancestorRenderObjectOfType<\/a> in <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nRenderObject ancestorRenderObjectOfType(TypeMatcher matcher) {\n  assert(_debugCheckStateIsActiveForAncestorLookup());\n  Element ancestor = _parent;\n  while (ancestor != null) {\n    if (ancestor is RenderObjectElement &amp;&amp; matcher.check(ancestor.renderObject))\n      break;\n    ancestor = ancestor._parent;\n  }\n  final RenderObjectElement renderObjectAncestor = ancestor;\n  return renderObjectAncestor?.renderObject;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/ancestorRenderObjectOfType.html",
+            "isDeprecated": "0",
+            "type": "rendering.RenderObject",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Element",
-            "sig": "",
+            "params": [
+                {
+                    "name": "matcher",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.TypeMatcher"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns the <a href=\"widgets\/State-class.html\">State<\/a> object of the nearest ancestor <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> widget\nthat matches the given <a href=\"widgets\/TypeMatcher-class.html\">TypeMatcher<\/a>.<\/p>\n<p>This should not be used from build methods, because the build context will\nnot be rebuilt if the value that would be returned by this method changes.\nIn general, <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> is more appropriate for such\ncases. This method is useful for changing the state of an ancestor widget in\na one-off manner, for example, to cause an ancestor scrolling list to\nscroll this build context's widget into view, or to move the focus in\nresponse to user interaction.<\/p>\n<p>In general, though, consider using a callback that triggers a stateful\nchange in the ancestor rather than using the imperative style implied by\nthis method. This will usually lead to more maintainable and reusable code\nsince it decouples widgets from each other.<\/p>\n<p>Calling this method is relatively expensive (O(N) in the depth of the\ntree). Only call this method if the distance from this widget to the\ndesired ancestor is known to be small and bounded.<\/p>\n<p>This method should not be called from <a href=\"widgets\/Element\/deactivate.html\">State.deactivate<\/a> or <a href=\"widgets\/State\/dispose.html\">State.dispose<\/a>\nbecause the widget tree is no longer stable at that time. To refer to\nan ancestor from one of those methods, save a reference to the ancestor\nby calling <a href=\"widgets\/Element\/ancestorStateOfType.html\">ancestorStateOfType<\/a> in <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a>.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">ScrollableState scrollable = context.ancestorStateOfType(\n  const TypeMatcher&lt;ScrollableState&gt;(),\n);<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nState ancestorStateOfType(TypeMatcher matcher) {\n  assert(_debugCheckStateIsActiveForAncestorLookup());\n  Element ancestor = _parent;\n  while (ancestor != null) {\n    if (ancestor is StatefulElement &amp;&amp; matcher.check(ancestor.state))\n      break;\n    ancestor = ancestor._parent;\n  }\n  final StatefulElement statefulAncestor = ancestor;\n  return statefulAncestor?.state;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/ancestorStateOfType.html",
+            "isDeprecated": "0",
+            "type": "widgets.State<widgets.StatefulWidget>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": [
+                {
+                    "name": "matcher",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.TypeMatcher"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns the nearest ancestor widget of the given type, which must be the\ntype of a concrete <a href=\"widgets\/Widget-class.html\">Widget<\/a> subclass.<\/p>\n<p>In general, <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> is more useful, since inherited\nwidgets will trigger consumers to rebuild when they change. This method is\nappropriate when used in interaction event handlers (e.g. gesture\ncallbacks) or for performing one-off tasks such as asserting that you have\nor don't have a widget of a specific type as an ancestor. The return value\nof a Widget's build method should not depend on the value returned by this\nmethod, because the build context will not rebuild if the return value of\nthis method changes. This could lead to a situation where data used in the\nbuild method changes, but the widget is not rebuilt.<\/p>\n<p>Calling this method is relatively expensive (O(N) in the depth of the\ntree). Only call this method if the distance from this widget to the\ndesired ancestor is known to be small and bounded.<\/p>\n<p>This method should not be called from <a href=\"widgets\/Element\/deactivate.html\">State.deactivate<\/a> or <a href=\"widgets\/State\/dispose.html\">State.dispose<\/a>\nbecause the widget tree is no longer stable at that time. To refer to\nan ancestor from one of those methods, save a reference to the ancestor\nby calling <a href=\"widgets\/Element\/ancestorWidgetOfExactType.html\">ancestorWidgetOfExactType<\/a> in <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nWidget ancestorWidgetOfExactType(Type targetType) {\n  assert(_debugCheckStateIsActiveForAncestorLookup());\n  Element ancestor = _parent;\n  while (ancestor != null &amp;&amp; ancestor.widget.runtimeType != targetType)\n    ancestor = ancestor._parent;\n  return ancestor?.widget;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/ancestorWidgetOfExactType.html",
+            "isDeprecated": "0",
+            "type": "widgets.Widget",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": [
+                {
+                    "name": "targetType",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Type"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Add <a href=\"widgets\/Element\/renderObject.html\">renderObject<\/a> to the render tree at the location specified by <a href=\"widgets\/Element\/slot.html\">slot<\/a>.<\/p>\n<p>The default implementation of this function simply calls\n<a href=\"widgets\/Element\/attachRenderObject.html\">attachRenderObject<\/a> recursively on its child. The\n<a href=\"widgets\/Element\/attachRenderObject.html\">RenderObjectElement.attachRenderObject<\/a> override does the actual work of\nadding <a href=\"widgets\/Element\/renderObject.html\">renderObject<\/a> to the render tree.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void attachRenderObject(dynamic newSlot) {\n  assert(_slot == null);\n  visitChildren((Element child) {\n    child.attachRenderObject(newSlot);\n  });\n  _slot = newSlot;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/attachRenderObject.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
             "params": [
                 {
                     "name": "newSlot",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/attachRenderObject.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void attachRenderObject(dynamic newSlot) {\n  assert(_slot == null);\n  visitChildren((Element child) {\n    child.attachRenderObject(newSlot);\n  });\n  _slot = newSlot;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "deactivate",
-            "type": "",
-            "desc": "<p>Transition from the \"active\" to the \"inactive\" lifecycle state.<\/p>\n<p>The framework calls this method when a previously active element is moved\nto the list of inactive elements. While in the inactive state, the element\nwill not appear on screen. The element can remain in the inactive state\nonly until the end of the current animation frame. At the end of the\nanimation frame, if the element has not be reactivated, the framework will\nunmount the element.<\/p>\n<p>This is (indirectly) called by <a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a>.<\/p>\n<p>See the lifecycle documentation for <a href=\"widgets\/Element-class.html\">Element<\/a> for additional information.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Element\/deactivate.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid deactivate() {\n  assert(_debugLifecycleState == _ElementLifecycle.active);\n  assert(widget != null);\n  assert(depth != null);\n  assert(_active);\n  if (_dependencies != null &amp;&amp; _dependencies.isNotEmpty) {\n    for (InheritedElement dependency in _dependencies)\n      dependency._dependents.remove(this);\n    \/\/ For expediency, we don't actually clear the list here, even though it's\n    \/\/ no longer representative of what we are registered with. If we never\n    \/\/ get re-used, it doesn't matter. If we do, then we'll clear the list in\n    \/\/ activate(). The benefit of this is that it allows Element's activate()\n    \/\/ implementation to decide whether to rebuild based on whether we had\n    \/\/ dependencies here.\n  }\n  _inheritedWidgets = null;\n  _active = false;\n  assert(() { _debugLifecycleState = _ElementLifecycle.inactive; return true; }());\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "deactivateChild",
-            "type": "",
-            "desc": "<p>Move the given element to the list of inactive elements and detach its\nrender object from the render tree.<\/p>\n<p>This method stops the given element from being a child of this element by\ndetaching its render object from the render tree and moving the element to\nthe list of inactive elements.<\/p>\n<p>This method (indirectly) calls <a href=\"widgets\/Element\/deactivate.html\">deactivate<\/a> on the child.<\/p>\n<p>The caller is responsible for removing the child from its child model.\nTypically <a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a> is called by the element itself while it is\nupdating its child model; however, during <a href=\"widgets\/GlobalKey-class.html\">GlobalKey<\/a> reparenting, the new\nparent proactively calls the old parent's <a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a>, first using\n<a href=\"widgets\/Element\/forgetChild.html\">forgetChild<\/a> to cause the old parent to update its child model.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [
-                {
-                    "name": "child",
-                    "type": "widgets.Element",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/deactivateChild.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid deactivateChild(Element child) {\n  assert(child != null);\n  assert(child._parent == this);\n  child._parent = null;\n  child.detachRenderObject();\n  owner._inactiveElements.add(child); \/\/ this eventually calls child.deactivate()\n  assert(() {\n    if (debugPrintGlobalKeyedWidgetLifecycle) {\n      if (child.widget.key is GlobalKey)\n        debugPrint('Deactivated $child (keyed child of $this)');\n    }\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "debugDeactivated",
-            "type": "",
-            "desc": "<p>Called, in debug mode, after children have been deactivated (see <a href=\"widgets\/Element\/deactivate.html\">deactivate<\/a>).<\/p>\n<p>This method is not called in release builds.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Element\/debugDeactivated.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid debugDeactivated() {\n  assert(_debugLifecycleState == _ElementLifecycle.inactive);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "debugDescribeChildren",
-            "type": "dart:core.List<foundation.DiagnosticsNode>",
-            "desc": "<p>Returns a list of <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> objects describing this node's\nchildren.<\/p>\n<p>Children that are offstage should be added with <code>style<\/code> set to\n<a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle.offstage<\/a> to indicate that they are offstage.<\/p>\n<p>The list must not contain any null entries. If there are explicit null\nchildren to report, consider <a href=\"foundation\/DiagnosticsNode\/DiagnosticsNode.message.html\">new DiagnosticsNode.message<\/a> or\n<a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty&lt;Object&gt;<\/a> as possible <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> objects to\nprovide.<\/p>\n<p>Used by <a href=\"foundation\/DiagnosticableTree\/toStringDeep.html\">toStringDeep<\/a>, <a href=\"foundation\/DiagnosticableTree\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/DiagnosticableTree\/toStringShallow.html\">toStringShallow<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/Element\/debugDescribeChildren.html\">RenderTable.debugDescribeChildren<\/a>, which provides high quality custom\ndescriptions for its child nodes.<\/li><\/ul>",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Element\/debugDescribeChildren.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nList&lt;DiagnosticsNode&gt; debugDescribeChildren() {\n  final List&lt;DiagnosticsNode&gt; children = &lt;DiagnosticsNode&gt;[];\n  visitChildren((Element child) {\n    if (child != null) {\n      children.add(child.toDiagnosticsNode());\n    } else {\n      children.add(DiagnosticsNode.message('&lt;null child&gt;'));\n    }\n  });\n  return children;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:core.List",
-                "foundation.DiagnosticsNode"
             ]
         },
         {
-            "name": "debugFillProperties",
-            "type": "",
-            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"widgets\/Element\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTree\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/Diagnosticable\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "desc": "<p>Transition from the \"active\" to the \"inactive\" lifecycle state.<\/p>\n<p>The framework calls this method when a previously active element is moved\nto the list of inactive elements. While in the inactive state, the element\nwill not appear on screen. The element can remain in the inactive state\nonly until the end of the current animation frame. At the end of the\nanimation frame, if the element has not be reactivated, the framework will\nunmount the element.<\/p>\n<p>This is (indirectly) called by <a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a>.<\/p>\n<p>See the lifecycle documentation for <a href=\"widgets\/Element-class.html\">Element<\/a> for additional information.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid deactivate() {\n  assert(_debugLifecycleState == _ElementLifecycle.active);\n  assert(widget != null);\n  assert(depth != null);\n  assert(_active);\n  if (_dependencies != null &amp;&amp; _dependencies.isNotEmpty) {\n    for (InheritedElement dependency in _dependencies)\n      dependency._dependents.remove(this);\n    \/\/ For expediency, we don't actually clear the list here, even though it's\n    \/\/ no longer representative of what we are registered with. If we never\n    \/\/ get re-used, it doesn't matter. If we do, then we'll clear the list in\n    \/\/ activate(). The benefit of this is that it allows Element's activate()\n    \/\/ implementation to decide whether to rebuild based on whether we had\n    \/\/ dependencies here.\n  }\n  _inheritedWidgets = null;\n  _active = false;\n  assert(() { _debugLifecycleState = _ElementLifecycle.inactive; return true; }());\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/deactivate.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Element",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>Move the given element to the list of inactive elements and detach its\nrender object from the render tree.<\/p>\n<p>This method stops the given element from being a child of this element by\ndetaching its render object from the render tree and moving the element to\nthe list of inactive elements.<\/p>\n<p>This method (indirectly) calls <a href=\"widgets\/Element\/deactivate.html\">deactivate<\/a> on the child.<\/p>\n<p>The caller is responsible for removing the child from its child model.\nTypically <a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a> is called by the element itself while it is\nupdating its child model; however, during <a href=\"widgets\/GlobalKey-class.html\">GlobalKey<\/a> reparenting, the new\nparent proactively calls the old parent's <a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a>, first using\n<a href=\"widgets\/Element\/forgetChild.html\">forgetChild<\/a> to cause the old parent to update its child model.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid deactivateChild(Element child) {\n  assert(child != null);\n  assert(child._parent == this);\n  child._parent = null;\n  child.detachRenderObject();\n  owner._inactiveElements.add(child); \/\/ this eventually calls child.deactivate()\n  assert(() {\n    if (debugPrintGlobalKeyedWidgetLifecycle) {\n      if (child.widget.key is GlobalKey)\n        debugPrint('Deactivated $child (keyed child of $this)');\n    }\n    return true;\n  }());\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/deactivateChild.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": [
+                {
+                    "name": "child",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Element"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Called, in debug mode, after children have been deactivated (see <a href=\"widgets\/Element\/deactivate.html\">deactivate<\/a>).<\/p>\n<p>This method is not called in release builds.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid debugDeactivated() {\n  assert(_debugLifecycleState == _ElementLifecycle.inactive);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/debugDeactivated.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns a list of <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> objects describing this node's\nchildren.<\/p>\n<p>Children that are offstage should be added with <code>style<\/code> set to\n<a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle.offstage<\/a> to indicate that they are offstage.<\/p>\n<p>The list must not contain any null entries. If there are explicit null\nchildren to report, consider <a href=\"foundation\/DiagnosticsNode\/DiagnosticsNode.message.html\">new DiagnosticsNode.message<\/a> or\n<a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty&lt;Object&gt;<\/a> as possible <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> objects to\nprovide.<\/p>\n<p>Used by <a href=\"foundation\/DiagnosticableTree\/toStringDeep.html\">toStringDeep<\/a>, <a href=\"foundation\/DiagnosticableTree\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/DiagnosticableTree\/toStringShallow.html\">toStringShallow<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/Element\/debugDescribeChildren.html\">RenderTable.debugDescribeChildren<\/a>, which provides high quality custom\ndescriptions for its child nodes.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nList&lt;DiagnosticsNode&gt; debugDescribeChildren() {\n  final List&lt;DiagnosticsNode&gt; children = &lt;DiagnosticsNode&gt;[];\n  visitChildren((Element child) {\n    if (child != null) {\n      children.add(child.toDiagnosticsNode());\n    } else {\n      children.add(DiagnosticsNode.message('&lt;null child&gt;'));\n    }\n  });\n  return children;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/debugDescribeChildren.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<foundation.DiagnosticsNode>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": []
+        },
+        {
+            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"widgets\/Element\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"foundation\/DiagnosticableTree\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/Diagnosticable\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.defaultDiagnosticsTreeStyle= DiagnosticsTreeStyle.dense;\n  properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n  properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n  if (widget != null) {\n    properties.add(DiagnosticsProperty&lt;Key&gt;('key', widget?.key, showName: false, defaultValue: null, level: DiagnosticLevel.hidden));\n    widget.debugFillProperties(properties);\n  }\n  properties.add(FlagProperty('dirty', value: dirty, ifTrue: 'dirty'));\n  if (_dependencies != null &amp;&amp; _dependencies.isNotEmpty) {\n    final List&lt;DiagnosticsNode&gt; diagnosticsDependencies = _dependencies\n      .map((InheritedElement element) =&gt; element.widget.toDiagnosticsNode(style: DiagnosticsTreeStyle.sparse))\n      .toList();\n    properties.add(DiagnosticsProperty&lt;List&lt;DiagnosticsNode&gt;&gt;('dependencies', diagnosticsDependencies));\n  }\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/debugFillProperties.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
             "params": [
                 {
                     "name": "properties",
-                    "type": "foundation.DiagnosticPropertiesBuilder",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "foundation.DiagnosticPropertiesBuilder"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/debugFillProperties.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  super.debugFillProperties(properties);\n  properties.defaultDiagnosticsTreeStyle= DiagnosticsTreeStyle.dense;\n  properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n  properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n  if (widget != null) {\n    properties.add(DiagnosticsProperty&lt;Key&gt;('key', widget?.key, showName: false, defaultValue: null, level: DiagnosticLevel.hidden));\n    widget.debugFillProperties(properties);\n  }\n  properties.add(FlagProperty('dirty', value: dirty, ifTrue: 'dirty'));\n  if (_dependencies != null &amp;&amp; _dependencies.isNotEmpty) {\n    final List&lt;DiagnosticsNode&gt; diagnosticsDependencies = _dependencies\n      .map((InheritedElement element) =&gt; element.widget.toDiagnosticsNode(style: DiagnosticsTreeStyle.sparse))\n      .toList();\n    properties.add(DiagnosticsProperty&lt;List&lt;DiagnosticsNode&gt;&gt;('dependencies', diagnosticsDependencies));\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "debugGetCreatorChain",
-            "type": "dart:core.String",
             "desc": "<p>Returns a description of what caused this element to be created.<\/p>\n<p>Useful for debugging the source of an element.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String debugGetCreatorChain(int limit) {\n  final List&lt;String&gt; chain = &lt;String&gt;[];\n  Element node = this;\n  while (chain.length &lt; limit &amp;&amp; node != null) {\n    chain.add(node.toStringShort());\n    node = node._parent;\n  }\n  if (node != null)\n    chain.add('\\u22EF');\n  return chain.join(' \\u2190 ');\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/debugGetCreatorChain.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Element",
-            "sig": "",
             "params": [
                 {
                     "name": "limit",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.int"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/debugGetCreatorChain.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String debugGetCreatorChain(int limit) {\n  final List&lt;String&gt; chain = &lt;String&gt;[];\n  Element node = this;\n  while (chain.length &lt; limit &amp;&amp; node != null) {\n    chain.add(node.toStringShort());\n    node = node._parent;\n  }\n  if (node != null)\n    chain.add('\\u22EF');\n  return chain.join(' \\u2190 ');\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "debugGetDiagnosticChain",
-            "type": "dart:core.List<widgets.Element>",
-            "desc": "<p>Returns the parent chain from this element back to the root of the tree.<\/p>\n<p>Useful for debug display of a tree of Elements with only nodes in the path\nfrom the root to this Element expanded.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Element\/debugGetDiagnosticChain.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;Element&gt; debugGetDiagnosticChain() {\n  final List&lt;Element&gt; chain = &lt;Element&gt;[this];\n  Element node = _parent;\n  while (node != null) {\n    chain.add(node);\n    node = node._parent;\n  }\n  return chain;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:core.List",
-                "widgets.Element"
             ]
         },
         {
-            "name": "debugVisitOnstageChildren",
-            "type": "",
-            "desc": "<p>Calls the argument for each child considered onstage.<\/p>\n<p>Classes like <a href=\"widgets\/Offstage-class.html\">Offstage<\/a> and <a href=\"widgets\/Overlay-class.html\">Overlay<\/a> override this method to hide their\nchildren.<\/p>\n<p>Being onstage affects the element's discoverability during testing when\nyou use Flutter's <a href=\"flutter_test\/Finder-class.html\">Finder<\/a> objects. For example, when you instruct the\ntest framework to tap on a widget, by default the finder will look for\nonstage elements and ignore the offstage ones.<\/p>\n<p>The default implementation defers to <a href=\"widgets\/Element\/visitChildren.html\">visitChildren<\/a> and therefore treats\nthe element as onstage.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/Offstage-class.html\">Offstage<\/a> widget that hides its children.<\/li>\n<li>\n<a href=\"flutter_test\/Finder-class.html\">Finder<\/a> that skips offstage widgets by default.<\/li>\n<li>\n<a href=\"rendering\/RenderObject\/visitChildrenForSemantics.html\">RenderObject.visitChildrenForSemantics<\/a>, in contrast to this method,\ndesigned specifically for excluding parts of the UI from the semantics\ntree.<\/li>\n<\/ul>",
+            "desc": "<p>Returns the parent chain from this element back to the root of the tree.<\/p>\n<p>Useful for debug display of a tree of Elements with only nodes in the path\nfrom the root to this Element expanded.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;Element&gt; debugGetDiagnosticChain() {\n  final List&lt;Element&gt; chain = &lt;Element&gt;[this];\n  Element node = _parent;\n  while (node != null) {\n    chain.add(node);\n    node = node._parent;\n  }\n  return chain;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/debugGetDiagnosticChain.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<widgets.Element>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Element",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>Calls the argument for each child considered onstage.<\/p>\n<p>Classes like <a href=\"widgets\/Offstage-class.html\">Offstage<\/a> and <a href=\"widgets\/Overlay-class.html\">Overlay<\/a> override this method to hide their\nchildren.<\/p>\n<p>Being onstage affects the element's discoverability during testing when\nyou use Flutter's <a href=\"flutter_test\/Finder-class.html\">Finder<\/a> objects. For example, when you instruct the\ntest framework to tap on a widget, by default the finder will look for\nonstage elements and ignore the offstage ones.<\/p>\n<p>The default implementation defers to <a href=\"widgets\/Element\/visitChildren.html\">visitChildren<\/a> and therefore treats\nthe element as onstage.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/Offstage-class.html\">Offstage<\/a> widget that hides its children.<\/li>\n<li>\n<a href=\"flutter_test\/Finder-class.html\">Finder<\/a> that skips offstage widgets by default.<\/li>\n<li>\n<a href=\"rendering\/RenderObject\/visitChildrenForSemantics.html\">RenderObject.visitChildrenForSemantics<\/a>, in contrast to this method,\ndesigned specifically for excluding parts of the UI from the semantics\ntree.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void debugVisitOnstageChildren(ElementVisitor visitor) =&gt; visitChildren(visitor);<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/debugVisitOnstageChildren.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
             "params": [
                 {
                     "name": "visitor",
-                    "type": "widgets.ElementVisitor",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.ElementVisitor"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/debugVisitOnstageChildren.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void debugVisitOnstageChildren(ElementVisitor visitor) =&gt; visitChildren(visitor);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "detachRenderObject",
-            "type": "",
             "desc": "<p>Remove <a href=\"widgets\/Element\/renderObject.html\">renderObject<\/a> from the render tree.<\/p>\n<p>The default implementation of this function simply calls\n<a href=\"widgets\/Element\/detachRenderObject.html\">detachRenderObject<\/a> recursively on its child. The\n<a href=\"widgets\/Element\/detachRenderObject.html\">RenderObjectElement.detachRenderObject<\/a> override does the actual work of\nremoving <a href=\"widgets\/Element\/renderObject.html\">renderObject<\/a> from the render tree.<\/p>\n<p>This is called by <a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Element\/detachRenderObject.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void detachRenderObject() {\n  visitChildren((Element child) {\n    child.detachRenderObject();\n  });\n  _slot = null;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "href": "widgets\/Element\/detachRenderObject.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": []
         },
         {
-            "name": "didChangeDependencies",
-            "type": "",
             "desc": "<p>Called when a dependency of this element changes.<\/p>\n<p>The <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> registers this element as depending on\ninherited information of the given type. When the information of that type\nchanges at this location in the tree (e.g., because the <a href=\"widgets\/InheritedElement-class.html\">InheritedElement<\/a>\nupdated to a new <a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> and\n<a href=\"widgets\/InheritedWidget\/updateShouldNotify.html\">InheritedWidget.updateShouldNotify<\/a> returned true), the framework calls\nthis function to notify this element of the change.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Element\/didChangeDependencies.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid didChangeDependencies() {\n  assert(_active); \/\/ otherwise markNeedsBuild is a no-op\n  assert(_debugCheckOwnerBuildTargetExists('didChangeDependencies'));\n  markNeedsBuild();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "findRenderObject",
-            "type": "rendering.RenderObject",
-            "desc": "<p>The current <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> for the widget. If the widget is a\n<a href=\"widgets\/RenderObjectWidget-class.html\">RenderObjectWidget<\/a>, this is the render object that the widget created\nfor itself. Otherwise, it is the render object of the first descendant\n<a href=\"widgets\/RenderObjectWidget-class.html\">RenderObjectWidget<\/a>.<\/p>\n<p>This method will only return a valid result after the build phase is\ncomplete. It is therefore not valid to call this from a build method.\nIt should only be called from interaction event handlers (e.g.\ngesture callbacks) or layout or paint callbacks.<\/p>\n<p>If the render object is a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, which is the common case, then the\nsize of the render object can be obtained from the <a href=\"widgets\/Element\/size.html\">size<\/a> getter. This is\nonly valid after the layout phase, and should therefore only be examined\nfrom paint callbacks or interaction event handlers (e.g. gesture\ncallbacks).<\/p>\n<p>For details on the different phases of a frame, see the discussion at\n<a href=\"widgets\/WidgetsBinding\/drawFrame.html\">WidgetsBinding.drawFrame<\/a>.<\/p>\n<p>Calling this method is theoretically relatively expensive (O(N) in the\ndepth of the tree), but in practice is usually cheap because the tree\nusually has many render objects and therefore the distance to the nearest\nrender object is usually short.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
+            "href": "widgets\/Element\/didChangeDependencies.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "widgets\/Element\/findRenderObject.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nRenderObject findRenderObject() =&gt; renderObject;<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "forgetChild",
-            "type": "",
-            "desc": "<p>Remove the given child from the element's child list, in preparation for\nthe child being reused elsewhere in the element tree.<\/p>\n<p>This updates the child model such that, e.g., <a href=\"widgets\/Element\/visitChildren.html\">visitChildren<\/a> does not\nwalk that child anymore.<\/p>\n<p>The element will still have a valid parent when this is called. After this\nis called, <a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a> is called to sever the link to this object.<\/p>\n    ",
             "static": false,
             "memberOf": "widgets.Element",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>The current <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> for the widget. If the widget is a\n<a href=\"widgets\/RenderObjectWidget-class.html\">RenderObjectWidget<\/a>, this is the render object that the widget created\nfor itself. Otherwise, it is the render object of the first descendant\n<a href=\"widgets\/RenderObjectWidget-class.html\">RenderObjectWidget<\/a>.<\/p>\n<p>This method will only return a valid result after the build phase is\ncomplete. It is therefore not valid to call this from a build method.\nIt should only be called from interaction event handlers (e.g.\ngesture callbacks) or layout or paint callbacks.<\/p>\n<p>If the render object is a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, which is the common case, then the\nsize of the render object can be obtained from the <a href=\"widgets\/Element\/size.html\">size<\/a> getter. This is\nonly valid after the layout phase, and should therefore only be examined\nfrom paint callbacks or interaction event handlers (e.g. gesture\ncallbacks).<\/p>\n<p>For details on the different phases of a frame, see the discussion at\n<a href=\"widgets\/WidgetsBinding\/drawFrame.html\">WidgetsBinding.drawFrame<\/a>.<\/p>\n<p>Calling this method is theoretically relatively expensive (O(N) in the\ndepth of the tree), but in practice is usually cheap because the tree\nusually has many render objects and therefore the distance to the nearest\nrender object is usually short.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nRenderObject findRenderObject() =&gt; renderObject;<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/findRenderObject.html",
+            "isDeprecated": "0",
+            "type": "rendering.RenderObject",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": []
+        },
+        {
+            "desc": "<p>Remove the given child from the element's child list, in preparation for\nthe child being reused elsewhere in the element tree.<\/p>\n<p>This updates the child model such that, e.g., <a href=\"widgets\/Element\/visitChildren.html\">visitChildren<\/a> does not\nwalk that child anymore.<\/p>\n<p>The element will still have a valid parent when this is called. After this\nis called, <a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a> is called to sever the link to this object.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid forgetChild(Element child);<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/forgetChild.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
             "params": [
                 {
                     "name": "child",
-                    "type": "widgets.Element",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Element"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/forgetChild.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid forgetChild(Element child);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "inflateWidget",
-            "type": "widgets.Element",
             "desc": "<p>Create an element for the given widget and add it as a child of this\nelement in the given slot.<\/p>\n<p>This method is typically called by <a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a> but can be called\ndirectly by subclasses that need finer-grained control over creating\nelements.<\/p>\n<p>If the given widget has a global key and an element already exists that\nhas a widget with that global key, this function will reuse that element\n(potentially grafting it from another location in the tree or reactivating\nit from the list of inactive elements) rather than creating a new element.<\/p>\n<p>The element returned by this function will already have been mounted and\nwill be in the \"active\" lifecycle state.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nElement inflateWidget(Widget newWidget, dynamic newSlot) {\n  assert(newWidget != null);\n  final Key key = newWidget.key;\n  if (key is GlobalKey) {\n    final Element newChild = _retakeInactiveElement(key, newWidget);\n    if (newChild != null) {\n      assert(newChild._parent == null);\n      assert(() { _debugCheckForCycles(newChild); return true; }());\n      newChild._activateWithParent(this, newSlot);\n      final Element updatedChild = updateChild(newChild, newWidget, newSlot);\n      assert(newChild == updatedChild);\n      return updatedChild;\n    }\n  }\n  final Element newChild = newWidget.createElement();\n  assert(() { _debugCheckForCycles(newChild); return true; }());\n  newChild.mount(this, newSlot);\n  assert(newChild._debugLifecycleState == _ElementLifecycle.active);\n  return newChild;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/inflateWidget.html",
+            "isDeprecated": "0",
+            "type": "widgets.Element",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Element",
-            "sig": "",
             "params": [
                 {
-                    "name": "newWidget",
-                    "type": "widgets.Widget",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "newSlot",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 },
                 {
-                    "name": "newSlot",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "newWidget",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Widget"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/inflateWidget.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nElement inflateWidget(Widget newWidget, dynamic newSlot) {\n  assert(newWidget != null);\n  final Key key = newWidget.key;\n  if (key is GlobalKey) {\n    final Element newChild = _retakeInactiveElement(key, newWidget);\n    if (newChild != null) {\n      assert(newChild._parent == null);\n      assert(() { _debugCheckForCycles(newChild); return true; }());\n      newChild._activateWithParent(this, newSlot);\n      final Element updatedChild = updateChild(newChild, newWidget, newSlot);\n      assert(newChild == updatedChild);\n      return updatedChild;\n    }\n  }\n  final Element newChild = newWidget.createElement();\n  assert(() { _debugCheckForCycles(newChild); return true; }());\n  newChild.mount(this, newSlot);\n  assert(newChild._debugLifecycleState == _ElementLifecycle.active);\n  return newChild;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "inheritFromElement",
-            "type": "widgets.InheritedWidget",
             "desc": "<p>Registers this build context with <code>ancestor<\/code> such that when\n<code>ancestor<\/code>'s widget changes this build context is rebuilt.<\/p>\n<p>Returns <code>ancestor.widget<\/code>.<\/p>\n<p>This method is rarely called directly. Most applications should use\n<a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a>, which calls this method after finding\nthe appropriate <a href=\"widgets\/InheritedElement-class.html\">InheritedElement<\/a> ancestor.<\/p>\n<p>All of the qualifications about when <a href=\"widgets\/Element\/inheritFromWidgetOfExactType.html\">inheritFromWidgetOfExactType<\/a> can\nbe called apply to this method as well.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nInheritedWidget inheritFromElement(InheritedElement ancestor, { Object aspect }) {\n  assert(ancestor != null);\n  _dependencies ??= HashSet&lt;InheritedElement&gt;();\n  _dependencies.add(ancestor);\n  ancestor.updateDependencies(this, aspect);\n  return ancestor.widget;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/inheritFromElement.html",
+            "isDeprecated": "0",
+            "type": "widgets.InheritedWidget",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Element",
-            "sig": "",
             "params": [
                 {
                     "name": "ancestor",
-                    "type": "widgets.InheritedElement",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.InheritedElement"
                 },
                 {
                     "name": "aspect",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/inheritFromElement.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nInheritedWidget inheritFromElement(InheritedElement ancestor, { Object aspect }) {\n  assert(ancestor != null);\n  _dependencies ??= HashSet&lt;InheritedElement&gt;();\n  _dependencies.add(ancestor);\n  ancestor.updateDependencies(this, aspect);\n  return ancestor.widget;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "inheritFromWidgetOfExactType",
-            "type": "widgets.InheritedWidget",
-            "desc": "<p>Obtains the nearest widget of the given type, which must be the type of a\nconcrete <a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> subclass, and registers this build context with\nthat widget such that when that widget changes (or a new widget of that\ntype is introduced, or the widget goes away), this build context is\nrebuilt so that it can obtain new values from that widget.<\/p>\n<p>This is typically called implicitly from <code>of()<\/code> static methods, e.g.\n<a href=\"material\/Theme\/of.html\">Theme.of<\/a>.<\/p>\n<p>This method should not be called from widget constructors or from\n<a href=\"widgets\/State\/initState.html\">State.initState<\/a> methods, because those methods would not get called\nagain if the inherited value were to change. To ensure that the widget\ncorrectly updates itself when the inherited value changes, only call this\n(directly or indirectly) from build methods, layout and paint callbacks, or\nfrom <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a>.<\/p>\n<p>This method should not be called from <a href=\"widgets\/State\/dispose.html\">State.dispose<\/a> because the element\ntree is no longer stable at that time. To refer to an ancestor from that\nmethod, save a reference to the ancestor in <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a>.\nIt is safe to use this method from <a href=\"widgets\/Element\/deactivate.html\">State.deactivate<\/a>, which is called\nwhenever the widget is removed from the tree.<\/p>\n<p>It is also possible to call this method from interaction event handlers\n(e.g. gesture callbacks) or timers, to obtain a value once, if that value\nis not going to be cached and reused later.<\/p>\n<p>Calling this method is O(1) with a small constant factor, but will lead to\nthe widget being rebuilt more often.<\/p>\n<p>Once a widget registers a dependency on a particular type by calling this\nmethod, it will be rebuilt, and <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a> will be\ncalled, whenever changes occur relating to that widget until the next time\nthe widget or one of its ancestors is moved (for example, because an\nancestor is added or removed).<\/p>\n<p>The <code>aspect<\/code> parameter is only used when <code>targetType<\/code> is an\n<a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> subclasses that supports partial updates, like\n<a href=\"widgets\/InheritedModel-class.html\">InheritedModel<\/a>. It specifies what \"aspect\" of the inherited\nwidget this context depends on.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [
-                {
-                    "name": "targetType",
-                    "type": "dart:core.Type",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "aspect",
-                    "type": "dart:core.Object",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/inheritFromWidgetOfExactType.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nInheritedWidget inheritFromWidgetOfExactType(Type targetType, { Object aspect }) {\n  assert(_debugCheckStateIsActiveForAncestorLookup());\n  final InheritedElement ancestor = _inheritedWidgets == null ? null : _inheritedWidgets[targetType];\n  if (ancestor != null) {\n    assert(ancestor is InheritedElement);\n    return inheritFromElement(ancestor, aspect: aspect);\n  }\n  _hadUnsatisfiedDependencies = true;\n  return null;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "markNeedsBuild",
-            "type": "",
-            "desc": "<p>Marks the element as dirty and adds it to the global list of widgets to\nrebuild in the next frame.<\/p>\n<p>Since it is inefficient to build an element twice in one frame,\napplications and widgets should be structured so as to only mark\nwidgets dirty during event handlers before the frame begins, not during\nthe build itself.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Element\/markNeedsBuild.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void markNeedsBuild() {\n  assert(_debugLifecycleState != _ElementLifecycle.defunct);\n  if (!_active)\n    return;\n  assert(owner != null);\n  assert(_debugLifecycleState == _ElementLifecycle.active);\n  assert(() {\n    if (owner._debugBuilding) {\n      assert(owner._debugCurrentBuildTarget != null);\n      assert(owner._debugStateLocked);\n      if (_debugIsInScope(owner._debugCurrentBuildTarget))\n        return true;\n      if (!_debugAllowIgnoredCallsToMarkNeedsBuild) {\n        throw FlutterError(\n          'setState() or markNeedsBuild() called during build.\\n'\n          'This ${widget.runtimeType} widget cannot be marked as needing to build because the framework '\n          'is already in the process of building widgets. A widget can be marked as '\n          'needing to be built during the build phase only if one of its ancestors '\n          'is currently building. This exception is allowed because the framework '\n          'builds parent widgets before children, which means a dirty descendant '\n          'will always be built. Otherwise, the framework might not visit this '\n          'widget during this build phase.\\n'\n          'The widget on which setState() or markNeedsBuild() was called was:\\n'\n          '  $this\\n'\n          '${owner._debugCurrentBuildTarget == null ? \"\" : \"The widget which was currently being built when the offending call was made was:\\n  ${owner._debugCurrentBuildTarget}\"}'\n        );\n      }\n      assert(dirty); \/\/ can only get here if we're not in scope, but ignored calls are allowed, and our call would somehow be ignored (since we're already dirty)\n    } else if (owner._debugStateLocked) {\n      assert(!_debugAllowIgnoredCallsToMarkNeedsBuild);\n      throw FlutterError(\n        'setState() or markNeedsBuild() called when widget tree was locked.\\n'\n        'This ${widget.runtimeType} widget cannot be marked as needing to build '\n        'because the framework is locked.\\n'\n        'The widget on which setState() or markNeedsBuild() was called was:\\n'\n        '  $this\\n'\n      );\n    }\n    return true;\n  }());\n  if (dirty)\n    return;\n  _dirty = true;\n  owner.scheduleBuildFor(this);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "mount",
-            "type": "",
-            "desc": "<p>Add this element to the tree in the given slot of the given parent.<\/p>\n<p>The framework calls this function when a newly created element is added to\nthe tree for the first time. Use this method to initialize state that\ndepends on having a parent. State that is independent of the parent can\nmore easily be initialized in the constructor.<\/p>\n<p>This method transitions the element from the \"initial\" lifecycle state to\nthe \"active\" lifecycle state.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [
-                {
-                    "name": "parent",
-                    "type": "widgets.Element",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "newSlot",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/mount.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid mount(Element parent, dynamic newSlot) {\n  assert(_debugLifecycleState == _ElementLifecycle.initial);\n  assert(widget != null);\n  assert(_parent == null);\n  assert(parent == null || parent._debugLifecycleState == _ElementLifecycle.active);\n  assert(slot == null);\n  assert(depth == null);\n  assert(!_active);\n  _parent = parent;\n  _slot = newSlot;\n  _depth = _parent != null ? _parent.depth + 1 : 1;\n  _active = true;\n  if (parent != null) \/\/ Only assign ownership if the parent is non-null\n    _owner = parent.owner;\n  if (widget.key is GlobalKey) {\n    final GlobalKey key = widget.key;\n    key._register(this);\n  }\n  _updateInheritance();\n  assert(() { _debugLifecycleState = _ElementLifecycle.active; return true; }());\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "performRebuild",
-            "type": "",
-            "desc": "<p>Called by rebuild() after the appropriate checks have been made.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Element\/performRebuild.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid performRebuild();<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "reassemble",
-            "type": "",
-            "desc": "<p>Called whenever the application is reassembled during debugging, for\nexample during hot reload.<\/p>\n<p>This method should rerun any initialization logic that depends on global\nstate, for example, image loading from asset bundles (since the asset\nbundle may have changed).<\/p>\n<p>This function will only be called during development. In release builds,\nthe <code>ext.flutter.reassemble<\/code> hook is not available, and so this code will\nnever execute.\nSee also:<\/p>\n<ul>\n<li><a href=\"widgets\/Element\/reassemble.html\">State.reassemble<\/a><\/li>\n<li><a href=\"foundation\/BindingBase\/reassembleApplication.html\">BindingBase.reassembleApplication<\/a><\/li>\n<li>\n<a href=\"widgets\/Image-class.html\">Image<\/a>, which uses this to reload images.<\/li>\n<\/ul>",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Element\/reassemble.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\n@protected\nvoid reassemble() {\n  markNeedsBuild();\n  visitChildren((Element child) {\n    child.reassemble();\n  });\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "rebuild",
-            "type": "",
-            "desc": "<p>Called by the <a href=\"widgets\/BuildOwner-class.html\">BuildOwner<\/a> when <a href=\"widgets\/BuildOwner\/scheduleBuildFor.html\">BuildOwner.scheduleBuildFor<\/a> has been\ncalled to mark this element dirty, by <a href=\"widgets\/Element\/mount.html\">mount<\/a> when the element is first\nbuilt, and by <a href=\"widgets\/Element\/update.html\">update<\/a> when the widget has changed.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Element\/rebuild.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void rebuild() {\n  assert(_debugLifecycleState != _ElementLifecycle.initial);\n  if (!_active || !_dirty)\n    return;\n  assert(() {\n    if (debugOnRebuildDirtyWidget != null) {\n      debugOnRebuildDirtyWidget(this, _debugBuiltOnce);\n    }\n    if (debugPrintRebuildDirtyWidgets) {\n      if (!_debugBuiltOnce) {\n        debugPrint('Building $this');\n        _debugBuiltOnce = true;\n      } else {\n        debugPrint('Rebuilding $this');\n      }\n    }\n    return true;\n  }());\n  assert(_debugLifecycleState == _ElementLifecycle.active);\n  assert(owner._debugStateLocked);\n  Element debugPreviousBuildTarget;\n  assert(() {\n    debugPreviousBuildTarget = owner._debugCurrentBuildTarget;\n    owner._debugCurrentBuildTarget = this;\n    return true;\n  }());\n  performRebuild();\n  assert(() {\n    assert(owner._debugCurrentBuildTarget == this);\n    owner._debugCurrentBuildTarget = debugPreviousBuildTarget;\n    return true;\n  }());\n  assert(!_dirty);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "rootAncestorStateOfType",
-            "type": "widgets.State<widgets.StatefulWidget>",
-            "desc": "<p>Returns the <a href=\"widgets\/State-class.html\">State<\/a> object of the furthest ancestor <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> widget\nthat matches the given <a href=\"widgets\/TypeMatcher-class.html\">TypeMatcher<\/a>.<\/p>\n<p>Functions the same way as <a href=\"widgets\/Element\/ancestorStateOfType.html\">ancestorStateOfType<\/a> but keeps visiting subsequent\nancestors until there are none of the type matching <a href=\"widgets\/TypeMatcher-class.html\">TypeMatcher<\/a> remaining.\nThen returns the last one found.<\/p>\n<p>This operation is O(N) as well though N is the entire widget tree rather than\na subtree.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [
-                {
-                    "name": "matcher",
-                    "type": "widgets.TypeMatcher",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/rootAncestorStateOfType.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nState rootAncestorStateOfType(TypeMatcher matcher) {\n  assert(_debugCheckStateIsActiveForAncestorLookup());\n  Element ancestor = _parent;\n  StatefulElement statefulAncestor;\n  while (ancestor != null) {\n    if (ancestor is StatefulElement &amp;&amp; matcher.check(ancestor.state))\n      statefulAncestor = ancestor;\n    ancestor = ancestor._parent;\n  }\n  return statefulAncestor?.state;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "widgets.State",
-                "widgets.StatefulWidget"
             ]
         },
         {
-            "name": "toStringShort",
-            "type": "dart:core.String",
+            "desc": "<p>Obtains the nearest widget of the given type, which must be the type of a\nconcrete <a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> subclass, and registers this build context with\nthat widget such that when that widget changes (or a new widget of that\ntype is introduced, or the widget goes away), this build context is\nrebuilt so that it can obtain new values from that widget.<\/p>\n<p>This is typically called implicitly from <code>of()<\/code> static methods, e.g.\n<a href=\"material\/Theme\/of.html\">Theme.of<\/a>.<\/p>\n<p>This method should not be called from widget constructors or from\n<a href=\"widgets\/State\/initState.html\">State.initState<\/a> methods, because those methods would not get called\nagain if the inherited value were to change. To ensure that the widget\ncorrectly updates itself when the inherited value changes, only call this\n(directly or indirectly) from build methods, layout and paint callbacks, or\nfrom <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a>.<\/p>\n<p>This method should not be called from <a href=\"widgets\/State\/dispose.html\">State.dispose<\/a> because the element\ntree is no longer stable at that time. To refer to an ancestor from that\nmethod, save a reference to the ancestor in <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a>.\nIt is safe to use this method from <a href=\"widgets\/Element\/deactivate.html\">State.deactivate<\/a>, which is called\nwhenever the widget is removed from the tree.<\/p>\n<p>It is also possible to call this method from interaction event handlers\n(e.g. gesture callbacks) or timers, to obtain a value once, if that value\nis not going to be cached and reused later.<\/p>\n<p>Calling this method is O(1) with a small constant factor, but will lead to\nthe widget being rebuilt more often.<\/p>\n<p>Once a widget registers a dependency on a particular type by calling this\nmethod, it will be rebuilt, and <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a> will be\ncalled, whenever changes occur relating to that widget until the next time\nthe widget or one of its ancestors is moved (for example, because an\nancestor is added or removed).<\/p>\n<p>The <code>aspect<\/code> parameter is only used when <code>targetType<\/code> is an\n<a href=\"widgets\/InheritedWidget-class.html\">InheritedWidget<\/a> subclasses that supports partial updates, like\n<a href=\"widgets\/InheritedModel-class.html\">InheritedModel<\/a>. It specifies what \"aspect\" of the inherited\nwidget this context depends on.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nInheritedWidget inheritFromWidgetOfExactType(Type targetType, { Object aspect }) {\n  assert(_debugCheckStateIsActiveForAncestorLookup());\n  final InheritedElement ancestor = _inheritedWidgets == null ? null : _inheritedWidgets[targetType];\n  if (ancestor != null) {\n    assert(ancestor is InheritedElement);\n    return inheritFromElement(ancestor, aspect: aspect);\n  }\n  _hadUnsatisfiedDependencies = true;\n  return null;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/inheritFromWidgetOfExactType.html",
+            "isDeprecated": "0",
+            "type": "widgets.InheritedWidget",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": [
+                {
+                    "name": "aspect",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Object"
+                },
+                {
+                    "name": "targetType",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Type"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Marks the element as dirty and adds it to the global list of widgets to\nrebuild in the next frame.<\/p>\n<p>Since it is inefficient to build an element twice in one frame,\napplications and widgets should be structured so as to only mark\nwidgets dirty during event handlers before the frame begins, not during\nthe build itself.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void markNeedsBuild() {\n  assert(_debugLifecycleState != _ElementLifecycle.defunct);\n  if (!_active)\n    return;\n  assert(owner != null);\n  assert(_debugLifecycleState == _ElementLifecycle.active);\n  assert(() {\n    if (owner._debugBuilding) {\n      assert(owner._debugCurrentBuildTarget != null);\n      assert(owner._debugStateLocked);\n      if (_debugIsInScope(owner._debugCurrentBuildTarget))\n        return true;\n      if (!_debugAllowIgnoredCallsToMarkNeedsBuild) {\n        throw FlutterError(\n          'setState() or markNeedsBuild() called during build.\\n'\n          'This ${widget.runtimeType} widget cannot be marked as needing to build because the framework '\n          'is already in the process of building widgets. A widget can be marked as '\n          'needing to be built during the build phase only if one of its ancestors '\n          'is currently building. This exception is allowed because the framework '\n          'builds parent widgets before children, which means a dirty descendant '\n          'will always be built. Otherwise, the framework might not visit this '\n          'widget during this build phase.\\n'\n          'The widget on which setState() or markNeedsBuild() was called was:\\n'\n          '  $this\\n'\n          '${owner._debugCurrentBuildTarget == null ? \"\" : \"The widget which was currently being built when the offending call was made was:\\n  ${owner._debugCurrentBuildTarget}\"}'\n        );\n      }\n      assert(dirty); \/\/ can only get here if we're not in scope, but ignored calls are allowed, and our call would somehow be ignored (since we're already dirty)\n    } else if (owner._debugStateLocked) {\n      assert(!_debugAllowIgnoredCallsToMarkNeedsBuild);\n      throw FlutterError(\n        'setState() or markNeedsBuild() called when widget tree was locked.\\n'\n        'This ${widget.runtimeType} widget cannot be marked as needing to build '\n        'because the framework is locked.\\n'\n        'The widget on which setState() or markNeedsBuild() was called was:\\n'\n        '  $this\\n'\n      );\n    }\n    return true;\n  }());\n  if (dirty)\n    return;\n  _dirty = true;\n  owner.scheduleBuildFor(this);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/markNeedsBuild.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": []
+        },
+        {
+            "desc": "<p>Add this element to the tree in the given slot of the given parent.<\/p>\n<p>The framework calls this function when a newly created element is added to\nthe tree for the first time. Use this method to initialize state that\ndepends on having a parent. State that is independent of the parent can\nmore easily be initialized in the constructor.<\/p>\n<p>This method transitions the element from the \"initial\" lifecycle state to\nthe \"active\" lifecycle state.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid mount(Element parent, dynamic newSlot) {\n  assert(_debugLifecycleState == _ElementLifecycle.initial);\n  assert(widget != null);\n  assert(_parent == null);\n  assert(parent == null || parent._debugLifecycleState == _ElementLifecycle.active);\n  assert(slot == null);\n  assert(depth == null);\n  assert(!_active);\n  _parent = parent;\n  _slot = newSlot;\n  _depth = _parent != null ? _parent.depth + 1 : 1;\n  _active = true;\n  if (parent != null) \/\/ Only assign ownership if the parent is non-null\n    _owner = parent.owner;\n  if (widget.key is GlobalKey) {\n    final GlobalKey key = widget.key;\n    key._register(this);\n  }\n  _updateInheritance();\n  assert(() { _debugLifecycleState = _ElementLifecycle.active; return true; }());\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/mount.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": [
+                {
+                    "name": "newSlot",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
+                },
+                {
+                    "name": "parent",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Element"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Called by rebuild() after the appropriate checks have been made.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid performRebuild();<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/performRebuild.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": []
+        },
+        {
+            "desc": "<p>Called whenever the application is reassembled during debugging, for\nexample during hot reload.<\/p>\n<p>This method should rerun any initialization logic that depends on global\nstate, for example, image loading from asset bundles (since the asset\nbundle may have changed).<\/p>\n<p>This function will only be called during development. In release builds,\nthe <code>ext.flutter.reassemble<\/code> hook is not available, and so this code will\nnever execute.\nSee also:<\/p>\n<ul>\n<li><a href=\"widgets\/Element\/reassemble.html\">State.reassemble<\/a><\/li>\n<li><a href=\"foundation\/BindingBase\/reassembleApplication.html\">BindingBase.reassembleApplication<\/a><\/li>\n<li>\n<a href=\"widgets\/Image-class.html\">Image<\/a>, which uses this to reload images.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\n@protected\nvoid reassemble() {\n  markNeedsBuild();\n  visitChildren((Element child) {\n    child.reassemble();\n  });\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/reassemble.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": []
+        },
+        {
+            "desc": "<p>Called by the <a href=\"widgets\/BuildOwner-class.html\">BuildOwner<\/a> when <a href=\"widgets\/BuildOwner\/scheduleBuildFor.html\">BuildOwner.scheduleBuildFor<\/a> has been\ncalled to mark this element dirty, by <a href=\"widgets\/Element\/mount.html\">mount<\/a> when the element is first\nbuilt, and by <a href=\"widgets\/Element\/update.html\">update<\/a> when the widget has changed.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void rebuild() {\n  assert(_debugLifecycleState != _ElementLifecycle.initial);\n  if (!_active || !_dirty)\n    return;\n  assert(() {\n    if (debugOnRebuildDirtyWidget != null) {\n      debugOnRebuildDirtyWidget(this, _debugBuiltOnce);\n    }\n    if (debugPrintRebuildDirtyWidgets) {\n      if (!_debugBuiltOnce) {\n        debugPrint('Building $this');\n        _debugBuiltOnce = true;\n      } else {\n        debugPrint('Rebuilding $this');\n      }\n    }\n    return true;\n  }());\n  assert(_debugLifecycleState == _ElementLifecycle.active);\n  assert(owner._debugStateLocked);\n  Element debugPreviousBuildTarget;\n  assert(() {\n    debugPreviousBuildTarget = owner._debugCurrentBuildTarget;\n    owner._debugCurrentBuildTarget = this;\n    return true;\n  }());\n  performRebuild();\n  assert(() {\n    assert(owner._debugCurrentBuildTarget == this);\n    owner._debugCurrentBuildTarget = debugPreviousBuildTarget;\n    return true;\n  }());\n  assert(!_dirty);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/rebuild.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns the <a href=\"widgets\/State-class.html\">State<\/a> object of the furthest ancestor <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a> widget\nthat matches the given <a href=\"widgets\/TypeMatcher-class.html\">TypeMatcher<\/a>.<\/p>\n<p>Functions the same way as <a href=\"widgets\/Element\/ancestorStateOfType.html\">ancestorStateOfType<\/a> but keeps visiting subsequent\nancestors until there are none of the type matching <a href=\"widgets\/TypeMatcher-class.html\">TypeMatcher<\/a> remaining.\nThen returns the last one found.<\/p>\n<p>This operation is O(N) as well though N is the entire widget tree rather than\na subtree.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nState rootAncestorStateOfType(TypeMatcher matcher) {\n  assert(_debugCheckStateIsActiveForAncestorLookup());\n  Element ancestor = _parent;\n  StatefulElement statefulAncestor;\n  while (ancestor != null) {\n    if (ancestor is StatefulElement &amp;&amp; matcher.check(ancestor.state))\n      statefulAncestor = ancestor;\n    ancestor = ancestor._parent;\n  }\n  return statefulAncestor?.state;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/rootAncestorStateOfType.html",
+            "isDeprecated": "0",
+            "type": "widgets.State<widgets.StatefulWidget>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": [
+                {
+                    "name": "matcher",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.TypeMatcher"
+                }
+            ]
+        },
+        {
             "desc": "<p>A short, textual description of this element.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Element\/toStringShort.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toStringShort() {\n  return widget != null ? '${widget.toStringShort()}' : '[$runtimeType]';\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "widgets\/Element\/toStringShort.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": []
         },
         {
-            "name": "unmount",
-            "type": "",
             "desc": "<p>Transition from the \"inactive\" to the \"defunct\" lifecycle state.<\/p>\n<p>Called when the framework determines that an inactive element will never\nbe reactivated. At the end of each animation frame, the framework calls\n<a href=\"widgets\/Element\/unmount.html\">unmount<\/a> on any remaining inactive elements, preventing inactive elements\nfrom remaining inactive for longer than a single animation frame.<\/p>\n<p>After this function is called, the element will not be incorporated into\nthe tree again.<\/p>\n<p>See the lifecycle documentation for <a href=\"widgets\/Element-class.html\">Element<\/a> for additional information.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/Element\/unmount.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid unmount() {\n  assert(_debugLifecycleState == _ElementLifecycle.inactive);\n  assert(widget != null);\n  assert(depth != null);\n  assert(!_active);\n  if (widget.key is GlobalKey) {\n    final GlobalKey key = widget.key;\n    key._unregister(this);\n  }\n  assert(() { _debugLifecycleState = _ElementLifecycle.defunct; return true; }());\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "href": "widgets\/Element\/unmount.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": []
         },
         {
-            "name": "update",
-            "type": "",
             "desc": "<p>Change the widget used to configure this element.<\/p>\n<p>The framework calls this function when the parent wishes to use a\ndifferent widget to configure this element. The new widget is guaranteed\nto have the same <a href=\"dart-core\/Object\/runtimeType.html\">runtimeType<\/a> as the old widget.<\/p>\n<p>This function is called only during the \"active\" lifecycle state.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [
-                {
-                    "name": "newWidget",
-                    "type": "widgets.Widget",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/update.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@mustCallSuper\nvoid update(covariant Widget newWidget) {\n  \/\/ This code is hot when hot reloading, so we try to\n  \/\/ only call _AssertionError._evaluateAssertion once.\n  assert(_debugLifecycleState == _ElementLifecycle.active\n      &amp;&amp; widget != null\n      &amp;&amp; newWidget != null\n      &amp;&amp; newWidget != widget\n      &amp;&amp; depth != null\n      &amp;&amp; _active\n      &amp;&amp; Widget.canUpdate(widget, newWidget));\n  _widget = newWidget;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "updateChild",
-            "type": "widgets.Element",
-            "desc": "<p>Update the given child with the given new configuration.<\/p>\n<p>This method is the core of the widgets system. It is called each time we\nare to add, update, or remove a child based on an updated configuration.<\/p>\n<p>If the <code>child<\/code> is null, and the <code>newWidget<\/code> is not null, then we have a new\nchild for which we need to create an <a href=\"widgets\/Element-class.html\">Element<\/a>, configured with <code>newWidget<\/code>.<\/p>\n<p>If the <code>newWidget<\/code> is null, and the <code>child<\/code> is not null, then we need to\nremove it because it no longer has a configuration.<\/p>\n<p>If neither are null, then we need to update the <code>child<\/code>'s configuration to\nbe the new configuration given by <code>newWidget<\/code>. If <code>newWidget<\/code> can be given\nto the existing child (as determined by <a href=\"widgets\/Widget\/canUpdate.html\">Widget.canUpdate<\/a>), then it is so\ngiven. Otherwise, the old child needs to be disposed and a new child\ncreated for the new configuration.<\/p>\n<p>If both are null, then we don't have a child and won't have a child, so we\ndo nothing.<\/p>\n<p>The <a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a> method returns the new child, if it had to create one,\nor the child that was passed in, if it just had to update the child, or\nnull, if it removed the child and did not replace it.<\/p>\n<p>The following table summarizes the above:<\/p>\n<table>\n<thead><tr>\n<th style=\"text-align: center;\"><\/th>\n<th style=\"text-align: left;\"><strong>newWidget == null<\/strong><\/th>\n<th style=\"text-align: left;\"><strong>newWidget != null<\/strong><\/th>\n<\/tr><\/thead>\n<tbody>\n<tr>\n<td style=\"text-align: center;\"><strong>child == null<\/strong><\/td>\n<td style=\"text-align: left;\">Returns null.<\/td>\n<td style=\"text-align: left;\">Returns new <a href=\"widgets\/Element-class.html\">Element<\/a>.<\/td>\n<\/tr>\n<tr>\n<td style=\"text-align: center;\"><strong>child != null<\/strong><\/td>\n<td style=\"text-align: left;\">Old child is removed, returns null.<\/td>\n<td style=\"text-align: left;\">Old child updated if possible, returns child or new <a href=\"widgets\/Element-class.html\">Element<\/a>.<\/td>\n<\/tr>\n<\/tbody>\n<\/table>",
+            "href": "widgets\/Element\/update.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Element",
-            "sig": "",
+            "params": [
+                {
+                    "name": "newWidget",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Widget"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Update the given child with the given new configuration.<\/p>\n<p>This method is the core of the widgets system. It is called each time we\nare to add, update, or remove a child based on an updated configuration.<\/p>\n<p>If the <code>child<\/code> is null, and the <code>newWidget<\/code> is not null, then we have a new\nchild for which we need to create an <a href=\"widgets\/Element-class.html\">Element<\/a>, configured with <code>newWidget<\/code>.<\/p>\n<p>If the <code>newWidget<\/code> is null, and the <code>child<\/code> is not null, then we need to\nremove it because it no longer has a configuration.<\/p>\n<p>If neither are null, then we need to update the <code>child<\/code>'s configuration to\nbe the new configuration given by <code>newWidget<\/code>. If <code>newWidget<\/code> can be given\nto the existing child (as determined by <a href=\"widgets\/Widget\/canUpdate.html\">Widget.canUpdate<\/a>), then it is so\ngiven. Otherwise, the old child needs to be disposed and a new child\ncreated for the new configuration.<\/p>\n<p>If both are null, then we don't have a child and won't have a child, so we\ndo nothing.<\/p>\n<p>The <a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a> method returns the new child, if it had to create one,\nor the child that was passed in, if it just had to update the child, or\nnull, if it removed the child and did not replace it.<\/p>\n<p>The following table summarizes the above:<\/p>\n<table>\n<thead><tr>\n<th style=\"text-align: center;\"><\/th>\n<th style=\"text-align: left;\"><strong>newWidget == null<\/strong><\/th>\n<th style=\"text-align: left;\"><strong>newWidget != null<\/strong><\/th>\n<\/tr><\/thead>\n<tbody>\n<tr>\n<td style=\"text-align: center;\"><strong>child == null<\/strong><\/td>\n<td style=\"text-align: left;\">Returns null.<\/td>\n<td style=\"text-align: left;\">Returns new <a href=\"widgets\/Element-class.html\">Element<\/a>.<\/td>\n<\/tr>\n<tr>\n<td style=\"text-align: center;\"><strong>child != null<\/strong><\/td>\n<td style=\"text-align: left;\">Old child is removed, returns null.<\/td>\n<td style=\"text-align: left;\">Old child updated if possible, returns child or new <a href=\"widgets\/Element-class.html\">Element<\/a>.<\/td>\n<\/tr>\n<\/tbody>\n<\/table>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nElement updateChild(Element child, Widget newWidget, dynamic newSlot) {\n  assert(() {\n    if (newWidget != null &amp;&amp; newWidget.key is GlobalKey) {\n      final GlobalKey key = newWidget.key;\n      key._debugReserveFor(this);\n    }\n    return true;\n  }());\n  if (newWidget == null) {\n    if (child != null)\n      deactivateChild(child);\n    return null;\n  }\n  if (child != null) {\n    if (child.widget == newWidget) {\n      if (child.slot != newSlot)\n        updateSlotForChild(child, newSlot);\n      return child;\n    }\n    if (Widget.canUpdate(child.widget, newWidget)) {\n      if (child.slot != newSlot)\n        updateSlotForChild(child, newSlot);\n      child.update(newWidget);\n      assert(child.widget == newWidget);\n      assert(() {\n        child.owner._debugElementWasRebuilt(child);\n        return true;\n      }());\n      return child;\n    }\n    deactivateChild(child);\n    assert(child._parent == null);\n  }\n  return inflateWidget(newWidget, newSlot);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/updateChild.html",
+            "isDeprecated": "0",
+            "type": "widgets.Element",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
             "params": [
                 {
                     "name": "child",
-                    "type": "widgets.Element",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Element"
+                },
+                {
+                    "name": "newSlot",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 },
                 {
                     "name": "newWidget",
-                    "type": "widgets.Widget",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "newSlot",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Widget"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/updateChild.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nElement updateChild(Element child, Widget newWidget, dynamic newSlot) {\n  assert(() {\n    if (newWidget != null &amp;&amp; newWidget.key is GlobalKey) {\n      final GlobalKey key = newWidget.key;\n      key._debugReserveFor(this);\n    }\n    return true;\n  }());\n  if (newWidget == null) {\n    if (child != null)\n      deactivateChild(child);\n    return null;\n  }\n  if (child != null) {\n    if (child.widget == newWidget) {\n      if (child.slot != newSlot)\n        updateSlotForChild(child, newSlot);\n      return child;\n    }\n    if (Widget.canUpdate(child.widget, newWidget)) {\n      if (child.slot != newSlot)\n        updateSlotForChild(child, newSlot);\n      child.update(newWidget);\n      assert(child.widget == newWidget);\n      assert(() {\n        child.owner._debugElementWasRebuilt(child);\n        return true;\n      }());\n      return child;\n    }\n    deactivateChild(child);\n    assert(child._parent == null);\n  }\n  return inflateWidget(newWidget, newSlot);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "updateSlotForChild",
-            "type": "",
             "desc": "<p>Change the slot that the given child occupies in its parent.<\/p>\n<p>Called by <a href=\"widgets\/MultiChildRenderObjectElement-class.html\">MultiChildRenderObjectElement<\/a>, and other <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a>\nsubclasses that have multiple children, when child moves from one position\nto another in this element's child list.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid updateSlotForChild(Element child, dynamic newSlot) {\n  assert(_debugLifecycleState == _ElementLifecycle.active);\n  assert(child != null);\n  assert(child._parent == this);\n  void visit(Element element) {\n    element._updateSlot(newSlot);\n    if (element is! RenderObjectElement)\n      element.visitChildren(visit);\n  }\n  visit(child);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/updateSlotForChild.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Element",
-            "sig": "",
             "params": [
                 {
                     "name": "child",
-                    "type": "widgets.Element",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Element"
                 },
                 {
                     "name": "newSlot",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/updateSlotForChild.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid updateSlotForChild(Element child, dynamic newSlot) {\n  assert(_debugLifecycleState == _ElementLifecycle.active);\n  assert(child != null);\n  assert(child._parent == this);\n  void visit(Element element) {\n    element._updateSlot(newSlot);\n    if (element is! RenderObjectElement)\n      element.visitChildren(visit);\n  }\n  visit(child);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "visitAncestorElements",
-            "type": "",
             "desc": "<p>Walks the ancestor chain, starting with the parent of this build context's\nwidget, invoking the argument for each ancestor. The callback is given a\nreference to the ancestor widget's corresponding <a href=\"widgets\/Element-class.html\">Element<\/a> object. The\nwalk stops when it reaches the root widget or when the callback returns\nfalse. The callback must not return null.<\/p>\n<p>This is useful for inspecting the widget tree.<\/p>\n<p>Calling this method is relatively expensive (O(N) in the depth of the tree).<\/p>\n<p>This method should not be called from <a href=\"widgets\/Element\/deactivate.html\">State.deactivate<\/a> or <a href=\"widgets\/State\/dispose.html\">State.dispose<\/a>\nbecause the element tree is no longer stable at that time. To refer to\nan ancestor from one of those methods, save a reference to the ancestor\nby calling <a href=\"widgets\/Element\/visitAncestorElements.html\">visitAncestorElements<\/a> in <a href=\"widgets\/Element\/didChangeDependencies.html\">State.didChangeDependencies<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.Element",
-            "sig": "",
-            "params": [
-                {
-                    "name": "element",
-                    "type": "widgets.Element",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "element",
-                    "type": "widgets.Element",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/visitAncestorElements.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid visitAncestorElements(bool visitor(Element element)) {\n  assert(_debugCheckStateIsActiveForAncestorLookup());\n  Element ancestor = _parent;\n  while (ancestor != null &amp;&amp; visitor(ancestor))\n    ancestor = ancestor._parent;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            "href": "widgets\/Element\/visitAncestorElements.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.Element",
+            "params": [
+                {
+                    "name": "element",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Element"
+                }
+            ]
         },
         {
-            "name": "visitChildElements",
-            "type": "",
             "desc": "<p>Wrapper around <a href=\"widgets\/Element\/visitChildren.html\">visitChildren<\/a> for <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid visitChildElements(ElementVisitor visitor) {\n  assert(() {\n    if (owner == null || !owner._debugStateLocked)\n      return true;\n    throw FlutterError(\n      'visitChildElements() called during build.\\n'\n      'The BuildContext.visitChildElements() method can\\'t be called during '\n      'build because the child list is still being updated at that point, '\n      'so the children might not be constructed yet, or might be old children '\n      'that are going to be replaced.'\n    );\n  }());\n  visitChildren(visitor);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/visitChildElements.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Element",
-            "sig": "",
             "params": [
                 {
                     "name": "visitor",
-                    "type": "widgets.ElementVisitor",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.ElementVisitor"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/visitChildElements.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid visitChildElements(ElementVisitor visitor) {\n  assert(() {\n    if (owner == null || !owner._debugStateLocked)\n      return true;\n    throw FlutterError(\n      'visitChildElements() called during build.\\n'\n      'The BuildContext.visitChildElements() method can\\'t be called during '\n      'build because the child list is still being updated at that point, '\n      'so the children might not be constructed yet, or might be old children '\n      'that are going to be replaced.'\n    );\n  }());\n  visitChildren(visitor);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "visitChildren",
-            "type": "",
             "desc": "<p>Calls the argument for each child. Must be overridden by subclasses that\nsupport having children.<\/p>\n<p>There is no guaranteed order in which the children will be visited, though\nit should be consistent over time.<\/p>\n<p>Calling this during build is dangerous: the child list might still be\nbeing updated at that point, so the children might not be constructed yet,\nor might be old children that are going to be replaced. This method should\nonly be called if it is provable that the children are available.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void visitChildren(ElementVisitor visitor) { }<\/code><\/pre>\n    ",
+            "href": "widgets\/Element\/visitChildren.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.Element",
-            "sig": "",
             "params": [
                 {
                     "name": "visitor",
-                    "type": "widgets.ElementVisitor",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.ElementVisitor"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/Element\/visitChildren.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void visitChildren(ElementVisitor visitor) { }<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "name": "depth",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>An integer that is guaranteed to be greater than the parent's, if any.\nThe element at the root of the tree must have a depth greater than 0.<\/p>\n        ",
-            "memberOf": "widgets.Element",
-            "isConstant": false,
-            "href": "widgets\/Element\/depth.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get depth =&gt; _depth;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "dirty",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Returns true if the element has been marked as needing rebuilding.<\/p>\n        ",
-            "memberOf": "widgets.Element",
-            "isConstant": false,
-            "href": "widgets\/Element\/dirty.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get dirty =&gt; _dirty;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "hashCode",
+            "href": "widgets\/Element\/depth.html",
+            "isDeprecated": "0",
             "type": "dart:core.int",
-            "types": [],
+            "memberOf": "widgets.Element",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns true if the element has been marked as needing rebuilding.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get dirty =&gt; _dirty;<\/code><\/pre>\n        ",
+            "href": "widgets\/Element\/dirty.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.Element",
+            "params": []
+        },
+        {
             "desc": "<p>The hash code for this object.<\/p>\n<p>A hash code is a single integer which represents the state of the object\nthat affects <a href=\"widgets\/Element\/operator_equals.html\">operator ==<\/a> comparisons.<\/p>\n<p>All objects have hash codes.\nThe default hash code represents only the identity of the object,\nthe same way as the default <a href=\"widgets\/Element\/operator_equals.html\">operator ==<\/a> implementation only considers objects\nequal if they are identical (see <a href=\"dart-core\/identityHashCode.html\">identityHashCode<\/a>).<\/p>\n<p>If <a href=\"widgets\/Element\/operator_equals.html\">operator ==<\/a> is overridden to use the object state instead,\nthe hash code must also be changed to represent that state.<\/p>\n<p>Hash codes must be the same for objects that are equal to each other\naccording to <a href=\"widgets\/Element\/operator_equals.html\">operator ==<\/a>.\nThe hash code of an object should only change if the object changes\nin a way that affects equality.\nThere are no further requirements for the hash codes.\nThey need not be consistent between executions of the same program\nand there are no distribution guarantees.<\/p>\n<p>Objects that are not equal are allowed to have the same hash code,\nit is even technically allowed that all instances have the same hash code,\nbut if clashes happen too often, it may reduce the efficiency of hash-based\ndata structures like <a href=\"dart-collection\/HashSet-class.html\">HashSet<\/a> or <a href=\"dart-collection\/HashMap-class.html\">HashMap<\/a>.<\/p>\n<p>If a subclass overrides <a href=\"widgets\/Element\/hashCode.html\">hashCode<\/a>, it should override the\n<a href=\"widgets\/Element\/operator_equals.html\">operator ==<\/a> operator as well to maintain consistency.<\/p>\n        ",
-            "memberOf": "widgets.Element",
-            "isConstant": false,
-            "href": "widgets\/Element\/hashCode.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get hashCode =&gt; _cachedHash;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/Element\/hashCode.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "widgets.Element",
+            "params": []
         },
         {
-            "name": "owner",
-            "type": "widgets.BuildOwner",
-            "types": [],
             "desc": "<p>The object that manages the lifecycle of this element.<\/p>\n        ",
-            "memberOf": "widgets.Element",
-            "isConstant": false,
-            "href": "widgets\/Element\/owner.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nBuildOwner get owner =&gt; _owner;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/Element\/owner.html",
+            "isDeprecated": "0",
+            "type": "widgets.BuildOwner",
+            "memberOf": "widgets.Element",
+            "params": []
         },
         {
-            "name": "renderObject",
-            "type": "rendering.RenderObject",
-            "types": [],
             "desc": "<p>The render object at (or below) this location in the tree.<\/p>\n<p>If this object is a <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a>, the render object is the one at\nthis location in the tree. Otherwise, this getter will walk down the tree\nuntil it finds a <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a>.<\/p>\n        ",
-            "memberOf": "widgets.Element",
-            "isConstant": false,
-            "href": "widgets\/Element\/renderObject.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">RenderObject get renderObject {\n  RenderObject result;\n  void visit(Element element) {\n    assert(result == null); \/\/ this verifies that there's only one child\n    if (element is RenderObjectElement)\n      result = element.renderObject;\n    else\n      element.visitChildren(visit);\n  }\n  visit(this);\n  return result;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/Element\/renderObject.html",
+            "isDeprecated": "0",
+            "type": "rendering.RenderObject",
+            "memberOf": "widgets.Element",
+            "params": []
         },
         {
-            "name": "size",
-            "type": "dart:ui.Size",
-            "types": [],
             "desc": "<p>The size of the <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> returned by <a href=\"widgets\/Element\/findRenderObject.html\">findRenderObject<\/a>.<\/p>\n<p>This getter will only return a valid result after the layout phase is\ncomplete. It is therefore not valid to call this from a build method.\nIt should only be called from paint callbacks or interaction event\nhandlers (e.g. gesture callbacks).<\/p>\n<p>For details on the different phases of a frame, see the discussion at\n<a href=\"widgets\/WidgetsBinding\/drawFrame.html\">WidgetsBinding.drawFrame<\/a>.<\/p>\n<p>This getter will only return a valid result if <a href=\"widgets\/Element\/findRenderObject.html\">findRenderObject<\/a> actually\nreturns a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>. If <a href=\"widgets\/Element\/findRenderObject.html\">findRenderObject<\/a> returns a render object that\nis not a subtype of <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> (e.g., <a href=\"rendering\/RenderView-class.html\">RenderView<\/a>), this getter will\nthrow an exception in checked mode and will return null in release mode.<\/p>\n<p>Calling this getter is theoretically relatively expensive (O(N) in the\ndepth of the tree), but in practice is usually cheap because the tree\nusually has many render objects and therefore the distance to the nearest\nrender object is usually short.<\/p>\n        ",
-            "memberOf": "widgets.Element",
-            "isConstant": false,
-            "href": "widgets\/Element\/size.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nSize get size {\n  assert(() {\n    if (_debugLifecycleState != _ElementLifecycle.active) {\n      throw FlutterError(\n        'Cannot get size of inactive element.\\n'\n        'In order for an element to have a valid size, the element must be '\n        'active, which means it is part of the tree. Instead, this element '\n        'is in the $_debugLifecycleState state.\\n'\n        'The size getter was called for the following element:\\n'\n        '  $this\\n'\n      );\n    }\n    if (owner._debugBuilding) {\n      throw FlutterError(\n        'Cannot get size during build.\\n'\n        'The size of this render object has not yet been determined because '\n        'the framework is still in the process of building widgets, which '\n        'means the render tree for this frame has not yet been determined. '\n        'The size getter should only be called from paint callbacks or '\n        'interaction event handlers (e.g. gesture callbacks).\\n'\n        '\\n'\n        'If you need some sizing information during build to decide which '\n        'widgets to build, consider using a LayoutBuilder widget, which can '\n        'tell you the layout constraints at a given location in the tree. See '\n        '&lt;https:\/\/docs.flutter.io\/flutter\/widgets\/LayoutBuilder-class.html&gt; '\n        'for more details.\\n'\n        '\\n'\n        'The size getter was called for the following element:\\n'\n        '  $this\\n'\n      );\n    }\n    return true;\n  }());\n  final RenderObject renderObject = findRenderObject();\n  assert(() {\n    if (renderObject == null) {\n      throw FlutterError(\n        'Cannot get size without a render object.\\n'\n        'In order for an element to have a valid size, the element must have '\n        'an associated render object. This element does not have an associated '\n        'render object, which typically means that the size getter was called '\n        'too early in the pipeline (e.g., during the build phase) before the '\n        'framework has created the render tree.\\n'\n        'The size getter was called for the following element:\\n'\n        '  $this\\n'\n      );\n    }\n    if (renderObject is RenderSliver) {\n      throw FlutterError(\n        'Cannot get size from a RenderSliver.\\n'\n        'The render object associated with this element is a '\n        '${renderObject.runtimeType}, which is a subtype of RenderSliver. '\n        'Slivers do not have a size per se. They have a more elaborate '\n        'geometry description, which can be accessed by calling '\n        'findRenderObject and then using the \"geometry\" getter on the '\n        'resulting object.\\n'\n        'The size getter was called for the following element:\\n'\n        '  $this\\n'\n        'The associated render sliver was:\\n'\n        '  ${renderObject.toStringShallow(joiner: \"\\n  \")}'\n      );\n    }\n    if (renderObject is! RenderBox) {\n      throw FlutterError(\n        'Cannot get size from a render object that is not a RenderBox.\\n'\n        'Instead of being a subtype of RenderBox, the render object associated '\n        'with this element is a ${renderObject.runtimeType}. If this type of '\n        'render object does have a size, consider calling findRenderObject '\n        'and extracting its size manually.\\n'\n        'The size getter was called for the following element:\\n'\n        '  $this\\n'\n        'The associated render object was:\\n'\n        '  ${renderObject.toStringShallow(joiner: \"\\n  \")}'\n      );\n    }\n    final RenderBox box = renderObject;\n    if (!box.hasSize) {\n      throw FlutterError(\n        'Cannot get size from a render object that has not been through layout.\\n'\n        'The size of this render object has not yet been determined because '\n        'this render object has not yet been through layout, which typically '\n        'means that the size getter was called too early in the pipeline '\n        '(e.g., during the build phase) before the framework has determined '\n        'the size and position of the render objects during layout.\\n'\n        'The size getter was called for the following element:\\n'\n        '  $this\\n'\n        'The render object from which the size was to be obtained was:\\n'\n        '  ${box.toStringShallow(joiner: \"\\n  \")}'\n      );\n    }\n    if (box.debugNeedsLayout) {\n      throw FlutterError(\n        'Cannot get size from a render object that has been marked dirty for layout.\\n'\n        'The size of this render object is ambiguous because this render object has '\n        'been modified since it was last laid out, which typically means that the size '\n        'getter was called too early in the pipeline (e.g., during the build phase) '\n        'before the framework has determined the size and position of the render '\n        'objects during layout.\\n'\n        'The size getter was called for the following element:\\n'\n        '  $this\\n'\n        'The render object from which the size was to be obtained was:\\n'\n        '  ${box.toStringShallow(joiner: \"\\n  \")}\\n'\n        'Consider using debugPrintMarkNeedsLayoutStacks to determine why the render '\n        'object in question is dirty, if you did not expect this.'\n      );\n    }\n    return true;\n  }());\n  if (renderObject is RenderBox)\n    return renderObject.size;\n  return null;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "slot",
-            "type": "",
-            "types": [],
-            "desc": "<p>Information set by parent to define where this child fits in its parent's\nchild list.<\/p>\n<p>Subclasses of Element that only have one child should use null for\nthe slot for that child.<\/p>\n        ",
+            "href": "widgets\/Element\/size.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Size",
             "memberOf": "widgets.Element",
-            "isConstant": false,
-            "href": "widgets\/Element\/slot.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">dynamic get slot =&gt; _slot;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "widget",
-            "type": "widgets.Widget",
-            "types": [],
             "desc": "<p>The configuration for this element.<\/p>\n        ",
-            "memberOf": "widgets.Element",
-            "isConstant": false,
-            "href": "widgets\/Element\/widget.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nWidget get widget =&gt; _widget;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/Element\/widget.html",
+            "isDeprecated": "0",
+            "type": "widgets.Widget",
+            "memberOf": "widgets.Element",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [
-        "widgets.ComponentElement",
-        "widgets.InheritedElement",
-        "widgets.InheritedModelElement",
-        "widgets.LeafRenderObjectElement",
-        "widgets.ListWheelElement",
-        "widgets.MultiChildRenderObjectElement",
-        "widgets.ParentDataElement",
-        "widgets.ProxyElement",
-        "widgets.RenderObjectElement",
-        "widgets.RenderObjectToWidgetElement",
-        "widgets.RootRenderObjectElement",
-        "widgets.SingleChildRenderObjectElement",
-        "widgets.SliverMultiBoxAdaptorElement",
-        "widgets.StatefulElement",
-        "widgets.StatelessElement"
-    ],
-    "realImplementors": [],
-    "cn": [],
-    "href": "widgets\/Element-class.html",
-    "desc": "<p>An instantiation of a <a href=\"widgets\/Widget-class.html\">Widget<\/a> at a particular location in the tree.<\/p>\n<p>Widgets describe how to configure a subtree but the same widget can be used\nto configure multiple subtrees simultaneously because widgets are immutable.\nAn <a href=\"widgets\/Element-class.html\">Element<\/a> represents the use of a widget to configure a specific location\nin the tree. Over time, the widget associated with a given element can\nchange, for example, if the parent widget rebuilds and creates a new widget\nfor this location.<\/p>\n<p>Elements form a tree. Most elements have a unique child, but some widgets\n(e.g., subclasses of <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a>) can have multiple children.<\/p>\n<p>Elements have the following lifecycle:<\/p>\n<ul>\n<li>The framework creates an element by calling <a href=\"widgets\/Widget\/createElement.html\">Widget.createElement<\/a> on the\nwidget that will be used as the element's initial configuration.<\/li>\n<li>The framework calls <a href=\"widgets\/Element\/mount.html\">mount<\/a> to add the newly created element to the tree\nat a given slot in a given parent. The <a href=\"widgets\/Element\/mount.html\">mount<\/a> method is responsible for\ninflating any child widgets and calling <a href=\"widgets\/Element\/attachRenderObject.html\">attachRenderObject<\/a> as\nnecessary to attach any associated render objects to the render tree.<\/li>\n<li>At this point, the element is considered \"active\" and might appear on\nscreen.<\/li>\n<li>At some point, the parent might decide to change the widget used to\nconfigure this element, for example because the parent rebuilt with new\nstate. When this happens, the framework will call <a href=\"widgets\/Element\/update.html\">update<\/a> with the new\nwidget. The new widget will always have the same <a href=\"dart-core\/Object\/runtimeType.html\">runtimeType<\/a> and key as\nold widget. If the parent wishes to change the <a href=\"dart-core\/Object\/runtimeType.html\">runtimeType<\/a> or key of\nthe widget at this location in the tree, can do so by unmounting this\nelement and inflating the new widget at this location.<\/li>\n<li>At some point, an ancestor might decide to remove this element (or an\nintermediate ancestor) from the tree, which the ancestor does by calling\n<a href=\"widgets\/Element\/deactivateChild.html\">deactivateChild<\/a> on itself. Deactivating the intermediate ancestor will\nremove that element's render object from the render tree and add this\nelement to the <a href=\"widgets\/Element\/owner.html\">owner<\/a>'s list of inactive elements, causing the framework\nto call <a href=\"widgets\/Element\/deactivate.html\">deactivate<\/a> on this element.<\/li>\n<li>At this point, the element is considered \"inactive\" and will not appear\non screen. An element can remain in the inactive state only until\nthe end of the current animation frame. At the end of the animation\nframe, any elements that are still inactive will be unmounted.<\/li>\n<li>If the element gets reincorporated into the tree (e.g., because it or one\nof its ancestors has a global key that is reused), the framework will\nremove the element from the <a href=\"widgets\/Element\/owner.html\">owner<\/a>'s list of inactive elements, call\n<a href=\"widgets\/Element\/activate.html\">activate<\/a> on the element, and reattach the element's render object to\nthe render tree. (At this point, the element is again considered \"active\"\nand might appear on screen.)<\/li>\n<li>If the element does not get reincorporated into the tree by the end of\nthe current animation frame, the framework will call <a href=\"widgets\/Element\/unmount.html\">unmount<\/a> on the\nelement.<\/li>\n<li>At this point, the element is considered \"defunct\" and will not be\nincorporated into the tree in the future.<\/li>\n<\/ul>",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "Element"
+    ]
 }

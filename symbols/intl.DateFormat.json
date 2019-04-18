@@ -1,2428 +1,977 @@
 {
-    "name": "intl.DateFormat",
-    "extends": [],
+    "desc": "<p>DateFormat is for formatting and parsing dates in a locale-sensitive\nmanner.<\/p>\n<p>It allows the user to choose from a set of standard date time formats as\nwell as specify a customized pattern under certain locales. Date elements\nthat vary across locales include month name, week name, field order, etc.\nWe also allow the user to use any customized pattern to parse or format\ndate-time strings under certain locales. Date elements that vary across\nlocales include month name, weekname, field, order, etc.<\/p>\n<p>Formatting dates in the default \"en_US\" format does not require any\ninitialization. e.g.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">print(new DateFormat.yMMMd().format(new DateTime.now()));\n<\/code><\/pre>\n<p>But for other locales, the formatting data for the locale must be\nobtained. This can currently be done in one of three ways, determined by\nwhich library you import. In all cases, the \"initializeDateFormatting\"\nmethod must be called and will return a future that is complete once the\nlocale data is available. The result of the future isn't important, but the\ndata for that locale is available to the date formatting and parsing once it\ncompletes.<\/p>\n<p>The easiest option is that the data may be available locally, imported in a\nlibrary that contains data for all the locales.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">import 'package:intl\/date_symbol_data_local.dart';\ninitializeDateFormatting(\"fr_FR\", null).then((_) =&gt; runMyCode());\n<\/code><\/pre>\n<p>If we are running outside of a browser, we may want to read the data\nfrom files in the file system.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">import 'package:intl\/date_symbol_data_file.dart';\ninitializeDateFormatting(\"de_DE\", null).then((_) =&gt; runMyCode());\n<\/code><\/pre>\n<p>If we are running in a browser, we may want to read the data from the\nserver using the XmlHttpRequest mechanism.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">import 'package:intl\/date_symbol_data_http_request.dart';\ninitializeDateFormatting(\"pt_BR\", null).then((_) =&gt; runMyCode());\n<\/code><\/pre>\n<p>The code in example\/basic\/basic_example.dart shows a full example of\nusing this mechanism.<\/p>\n<p>Once we have the locale data, we need to specify the particular format.\nThis library uses the ICU\/JDK date\/time pattern specification both for\ncomplete format specifications and also the abbreviated \"skeleton\" form\nwhich can also adapt to different locales and is preferred where available.<\/p>\n<p>Skeletons: These can be specified either as the ICU constant name or as the\nskeleton to which it resolves. The supported set of skeletons is as follows.\nFor each skeleton there is a named constructor that can be used to create\nit.  It's also possible to pass the skeleton as a string, but the\nconstructor is preferred.<\/p>\n<pre class=\"language-dart\"><code> ICU Name                   Skeleton\n --------                   --------\n DAY                          d\n ABBR_WEEKDAY                 E\n WEEKDAY                      EEEE\n ABBR_STANDALONE_MONTH        LLL\n STANDALONE_MONTH             LLLL\n NUM_MONTH                    M\n NUM_MONTH_DAY                Md\n NUM_MONTH_WEEKDAY_DAY        MEd\n ABBR_MONTH                   MMM\n ABBR_MONTH_DAY               MMMd\n ABBR_MONTH_WEEKDAY_DAY       MMMEd\n MONTH                        MMMM\n MONTH_DAY                    MMMMd\n MONTH_WEEKDAY_DAY            MMMMEEEEd\n ABBR_QUARTER                 QQQ\n QUARTER                      QQQQ\n YEAR                         y\n YEAR_NUM_MONTH               yM\n YEAR_NUM_MONTH_DAY           yMd\n YEAR_NUM_MONTH_WEEKDAY_DAY   yMEd\n YEAR_ABBR_MONTH              yMMM\n YEAR_ABBR_MONTH_DAY          yMMMd\n YEAR_ABBR_MONTH_WEEKDAY_DAY  yMMMEd\n YEAR_MONTH                   yMMMM\n YEAR_MONTH_DAY               yMMMMd\n YEAR_MONTH_WEEKDAY_DAY       yMMMMEEEEd\n YEAR_ABBR_QUARTER            yQQQ\n YEAR_QUARTER                 yQQQQ\n HOUR24                       H\n HOUR24_MINUTE                Hm\n HOUR24_MINUTE_SECOND         Hms\n HOUR                         j\n HOUR_MINUTE                  jm\n HOUR_MINUTE_SECOND           jms\n HOUR_MINUTE_GENERIC_TZ       jmv\n HOUR_MINUTE_TZ               jmz\n HOUR_GENERIC_TZ              jv\n HOUR_TZ                      jz\n MINUTE                       m\n MINUTE_SECOND                ms\n SECOND                       s\n<\/code><\/pre>\n<p>Examples Using the US Locale:<\/p>\n<pre class=\"language-dart\"><code> Pattern                           Result\n ----------------                  -------\n new DateFormat.yMd()             -&gt; 7\/10\/1996\n new DateFormat(\"yMd\")            -&gt; 7\/10\/1996\n new DateFormat.yMMMMd(\"en_US\")   -&gt; July 10, 1996\n new DateFormat.jm()              -&gt; 5:08 PM\n new DateFormat.yMd().add_jm()    -&gt; 7\/10\/1996 5:08 PM\n new DateFormat.Hm()              -&gt; 17:08 \/\/ force 24 hour time\n<\/code><\/pre>\n<p>Explicit Pattern Syntax: Formats can also be specified with a pattern\nstring.  This can be used for formats that don't have a skeleton available,\nbut these will not adapt to different locales. For example, in an explicit\npattern the letters \"H\" and \"h\" are available for 24 hour and 12 hour time\nformats respectively. But there isn't a way in an explicit pattern to get\nthe behaviour of the \"j\" skeleton, which prints 24 hour or 12 hour time\naccording to the conventions of the locale, and also includes am\/pm markers\nwhere appropriate. So it is preferable to use the skeletons.<\/p>\n<p>The following characters are available in explicit patterns:<\/p>\n<pre class=\"language-dart\"><code>Symbol   Meaning                Presentation       Example\n------   -------                ------------       -------\nG        era designator         (Text)             AD\ny        year                   (Number)           1996\nM        month in year          (Text &amp; Number)    July &amp; 07\nL        standalone month       (Text &amp; Number)    July &amp; 07\nd        day in month           (Number)           10\nc        standalone day         (Number)           10\nh        hour in am\/pm (1~12)   (Number)           12\nH        hour in day (0~23)     (Number)           0\nm        minute in hour         (Number)           30\ns        second in minute       (Number)           55\nS        fractional second      (Number)           978\nE        day of week            (Text)             Tuesday\nD        day in year            (Number)           189\na        am\/pm marker           (Text)             PM\nk        hour in day (1~24)     (Number)           24\nK        hour in am\/pm (0~11)   (Number)           0\nz        time zone              (Text)             Pacific Standard Time\nZ        time zone (RFC 822)    (Number)           -0800\nv        time zone (generic)    (Text)             Pacific Time\nQ        quarter                (Text)             Q3\n'        escape for text        (Delimiter)        'Date='\n''       single quote           (Literal)          'o''clock'\n<\/code><\/pre>\n<p>The count of pattern letters determine the format.<\/p>\n<p><strong>Text<\/strong>:<\/p>\n<ul>\n<li>5 pattern letters--use narrow form for standalone. Otherwise not used.<\/li>\n<li>4 or more pattern letters--use full form,<\/li>\n<li>3 pattern letters--use short or abbreviated form if one exists<\/li>\n<li>less than 3--use numeric form if one exists<\/li>\n<\/ul>\n<p><strong>Number<\/strong>: the minimum number of digits. Shorter numbers are zero-padded to\nthis amount (e.g. if \"m\" produces \"6\", \"mm\" produces \"06\"). Year is handled\nspecially; that is, if the count of 'y' is 2, the Year will be truncated to\n2 digits. (e.g., if \"yyyy\" produces \"1997\", \"yy\" produces \"97\".) Unlike\nother fields, fractional seconds are padded on the right with zero.<\/p>\n<p><strong>(Text &amp; Number)<\/strong>: 3 or over, use text, otherwise use number.<\/p>\n<p>Any characters not in the pattern will be treated as quoted text. For\ninstance, characters like ':', '.', ' ', '#' and '@' will appear in the\nresulting text even though they are not enclosed in single quotes. In our\ncurrent pattern usage, not all letters have meanings. But those unused\nletters are strongly discouraged to be used as quoted text without quotes,\nbecause we may use other letters as pattern characters in the future.<\/p>\n<p>Examples Using the US Locale:<\/p>\n<pre class=\"language-dart\"><code>Format Pattern                    Result\n--------------                    -------\n\"yyyy.MM.dd G 'at' HH:mm:ss vvvv\" 1996.07.10 AD at 15:08:56 Pacific Time\n\"EEE, MMM d, ''yy\"                Wed, Jul 10, '96\n\"h:mm a\"                          12:08 PM\n\"hh 'o''clock' a, zzzz\"           12 o'clock PM, Pacific Daylight Time\n\"K:mm a, vvv\"                     0:00 PM, PT\n\"yyyyy.MMMMM.dd GGG hh:mm aaa\"    01996.July.10 AD 12:08 PM\n<\/code><\/pre>\n<p>When parsing a date string using the abbreviated year pattern (\"yy\"),\nDateFormat must interpret the abbreviated year relative to some\ncentury. It does this by adjusting dates to be within 80 years before and 20\nyears after the time the parse function is called. For example, using a\npattern of \"MM\/dd\/yy\" and a DateParse instance created on Jan 1, 1997,\nthe string \"01\/11\/12\" would be interpreted as Jan 11, 2012 while the string\n\"05\/04\/64\" would be interpreted as May 4, 1964. During parsing, only\nstrings consisting of exactly two digits will be parsed into the default\ncentury. Any other numeric string, such as a one digit string, a three or\nmore digit string will be interpreted as its face value.<\/p>\n<p>If the year pattern does not have exactly two 'y' characters, the year is\ninterpreted literally, regardless of the number of digits. So using the\npattern \"MM\/dd\/yyyy\", \"01\/11\/12\" parses to Jan 11, 12 A.D.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "intl\/DateFormat-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "intl",
+    "name": "intl.DateFormat",
+    "shortname": "DateFormat",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "DateFormat",
-            "type": "",
             "desc": "<p>Creates a new DateFormat, using the format specified by <code>newPattern<\/code>.<\/p>\n<p>For forms that match one of our predefined skeletons, we look up the\ncorresponding pattern in <code>locale<\/code> (or in the default locale if none is\nspecified) and use the resulting full format string. This is the preferred\nusage, but if <code>newPattern<\/code> does not match one of the skeletons, then it is\nused as a format directly, but will not be adapted to suit the locale.<\/p>\n<p>For example, in an en_US locale, specifying the skeleton<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">new DateFormat.yMEd();\n<\/code><\/pre>\n<p>or the explicit<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">new DateFormat('EEE, M\/d\/y');\n<\/code><\/pre>\n<p>would produce the same result, a date of the form \"Wed, 6\/27\/2012\".<\/p>\n<p>The first version would produce a different format string if used in\nanother locale, but the second format would always be the same.<\/p>\n<p>If <code>locale<\/code> does not exist in our set of supported locales then an\n<a href=\"dart-core\/ArgumentError-class.html\">ArgumentError<\/a> is thrown.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat([String newPattern, String locale]) {\n  \/\/ TODO(alanknight): It should be possible to specify multiple skeletons eg\n  \/\/ date, time, timezone all separately. Adding many or named parameters to\n  \/\/ the constructor seems awkward, especially with the possibility of\n  \/\/ confusion with the locale. A \"fluent\" interface with cascading on an\n  \/\/ instance might work better? A list of patterns is also possible.\n  _locale = Intl.verifiedLocale(locale, localeExists);\n  addPattern(newPattern);\n}<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/DateFormat.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "intl.DateFormat",
-            "sig": "",
             "params": [
+                {
+                    "name": "locale",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.String"
+                },
                 {
                     "name": "newPattern",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "locale",
-                    "type": "dart:core.String",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat([String newPattern, String locale]) {\n  \/\/ TODO(alanknight): It should be possible to specify multiple skeletons eg\n  \/\/ date, time, timezone all separately. Adding many or named parameters to\n  \/\/ the constructor seems awkward, especially with the possibility of\n  \/\/ confusion with the locale. A \"fluent\" interface with cascading on an\n  \/\/ instance might work better? A list of patterns is also possible.\n  _locale = Intl.verifiedLocale(locale, localeExists);\n  addPattern(newPattern);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.E",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.E.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.E([locale]) : this(\"E\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.EEEE",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.EEEE.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.EEEE([locale]) : this(\"EEEE\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.H",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.H.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.H([locale]) : this(\"H\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.Hm",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.Hm.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.Hm([locale]) : this(\"Hm\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.Hms",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.Hms.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.Hms([locale]) : this(\"Hms\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.LLL",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.LLL.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.LLL([locale]) : this(\"LLL\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.LLLL",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.LLLL.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.LLLL([locale]) : this(\"LLLL\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.M",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.M.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.M([locale]) : this(\"M\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.MEd",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.MEd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.MEd([locale]) : this(\"MEd\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.MMM",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.MMM.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.MMM([locale]) : this(\"MMM\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.MMMEd",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.MMMEd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.MMMEd([locale]) : this(\"MMMEd\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.MMMM",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.MMMM.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.MMMM([locale]) : this(\"MMMM\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.MMMMEEEEd",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.MMMMEEEEd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.MMMMEEEEd([locale]) : this(\"MMMMEEEEd\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.MMMMd",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.MMMMd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.MMMMd([locale]) : this(\"MMMMd\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.MMMd",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.MMMd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.MMMd([locale]) : this(\"MMMd\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.Md",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.Md.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.Md([locale]) : this(\"Md\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.QQQ",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.QQQ.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.QQQ([locale]) : this(\"QQQ\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.QQQQ",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.QQQQ.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.QQQQ([locale]) : this(\"QQQQ\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "addPattern",
-            "type": "intl.DateFormat",
-            "desc": "<p>Add <code>inputPattern<\/code> to this instance as a pattern.<\/p>\n<p>If there was a previous pattern, then this appends to it, separating the\ntwo by <code>separator<\/code>.  <code>inputPattern<\/code> is first looked up in our list of\nknown skeletons.  If it's found there, then use the corresponding pattern\nfor this locale.  If it's not, then treat <code>inputPattern<\/code> as an explicit\npattern.<\/p>\n    ",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "inputPattern",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "separator",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/addPattern.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat addPattern(String inputPattern, [String separator = ' ']) {\n  \/\/ TODO(alanknight): This is an expensive operation. Caching recently used\n  \/\/ formats, or possibly introducing an entire \"locale\" object that would\n  \/\/ cache patterns for that locale could be a good optimization.\n  \/\/ If we have already parsed the format fields, reset them.\n  _formatFieldsPrivate = null;\n  if (inputPattern == null) return this;\n  if (!_availableSkeletons.containsKey(inputPattern)) {\n    _appendPattern(inputPattern, separator);\n  } else {\n    _appendPattern(_availableSkeletons[inputPattern], separator);\n  }\n  return this;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_E",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_E.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_E() =&gt; addPattern(\"E\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_EEEE",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_EEEE.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_EEEE() =&gt; addPattern(\"EEEE\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_H",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_H.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_H() =&gt; addPattern(\"H\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_Hm",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_Hm.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_Hm() =&gt; addPattern(\"Hm\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_Hms",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_Hms.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_Hms() =&gt; addPattern(\"Hms\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_LLL",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_LLL.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_LLL() =&gt; addPattern(\"LLL\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_LLLL",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_LLLL.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_LLLL() =&gt; addPattern(\"LLLL\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_M",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_M.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_M() =&gt; addPattern(\"M\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_MEd",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_MEd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MEd() =&gt; addPattern(\"MEd\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_MMM",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_MMM.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MMM() =&gt; addPattern(\"MMM\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_MMMEd",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_MMMEd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MMMEd() =&gt; addPattern(\"MMMEd\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_MMMM",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_MMMM.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MMMM() =&gt; addPattern(\"MMMM\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_MMMMEEEEd",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_MMMMEEEEd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MMMMEEEEd() =&gt; addPattern(\"MMMMEEEEd\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_MMMMd",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_MMMMd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MMMMd() =&gt; addPattern(\"MMMMd\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_MMMd",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_MMMd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MMMd() =&gt; addPattern(\"MMMd\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_Md",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_Md.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_Md() =&gt; addPattern(\"Md\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_QQQ",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_QQQ.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_QQQ() =&gt; addPattern(\"QQQ\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_QQQQ",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_QQQQ.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_QQQQ() =&gt; addPattern(\"QQQQ\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_d",
-            "type": "intl.DateFormat",
-            "desc": "<p>The \"add_*\" methods append a particular skeleton to the format, or set\nit as the only format if none was previously set. These are primarily\nuseful for creating compound formats. For example<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">new DateFormat.yMd().add_Hms();\n<\/code><\/pre>\n<p>would create a date format that prints both the date and the time.<\/p>\n    ",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_d.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_d() =&gt; addPattern(\"d\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_j",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_j.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_j() =&gt; addPattern(\"j\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_jm",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_jm.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_jm() =&gt; addPattern(\"jm\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_jms",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_jms.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_jms() =&gt; addPattern(\"jms\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_jmv",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_jmv.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_jmv() =&gt; addPattern(\"jmv\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_jmz",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_jmz.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_jmz() =&gt; addPattern(\"jmz\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_jv",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_jv.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_jv() =&gt; addPattern(\"jv\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_jz",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_jz.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_jz() =&gt; addPattern(\"jz\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_m",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_m.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_m() =&gt; addPattern(\"m\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_ms",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_ms.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_ms() =&gt; addPattern(\"ms\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_s",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_s.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_s() =&gt; addPattern(\"s\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_y",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_y.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_y() =&gt; addPattern(\"y\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_yM",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_yM.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yM() =&gt; addPattern(\"yM\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_yMEd",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_yMEd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMEd() =&gt; addPattern(\"yMEd\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_yMMM",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_yMMM.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMMM() =&gt; addPattern(\"yMMM\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_yMMMEd",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_yMMMEd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMMMEd() =&gt; addPattern(\"yMMMEd\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_yMMMM",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_yMMMM.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMMMM() =&gt; addPattern(\"yMMMM\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_yMMMMEEEEd",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_yMMMMEEEEd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMMMMEEEEd() =&gt; addPattern(\"yMMMMEEEEd\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_yMMMMd",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_yMMMMd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMMMMd() =&gt; addPattern(\"yMMMMd\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_yMMMd",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_yMMMd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMMMd() =&gt; addPattern(\"yMMMd\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_yMd",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_yMd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMd() =&gt; addPattern(\"yMd\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_yQQQ",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_yQQQ.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yQQQ() =&gt; addPattern(\"yQQQ\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "add_yQQQQ",
-            "type": "intl.DateFormat",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/add_yQQQQ.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yQQQQ() =&gt; addPattern(\"yQQQQ\");<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "allLocalesWithSymbols",
-            "type": "dart:core.List<dart:core.String>",
-            "desc": "<p>Returns a list of all locales for which we have date formatting\ninformation.<\/p>\n    ",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/allLocalesWithSymbols.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static List&lt;String&gt; allLocalesWithSymbols() =&gt;\n    new List&lt;String&gt;.from(dateTimeSymbols.keys);<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:core.List",
-                "dart:core.String"
             ]
         },
         {
-            "name": "DateFormat.d",
-            "type": "",
-            "desc": "<p>The named constructors for this class are all conveniences for creating\ninstances using one of the known \"skeleton\" formats, and having code\ncompletion support for discovering those formats.\nSo,<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">new DateFormat.yMd(\"en_US\")\n<\/code><\/pre>\n<p>is equivalent to<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">new DateFormat(\"yMd\", \"en_US\")\n<\/code><\/pre>\n<p>To create a compound format you can use these constructors in combination\nwith the \"add_*\" methods below. e.g.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">new DateFormat.yMd().add_Hms();\n<\/code><\/pre>\n<p>If the optional <code>locale<\/code> is omitted, the format will be created using the\ndefault locale in <a href=\"intl\/Intl\/systemLocale.html\">Intl.systemLocale<\/a>.<\/p>\n    ",
+            "desc": "<p>Add <code>inputPattern<\/code> to this instance as a pattern.<\/p>\n<p>If there was a previous pattern, then this appends to it, separating the\ntwo by <code>separator<\/code>.  <code>inputPattern<\/code> is first looked up in our list of\nknown skeletons.  If it's found there, then use the corresponding pattern\nfor this locale.  If it's not, then treat <code>inputPattern<\/code> as an explicit\npattern.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat addPattern(String inputPattern, [String separator = ' ']) {\n  \/\/ TODO(alanknight): This is an expensive operation. Caching recently used\n  \/\/ formats, or possibly introducing an entire \"locale\" object that would\n  \/\/ cache patterns for that locale could be a good optimization.\n  \/\/ If we have already parsed the format fields, reset them.\n  _formatFieldsPrivate = null;\n  if (inputPattern == null) return this;\n  if (!_availableSkeletons.containsKey(inputPattern)) {\n    _appendPattern(inputPattern, separator);\n  } else {\n    _appendPattern(_availableSkeletons[inputPattern], separator);\n  }\n  return this;\n}<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/addPattern.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "intl.DateFormat",
-            "sig": "",
             "params": [
                 {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "inputPattern",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                },
+                {
+                    "name": "separator",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.d.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.d([locale]) : this(\"d\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "format",
-            "type": "dart:core.String",
-            "desc": "<p>Return a string representing <code>date<\/code> formatted according to our locale\nand internal format.<\/p>\n    ",
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_E() =&gt; addPattern(\"E\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_E.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "intl.DateFormat",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_EEEE() =&gt; addPattern(\"EEEE\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_EEEE.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_H() =&gt; addPattern(\"H\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_H.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_Hm() =&gt; addPattern(\"Hm\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_Hm.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_Hms() =&gt; addPattern(\"Hms\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_Hms.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_LLL() =&gt; addPattern(\"LLL\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_LLL.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_LLLL() =&gt; addPattern(\"LLLL\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_LLLL.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_M() =&gt; addPattern(\"M\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_M.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MEd() =&gt; addPattern(\"MEd\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_MEd.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MMM() =&gt; addPattern(\"MMM\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_MMM.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MMMEd() =&gt; addPattern(\"MMMEd\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_MMMEd.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MMMM() =&gt; addPattern(\"MMMM\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_MMMM.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MMMMEEEEd() =&gt; addPattern(\"MMMMEEEEd\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_MMMMEEEEd.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MMMMd() =&gt; addPattern(\"MMMMd\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_MMMMd.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_MMMd() =&gt; addPattern(\"MMMd\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_MMMd.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_Md() =&gt; addPattern(\"Md\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_Md.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_QQQ() =&gt; addPattern(\"QQQ\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_QQQ.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_QQQQ() =&gt; addPattern(\"QQQQ\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_QQQQ.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": "<p>The \"add_*\" methods append a particular skeleton to the format, or set\nit as the only format if none was previously set. These are primarily\nuseful for creating compound formats. For example<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">new DateFormat.yMd().add_Hms();\n<\/code><\/pre>\n<p>would create a date format that prints both the date and the time.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_d() =&gt; addPattern(\"d\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_d.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_j() =&gt; addPattern(\"j\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_j.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_jm() =&gt; addPattern(\"jm\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_jm.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_jms() =&gt; addPattern(\"jms\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_jms.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_jmv() =&gt; addPattern(\"jmv\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_jmv.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_jmz() =&gt; addPattern(\"jmz\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_jmz.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_jv() =&gt; addPattern(\"jv\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_jv.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_jz() =&gt; addPattern(\"jz\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_jz.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_m() =&gt; addPattern(\"m\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_m.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_ms() =&gt; addPattern(\"ms\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_ms.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_s() =&gt; addPattern(\"s\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_s.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_y() =&gt; addPattern(\"y\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_y.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yM() =&gt; addPattern(\"yM\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_yM.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMEd() =&gt; addPattern(\"yMEd\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_yMEd.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMMM() =&gt; addPattern(\"yMMM\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_yMMM.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMMMEd() =&gt; addPattern(\"yMMMEd\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_yMMMEd.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMMMM() =&gt; addPattern(\"yMMMM\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_yMMMM.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMMMMEEEEd() =&gt; addPattern(\"yMMMMEEEEd\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_yMMMMEEEEd.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMMMMd() =&gt; addPattern(\"yMMMMd\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_yMMMMd.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMMMd() =&gt; addPattern(\"yMMMd\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_yMMMd.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yMd() =&gt; addPattern(\"yMd\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_yMd.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yQQQ() =&gt; addPattern(\"yQQQ\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_yQQQ.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": null,
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat add_yQQQQ() =&gt; addPattern(\"yQQQQ\");<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/add_yQQQQ.html",
+            "isDeprecated": "0",
+            "type": "intl.DateFormat",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns a list of all locales for which we have date formatting\ninformation.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static List&lt;String&gt; allLocalesWithSymbols() =&gt;\n    new List&lt;String&gt;.from(dateTimeSymbols.keys);<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/allLocalesWithSymbols.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<dart:core.String>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
+            "desc": "<p>Return a string representing <code>date<\/code> formatted according to our locale\nand internal format.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String format(DateTime date) {\n  \/\/ TODO(efortuna): read optional TimeZone argument (or similar)?\n  var result = new StringBuffer();\n  _formatFields.forEach((field) =&gt; result.write(field.format(date)));\n  return result.toString();\n}<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/format.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
             "params": [
                 {
                     "name": "date",
-                    "type": "dart:core.DateTime",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.DateTime"
                 }
-            ],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/format.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String format(DateTime date) {\n  \/\/ TODO(efortuna): read optional TimeZone argument (or similar)?\n  var result = new StringBuffer();\n  _formatFields.forEach((field) =&gt; result.write(field.format(date)));\n  return result.toString();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "formatDuration",
-            "type": "dart:core.String",
             "desc": "<p>NOT YET IMPLEMENTED.<\/p>\n<p>Returns a date string indicating how long ago (3 hours, 2 minutes)\nsomething has happened or how long in the future something will happen\ngiven a <code>reference<\/code> DateTime relative to the current time.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String formatDuration(DateTime reference) =&gt; '';<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/formatDuration.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "intl.DateFormat",
-            "sig": "",
             "params": [
                 {
                     "name": "reference",
-                    "type": "dart:core.DateTime",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.DateTime"
                 }
-            ],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/formatDuration.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String formatDuration(DateTime reference) =&gt; '';<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "formatDurationFrom",
-            "type": "dart:core.String",
             "desc": "<p>NOT YET IMPLEMENTED.<\/p>\n<p>Formats a string indicating how long ago (negative <code>duration<\/code>) or how far\nin the future (positive <code>duration<\/code>) some time is with respect to a\nreference <code>date<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String formatDurationFrom(Duration duration, DateTime date) =&gt; '';<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/formatDurationFrom.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "intl.DateFormat",
-            "sig": "",
             "params": [
-                {
-                    "name": "duration",
-                    "type": "dart:core.Duration",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
                 {
                     "name": "date",
-                    "type": "dart:core.DateTime",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/formatDurationFrom.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String formatDurationFrom(Duration duration, DateTime date) =&gt; '';<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.j",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.DateTime"
+                },
                 {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "duration",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Duration"
                 }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.j.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.j([locale]) : this(\"j\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "DateFormat.jm",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.jm.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.jm([locale]) : this(\"jm\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.jms",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.jms.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.jms([locale]) : this(\"jms\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.jmv",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.jmv.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.jmv([locale]) : this(\"jmv\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.jmz",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.jmz.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.jmz([locale]) : this(\"jmz\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.jv",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.jv.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.jv([locale]) : this(\"jv\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.jz",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.jz.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.jz([locale]) : this(\"jz\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "localeExists",
-            "type": "dart:core.bool",
             "desc": "<p>Return true if the locale exists, or if it is null. The null case\nis interpreted to mean that we use the default locale.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static bool localeExists(localeName) {\n  if (localeName == null) return false;\n  return dateTimeSymbols.containsKey(localeName);\n}<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/localeExists.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "intl.DateFormat",
-            "sig": "",
             "params": [
                 {
                     "name": "localeName",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/localeExists.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static bool localeExists(localeName) {\n  if (localeName == null) return false;\n  return dateTimeSymbols.containsKey(localeName);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "DateFormat.m",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.m.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.m([locale]) : this(\"m\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.ms",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.ms.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.ms([locale]) : this(\"ms\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "parse",
-            "type": "dart:core.DateTime",
             "desc": "<p>Given user input, attempt to parse the <code>inputString<\/code> into the anticipated\nformat, treating it as being in the local timezone.<\/p>\n<p>If <code>inputString<\/code> does not match our format, throws a <a href=\"dart-core\/FormatException-class.html\">FormatException<\/a>.\nThis will accept dates whose values are not strictly valid, or strings\nwith additional characters (including whitespace) after a valid date. For\nstricter parsing, use <a href=\"intl\/DateFormat\/parseStrict.html\">parseStrict<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "inputString",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "utc",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/parse.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateTime parse(String inputString, [utc = false]) =&gt;\n    _parse(inputString, utc: utc, strict: false);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "parseLoose",
+            "href": "intl\/DateFormat\/parse.html",
+            "isDeprecated": "0",
             "type": "dart:core.DateTime",
-            "desc": "<p>Given user input, attempt to parse the <code>inputString<\/code> \"loosely\" into the\nanticipated format, accepting some variations from the strict format.<\/p>\n<p>If <code>inputString<\/code> is accepted by <a href=\"intl\/DateFormat\/parseStrict.html\">parseStrict<\/a>, just return the result. If\nnot, attempt to parse it, but accepting either upper or lower case,\nallowing delimiters to be missing and replaced or supplemented with\nwhitespace, and allowing arbitrary amounts of whitespace wherever\nwhitespace is permitted. Note that this does not allow trailing\ncharacters, the way <a href=\"intl\/DateFormat\/parse.html\">parse<\/a> does.  It also does not allow alternative\nnames for months or weekdays other than those the format knows about. The\nrestrictions are quite arbitrary and it's not known how well they'll work\nfor locales that aren't English-like.<\/p>\n<p>If <code>inputString<\/code> does not parse, this throws a <a href=\"dart-core\/FormatException-class.html\">FormatException<\/a>.<\/p>\n<p>For example, this will accept<\/p>\n<pre class=\"language-dart\"><code>  new DateFormat.yMMMd(\"en_US\").parseLoose(\"SEp   3 2014\");\n  new DateFormat.yMd(\"en_US\").parseLoose(\"09    03\/2014\");\n  new DateFormat.yMd(\"en_US\").parseLoose(\"09 \/ 03 \/ 2014\");\n<\/code><\/pre>\n<p>It will NOT accept<\/p>\n<pre class=\"language-dart\"><code> \/\/ \"Sept\" is not a valid month name.\n new DateFormat.yMMMd(\"en_US\").parseLoose(\"Sept 3, 2014\");\n<\/code><\/pre>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "intl.DateFormat",
-            "sig": "",
             "params": [
                 {
                     "name": "inputString",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 },
                 {
                     "name": "utc",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/parseLoose.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateTime parseLoose(String inputString, [utc = false]) {\n  try {\n    return _parse(inputString, utc: utc, strict: true);\n  } on FormatException {\n    return _parseLoose(inputString.toLowerCase(), utc);\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "parsePattern",
-            "type": "dart:core.List",
-            "desc": "<p>Parse the template pattern and return a list of field objects.<\/p>\n    ",
+            "desc": "<p>Given user input, attempt to parse the <code>inputString<\/code> \"loosely\" into the\nanticipated format, accepting some variations from the strict format.<\/p>\n<p>If <code>inputString<\/code> is accepted by <a href=\"intl\/DateFormat\/parseStrict.html\">parseStrict<\/a>, just return the result. If\nnot, attempt to parse it, but accepting either upper or lower case,\nallowing delimiters to be missing and replaced or supplemented with\nwhitespace, and allowing arbitrary amounts of whitespace wherever\nwhitespace is permitted. Note that this does not allow trailing\ncharacters, the way <a href=\"intl\/DateFormat\/parse.html\">parse<\/a> does.  It also does not allow alternative\nnames for months or weekdays other than those the format knows about. The\nrestrictions are quite arbitrary and it's not known how well they'll work\nfor locales that aren't English-like.<\/p>\n<p>If <code>inputString<\/code> does not parse, this throws a <a href=\"dart-core\/FormatException-class.html\">FormatException<\/a>.<\/p>\n<p>For example, this will accept<\/p>\n<pre class=\"language-dart\"><code>  new DateFormat.yMMMd(\"en_US\").parseLoose(\"SEp   3 2014\");\n  new DateFormat.yMd(\"en_US\").parseLoose(\"09    03\/2014\");\n  new DateFormat.yMd(\"en_US\").parseLoose(\"09 \/ 03 \/ 2014\");\n<\/code><\/pre>\n<p>It will NOT accept<\/p>\n<pre class=\"language-dart\"><code> \/\/ \"Sept\" is not a valid month name.\n new DateFormat.yMMMd(\"en_US\").parseLoose(\"Sept 3, 2014\");\n<\/code><\/pre>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateTime parseLoose(String inputString, [utc = false]) {\n  try {\n    return _parse(inputString, utc: utc, strict: true);\n  } on FormatException {\n    return _parseLoose(inputString.toLowerCase(), utc);\n  }\n}<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/parseLoose.html",
+            "isDeprecated": "0",
+            "type": "dart:core.DateTime",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "intl.DateFormat",
-            "sig": "",
+            "params": [
+                {
+                    "name": "inputString",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                },
+                {
+                    "name": "utc",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Parse the template pattern and return a list of field objects.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;_DateFormatField&gt; parsePattern(String pattern) {\n  if (pattern == null) return null;\n  return _parsePatternHelper(pattern).reversed.toList();\n}<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/parsePattern.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
             "params": [
                 {
                     "name": "pattern",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/parsePattern.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;_DateFormatField&gt; parsePattern(String pattern) {\n  if (pattern == null) return null;\n  return _parsePatternHelper(pattern).reversed.toList();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "parseStrict",
-            "type": "dart:core.DateTime",
             "desc": "<p>Given user input, attempt to parse the <code>inputString<\/code> into the anticipated\nformat, treating it as being in the local timezone.<\/p>\n<p>If <code>inputString<\/code> does not match our format, throws a <a href=\"dart-core\/FormatException-class.html\">FormatException<\/a>.\nThis will reject dates whose values are not strictly valid, even if the\nDateTime constructor will accept them. It will also rejct strings with\nadditional characters (including whitespace) after a valid date. For\nlooser parsing, use <a href=\"intl\/DateFormat\/parse.html\">parse<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateTime parseStrict(String inputString, [utc = false]) =&gt;\n    _parse(inputString, utc: utc, strict: true);<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/parseStrict.html",
+            "isDeprecated": "0",
+            "type": "dart:core.DateTime",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "intl.DateFormat",
-            "sig": "",
             "params": [
                 {
                     "name": "inputString",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 },
                 {
                     "name": "utc",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "<dynamic>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/parseStrict.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateTime parseStrict(String inputString, [utc = false]) =&gt;\n    _parse(inputString, utc: utc, strict: true);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "parseUTC",
-            "type": "dart:core.DateTime",
             "desc": "<p>Given user input, attempt to parse the <code>inputString<\/code> into the anticipated\nformat, treating it as being in UTC.<\/p>\n<p>The canonical Dart style name\nis <a href=\"intl\/DateFormat\/parseUtc.html\">parseUtc<\/a>, but <a href=\"intl\/DateFormat\/parseUTC.html\">parseUTC<\/a> is retained\nfor backward-compatibility.<\/p>\n    ",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "inputString",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/parseUTC.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateTime parseUTC(String inputString) =&gt; parse(inputString, true);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "parseUtc",
+            "href": "intl\/DateFormat\/parseUTC.html",
+            "isDeprecated": "0",
             "type": "dart:core.DateTime",
-            "desc": "<p>Given user input, attempt to parse the <code>inputString<\/code> into the anticipated\nformat, treating it as being in UTC.<\/p>\n<p>The canonical Dart style name\nis <a href=\"intl\/DateFormat\/parseUtc.html\">parseUtc<\/a>, but <a href=\"intl\/DateFormat\/parseUTC.html\">parseUTC<\/a> is retained\nfor backward-compatibility.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "intl.DateFormat",
-            "sig": "",
             "params": [
                 {
                     "name": "inputString",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/parseUtc.html",
+            ]
+        },
+        {
+            "desc": "<p>Given user input, attempt to parse the <code>inputString<\/code> into the anticipated\nformat, treating it as being in UTC.<\/p>\n<p>The canonical Dart style name\nis <a href=\"intl\/DateFormat\/parseUtc.html\">parseUtc<\/a>, but <a href=\"intl\/DateFormat\/parseUTC.html\">parseUTC<\/a> is retained\nfor backward-compatibility.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateTime parseUtc(String inputString) =&gt; parse(inputString, true);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.s",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.s.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.s([locale]) : this(\"s\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "shouldUseNativeDigitsByDefaultFor",
-            "type": "",
-            "desc": "<p>Should a new DateFormat for <code>locale<\/code> have useNativeDigits true.<\/p>\n<p>For example, for locale 'ar' when this setting is true, DateFormat will\nformat using Eastern Arabic digits, e.g. \"\\u0660, \\u0661, \\u0662\". If it\nis false, a new DateFormat will format using ASCII digits.<\/p>\n    ",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
+            "href": "intl\/DateFormat\/parseUtc.html",
+            "isDeprecated": "0",
+            "type": "dart:core.DateTime",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "intl\/DateFormat\/shouldUseNativeDigitsByDefaultFor.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static shouldUseNativeDigitsByDefaultFor(String locale) {\n  return _useNativeDigitsByDefault[locale] ?? true;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "useNativeDigitsByDefaultFor",
-            "type": "",
-            "desc": "<p>Indicate if a new DateFormat for <code>locale<\/code> should have useNativeDigits\ntrue.<\/p>\n<p>For example, for locale 'ar' when this setting is true, DateFormat will\nformat using Eastern Arabic digits, e.g. \"\\u0660, \\u0661, \\u0662\". If it\nis false, a new DateFormat will format using ASCII digits.<\/p>\n<p>If not indicated, the default value is true, so native digits will be\nused.<\/p>\n    ",
             "static": false,
             "memberOf": "intl.DateFormat",
-            "sig": "",
+            "params": [
+                {
+                    "name": "inputString",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Should a new DateFormat for <code>locale<\/code> have useNativeDigits true.<\/p>\n<p>For example, for locale 'ar' when this setting is true, DateFormat will\nformat using Eastern Arabic digits, e.g. \"\\u0660, \\u0661, \\u0662\". If it\nis false, a new DateFormat will format using ASCII digits.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static shouldUseNativeDigitsByDefaultFor(String locale) {\n  return _useNativeDigitsByDefault[locale] ?? true;\n}<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/shouldUseNativeDigitsByDefaultFor.html",
+            "isDeprecated": "0",
+            "type": "<dynamic>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
             "params": [
                 {
                     "name": "locale",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Indicate if a new DateFormat for <code>locale<\/code> should have useNativeDigits\ntrue.<\/p>\n<p>For example, for locale 'ar' when this setting is true, DateFormat will\nformat using Eastern Arabic digits, e.g. \"\\u0660, \\u0661, \\u0662\". If it\nis false, a new DateFormat will format using ASCII digits.<\/p>\n<p>If not indicated, the default value is true, so native digits will be\nused.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static useNativeDigitsByDefaultFor(String locale, bool value) {\n  _useNativeDigitsByDefault[locale] = value;\n}<\/code><\/pre>\n    ",
+            "href": "intl\/DateFormat\/useNativeDigitsByDefaultFor.html",
+            "isDeprecated": "0",
+            "type": "<dynamic>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "intl.DateFormat",
+            "params": [
+                {
+                    "name": "locale",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 },
                 {
                     "name": "value",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.bool"
                 }
-            ],
-            "isConstructor": false,
-            "href": "intl\/DateFormat\/useNativeDigitsByDefaultFor.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static useNativeDigitsByDefaultFor(String locale, bool value) {\n  _useNativeDigitsByDefault[locale] = value;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "DateFormat.y",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.y.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.y([locale]) : this(\"y\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.yM",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.yM.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.yM([locale]) : this(\"yM\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.yMEd",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.yMEd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.yMEd([locale]) : this(\"yMEd\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.yMMM",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.yMMM.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.yMMM([locale]) : this(\"yMMM\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.yMMMEd",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.yMMMEd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.yMMMEd([locale]) : this(\"yMMMEd\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.yMMMM",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.yMMMM.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.yMMMM([locale]) : this(\"yMMMM\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.yMMMMEEEEd",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.yMMMMEEEEd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.yMMMMEEEEd([locale]) : this(\"yMMMMEEEEd\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.yMMMMd",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.yMMMMd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.yMMMMd([locale]) : this(\"yMMMMd\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.yMMMd",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.yMMMd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.yMMMd([locale]) : this(\"yMMMd\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.yMd",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.yMd.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.yMd([locale]) : this(\"yMd\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.yQQQ",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.yQQQ.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.yQQQ([locale]) : this(\"yQQQ\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "DateFormat.yQQQQ",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "intl.DateFormat",
-            "sig": "",
-            "params": [
-                {
-                    "name": "locale",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": true,
-            "href": "intl\/DateFormat\/DateFormat.yQQQQ.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">DateFormat.yQQQQ([locale]) : this(\"yQQQQ\", locale);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "type": "",
-            "href": "intl\/DateFormat\/ABBR_MONTH-constant.html",
-            "desc": "<p>For each of the skeleton formats we also allow the use of the\ncorresponding ICU constant names.<\/p>\n    ",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String ABBR_MONTH = 'MMM'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "ABBR_MONTH",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/ABBR_MONTH_DAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String ABBR_MONTH_DAY = 'MMMd'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "ABBR_MONTH_DAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/ABBR_MONTH_WEEKDAY_DAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String ABBR_MONTH_WEEKDAY_DAY = 'MMMEd'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "ABBR_MONTH_WEEKDAY_DAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/ABBR_QUARTER-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String ABBR_QUARTER = 'QQQ'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "ABBR_QUARTER",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/ABBR_STANDALONE_MONTH-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String ABBR_STANDALONE_MONTH = 'LLL'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "ABBR_STANDALONE_MONTH",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/ABBR_WEEKDAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String ABBR_WEEKDAY = 'E'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "ABBR_WEEKDAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/DAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String DAY = 'd'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "DAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/HOUR-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String HOUR = 'j'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "HOUR",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/HOUR24-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String HOUR24 = 'H'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "HOUR24",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/HOUR24_MINUTE-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String HOUR24_MINUTE = 'Hm'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "HOUR24_MINUTE",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/HOUR24_MINUTE_SECOND-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String HOUR24_MINUTE_SECOND = 'Hms'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "HOUR24_MINUTE_SECOND",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/HOUR_GENERIC_TZ-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String HOUR_GENERIC_TZ = 'jv'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "HOUR_GENERIC_TZ",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/HOUR_MINUTE-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String HOUR_MINUTE = 'jm'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "HOUR_MINUTE",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/HOUR_MINUTE_GENERIC_TZ-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String HOUR_MINUTE_GENERIC_TZ = 'jmv'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "HOUR_MINUTE_GENERIC_TZ",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/HOUR_MINUTE_SECOND-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String HOUR_MINUTE_SECOND = 'jms'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "HOUR_MINUTE_SECOND",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/HOUR_MINUTE_TZ-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String HOUR_MINUTE_TZ = 'jmz'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "HOUR_MINUTE_TZ",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/HOUR_TZ-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String HOUR_TZ = 'jz'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "HOUR_TZ",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/MINUTE-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String MINUTE = 'm'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "MINUTE",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/MINUTE_SECOND-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String MINUTE_SECOND = 'ms'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "MINUTE_SECOND",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/MONTH-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String MONTH = 'MMMM'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "MONTH",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/MONTH_DAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String MONTH_DAY = 'MMMMd'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "MONTH_DAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/MONTH_WEEKDAY_DAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String MONTH_WEEKDAY_DAY = 'MMMMEEEEd'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "MONTH_WEEKDAY_DAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/NUM_MONTH-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String NUM_MONTH = 'M'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "NUM_MONTH",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/NUM_MONTH_DAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String NUM_MONTH_DAY = 'Md'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "NUM_MONTH_DAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/NUM_MONTH_WEEKDAY_DAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String NUM_MONTH_WEEKDAY_DAY = 'MEd'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "NUM_MONTH_WEEKDAY_DAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/QUARTER-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String QUARTER = 'QQQQ'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "QUARTER",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/SECOND-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String SECOND = 's'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "SECOND",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/STANDALONE_MONTH-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String STANDALONE_MONTH = 'LLLL'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "STANDALONE_MONTH",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/WEEKDAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String WEEKDAY = 'EEEE'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "WEEKDAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/YEAR-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String YEAR = 'y'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "YEAR",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/YEAR_ABBR_MONTH-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String YEAR_ABBR_MONTH = 'yMMM'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "YEAR_ABBR_MONTH",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/YEAR_ABBR_MONTH_DAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String YEAR_ABBR_MONTH_DAY = 'yMMMd'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "YEAR_ABBR_MONTH_DAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/YEAR_ABBR_MONTH_WEEKDAY_DAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String YEAR_ABBR_MONTH_WEEKDAY_DAY = 'yMMMEd'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "YEAR_ABBR_MONTH_WEEKDAY_DAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/YEAR_ABBR_QUARTER-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String YEAR_ABBR_QUARTER = 'yQQQ'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "YEAR_ABBR_QUARTER",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/YEAR_MONTH-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String YEAR_MONTH = 'yMMMM'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "YEAR_MONTH",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/YEAR_MONTH_DAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String YEAR_MONTH_DAY = 'yMMMMd'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "YEAR_MONTH_DAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/YEAR_MONTH_WEEKDAY_DAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String YEAR_MONTH_WEEKDAY_DAY = 'yMMMMEEEEd'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "YEAR_MONTH_WEEKDAY_DAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/YEAR_NUM_MONTH-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String YEAR_NUM_MONTH = 'yM'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "YEAR_NUM_MONTH",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/YEAR_NUM_MONTH_DAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String YEAR_NUM_MONTH_DAY = 'yMd'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "YEAR_NUM_MONTH_DAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/YEAR_NUM_MONTH_WEEKDAY_DAY-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String YEAR_NUM_MONTH_WEEKDAY_DAY = 'yMEd'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "YEAR_NUM_MONTH_WEEKDAY_DAY",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "type": "",
-            "href": "intl\/DateFormat\/YEAR_QUARTER-constant.html",
-            "desc": "",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static const String YEAR_QUARTER = 'yQQQQ'\n\n<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "name": "YEAR_QUARTER",
-            "memberOf": "intl.DateFormat"
-        },
-        {
-            "name": "dateOnly",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Does our format only only date fields, and no time fields.<\/p>\n<p>For example, 'yyyy-MM-dd' would be true, but 'dd hh:mm' would be false.<\/p>\n        ",
-            "memberOf": "intl.DateFormat",
-            "isConstant": false,
-            "href": "intl\/DateFormat\/dateOnly.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get dateOnly =&gt; _dateOnly ??= _checkDateOnly;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "intl\/DateFormat\/dateOnly.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "intl.DateFormat",
+            "params": []
         },
         {
-            "name": "dateSymbols",
-            "type": "date_symbols.DateSymbols",
-            "types": [],
             "desc": "<p>Return the <code>DateSymbol<\/code> information for the locale.<\/p>\n<p>This can be useful to find lists like the names of weekdays or months in a\nlocale, but the structure of this data may change, and it's generally\nbetter to go through the <a href=\"intl\/DateFormat\/format.html\">format<\/a> and <a href=\"intl\/DateFormat\/parse.html\">parse<\/a> APIs. If the locale isn't\npresent, or is uninitialized, returns null.<\/p>\n        ",
-            "memberOf": "intl.DateFormat",
-            "isConstant": false,
-            "href": "intl\/DateFormat\/dateSymbols.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">DateSymbols get dateSymbols {\n  if (_locale != lastDateSymbolLocale) {\n    lastDateSymbolLocale = _locale;\n    cachedDateSymbols = dateTimeSymbols[_locale];\n  }\n  return cachedDateSymbols;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "intl\/DateFormat\/dateSymbols.html",
+            "isDeprecated": "0",
+            "type": "date_symbols.DateSymbols",
+            "memberOf": "intl.DateFormat",
+            "params": []
         },
         {
-            "name": "digitMatcher",
-            "type": "dart:core.RegExp",
-            "types": [],
             "desc": "<p>A regular expression which matches against digits for this locale.<\/p>\n        ",
-            "memberOf": "intl.DateFormat",
-            "isConstant": false,
-            "href": "intl\/DateFormat\/digitMatcher.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">RegExp get digitMatcher {\n  if (_digitMatcher != null) return _digitMatcher;\n  _digitMatcher = _digitMatchers.putIfAbsent(localeZero, _initDigitMatcher);\n  return _digitMatcher;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "intl\/DateFormat\/digitMatcher.html",
+            "isDeprecated": "0",
+            "type": "dart:core.RegExp",
+            "memberOf": "intl.DateFormat",
+            "params": []
         },
         {
-            "name": "locale",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>Return the locale code in which we operate, e.g. 'en_US' or 'pt'.<\/p>\n        ",
-            "memberOf": "intl.DateFormat",
-            "isConstant": false,
-            "href": "intl\/DateFormat\/locale.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get locale =&gt; _locale;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "localeZero",
+            "href": "intl\/DateFormat\/locale.html",
+            "isDeprecated": "0",
             "type": "dart:core.String",
-            "types": [],
+            "memberOf": "intl.DateFormat",
+            "params": []
+        },
+        {
             "desc": "<p>For performance, keep the zero digit available.<\/p>\n        ",
-            "memberOf": "intl.DateFormat",
-            "isConstant": false,
-            "href": "intl\/DateFormat\/localeZero.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get localeZero =&gt; _localeZero == null\n    ? _localeZero = (useNativeDigits ? dateSymbols.ZERODIGIT ?? '0' : '0')\n    : _localeZero;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "intl\/DateFormat\/localeZero.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "intl.DateFormat",
+            "params": []
         },
         {
-            "name": "localeZeroCodeUnit",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>For performance, keep the code unit of the zero digit available.<\/p>\n        ",
-            "memberOf": "intl.DateFormat",
-            "isConstant": false,
-            "href": "intl\/DateFormat\/localeZeroCodeUnit.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get localeZeroCodeUnit =&gt; _localeZeroCodeUnit == null\n    ? _localeZeroCodeUnit = localeZero.codeUnitAt(0)\n    : _localeZeroCodeUnit;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "pattern",
-            "type": "",
-            "types": [],
-            "desc": "<p>Return the pattern that we use to format dates.<\/p>\n        ",
+            "href": "intl\/DateFormat\/localeZeroCodeUnit.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
             "memberOf": "intl.DateFormat",
-            "isConstant": false,
-            "href": "intl\/DateFormat\/pattern.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">get pattern =&gt; _pattern;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "useNativeDigits",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Should we use native digits for printing DateTime, or ASCII.<\/p>\n<p>The default for this can be set using <a href=\"intl\/DateFormat\/useNativeDigitsByDefaultFor.html\">useNativeDigitsByDefaultFor<\/a>.<\/p>\n        ",
-            "memberOf": "intl.DateFormat",
-            "isConstant": false,
-            "href": "intl\/DateFormat\/useNativeDigits.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get useNativeDigits =&gt; _useNativeDigits == null\n    ? _useNativeDigits = shouldUseNativeDigitsByDefaultFor(locale)\n    : _useNativeDigits;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "intl\/DateFormat\/useNativeDigits.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "intl.DateFormat",
+            "params": []
         },
         {
-            "name": "usesAsciiDigits",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Does this use ASCII digits<\/p>\n        ",
-            "memberOf": "intl.DateFormat",
-            "isConstant": false,
-            "href": "intl\/DateFormat\/usesAsciiDigits.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get usesAsciiDigits =&gt; !usesNativeDigits;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "intl\/DateFormat\/usesAsciiDigits.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "intl.DateFormat",
+            "params": []
         },
         {
-            "name": "usesNativeDigits",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "",
-            "memberOf": "intl.DateFormat",
-            "isConstant": false,
-            "href": "intl\/DateFormat\/usesNativeDigits.html",
+            "desc": null,
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get usesNativeDigits =&gt;\n    useNativeDigits &amp;&amp; _localeZeroCodeUnit != _asciiZeroCodeUnit;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "intl\/DateFormat\/usesNativeDigits.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "intl.DateFormat",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "intl\/DateFormat-class.html",
-    "desc": "<p>DateFormat is for formatting and parsing dates in a locale-sensitive\nmanner.<\/p>\n<p>It allows the user to choose from a set of standard date time formats as\nwell as specify a customized pattern under certain locales. Date elements\nthat vary across locales include month name, week name, field order, etc.\nWe also allow the user to use any customized pattern to parse or format\ndate-time strings under certain locales. Date elements that vary across\nlocales include month name, weekname, field, order, etc.<\/p>\n<p>Formatting dates in the default \"en_US\" format does not require any\ninitialization. e.g.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">print(new DateFormat.yMMMd().format(new DateTime.now()));\n<\/code><\/pre>\n<p>But for other locales, the formatting data for the locale must be\nobtained. This can currently be done in one of three ways, determined by\nwhich library you import. In all cases, the \"initializeDateFormatting\"\nmethod must be called and will return a future that is complete once the\nlocale data is available. The result of the future isn't important, but the\ndata for that locale is available to the date formatting and parsing once it\ncompletes.<\/p>\n<p>The easiest option is that the data may be available locally, imported in a\nlibrary that contains data for all the locales.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">import 'package:intl\/date_symbol_data_local.dart';\ninitializeDateFormatting(\"fr_FR\", null).then((_) =&gt; runMyCode());\n<\/code><\/pre>\n<p>If we are running outside of a browser, we may want to read the data\nfrom files in the file system.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">import 'package:intl\/date_symbol_data_file.dart';\ninitializeDateFormatting(\"de_DE\", null).then((_) =&gt; runMyCode());\n<\/code><\/pre>\n<p>If we are running in a browser, we may want to read the data from the\nserver using the XmlHttpRequest mechanism.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">import 'package:intl\/date_symbol_data_http_request.dart';\ninitializeDateFormatting(\"pt_BR\", null).then((_) =&gt; runMyCode());\n<\/code><\/pre>\n<p>The code in example\/basic\/basic_example.dart shows a full example of\nusing this mechanism.<\/p>\n<p>Once we have the locale data, we need to specify the particular format.\nThis library uses the ICU\/JDK date\/time pattern specification both for\ncomplete format specifications and also the abbreviated \"skeleton\" form\nwhich can also adapt to different locales and is preferred where available.<\/p>\n<p>Skeletons: These can be specified either as the ICU constant name or as the\nskeleton to which it resolves. The supported set of skeletons is as follows.\nFor each skeleton there is a named constructor that can be used to create\nit.  It's also possible to pass the skeleton as a string, but the\nconstructor is preferred.<\/p>\n<pre class=\"language-dart\"><code> ICU Name                   Skeleton\n --------                   --------\n DAY                          d\n ABBR_WEEKDAY                 E\n WEEKDAY                      EEEE\n ABBR_STANDALONE_MONTH        LLL\n STANDALONE_MONTH             LLLL\n NUM_MONTH                    M\n NUM_MONTH_DAY                Md\n NUM_MONTH_WEEKDAY_DAY        MEd\n ABBR_MONTH                   MMM\n ABBR_MONTH_DAY               MMMd\n ABBR_MONTH_WEEKDAY_DAY       MMMEd\n MONTH                        MMMM\n MONTH_DAY                    MMMMd\n MONTH_WEEKDAY_DAY            MMMMEEEEd\n ABBR_QUARTER                 QQQ\n QUARTER                      QQQQ\n YEAR                         y\n YEAR_NUM_MONTH               yM\n YEAR_NUM_MONTH_DAY           yMd\n YEAR_NUM_MONTH_WEEKDAY_DAY   yMEd\n YEAR_ABBR_MONTH              yMMM\n YEAR_ABBR_MONTH_DAY          yMMMd\n YEAR_ABBR_MONTH_WEEKDAY_DAY  yMMMEd\n YEAR_MONTH                   yMMMM\n YEAR_MONTH_DAY               yMMMMd\n YEAR_MONTH_WEEKDAY_DAY       yMMMMEEEEd\n YEAR_ABBR_QUARTER            yQQQ\n YEAR_QUARTER                 yQQQQ\n HOUR24                       H\n HOUR24_MINUTE                Hm\n HOUR24_MINUTE_SECOND         Hms\n HOUR                         j\n HOUR_MINUTE                  jm\n HOUR_MINUTE_SECOND           jms\n HOUR_MINUTE_GENERIC_TZ       jmv\n HOUR_MINUTE_TZ               jmz\n HOUR_GENERIC_TZ              jv\n HOUR_TZ                      jz\n MINUTE                       m\n MINUTE_SECOND                ms\n SECOND                       s\n<\/code><\/pre>\n<p>Examples Using the US Locale:<\/p>\n<pre class=\"language-dart\"><code> Pattern                           Result\n ----------------                  -------\n new DateFormat.yMd()             -&gt; 7\/10\/1996\n new DateFormat(\"yMd\")            -&gt; 7\/10\/1996\n new DateFormat.yMMMMd(\"en_US\")   -&gt; July 10, 1996\n new DateFormat.jm()              -&gt; 5:08 PM\n new DateFormat.yMd().add_jm()    -&gt; 7\/10\/1996 5:08 PM\n new DateFormat.Hm()              -&gt; 17:08 \/\/ force 24 hour time\n<\/code><\/pre>\n<p>Explicit Pattern Syntax: Formats can also be specified with a pattern\nstring.  This can be used for formats that don't have a skeleton available,\nbut these will not adapt to different locales. For example, in an explicit\npattern the letters \"H\" and \"h\" are available for 24 hour and 12 hour time\nformats respectively. But there isn't a way in an explicit pattern to get\nthe behaviour of the \"j\" skeleton, which prints 24 hour or 12 hour time\naccording to the conventions of the locale, and also includes am\/pm markers\nwhere appropriate. So it is preferable to use the skeletons.<\/p>\n<p>The following characters are available in explicit patterns:<\/p>\n<pre class=\"language-dart\"><code>Symbol   Meaning                Presentation       Example\n------   -------                ------------       -------\nG        era designator         (Text)             AD\ny        year                   (Number)           1996\nM        month in year          (Text &amp; Number)    July &amp; 07\nL        standalone month       (Text &amp; Number)    July &amp; 07\nd        day in month           (Number)           10\nc        standalone day         (Number)           10\nh        hour in am\/pm (1~12)   (Number)           12\nH        hour in day (0~23)     (Number)           0\nm        minute in hour         (Number)           30\ns        second in minute       (Number)           55\nS        fractional second      (Number)           978\nE        day of week            (Text)             Tuesday\nD        day in year            (Number)           189\na        am\/pm marker           (Text)             PM\nk        hour in day (1~24)     (Number)           24\nK        hour in am\/pm (0~11)   (Number)           0\nz        time zone              (Text)             Pacific Standard Time\nZ        time zone (RFC 822)    (Number)           -0800\nv        time zone (generic)    (Text)             Pacific Time\nQ        quarter                (Text)             Q3\n'        escape for text        (Delimiter)        'Date='\n''       single quote           (Literal)          'o''clock'\n<\/code><\/pre>\n<p>The count of pattern letters determine the format.<\/p>\n<p><strong>Text<\/strong>:<\/p>\n<ul>\n<li>5 pattern letters--use narrow form for standalone. Otherwise not used.<\/li>\n<li>4 or more pattern letters--use full form,<\/li>\n<li>3 pattern letters--use short or abbreviated form if one exists<\/li>\n<li>less than 3--use numeric form if one exists<\/li>\n<\/ul>\n<p><strong>Number<\/strong>: the minimum number of digits. Shorter numbers are zero-padded to\nthis amount (e.g. if \"m\" produces \"6\", \"mm\" produces \"06\"). Year is handled\nspecially; that is, if the count of 'y' is 2, the Year will be truncated to\n2 digits. (e.g., if \"yyyy\" produces \"1997\", \"yy\" produces \"97\".) Unlike\nother fields, fractional seconds are padded on the right with zero.<\/p>\n<p><strong>(Text &amp; Number)<\/strong>: 3 or over, use text, otherwise use number.<\/p>\n<p>Any characters not in the pattern will be treated as quoted text. For\ninstance, characters like ':', '.', ' ', '#' and '@' will appear in the\nresulting text even though they are not enclosed in single quotes. In our\ncurrent pattern usage, not all letters have meanings. But those unused\nletters are strongly discouraged to be used as quoted text without quotes,\nbecause we may use other letters as pattern characters in the future.<\/p>\n<p>Examples Using the US Locale:<\/p>\n<pre class=\"language-dart\"><code>Format Pattern                    Result\n--------------                    -------\n\"yyyy.MM.dd G 'at' HH:mm:ss vvvv\" 1996.07.10 AD at 15:08:56 Pacific Time\n\"EEE, MMM d, ''yy\"                Wed, Jul 10, '96\n\"h:mm a\"                          12:08 PM\n\"hh 'o''clock' a, zzzz\"           12 o'clock PM, Pacific Daylight Time\n\"K:mm a, vvv\"                     0:00 PM, PT\n\"yyyyy.MMMMM.dd GGG hh:mm aaa\"    01996.July.10 AD 12:08 PM\n<\/code><\/pre>\n<p>When parsing a date string using the abbreviated year pattern (\"yy\"),\nDateFormat must interpret the abbreviated year relative to some\ncentury. It does this by adjusting dates to be within 80 years before and 20\nyears after the time the parse function is called. For example, using a\npattern of \"MM\/dd\/yy\" and a DateParse instance created on Jan 1, 1997,\nthe string \"01\/11\/12\" would be interpreted as Jan 11, 2012 while the string\n\"05\/04\/64\" would be interpreted as May 4, 1964. During parsing, only\nstrings consisting of exactly two digits will be parsed into the default\ncentury. Any other numeric string, such as a one digit string, a three or\nmore digit string will be interpreted as its face value.<\/p>\n<p>If the year pattern does not have exactly two 'y' characters, the year is\ninterpreted literally, regardless of the number of digits. So using the\npattern \"MM\/dd\/yyyy\", \"01\/11\/12\" parses to Jan 11, 12 A.D.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "DateFormat"
+    ]
 }

@@ -1,135 +1,123 @@
 {
-    "name": "flutter_test.LocalFileComparator",
-    "extends": [],
+    "desc": "<p>The default <a href=\"flutter_test\/GoldenFileComparator-class.html\">GoldenFileComparator<\/a> implementation for <code>flutter test<\/code>.<\/p>\n<p>This comparator loads golden files from the local file system, treating the\ngolden key as a relative path from the test file's directory.<\/p>\n<p>This comparator performs a very simplistic comparison, doing a byte-for-byte\ncomparison of the encoded PNGs, returning true only if there's an exact\nmatch. This means it will fail the test if two PNGs represent the same\npixels but are encoded differently.<\/p>\n<p>When using <code>flutter test --update-goldens<\/code>, <a href=\"flutter_test\/LocalFileComparator-class.html\">LocalFileComparator<\/a>\nupdates the files on disk to match the rendering.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "flutter_test\/LocalFileComparator-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "flutter_test",
+    "name": "flutter_test.LocalFileComparator",
+    "shortname": "LocalFileComparator",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "LocalFileComparator",
-            "type": "",
             "desc": "<p>Creates a new <a href=\"flutter_test\/LocalFileComparator-class.html\">LocalFileComparator<\/a> for the specified <code>testFile<\/code>.<\/p>\n<p>Golden file keys will be interpreted as file paths relative to the\ndirectory in which <code>testFile<\/code> resides.<\/p>\n<p>The <code>testFile<\/code> URL must represent a file.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">LocalFileComparator(Uri testFile, {path.Style pathStyle})\n  : basedir = _getBasedir(testFile, pathStyle),\n    _path = _getPath(pathStyle);<\/code><\/pre>\n    ",
+            "href": "flutter_test\/LocalFileComparator\/LocalFileComparator.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "flutter_test.LocalFileComparator",
-            "sig": "",
             "params": [
-                {
-                    "name": "testFile",
-                    "type": "dart:core.Uri",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
                 {
                     "name": "pathStyle",
-                    "type": "path.Style",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "flutter_test\/LocalFileComparator\/LocalFileComparator.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">LocalFileComparator(Uri testFile, {path.Style pathStyle})\n  : basedir = _getBasedir(testFile, pathStyle),\n    _path = _getPath(pathStyle);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "compare",
-            "type": "dart:async.Future<dart:core.bool>",
-            "desc": "<p>Compares <code>imageBytes<\/code> against the golden file identified by <code>golden<\/code>.<\/p>\n<p>The returned future completes with a boolean value that indicates whether\n<code>imageBytes<\/code> matches the golden file's bytes within the tolerance defined\nby the comparator.<\/p>\n<p>In the case of comparison mismatch, the comparator may choose to throw a\n<a href=\"package-test_api_test_api\/TestFailure-class.html\">TestFailure<\/a> if it wants to control the failure message.<\/p>\n<p>The method by which <code>golden<\/code> is located and by which its bytes are loaded\nis left up to the implementation class. For instance, some implementations\nmay load files from the local file system, whereas others may load files\nover the network or from a remote repository.<\/p>\n    ",
-            "static": false,
-            "memberOf": "flutter_test.LocalFileComparator",
-            "sig": "",
-            "params": [
-                {
-                    "name": "imageBytes",
-                    "type": "dart:typed_data.Uint8List",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "path.Style"
                 },
                 {
-                    "name": "golden",
-                    "type": "dart:core.Uri",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "testFile",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.Uri"
                 }
-            ],
-            "isConstructor": false,
-            "href": "flutter_test\/LocalFileComparator\/compare.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;bool&gt; compare(Uint8List imageBytes, Uri golden) async {\n  final File goldenFile = _getFile(golden);\n  if (!goldenFile.existsSync()) {\n    throw test_package.TestFailure('Could not be compared against non-existent file: \"$golden\"');\n  }\n  final List&lt;int&gt; goldenBytes = await goldenFile.readAsBytes();\n  return _areListsEqual&lt;int&gt;(imageBytes, goldenBytes);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "dart:core.bool"
             ]
         },
         {
-            "name": "update",
-            "type": "dart:async.Future",
-            "desc": "<p>Updates the golden file identified by <code>golden<\/code> with <code>imageBytes<\/code>.<\/p>\n<p>This will be invoked in lieu of <a href=\"flutter_test\/LocalFileComparator\/compare.html\">compare<\/a> when <a href=\"flutter_test\/autoUpdateGoldenFiles.html\">autoUpdateGoldenFiles<\/a>\nis <code>true<\/code> (which gets set automatically by the test framework when the\nuser runs <code>flutter test --update-goldens<\/code>).<\/p>\n<p>The method by which <code>golden<\/code> is located and by which its bytes are written\nis left up to the implementation class.<\/p>\n    ",
+            "desc": "<p>Compares <code>imageBytes<\/code> against the golden file identified by <code>golden<\/code>.<\/p>\n<p>The returned future completes with a boolean value that indicates whether\n<code>imageBytes<\/code> matches the golden file's bytes within the tolerance defined\nby the comparator.<\/p>\n<p>In the case of comparison mismatch, the comparator may choose to throw a\n<a href=\"package-test_api_test_api\/TestFailure-class.html\">TestFailure<\/a> if it wants to control the failure message.<\/p>\n<p>The method by which <code>golden<\/code> is located and by which its bytes are loaded\nis left up to the implementation class. For instance, some implementations\nmay load files from the local file system, whereas others may load files\nover the network or from a remote repository.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;bool&gt; compare(Uint8List imageBytes, Uri golden) async {\n  final File goldenFile = _getFile(golden);\n  if (!goldenFile.existsSync()) {\n    throw test_package.TestFailure('Could not be compared against non-existent file: \"$golden\"');\n  }\n  final List&lt;int&gt; goldenBytes = await goldenFile.readAsBytes();\n  return _areListsEqual&lt;int&gt;(imageBytes, goldenBytes);\n}<\/code><\/pre>\n    ",
+            "href": "flutter_test\/LocalFileComparator\/compare.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:core.bool>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "flutter_test.LocalFileComparator",
-            "sig": "",
             "params": [
                 {
                     "name": "golden",
-                    "type": "dart:core.Uri",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Uri"
                 },
                 {
                     "name": "imageBytes",
-                    "type": "dart:typed_data.Uint8List",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:typed_data.Uint8List"
                 }
-            ],
-            "isConstructor": false,
-            "href": "flutter_test\/LocalFileComparator\/update.html",
+            ]
+        },
+        {
+            "desc": "<p>Updates the golden file identified by <code>golden<\/code> with <code>imageBytes<\/code>.<\/p>\n<p>This will be invoked in lieu of <a href=\"flutter_test\/LocalFileComparator\/compare.html\">compare<\/a> when <a href=\"flutter_test\/autoUpdateGoldenFiles.html\">autoUpdateGoldenFiles<\/a>\nis <code>true<\/code> (which gets set automatically by the test framework when the\nuser runs <code>flutter test --update-goldens<\/code>).<\/p>\n<p>The method by which <code>golden<\/code> is located and by which its bytes are written\nis left up to the implementation class.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;void&gt; update(Uri golden, Uint8List imageBytes) async {\n  final File goldenFile = _getFile(golden);\n  await goldenFile.parent.create(recursive: true);\n  await goldenFile.writeAsBytes(imageBytes, flush: true);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "flutter_test\/LocalFileComparator\/update.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "flutter_test.LocalFileComparator",
+            "params": [
+                {
+                    "name": "golden",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.Uri"
+                },
+                {
+                    "name": "imageBytes",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:typed_data.Uint8List"
+                }
+            ]
         }
     ],
     "props": [
         {
-            "name": "basedir",
-            "type": "dart:core.Uri",
-            "types": [],
             "desc": "<p>The directory in which the test was loaded.<\/p>\n<p>Golden file keys will be interpreted as file paths relative to this\ndirectory.<\/p>\n        ",
-            "memberOf": "flutter_test.LocalFileComparator",
-            "isConstant": false,
-            "href": "flutter_test\/LocalFileComparator\/basedir.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Uri basedir\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "flutter_test\/LocalFileComparator\/basedir.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Uri",
+            "memberOf": "flutter_test.LocalFileComparator",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "flutter_test\/LocalFileComparator-class.html",
-    "desc": "<p>The default <a href=\"flutter_test\/GoldenFileComparator-class.html\">GoldenFileComparator<\/a> implementation for <code>flutter test<\/code>.<\/p>\n<p>This comparator loads golden files from the local file system, treating the\ngolden key as a relative path from the test file's directory.<\/p>\n<p>This comparator performs a very simplistic comparison, doing a byte-for-byte\ncomparison of the encoded PNGs, returning true only if there's an exact\nmatch. This means it will fail the test if two PNGs represent the same\npixels but are encoded differently.<\/p>\n<p>When using <code>flutter test --update-goldens<\/code>, <a href=\"flutter_test\/LocalFileComparator-class.html\">LocalFileComparator<\/a>\nupdates the files on disk to match the rendering.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "LocalFileComparator"
+    ]
 }

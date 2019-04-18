@@ -1,574 +1,483 @@
 {
+    "desc": "<p>A route that blocks interaction with previous routes.<\/p>\n<p><a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a>s cover the entire <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>. They are not necessarily\n<a href=\"widgets\/TransitionRoute\/opaque.html\">opaque<\/a>, however; for example, a pop-up menu uses a <a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a> but only\nshows the menu in a small box overlapping the previous route.<\/p>\n<p>The <code>T<\/code> type argument is the return value of the route. If there is no\nreturn value, consider using <code>void<\/code> as the return value.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "widgets\/ModalRoute-class.html",
+    "isAbstract": "1",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "widgets",
     "name": "widgets.ModalRoute",
+    "shortname": "ModalRoute",
     "extends": [
         "widgets.TransitionRoute",
         "widgets.OverlayRoute",
         "widgets.Route",
         "dart:core.Object"
     ],
-    "memberOf": "widgets",
     "events": [],
     "methods": [
         {
-            "name": "ModalRoute",
-            "type": "",
             "desc": "<p>Creates a route that blocks interaction with previous routes.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ModalRoute({\n  RouteSettings settings,\n}) : super(settings: settings);<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/ModalRoute.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "widgets.ModalRoute",
-            "sig": "",
             "params": [
                 {
                     "name": "settings",
-                    "type": "widgets.RouteSettings",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "widgets.RouteSettings"
                 }
-            ],
-            "isConstructor": true,
-            "href": "widgets\/ModalRoute\/ModalRoute.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ModalRoute({\n  RouteSettings settings,\n}) : super(settings: settings);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "addScopedWillPopCallback",
-            "type": "",
             "desc": "<p>Enables this route to veto attempts by the user to dismiss it.<\/p>\n<p>This callback is typically added using a <a href=\"widgets\/WillPopScope-class.html\">WillPopScope<\/a> widget. That\nwidget finds the enclosing <a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a> and uses this function to register\nthis callback:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Widget build(BuildContext context) {\n  return WillPopScope(\n    onWillPop: askTheUserIfTheyAreSure,\n    child: ...,\n  );\n}\n<\/code><\/pre>\n<p>This callback runs asynchronously and it's possible that it will be called\nafter its route has been disposed. The callback should check <a href=\"widgets\/State\/mounted.html\">State.mounted<\/a>\nbefore doing anything.<\/p>\n<p>A typical application of this callback would be to warn the user about\nunsaved <a href=\"widgets\/Form-class.html\">Form<\/a> data if the user attempts to back out of the form. In that\ncase, use the <a href=\"widgets\/Form\/onWillPop.html\">Form.onWillPop<\/a> property to register the callback.<\/p>\n<p>To register a callback manually, look up the enclosing <a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a> in a\n<a href=\"widgets\/State\/didChangeDependencies.html\">State.didChangeDependencies<\/a> callback:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">ModalRoute&lt;dynamic&gt; _route;\n\n@override\nvoid didChangeDependencies() {\n super.didChangeDependencies();\n _route?.removeScopedWillPopCallback(askTheUserIfTheyAreSure);\n _route = ModalRoute.of(context);\n _route?.addScopedWillPopCallback(askTheUserIfTheyAreSure);\n}\n<\/code><\/pre>\n<p>If you register a callback manually, be sure to remove the callback with\n<a href=\"widgets\/ModalRoute\/removeScopedWillPopCallback.html\">removeScopedWillPopCallback<\/a> by the time the widget has been disposed. A\nstateful widget can do this in its dispose method (continuing the previous\nexample):<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  _route?.removeScopedWillPopCallback(askTheUserIfTheyAreSure);\n  _route = null;\n  super.dispose();\n}\n<\/code><\/pre>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/WillPopScope-class.html\">WillPopScope<\/a>, which manages the registration and unregistration\nprocess automatically.<\/li>\n<li>\n<a href=\"widgets\/Form-class.html\">Form<\/a>, which provides an <code>onWillPop<\/code> callback that uses this mechanism.<\/li>\n<li>\n<a href=\"widgets\/ModalRoute\/willPop.html\">willPop<\/a>, which runs the callbacks added with this method.<\/li>\n<li>\n<a href=\"widgets\/ModalRoute\/removeScopedWillPopCallback.html\">removeScopedWillPopCallback<\/a>, which removes a callback from the list\nthat <a href=\"widgets\/ModalRoute\/willPop.html\">willPop<\/a> checks.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addScopedWillPopCallback(WillPopCallback callback) {\n  assert(_scopeKey.currentState != null, 'Tried to add a willPop callback to a route that is not currently in the tree.');\n  _willPopCallbacks.add(callback);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/addScopedWillPopCallback.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.ModalRoute",
-            "sig": "",
             "params": [
                 {
                     "name": "callback",
-                    "type": "widgets.WillPopCallback",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.WillPopCallback"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/addScopedWillPopCallback.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addScopedWillPopCallback(WillPopCallback callback) {\n  assert(_scopeKey.currentState != null, 'Tried to add a willPop callback to a route that is not currently in the tree.');\n  _willPopCallbacks.add(callback);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "buildPage",
-            "type": "widgets.Widget",
             "desc": "<p>Override this method to build the primary content of this route.<\/p>\n<p>The arguments have the following meanings:<\/p>\n<ul>\n<li>\n<code>context<\/code>: The context in which the route is being built.<\/li>\n<li>\n<code>animation<\/code>: The animation for this route's transition. When entering,\nthe animation runs forward from 0.0 to 1.0. When exiting, this animation\nruns backwards from 1.0 to 0.0.<\/li>\n<li>\n<code>secondaryAnimation<\/code>: The animation for the route being pushed on top of\nthis route. This animation lets this route coordinate with the entrance\nand exit transition of routes pushed on top of this route.<\/li>\n<\/ul>\n<p>This method is only called when the route is first built, and rarely\nthereafter. In particular, it is not automatically called again when the\nroute's state changes unless it uses <a href=\"widgets\/ModalRoute\/of.html\">ModalRoute.of<\/a>. For a builder that\nis called every time the route's state changes, consider\n<a href=\"widgets\/ModalRoute\/buildTransitions.html\">buildTransitions<\/a>. For widgets that change their behavior when the\nroute's state changes, consider <a href=\"widgets\/ModalRoute\/of.html\">ModalRoute.of<\/a> to obtain a reference to\nthe route; this will cause the widget to be rebuilt each time the route\nchanges state.<\/p>\n<p>In general, <a href=\"widgets\/ModalRoute\/buildPage.html\">buildPage<\/a> should be used to build the page contents, and\n<a href=\"widgets\/ModalRoute\/buildTransitions.html\">buildTransitions<\/a> for the widgets that change as the page is brought in\nand out of view. Avoid using <a href=\"widgets\/ModalRoute\/buildTransitions.html\">buildTransitions<\/a> for content that never\nchanges; building such content once from <a href=\"widgets\/ModalRoute\/buildPage.html\">buildPage<\/a> is more efficient.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Widget buildPage(BuildContext context, Animation&lt;double&gt; animation, Animation&lt;double&gt; secondaryAnimation);<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/buildPage.html",
+            "isDeprecated": "0",
+            "type": "widgets.Widget",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.ModalRoute",
-            "sig": "",
             "params": [
                 {
-                    "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "animation",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "animation.Animation<dart:core.double>"
                 },
                 {
-                    "name": "animation",
-                    "type": "animation.Animation<dart:core.double>",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "context",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "animation.Animation",
-                        "dart:core.double"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
                 },
                 {
                     "name": "secondaryAnimation",
-                    "type": "animation.Animation<dart:core.double>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "animation.Animation",
-                        "dart:core.double"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "animation.Animation<dart:core.double>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/buildPage.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Widget buildPage(BuildContext context, Animation&lt;double&gt; animation, Animation&lt;double&gt; secondaryAnimation);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "buildTransitions",
-            "type": "widgets.Widget",
             "desc": "<p>Override this method to wrap the <code>child<\/code> with one or more transition\nwidgets that define how the route arrives on and leaves the screen.<\/p>\n<p>By default, the child (which contains the widget returned by <a href=\"widgets\/ModalRoute\/buildPage.html\">buildPage<\/a>)\nis not wrapped in any transition widgets.<\/p>\n<p>The <a href=\"widgets\/ModalRoute\/buildTransitions.html\">buildTransitions<\/a> method, in contrast to <a href=\"widgets\/ModalRoute\/buildPage.html\">buildPage<\/a>, is called each\ntime the <a href=\"widgets\/Route-class.html\">Route<\/a>'s state changes (e.g. the value of <a href=\"widgets\/ModalRoute\/canPop.html\">canPop<\/a>).<\/p>\n<p>The <a href=\"widgets\/ModalRoute\/buildTransitions.html\">buildTransitions<\/a> method is typically used to define transitions\nthat animate the new topmost route's comings and goings. When the\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a> pushes a route on the top of its stack, the new route's\nprimary <code>animation<\/code> runs from 0.0 to 1.0. When the Navigator pops the\ntopmost route, e.g. because the use pressed the back button, the\nprimary animation runs from 1.0 to 0.0.<\/p>\n<p>The following example uses the primary animation to drive a\n<a href=\"widgets\/SlideTransition-class.html\">SlideTransition<\/a> that translates the top of the new route vertically\nfrom the bottom of the screen when it is pushed on the Navigator's\nstack. When the route is popped the SlideTransition translates the\nroute from the top of the screen back to the bottom.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">PageRouteBuilder(\n  pageBuilder: (BuildContext context,\n      Animation&lt;double&gt; animation,\n      Animation&lt;double&gt; secondaryAnimation,\n      Widget child,\n  ) {\n    return Scaffold(\n      appBar: AppBar(title: Text('Hello')),\n      body: Center(\n        child: Text('Hello World'),\n      ),\n    );\n  },\n  transitionsBuilder: (\n      BuildContext context,\n      Animation&lt;double&gt; animation,\n      Animation&lt;double&gt; secondaryAnimation,\n      Widget child,\n   ) {\n    return SlideTransition(\n      position: Tween&lt;Offset&gt;(\n        begin: const Offset(0.0, 1.0),\n        end: Offset.zero,\n      ).animate(animation),\n      child: child, \/\/ child is the value returned by pageBuilder\n    );\n  },\n);\n<\/code><\/pre>\n<p>We've used <a href=\"widgets\/PageRouteBuilder-class.html\">PageRouteBuilder<\/a> to demonstrate the <a href=\"widgets\/ModalRoute\/buildTransitions.html\">buildTransitions<\/a> method\nhere. The body of an override of the <a href=\"widgets\/ModalRoute\/buildTransitions.html\">buildTransitions<\/a> method would be\ndefined in the same way.<\/p>\n<p>When the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> pushes a route on the top of its stack, the\n<code>secondaryAnimation<\/code> can be used to define how the route that was on\nthe top of the stack leaves the screen. Similarly when the topmost route\nis popped, the secondaryAnimation can be used to define how the route\nbelow it reappears on the screen. When the Navigator pushes a new route\non the top of its stack, the old topmost route's secondaryAnimation\nruns from 0.0 to 1.0. When the Navigator pops the topmost route, the\nsecondaryAnimation for the route below it runs from 1.0 to 0.0.<\/p>\n<p>The example below adds a transition that's driven by the\n<code>secondaryAnimation<\/code>. When this route disappears because a new route has\nbeen pushed on top of it, it translates in the opposite direction of\nthe new route. Likewise when the route is exposed because the topmost\nroute has been popped off.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">  transitionsBuilder: (\n      BuildContext context,\n      Animation&lt;double&gt; animation,\n      Animation&lt;double&gt; secondaryAnimation,\n      Widget child,\n  ) {\n    return SlideTransition(\n      position: AlignmentTween(\n        begin: const Offset(0.0, 1.0),\n        end: Offset.zero,\n      ).animate(animation),\n      child: SlideTransition(\n        position: TweenOffset(\n          begin: Offset.zero,\n          end: const Offset(0.0, 1.0),\n        ).animate(secondaryAnimation),\n        child: child,\n      ),\n    );\n  }\n<\/code><\/pre>\n<p>In practice the <code>secondaryAnimation<\/code> is used pretty rarely.<\/p>\n<p>The arguments to this method are as follows:<\/p>\n<ul>\n<li>\n<code>context<\/code>: The context in which the route is being built.<\/li>\n<li>\n<code>animation<\/code>: When the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> pushes a route on the top of its stack,\nthe new route's primary <code>animation<\/code> runs from 0.0 to 1.0. When the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>\npops the topmost route this animation runs from 1.0 to 0.0.<\/li>\n<li>\n<code>secondaryAnimation<\/code>: When the Navigator pushes a new route\non the top of its stack, the old topmost route's <code>secondaryAnimation<\/code>\nruns from 0.0 to 1.0. When the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> pops the topmost route, the\n<code>secondaryAnimation<\/code> for the route below it runs from 1.0 to 0.0.<\/li>\n<li>\n<code>child<\/code>, the page contents, as returned by <a href=\"widgets\/ModalRoute\/buildPage.html\">buildPage<\/a>.<\/li>\n<\/ul>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/ModalRoute\/buildPage.html\">buildPage<\/a>, which is used to describe the actual contents of the page,\nand whose result is passed to the <code>child<\/code> argument of this method.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Widget buildTransitions(\n  BuildContext context,\n  Animation&lt;double&gt; animation,\n  Animation&lt;double&gt; secondaryAnimation,\n  Widget child,\n) {\n  return child;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/buildTransitions.html",
+            "isDeprecated": "0",
+            "type": "widgets.Widget",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.ModalRoute",
-            "sig": "",
             "params": [
                 {
-                    "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
                     "name": "animation",
-                    "type": "animation.Animation<dart:core.double>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "animation.Animation",
-                        "dart:core.double"
-                    ]
-                },
-                {
-                    "name": "secondaryAnimation",
-                    "type": "animation.Animation<dart:core.double>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "animation.Animation",
-                        "dart:core.double"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "animation.Animation<dart:core.double>"
                 },
                 {
                     "name": "child",
-                    "type": "widgets.Widget",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Widget"
+                },
+                {
+                    "name": "context",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
+                },
+                {
+                    "name": "secondaryAnimation",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "animation.Animation<dart:core.double>"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/buildTransitions.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Widget buildTransitions(\n  BuildContext context,\n  Animation&lt;double&gt; animation,\n  Animation&lt;double&gt; secondaryAnimation,\n  Widget child,\n) {\n  return child;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "changedExternalState",
-            "type": "",
-            "desc": "<p>Called whenever the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has its widget rebuilt, to indicate that\nthe route may wish to rebuild as well.<\/p>\n<p>This is called by the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> whenever the <a href=\"widgets\/NavigatorState-class.html\">NavigatorState<\/a>'s\n<code>widget<\/code> changes, for example because the <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> has been rebuilt.\nThis ensures that routes that directly refer to the state of the widget\nthat built the <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> will be notified when that widget rebuilds,\nsince it would otherwise be difficult to notify the routes that state they\ndepend on may have changed.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/ModalRoute\/changedInternalState.html\">changedInternalState<\/a>, the equivalent but for changes to the internal\nstate of the route.<\/li><\/ul>",
-            "static": false,
-            "memberOf": "widgets.ModalRoute",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/changedExternalState.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid changedExternalState() {\n  super.changedExternalState();\n  if (_scopeKey.currentState != null)\n    _scopeKey.currentState._forceRebuildPage();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "changedInternalState",
-            "type": "",
-            "desc": "<p>Called whenever the internal state of the route has changed.<\/p>\n<p>This should be called whenever <a href=\"widgets\/LocalHistoryRoute\/willHandlePopInternally.html\">willHandlePopInternally<\/a>, <a href=\"widgets\/LocalHistoryRoute\/didPop.html\">didPop<\/a>,\n<a href=\"widgets\/ModalRoute\/offstage.html\">offstage<\/a>, or other internal state of the route changes value. It is used\nby <a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a>, for example, to report the new information via its\ninherited widget to any children of the route.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/ModalRoute\/changedExternalState.html\">changedExternalState<\/a>, which is called when the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> rebuilds.<\/li><\/ul>",
-            "static": false,
-            "memberOf": "widgets.ModalRoute",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/changedInternalState.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid changedInternalState() {\n  super.changedInternalState();\n  setState(() { \/* internal state already changed *\/ });\n  _modalBarrier.markNeedsBuild();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "createOverlayEntries",
-            "type": "dart:core.Iterable<widgets.OverlayEntry>",
-            "desc": "<p>Subclasses should override this getter to return the builders for the overlay.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.ModalRoute",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/createOverlayEntries.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterable&lt;OverlayEntry&gt; createOverlayEntries() sync* {\n  yield _modalBarrier = OverlayEntry(builder: _buildModalBarrier);\n  yield OverlayEntry(builder: _buildModalScope, maintainState: maintainState);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:core.Iterable",
-                "widgets.OverlayEntry"
             ]
         },
         {
-            "name": "didChangePrevious",
-            "type": "",
-            "desc": "<p>This route's previous route has changed to the given new route. This is\ncalled on a route whenever the previous route changes for any reason, so\nlong as it is in the history. <code>previousRoute<\/code> will be null if there's no\nprevious route.<\/p>\n    ",
+            "desc": "<p>Called whenever the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> has its widget rebuilt, to indicate that\nthe route may wish to rebuild as well.<\/p>\n<p>This is called by the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> whenever the <a href=\"widgets\/NavigatorState-class.html\">NavigatorState<\/a>'s\n<code>widget<\/code> changes, for example because the <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> has been rebuilt.\nThis ensures that routes that directly refer to the state of the widget\nthat built the <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> will be notified when that widget rebuilds,\nsince it would otherwise be difficult to notify the routes that state they\ndepend on may have changed.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/ModalRoute\/changedInternalState.html\">changedInternalState<\/a>, the equivalent but for changes to the internal\nstate of the route.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid changedExternalState() {\n  super.changedExternalState();\n  if (_scopeKey.currentState != null)\n    _scopeKey.currentState._forceRebuildPage();\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/changedExternalState.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.ModalRoute",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>Called whenever the internal state of the route has changed.<\/p>\n<p>This should be called whenever <a href=\"widgets\/LocalHistoryRoute\/willHandlePopInternally.html\">willHandlePopInternally<\/a>, <a href=\"widgets\/LocalHistoryRoute\/didPop.html\">didPop<\/a>,\n<a href=\"widgets\/ModalRoute\/offstage.html\">offstage<\/a>, or other internal state of the route changes value. It is used\nby <a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a>, for example, to report the new information via its\ninherited widget to any children of the route.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/ModalRoute\/changedExternalState.html\">changedExternalState<\/a>, which is called when the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> rebuilds.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid changedInternalState() {\n  super.changedInternalState();\n  setState(() { \/* internal state already changed *\/ });\n  _modalBarrier.markNeedsBuild();\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/changedInternalState.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.ModalRoute",
+            "params": []
+        },
+        {
+            "desc": "<p>Subclasses should override this getter to return the builders for the overlay.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterable&lt;OverlayEntry&gt; createOverlayEntries() sync* {\n  yield _modalBarrier = OverlayEntry(builder: _buildModalBarrier);\n  yield OverlayEntry(builder: _buildModalScope, maintainState: maintainState);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/createOverlayEntries.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Iterable<widgets.OverlayEntry>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.ModalRoute",
+            "params": []
+        },
+        {
+            "desc": "<p>This route's previous route has changed to the given new route. This is\ncalled on a route whenever the previous route changes for any reason, so\nlong as it is in the history. <code>previousRoute<\/code> will be null if there's no\nprevious route.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid didChangePrevious(Route&lt;dynamic&gt; previousRoute) {\n  super.didChangePrevious(previousRoute);\n  changedInternalState();\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/didChangePrevious.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.ModalRoute",
             "params": [
                 {
                     "name": "previousRoute",
-                    "type": "widgets.Route",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.Route"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/didChangePrevious.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid didChangePrevious(Route&lt;dynamic&gt; previousRoute) {\n  super.didChangePrevious(previousRoute);\n  changedInternalState();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "didPush",
-            "type": "scheduler.TickerFuture",
-            "desc": "<p>Called after <a href=\"widgets\/ModalRoute\/install.html\">install<\/a> when the route is pushed onto the navigator.<\/p>\n<p>The returned value resolves when the push transition is complete.<\/p>\n<p>The <a href=\"widgets\/TransitionRoute\/didChangeNext.html\">didChangeNext<\/a> and <a href=\"widgets\/ModalRoute\/didChangePrevious.html\">didChangePrevious<\/a> methods are typically called\nimmediately after this method is called.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.ModalRoute",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/didPush.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nTickerFuture didPush() {\n  navigator.focusScopeNode.setFirstFocus(focusScopeNode);\n  return super.didPush();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "dispose",
-            "type": "",
-            "desc": "<p>The route should remove its overlays and free any other resources.<\/p>\n<p>This route is no longer referenced by the navigator.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.ModalRoute",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/dispose.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  focusScopeNode.detach();\n  super.dispose();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "install",
-            "type": "",
-            "desc": "<p>Called when the route is inserted into the navigator.<\/p>\n<p>Use this to populate <a href=\"widgets\/OverlayRoute\/overlayEntries.html\">overlayEntries<\/a> and add them to the overlay\n(accessible as <code>Navigator.overlay<\/code>). (The reason the <a href=\"widgets\/Route-class.html\">Route<\/a> is\nresponsible for doing this, rather than the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>, is that the\n<a href=\"widgets\/Route-class.html\">Route<\/a> will be responsible for <em>removing<\/em> the entries and this way it's\nsymmetric.)<\/p>\n<p>The <code>insertionPoint<\/code> argument will be null if this is the first route\ninserted. Otherwise, it indicates the overlay entry to place immediately\nbelow the first overlay for this route.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.ModalRoute",
-            "sig": "",
-            "params": [
-                {
-                    "name": "insertionPoint",
-                    "type": "widgets.OverlayEntry",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/install.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid install(OverlayEntry insertionPoint) {\n  super.install(insertionPoint);\n  _animationProxy = ProxyAnimation(super.animation);\n  _secondaryAnimationProxy = ProxyAnimation(super.secondaryAnimation);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "of",
-            "type": "widgets.ModalRoute",
-            "desc": "<p>Returns the modal route most closely associated with the given context.<\/p>\n<p>Returns null if the given context is not associated with a modal route.<\/p>\n<p>Typical usage is as follows:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">ModalRoute route = ModalRoute.of(context);\n<\/code><\/pre>\n<p>The given <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> will be rebuilt if the state of the route changes\n(specifically, if <a href=\"widgets\/Route\/isCurrent.html\">isCurrent<\/a> or <a href=\"widgets\/ModalRoute\/canPop.html\">canPop<\/a> change value).<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.ModalRoute",
-            "sig": "",
-            "params": [
-                {
-                    "name": "context",
-                    "type": "widgets.BuildContext",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/of.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic ModalRoute&lt;T&gt; of&lt;T extends Object&gt;(BuildContext context) {\n  final _ModalScopeStatus widget = context.inheritFromWidgetOfExactType(_ModalScopeStatus);\n  return widget?.route;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "removeScopedWillPopCallback",
-            "type": "",
-            "desc": "<p>Remove one of the callbacks run by <a href=\"widgets\/ModalRoute\/willPop.html\">willPop<\/a>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/Form-class.html\">Form<\/a>, which provides an <code>onWillPop<\/code> callback that uses this mechanism.<\/li>\n<li>\n<a href=\"widgets\/ModalRoute\/addScopedWillPopCallback.html\">addScopedWillPopCallback<\/a>, which adds callback to the list\nchecked by <a href=\"widgets\/ModalRoute\/willPop.html\">willPop<\/a>.<\/li>\n<\/ul>",
-            "static": false,
-            "memberOf": "widgets.ModalRoute",
-            "sig": "",
-            "params": [
-                {
-                    "name": "callback",
-                    "type": "widgets.WillPopCallback",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/removeScopedWillPopCallback.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeScopedWillPopCallback(WillPopCallback callback) {\n  assert(_scopeKey.currentState != null, 'Tried to remove a willPop callback from a route that is not currently in the tree.');\n  _willPopCallbacks.remove(callback);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "setState",
-            "type": "",
-            "desc": "<p>Schedule a call to <a href=\"widgets\/ModalRoute\/buildTransitions.html\">buildTransitions<\/a>.<\/p>\n<p>Whenever you need to change internal state for a <a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a> object, make\nthe change in a function that you pass to <a href=\"widgets\/ModalRoute\/setState.html\">setState<\/a>, as in:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">setState(() { myState = newValue });\n<\/code><\/pre>\n<p>If you just change the state directly without calling <a href=\"widgets\/ModalRoute\/setState.html\">setState<\/a>, then the\nroute will not be scheduled for rebuilding, meaning that its rendering\nwill not be updated.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.ModalRoute",
-            "sig": "",
-            "params": [
-                {
-                    "name": "fn",
-                    "type": "dart:ui.VoidCallback",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/setState.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid setState(VoidCallback fn) {\n  if (_scopeKey.currentState != null) {\n    _scopeKey.currentState._routeSetState(fn);\n  } else {\n    \/\/ The route isn't currently visible, so we don't have to call its setState\n    \/\/ method, but we do still need to call the fn callback, otherwise the state\n    \/\/ in the route won't be updated!\n    fn();\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "toString",
-            "type": "dart:core.String",
-            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.ModalRoute",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/toString.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; '$runtimeType($settings, animation: $_animation)';<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "willPop",
-            "type": "dart:async.Future<widgets.RoutePopDisposition>",
-            "desc": "<p>Returns the value of the first callback added with\n<a href=\"widgets\/ModalRoute\/addScopedWillPopCallback.html\">addScopedWillPopCallback<\/a> that returns false. If they all return true,\nreturns the inherited method's result (see <a href=\"widgets\/ModalRoute\/willPop.html\">Route.willPop<\/a>).<\/p>\n<p>Typically this method is not overridden because applications usually\ndon't create modal routes directly, they use higher level primitives\nlike <a href=\"material\/showDialog.html\">showDialog<\/a>. The scoped <a href=\"widgets\/WillPopCallback.html\">WillPopCallback<\/a> list makes it possible\nfor ModalRoute descendants to collectively define the value of <code>willPop<\/code>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/Form-class.html\">Form<\/a>, which provides an <code>onWillPop<\/code> callback that uses this mechanism.<\/li>\n<li>\n<a href=\"widgets\/ModalRoute\/addScopedWillPopCallback.html\">addScopedWillPopCallback<\/a>, which adds a callback to the list this\nmethod checks.<\/li>\n<li>\n<a href=\"widgets\/ModalRoute\/removeScopedWillPopCallback.html\">removeScopedWillPopCallback<\/a>, which removes a callback from the list\nthis method checks.<\/li>\n<\/ul>",
-            "static": false,
-            "memberOf": "widgets.ModalRoute",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/willPop.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;RoutePopDisposition&gt; willPop() async {\n  final _ModalScopeState&lt;T&gt; scope = _scopeKey.currentState;\n  assert(scope != null);\n  for (WillPopCallback callback in List&lt;WillPopCallback&gt;.from(_willPopCallbacks)) {\n    if (!await callback())\n      return RoutePopDisposition.doNotPop;\n  }\n  return await super.willPop();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "widgets.RoutePopDisposition"
             ]
         },
         {
-            "name": "withName",
-            "type": "widgets.RoutePredicate",
-            "desc": "<p>Returns a predicate that's true if the route has the specified name and if\npopping the route will not yield the same route, i.e. if the route's\n<a href=\"widgets\/LocalHistoryRoute\/willHandlePopInternally.html\">willHandlePopInternally<\/a> property is false.<\/p>\n<p>This function is typically used with <a href=\"widgets\/Navigator\/popUntil.html\">Navigator.popUntil()<\/a>.<\/p>\n    ",
+            "desc": "<p>Called after <a href=\"widgets\/ModalRoute\/install.html\">install<\/a> when the route is pushed onto the navigator.<\/p>\n<p>The returned value resolves when the push transition is complete.<\/p>\n<p>The <a href=\"widgets\/TransitionRoute\/didChangeNext.html\">didChangeNext<\/a> and <a href=\"widgets\/ModalRoute\/didChangePrevious.html\">didChangePrevious<\/a> methods are typically called\nimmediately after this method is called.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nTickerFuture didPush() {\n  navigator.focusScopeNode.setFirstFocus(focusScopeNode);\n  return super.didPush();\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/didPush.html",
+            "isDeprecated": "0",
+            "type": "scheduler.TickerFuture",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "widgets.ModalRoute",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>The route should remove its overlays and free any other resources.<\/p>\n<p>This route is no longer referenced by the navigator.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid dispose() {\n  focusScopeNode.detach();\n  super.dispose();\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/dispose.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.ModalRoute",
+            "params": []
+        },
+        {
+            "desc": "<p>Called when the route is inserted into the navigator.<\/p>\n<p>Use this to populate <a href=\"widgets\/OverlayRoute\/overlayEntries.html\">overlayEntries<\/a> and add them to the overlay\n(accessible as <code>Navigator.overlay<\/code>). (The reason the <a href=\"widgets\/Route-class.html\">Route<\/a> is\nresponsible for doing this, rather than the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>, is that the\n<a href=\"widgets\/Route-class.html\">Route<\/a> will be responsible for <em>removing<\/em> the entries and this way it's\nsymmetric.)<\/p>\n<p>The <code>insertionPoint<\/code> argument will be null if this is the first route\ninserted. Otherwise, it indicates the overlay entry to place immediately\nbelow the first overlay for this route.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid install(OverlayEntry insertionPoint) {\n  super.install(insertionPoint);\n  _animationProxy = ProxyAnimation(super.animation);\n  _secondaryAnimationProxy = ProxyAnimation(super.secondaryAnimation);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/install.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.ModalRoute",
+            "params": [
+                {
+                    "name": "insertionPoint",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.OverlayEntry"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns the modal route most closely associated with the given context.<\/p>\n<p>Returns null if the given context is not associated with a modal route.<\/p>\n<p>Typical usage is as follows:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">ModalRoute route = ModalRoute.of(context);\n<\/code><\/pre>\n<p>The given <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> will be rebuilt if the state of the route changes\n(specifically, if <a href=\"widgets\/Route\/isCurrent.html\">isCurrent<\/a> or <a href=\"widgets\/ModalRoute\/canPop.html\">canPop<\/a> change value).<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@optionalTypeArgs\nstatic ModalRoute&lt;T&gt; of&lt;T extends Object&gt;(BuildContext context) {\n  final _ModalScopeStatus widget = context.inheritFromWidgetOfExactType(_ModalScopeStatus);\n  return widget?.route;\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/of.html",
+            "isDeprecated": "0",
+            "type": "widgets.ModalRoute",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.ModalRoute",
+            "params": [
+                {
+                    "name": "context",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.BuildContext"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Remove one of the callbacks run by <a href=\"widgets\/ModalRoute\/willPop.html\">willPop<\/a>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/Form-class.html\">Form<\/a>, which provides an <code>onWillPop<\/code> callback that uses this mechanism.<\/li>\n<li>\n<a href=\"widgets\/ModalRoute\/addScopedWillPopCallback.html\">addScopedWillPopCallback<\/a>, which adds callback to the list\nchecked by <a href=\"widgets\/ModalRoute\/willPop.html\">willPop<\/a>.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeScopedWillPopCallback(WillPopCallback callback) {\n  assert(_scopeKey.currentState != null, 'Tried to remove a willPop callback from a route that is not currently in the tree.');\n  _willPopCallbacks.remove(callback);\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/removeScopedWillPopCallback.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.ModalRoute",
+            "params": [
+                {
+                    "name": "callback",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "widgets.WillPopCallback"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Schedule a call to <a href=\"widgets\/ModalRoute\/buildTransitions.html\">buildTransitions<\/a>.<\/p>\n<p>Whenever you need to change internal state for a <a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a> object, make\nthe change in a function that you pass to <a href=\"widgets\/ModalRoute\/setState.html\">setState<\/a>, as in:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">setState(() { myState = newValue });\n<\/code><\/pre>\n<p>If you just change the state directly without calling <a href=\"widgets\/ModalRoute\/setState.html\">setState<\/a>, then the\nroute will not be scheduled for rebuilding, meaning that its rendering\nwill not be updated.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nvoid setState(VoidCallback fn) {\n  if (_scopeKey.currentState != null) {\n    _scopeKey.currentState._routeSetState(fn);\n  } else {\n    \/\/ The route isn't currently visible, so we don't have to call its setState\n    \/\/ method, but we do still need to call the fn callback, otherwise the state\n    \/\/ in the route won't be updated!\n    fn();\n  }\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/setState.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.ModalRoute",
+            "params": [
+                {
+                    "name": "fn",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.VoidCallback"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; '$runtimeType($settings, animation: $_animation)';<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/toString.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.ModalRoute",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns the value of the first callback added with\n<a href=\"widgets\/ModalRoute\/addScopedWillPopCallback.html\">addScopedWillPopCallback<\/a> that returns false. If they all return true,\nreturns the inherited method's result (see <a href=\"widgets\/ModalRoute\/willPop.html\">Route.willPop<\/a>).<\/p>\n<p>Typically this method is not overridden because applications usually\ndon't create modal routes directly, they use higher level primitives\nlike <a href=\"material\/showDialog.html\">showDialog<\/a>. The scoped <a href=\"widgets\/WillPopCallback.html\">WillPopCallback<\/a> list makes it possible\nfor ModalRoute descendants to collectively define the value of <code>willPop<\/code>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/Form-class.html\">Form<\/a>, which provides an <code>onWillPop<\/code> callback that uses this mechanism.<\/li>\n<li>\n<a href=\"widgets\/ModalRoute\/addScopedWillPopCallback.html\">addScopedWillPopCallback<\/a>, which adds a callback to the list this\nmethod checks.<\/li>\n<li>\n<a href=\"widgets\/ModalRoute\/removeScopedWillPopCallback.html\">removeScopedWillPopCallback<\/a>, which removes a callback from the list\nthis method checks.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;RoutePopDisposition&gt; willPop() async {\n  final _ModalScopeState&lt;T&gt; scope = _scopeKey.currentState;\n  assert(scope != null);\n  for (WillPopCallback callback in List&lt;WillPopCallback&gt;.from(_willPopCallbacks)) {\n    if (!await callback())\n      return RoutePopDisposition.doNotPop;\n  }\n  return await super.willPop();\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/willPop.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<widgets.RoutePopDisposition>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.ModalRoute",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns a predicate that's true if the route has the specified name and if\npopping the route will not yield the same route, i.e. if the route's\n<a href=\"widgets\/LocalHistoryRoute\/willHandlePopInternally.html\">willHandlePopInternally<\/a> property is false.<\/p>\n<p>This function is typically used with <a href=\"widgets\/Navigator\/popUntil.html\">Navigator.popUntil()<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static RoutePredicate withName(String name) {\n  return (Route&lt;dynamic&gt; route) {\n    return !route.willHandlePopInternally\n        &amp;&amp; route is ModalRoute\n        &amp;&amp; route.settings.name == name;\n  };\n}<\/code><\/pre>\n    ",
+            "href": "widgets\/ModalRoute\/withName.html",
+            "isDeprecated": "0",
+            "type": "widgets.RoutePredicate",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "widgets.ModalRoute",
             "params": [
                 {
                     "name": "name",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/ModalRoute\/withName.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">static RoutePredicate withName(String name) {\n  return (Route&lt;dynamic&gt; route) {\n    return !route.willHandlePopInternally\n        &amp;&amp; route is ModalRoute\n        &amp;&amp; route.settings.name == name;\n  };\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "animation",
-            "type": "animation.Animation<dart:core.double>",
-            "types": [
-                "animation.Animation",
-                "dart:core.double"
-            ],
             "desc": "<p>The animation that drives the route's transition and the previous route's\nforward transition.<\/p>\n        ",
-            "memberOf": "widgets.ModalRoute",
-            "isConstant": false,
-            "href": "widgets\/ModalRoute\/animation.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAnimation&lt;double&gt; get animation =&gt; _animationProxy;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "barrierColor",
-            "type": "dart:ui.Color",
-            "types": [],
-            "desc": "<p>The color to use for the modal barrier. If this is null, the barrier will\nbe transparent.<\/p>\n<p>The modal barrier is the scrim that is rendered behind each route, which\ngenerally prevents the user from interacting with the route below the\ncurrent route, and normally partially obscures such routes.<\/p>\n<p>For example, when a dialog is on the screen, the page below the dialog is\nusually darkened by the modal barrier.<\/p>\n<p>The color is ignored, and the barrier made invisible, when <a href=\"widgets\/ModalRoute\/offstage.html\">offstage<\/a> is\ntrue.<\/p>\n<p>While the route is animating into position, the color is animated from\ntransparent to the specified color.<\/p>\n<p>If this getter would ever start returning a different color,\n<a href=\"widgets\/ModalRoute\/changedInternalState.html\">changedInternalState<\/a> should be invoked so that the change can take\neffect.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ModalRoute\/barrierDismissible.html\">barrierDismissible<\/a>, which controls the behavior of the barrier when\ntapped.<\/li>\n<li>\n<a href=\"widgets\/ModalBarrier-class.html\">ModalBarrier<\/a>, the widget that implements this feature.<\/li>\n<\/ul>",
-            "memberOf": "widgets.ModalRoute",
-            "isConstant": false,
-            "href": "widgets\/ModalRoute\/barrierColor.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Color get barrierColor;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "barrierDismissible",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether you can dismiss this route by tapping the modal barrier.<\/p>\n<p>The modal barrier is the scrim that is rendered behind each route, which\ngenerally prevents the user from interacting with the route below the\ncurrent route, and normally partially obscures such routes.<\/p>\n<p>For example, when a dialog is on the screen, the page below the dialog is\nusually darkened by the modal barrier.<\/p>\n<p>If <a href=\"widgets\/ModalRoute\/barrierDismissible.html\">barrierDismissible<\/a> is true, then tapping this barrier will cause the\ncurrent route to be popped (see <a href=\"widgets\/Navigator\/pop.html\">Navigator.pop<\/a>) with null as the value.<\/p>\n<p>If <a href=\"widgets\/ModalRoute\/barrierDismissible.html\">barrierDismissible<\/a> is false, then tapping the barrier has no effect.<\/p>\n<p>If this getter would ever start returning a different color,\n<a href=\"widgets\/ModalRoute\/changedInternalState.html\">changedInternalState<\/a> should be invoked so that the change can take\neffect.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ModalRoute\/barrierColor.html\">barrierColor<\/a>, which controls the color of the scrim for this route.<\/li>\n<li>\n<a href=\"widgets\/ModalBarrier-class.html\">ModalBarrier<\/a>, the widget that implements this feature.<\/li>\n<\/ul>",
-            "memberOf": "widgets.ModalRoute",
-            "isConstant": false,
-            "href": "widgets\/ModalRoute\/barrierDismissible.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get barrierDismissible;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "barrierLabel",
-            "type": "dart:core.String",
-            "types": [],
-            "desc": "<p>The semantic label used for a dismissible barrier.<\/p>\n<p>If the barrier is dismissible, this label will be read out if\naccessibility tools (like VoiceOver on iOS) focus on the barrier.<\/p>\n<p>The modal barrier is the scrim that is rendered behind each route, which\ngenerally prevents the user from interacting with the route below the\ncurrent route, and normally partially obscures such routes.<\/p>\n<p>For example, when a dialog is on the screen, the page below the dialog is\nusually darkened by the modal barrier.<\/p>\n<p>If this getter would ever start returning a different color,\n<a href=\"widgets\/ModalRoute\/changedInternalState.html\">changedInternalState<\/a> should be invoked so that the change can take\neffect.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ModalRoute\/barrierDismissible.html\">barrierDismissible<\/a>, which controls the behavior of the barrier when\ntapped.<\/li>\n<li>\n<a href=\"widgets\/ModalBarrier-class.html\">ModalBarrier<\/a>, the widget that implements this feature.<\/li>\n<\/ul>",
-            "memberOf": "widgets.ModalRoute",
-            "isConstant": false,
-            "href": "widgets\/ModalRoute\/barrierLabel.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get barrierLabel;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "canPop",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether this route can be popped.<\/p>\n<p>When this changes, the route will rebuild, and any widgets that used\n<a href=\"widgets\/ModalRoute\/of.html\">ModalRoute.of<\/a> will be notified.<\/p>\n        ",
-            "memberOf": "widgets.ModalRoute",
-            "isConstant": false,
-            "href": "widgets\/ModalRoute\/canPop.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get canPop =&gt; !isFirst || willHandlePopInternally;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "focusScopeNode",
-            "type": "widgets.FocusScopeNode",
-            "types": [],
-            "desc": "<p>The node this route will use for its root <a href=\"widgets\/FocusScope-class.html\">FocusScope<\/a> widget.<\/p>\n        ",
-            "memberOf": "widgets.ModalRoute",
-            "isConstant": false,
-            "href": "widgets\/ModalRoute\/focusScopeNode.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final FocusScopeNode focusScopeNode = FocusScopeNode()\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "hasScopedWillPopCallback",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>True if one or more <a href=\"widgets\/WillPopCallback.html\">WillPopCallback<\/a> callbacks exist.<\/p>\n<p>This method is used to disable the horizontal swipe pop gesture\nsupported by <a href=\"material\/MaterialPageRoute-class.html\">MaterialPageRoute<\/a> for <a href=\"foundation\/TargetPlatform-class.html\">TargetPlatform.iOS<\/a>.\nIf a pop might be vetoed, then the back gesture is disabled.<\/p>\n<p>The <a href=\"widgets\/ModalRoute\/buildTransitions.html\">buildTransitions<\/a> method will not be called again if this changes,\nsince it can change during the build as descendants of the route add or\nremove callbacks.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ModalRoute\/addScopedWillPopCallback.html\">addScopedWillPopCallback<\/a>, which adds a callback.<\/li>\n<li>\n<a href=\"widgets\/ModalRoute\/removeScopedWillPopCallback.html\">removeScopedWillPopCallback<\/a>, which removes a callback.<\/li>\n<li>\n<a href=\"widgets\/LocalHistoryRoute\/willHandlePopInternally.html\">willHandlePopInternally<\/a>, which reports on another reason why\na pop might be vetoed.<\/li>\n<\/ul>",
-            "memberOf": "widgets.ModalRoute",
-            "isConstant": false,
-            "href": "widgets\/ModalRoute\/hasScopedWillPopCallback.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool get hasScopedWillPopCallback {\n  return _willPopCallbacks.isNotEmpty;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "maintainState",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether the route should remain in memory when it is inactive.<\/p>\n<p>If this is true, then the route is maintained, so that any futures it is\nholding from the next route will properly resolve when the next route\npops. If this is not necessary, this can be set to false to allow the\nframework to entirely discard the route's widget hierarchy when it is not\nvisible.<\/p>\n<p>The value of this getter should not change during the lifetime of the\nobject. It is used by <a href=\"widgets\/ModalRoute\/createOverlayEntries.html\">createOverlayEntries<\/a>, which is called by\n<a href=\"widgets\/ModalRoute\/install.html\">install<\/a> near the beginning of the route lifecycle.<\/p>\n        ",
-            "memberOf": "widgets.ModalRoute",
-            "isConstant": false,
-            "href": "widgets\/ModalRoute\/maintainState.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get maintainState;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "offstage",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether this route is currently offstage.<\/p>\n<p>On the first frame of a route's entrance transition, the route is built\n<a href=\"widgets\/Offstage-class.html\">Offstage<\/a> using an animation progress of 1.0. The route is invisible and\nnon-interactive, but each widget has its final size and position. This\nmechanism lets the <a href=\"widgets\/HeroController-class.html\">HeroController<\/a> determine the final local of any hero\nwidgets being animated as part of the transition.<\/p>\n<p>The modal barrier, if any, is not rendered if <a href=\"widgets\/ModalRoute\/offstage.html\">offstage<\/a> is true (see\n<a href=\"widgets\/ModalRoute\/barrierColor.html\">barrierColor<\/a>).<\/p>\n        ",
-            "memberOf": "widgets.ModalRoute",
-            "isConstant": false,
-            "href": "widgets\/ModalRoute\/offstage.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get offstage =&gt; _offstage;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "secondaryAnimation",
+            "href": "widgets\/ModalRoute\/animation.html",
+            "isDeprecated": "0",
             "type": "animation.Animation<dart:core.double>",
-            "types": [
-                "animation.Animation",
-                "dart:core.double"
-            ],
-            "desc": "<p>The animation for the route being pushed on top of this route. This\nanimation lets this route coordinate with the entrance and exit transition\nof routes pushed on top of this route.<\/p>\n        ",
             "memberOf": "widgets.ModalRoute",
-            "isConstant": false,
-            "href": "widgets\/ModalRoute\/secondaryAnimation.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAnimation&lt;double&gt; get secondaryAnimation =&gt; _secondaryAnimationProxy;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "semanticsDismissible",
+            "desc": "<p>The color to use for the modal barrier. If this is null, the barrier will\nbe transparent.<\/p>\n<p>The modal barrier is the scrim that is rendered behind each route, which\ngenerally prevents the user from interacting with the route below the\ncurrent route, and normally partially obscures such routes.<\/p>\n<p>For example, when a dialog is on the screen, the page below the dialog is\nusually darkened by the modal barrier.<\/p>\n<p>The color is ignored, and the barrier made invisible, when <a href=\"widgets\/ModalRoute\/offstage.html\">offstage<\/a> is\ntrue.<\/p>\n<p>While the route is animating into position, the color is animated from\ntransparent to the specified color.<\/p>\n<p>If this getter would ever start returning a different color,\n<a href=\"widgets\/ModalRoute\/changedInternalState.html\">changedInternalState<\/a> should be invoked so that the change can take\neffect.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ModalRoute\/barrierDismissible.html\">barrierDismissible<\/a>, which controls the behavior of the barrier when\ntapped.<\/li>\n<li>\n<a href=\"widgets\/ModalBarrier-class.html\">ModalBarrier<\/a>, the widget that implements this feature.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Color get barrierColor;<\/code><\/pre>\n        ",
+            "href": "widgets\/ModalRoute\/barrierColor.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Color",
+            "memberOf": "widgets.ModalRoute",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether you can dismiss this route by tapping the modal barrier.<\/p>\n<p>The modal barrier is the scrim that is rendered behind each route, which\ngenerally prevents the user from interacting with the route below the\ncurrent route, and normally partially obscures such routes.<\/p>\n<p>For example, when a dialog is on the screen, the page below the dialog is\nusually darkened by the modal barrier.<\/p>\n<p>If <a href=\"widgets\/ModalRoute\/barrierDismissible.html\">barrierDismissible<\/a> is true, then tapping this barrier will cause the\ncurrent route to be popped (see <a href=\"widgets\/Navigator\/pop.html\">Navigator.pop<\/a>) with null as the value.<\/p>\n<p>If <a href=\"widgets\/ModalRoute\/barrierDismissible.html\">barrierDismissible<\/a> is false, then tapping the barrier has no effect.<\/p>\n<p>If this getter would ever start returning a different color,\n<a href=\"widgets\/ModalRoute\/changedInternalState.html\">changedInternalState<\/a> should be invoked so that the change can take\neffect.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ModalRoute\/barrierColor.html\">barrierColor<\/a>, which controls the color of the scrim for this route.<\/li>\n<li>\n<a href=\"widgets\/ModalBarrier-class.html\">ModalBarrier<\/a>, the widget that implements this feature.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get barrierDismissible;<\/code><\/pre>\n        ",
+            "href": "widgets\/ModalRoute\/barrierDismissible.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether the semantics of the modal barrier are included in the\nsemantics tree.<\/p>\n<p>The modal barrier is the scrim that is rendered behind each route, which\ngenerally prevents the user from interacting with the route below the\ncurrent route, and normally partially obscures such routes.<\/p>\n<p>If <a href=\"widgets\/ModalRoute\/semanticsDismissible.html\">semanticsDismissible<\/a> is true, then modal barrier semantics are\nincluded in the semantics tree.<\/p>\n<p>If <a href=\"widgets\/ModalRoute\/semanticsDismissible.html\">semanticsDismissible<\/a> is false, then modal barrier semantics are\nexcluded from the semantics tree and tapping on the modal barrier\nhas no effect.<\/p>\n        ",
             "memberOf": "widgets.ModalRoute",
-            "isConstant": false,
-            "href": "widgets\/ModalRoute\/semanticsDismissible.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get semanticsDismissible =&gt; true;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "subtreeContext",
-            "type": "widgets.BuildContext",
-            "types": [],
-            "desc": "<p>The build context for the subtree containing the primary content of this route.<\/p>\n        ",
+            "desc": "<p>The semantic label used for a dismissible barrier.<\/p>\n<p>If the barrier is dismissible, this label will be read out if\naccessibility tools (like VoiceOver on iOS) focus on the barrier.<\/p>\n<p>The modal barrier is the scrim that is rendered behind each route, which\ngenerally prevents the user from interacting with the route below the\ncurrent route, and normally partially obscures such routes.<\/p>\n<p>For example, when a dialog is on the screen, the page below the dialog is\nusually darkened by the modal barrier.<\/p>\n<p>If this getter would ever start returning a different color,\n<a href=\"widgets\/ModalRoute\/changedInternalState.html\">changedInternalState<\/a> should be invoked so that the change can take\neffect.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ModalRoute\/barrierDismissible.html\">barrierDismissible<\/a>, which controls the behavior of the barrier when\ntapped.<\/li>\n<li>\n<a href=\"widgets\/ModalBarrier-class.html\">ModalBarrier<\/a>, the widget that implements this feature.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get barrierLabel;<\/code><\/pre>\n        ",
+            "href": "widgets\/ModalRoute\/barrierLabel.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
             "memberOf": "widgets.ModalRoute",
-            "isConstant": false,
-            "href": "widgets\/ModalRoute\/subtreeContext.html",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether this route can be popped.<\/p>\n<p>When this changes, the route will rebuild, and any widgets that used\n<a href=\"widgets\/ModalRoute\/of.html\">ModalRoute.of<\/a> will be notified.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get canPop =&gt; !isFirst || willHandlePopInternally;<\/code><\/pre>\n        ",
+            "href": "widgets\/ModalRoute\/canPop.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.ModalRoute",
+            "params": []
+        },
+        {
+            "desc": "<p>The node this route will use for its root <a href=\"widgets\/FocusScope-class.html\">FocusScope<\/a> widget.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final FocusScopeNode focusScopeNode = FocusScopeNode()\n\n<\/code><\/pre>\n        ",
+            "href": "widgets\/ModalRoute\/focusScopeNode.html",
+            "isDeprecated": "0",
+            "type": "widgets.FocusScopeNode",
+            "memberOf": "widgets.ModalRoute",
+            "params": []
+        },
+        {
+            "desc": "<p>True if one or more <a href=\"widgets\/WillPopCallback.html\">WillPopCallback<\/a> callbacks exist.<\/p>\n<p>This method is used to disable the horizontal swipe pop gesture\nsupported by <a href=\"material\/MaterialPageRoute-class.html\">MaterialPageRoute<\/a> for <a href=\"foundation\/TargetPlatform-class.html\">TargetPlatform.iOS<\/a>.\nIf a pop might be vetoed, then the back gesture is disabled.<\/p>\n<p>The <a href=\"widgets\/ModalRoute\/buildTransitions.html\">buildTransitions<\/a> method will not be called again if this changes,\nsince it can change during the build as descendants of the route add or\nremove callbacks.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/ModalRoute\/addScopedWillPopCallback.html\">addScopedWillPopCallback<\/a>, which adds a callback.<\/li>\n<li>\n<a href=\"widgets\/ModalRoute\/removeScopedWillPopCallback.html\">removeScopedWillPopCallback<\/a>, which removes a callback.<\/li>\n<li>\n<a href=\"widgets\/LocalHistoryRoute\/willHandlePopInternally.html\">willHandlePopInternally<\/a>, which reports on another reason why\na pop might be vetoed.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nbool get hasScopedWillPopCallback {\n  return _willPopCallbacks.isNotEmpty;\n}<\/code><\/pre>\n        ",
+            "href": "widgets\/ModalRoute\/hasScopedWillPopCallback.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.ModalRoute",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether the route should remain in memory when it is inactive.<\/p>\n<p>If this is true, then the route is maintained, so that any futures it is\nholding from the next route will properly resolve when the next route\npops. If this is not necessary, this can be set to false to allow the\nframework to entirely discard the route's widget hierarchy when it is not\nvisible.<\/p>\n<p>The value of this getter should not change during the lifetime of the\nobject. It is used by <a href=\"widgets\/ModalRoute\/createOverlayEntries.html\">createOverlayEntries<\/a>, which is called by\n<a href=\"widgets\/ModalRoute\/install.html\">install<\/a> near the beginning of the route lifecycle.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get maintainState;<\/code><\/pre>\n        ",
+            "href": "widgets\/ModalRoute\/maintainState.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.ModalRoute",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether this route is currently offstage.<\/p>\n<p>On the first frame of a route's entrance transition, the route is built\n<a href=\"widgets\/Offstage-class.html\">Offstage<\/a> using an animation progress of 1.0. The route is invisible and\nnon-interactive, but each widget has its final size and position. This\nmechanism lets the <a href=\"widgets\/HeroController-class.html\">HeroController<\/a> determine the final local of any hero\nwidgets being animated as part of the transition.<\/p>\n<p>The modal barrier, if any, is not rendered if <a href=\"widgets\/ModalRoute\/offstage.html\">offstage<\/a> is true (see\n<a href=\"widgets\/ModalRoute\/barrierColor.html\">barrierColor<\/a>).<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get offstage =&gt; _offstage;<\/code><\/pre>\n        ",
+            "href": "widgets\/ModalRoute\/offstage.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.ModalRoute",
+            "params": []
+        },
+        {
+            "desc": "<p>The animation for the route being pushed on top of this route. This\nanimation lets this route coordinate with the entrance and exit transition\nof routes pushed on top of this route.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nAnimation&lt;double&gt; get secondaryAnimation =&gt; _secondaryAnimationProxy;<\/code><\/pre>\n        ",
+            "href": "widgets\/ModalRoute\/secondaryAnimation.html",
+            "isDeprecated": "0",
+            "type": "animation.Animation<dart:core.double>",
+            "memberOf": "widgets.ModalRoute",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether the semantics of the modal barrier are included in the\nsemantics tree.<\/p>\n<p>The modal barrier is the scrim that is rendered behind each route, which\ngenerally prevents the user from interacting with the route below the\ncurrent route, and normally partially obscures such routes.<\/p>\n<p>If <a href=\"widgets\/ModalRoute\/semanticsDismissible.html\">semanticsDismissible<\/a> is true, then modal barrier semantics are\nincluded in the semantics tree.<\/p>\n<p>If <a href=\"widgets\/ModalRoute\/semanticsDismissible.html\">semanticsDismissible<\/a> is false, then modal barrier semantics are\nexcluded from the semantics tree and tapping on the modal barrier\nhas no effect.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get semanticsDismissible =&gt; true;<\/code><\/pre>\n        ",
+            "href": "widgets\/ModalRoute\/semanticsDismissible.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "widgets.ModalRoute",
+            "params": []
+        },
+        {
+            "desc": "<p>The build context for the subtree containing the primary content of this route.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">BuildContext get subtreeContext =&gt; _subtreeKey.currentContext;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "widgets\/ModalRoute\/subtreeContext.html",
+            "isDeprecated": "0",
+            "type": "widgets.BuildContext",
+            "memberOf": "widgets.ModalRoute",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": true,
-    "implementors": [
-        "cupertino.CupertinoPageRoute",
-        "material.MaterialPageRoute",
-        "widgets.PageRoute",
-        "widgets.PageRouteBuilder",
-        "widgets.PopupRoute"
-    ],
-    "realImplementors": [
-        "cupertino.CupertinoPageRoute",
-        "material.MaterialPageRoute"
-    ],
-    "cn": [],
-    "href": "widgets\/ModalRoute-class.html",
-    "desc": "<p>A route that blocks interaction with previous routes.<\/p>\n<p><a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a>s cover the entire <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>. They are not necessarily\n<a href=\"widgets\/TransitionRoute\/opaque.html\">opaque<\/a>, however; for example, a pop-up menu uses a <a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a> but only\nshows the menu in a small box overlapping the previous route.<\/p>\n<p>The <code>T<\/code> type argument is the return value of the route. If there is no\nreturn value, consider using <code>void<\/code> as the return value.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "ModalRoute"
+    ]
 }

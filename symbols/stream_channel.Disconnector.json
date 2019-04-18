@@ -1,84 +1,76 @@
 {
-    "name": "stream_channel.Disconnector",
-    "extends": [],
+    "desc": "<p>Allows the caller to force a channel to disconnect.<\/p>\n<p>When <a href=\"package-stream_channel_stream_channel\/Disconnector\/disconnect.html\">disconnect<\/a> is called, the channel (or channels) transformed by this\ntransformer will act as though the remote end had disconnected\u2014the stream\nwill emit a done event, and the sink will ignore future inputs. The inner\nsink will also be closed to notify the remote end of the disconnection.<\/p>\n<p>If a channel is transformed after the <a href=\"package-stream_channel_stream_channel\/Disconnector\/disconnect.html\">disconnect<\/a> has been called, it will\nbe disconnected immediately.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-stream_channel_stream_channel\/Disconnector-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "stream_channel",
+    "name": "stream_channel.Disconnector",
+    "shortname": "Disconnector",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "Disconnector",
+            "desc": null,
+            "example": null,
+            "href": "package-stream_channel_stream_channel\/Disconnector\/Disconnector.html",
+            "isDeprecated": "0",
             "type": "",
-            "desc": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "stream_channel.Disconnector",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "package-stream_channel_stream_channel\/Disconnector\/Disconnector.html",
-            "example": "",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "bind",
-            "type": "stream_channel.StreamChannel",
             "desc": "<p>Transforms the events sent to and emitted by <code>channel<\/code>.<\/p>\n<p>Creates a new channel. When events are passed to the returned channel's\nsink, the transformer will transform them and pass the transformed\nversions to <code>channel.sink<\/code>. When events are emitted from the\n<code>channel.straem<\/code>, the transformer will transform them and pass the\ntransformed versions to the returned channel's stream.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;T&gt; bind(StreamChannel&lt;T&gt; channel) {\n  return channel.changeSink((innerSink) {\n    var sink = new _DisconnectorSink&lt;T&gt;(innerSink);\n\n    if (isDisconnected) {\n      \/\/ Ignore errors here, because otherwise there would be no way for the\n      \/\/ user to handle them gracefully.\n      sink._disconnect().catchError((_) {});\n    } else {\n      _sinks.add(sink);\n    }\n\n    return sink;\n  });\n}<\/code><\/pre>\n    ",
+            "href": "package-stream_channel_stream_channel\/Disconnector\/bind.html",
+            "isDeprecated": "0",
+            "type": "stream_channel.StreamChannel",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "stream_channel.Disconnector",
-            "sig": "",
             "params": [
                 {
                     "name": "channel",
-                    "type": "stream_channel.StreamChannel",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "stream_channel.StreamChannel"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-stream_channel_stream_channel\/Disconnector\/bind.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamChannel&lt;T&gt; bind(StreamChannel&lt;T&gt; channel) {\n  return channel.changeSink((innerSink) {\n    var sink = new _DisconnectorSink&lt;T&gt;(innerSink);\n\n    if (isDisconnected) {\n      \/\/ Ignore errors here, because otherwise there would be no way for the\n      \/\/ user to handle them gracefully.\n      sink._disconnect().catchError((_) {});\n    } else {\n      _sinks.add(sink);\n    }\n\n    return sink;\n  });\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "disconnect",
-            "type": "dart:async.Future",
             "desc": "<p>Disconnects all channels that have been transformed.<\/p>\n<p>Returns a future that completes when all inner sinks' <a href=\"dart-async\/StreamSink\/close.html\">StreamSink.close<\/a>\nfutures have completed. Note that a <a href=\"dart-async\/StreamController-class.html\">StreamController<\/a>'s sink won't close\nuntil the corresponding stream has a listener.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future disconnect() =&gt; _disconnectMemo.runOnce(() {\n      var futures = _sinks.map((sink) =&gt; sink._disconnect()).toList();\n      _sinks.clear();\n      return Future.wait(futures, eagerError: true);\n    });<\/code><\/pre>\n    ",
+            "href": "package-stream_channel_stream_channel\/Disconnector\/disconnect.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "stream_channel.Disconnector",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-stream_channel_stream_channel\/Disconnector\/disconnect.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future disconnect() =&gt; _disconnectMemo.runOnce(() {\n      var futures = _sinks.map((sink) =&gt; sink._disconnect()).toList();\n      _sinks.clear();\n      return Future.wait(futures, eagerError: true);\n    });<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         }
     ],
     "props": [
         {
-            "name": "isDisconnected",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether <a href=\"package-stream_channel_stream_channel\/Disconnector\/disconnect.html\">disconnect<\/a> has been called.<\/p>\n        ",
-            "memberOf": "stream_channel.Disconnector",
-            "isConstant": false,
-            "href": "package-stream_channel_stream_channel\/Disconnector\/isDisconnected.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isDisconnected =&gt; _disconnectMemo.hasRun;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-stream_channel_stream_channel\/Disconnector\/isDisconnected.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "stream_channel.Disconnector",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-stream_channel_stream_channel\/Disconnector-class.html",
-    "desc": "<p>Allows the caller to force a channel to disconnect.<\/p>\n<p>When <a href=\"package-stream_channel_stream_channel\/Disconnector\/disconnect.html\">disconnect<\/a> is called, the channel (or channels) transformed by this\ntransformer will act as though the remote end had disconnected\u2014the stream\nwill emit a done event, and the sink will ignore future inputs. The inner\nsink will also be closed to notify the remote end of the disconnection.<\/p>\n<p>If a channel is transformed after the <a href=\"package-stream_channel_stream_channel\/Disconnector\/disconnect.html\">disconnect<\/a> has been called, it will\nbe disconnected immediately.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "Disconnector"
+    ]
 }

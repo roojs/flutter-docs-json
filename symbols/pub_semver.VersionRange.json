@@ -1,358 +1,308 @@
 {
-    "name": "pub_semver.VersionRange",
-    "extends": [],
+    "desc": "<p>Constrains versions to a fall within a given range.<\/p>\n<p>If there is a minimum, then this only allows versions that are at that\nminimum or greater. If there is a maximum, then only versions less than\nthat are allowed. In other words, this allows <code>&gt;= min, &lt; max<\/code>.<\/p>\n<p>Version ranges are ordered first by their lower bounds, then by their upper\nbounds. For example, <code>&gt;=1.0.0 &lt;2.0.0<\/code> is before <code>&gt;=1.5.0 &lt;2.0.0<\/code> is before\n<code>&gt;=1.5.0 &lt;3.0.0<\/code>.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-pub_semver_pub_semver\/VersionRange-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "pub_semver",
+    "name": "pub_semver.VersionRange",
+    "shortname": "VersionRange",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "operator ==",
-            "type": "dart:core.bool",
-            "desc": "<p>The equality operator.<\/p>\n<p>The default behavior for all <a href=\"dart-core\/Object-class.html\">Object<\/a>s is to return true if and\nonly if <code>this<\/code> and <code>other<\/code> are the same object.<\/p>\n<p>Override this method to specify a different equality relation on\na class. The overriding method must still be an equivalence relation.\nThat is, it must be:<\/p>\n<ul>\n<li>\n<p>Total: It must return a boolean for all arguments. It should never throw\nor return <code>null<\/code>.<\/p>\n<\/li>\n<li>\n<p>Reflexive: For all objects <code>o<\/code>, <code>o == o<\/code> must be true.<\/p>\n<\/li>\n<li>\n<p>Symmetric: For all objects <code>o1<\/code> and <code>o2<\/code>, <code>o1 == o2<\/code> and <code>o2 == o1<\/code> must\neither both be true, or both be false.<\/p>\n<\/li>\n<li>\n<p>Transitive: For all objects <code>o1<\/code>, <code>o2<\/code>, and <code>o3<\/code>, if <code>o1 == o2<\/code> and\n<code>o2 == o3<\/code> are true, then <code>o1 == o3<\/code> must be true.<\/p>\n<\/li>\n<\/ul>\n<p>The method should also be consistent over time,\nso whether two objects are equal should only change\nif at least one of the objects was modified.<\/p>\n<p>If a subclass overrides the equality operator it should override\nthe <a href=\"package-pub_semver_pub_semver\/VersionRange\/hashCode.html\">hashCode<\/a> method as well to maintain consistency.<\/p>\n    ",
-            "static": false,
-            "memberOf": "pub_semver.VersionRange",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/operator_equals.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool operator ==(other) {\n  if (other is! VersionRange) return false;\n\n  return min == other.min &amp;&amp;\n      max == other.max &amp;&amp;\n      includeMin == other.includeMin &amp;&amp;\n      includeMax == other.includeMax;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "VersionRange",
-            "type": "",
             "desc": "<p>Creates a new version range from <code>min<\/code> to <code>max<\/code>, either inclusive or\nexclusive.<\/p>\n<p>If it is an error if <code>min<\/code> is greater than <code>max<\/code>.<\/p>\n<p>Either <code>max<\/code> or <code>min<\/code> may be omitted to not clamp the range at that end.\nIf both are omitted, the range allows all versions.<\/p>\n<p>If <code>includeMin<\/code> is <code>true<\/code>, then the minimum end of the range is inclusive.\nLikewise, passing <code>includeMax<\/code> as <code>true<\/code> makes the upper end inclusive.<\/p>\n<p>If <code>alwaysIncludeMaxPreRelease<\/code> is <code>true<\/code>, this will always include\npre-release versions of an exclusive <code>max<\/code>. Otherwise, it will use the\ndefault behavior for pre-release versions of <code>max<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory VersionRange(\n    {Version min,\n    Version max,\n    bool includeMin: false,\n    bool includeMax: false,\n    bool alwaysIncludeMaxPreRelease: false}) {\n  if (min != null &amp;&amp; max != null &amp;&amp; min &gt; max) {\n    throw new ArgumentError(\n        'Minimum version (\"$min\") must be less than maximum (\"$max\").');\n  }\n\n  if (!alwaysIncludeMaxPreRelease &amp;&amp;\n      !includeMax &amp;&amp;\n      max != null &amp;&amp;\n      !max.isPreRelease &amp;&amp;\n      max.build.isEmpty &amp;&amp;\n      (min == null ||\n          !min.isPreRelease ||\n          !equalsWithoutPreRelease(min, max))) {\n    max = max.firstPreRelease;\n  }\n\n  return new VersionRange._(min, max, includeMin, includeMax);\n}<\/code><\/pre>\n    ",
+            "href": "package-pub_semver_pub_semver\/VersionRange\/VersionRange.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "pub_semver.VersionRange",
-            "sig": "",
             "params": [
                 {
-                    "name": "min",
-                    "type": "pub_semver.Version",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "alwaysIncludeMaxPreRelease",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "max",
-                    "type": "pub_semver.Version",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "includeMin",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "dart:core.bool"
                 },
                 {
                     "name": "includeMax",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
                 },
                 {
-                    "name": "alwaysIncludeMaxPreRelease",
-                    "type": "dart:core.bool",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "includeMin",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.bool"
+                },
+                {
+                    "name": "max",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "pub_semver.Version"
+                },
+                {
+                    "name": "min",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "pub_semver.Version"
                 }
-            ],
-            "isConstructor": true,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/VersionRange.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">factory VersionRange(\n    {Version min,\n    Version max,\n    bool includeMin: false,\n    bool includeMax: false,\n    bool alwaysIncludeMaxPreRelease: false}) {\n  if (min != null &amp;&amp; max != null &amp;&amp; min &gt; max) {\n    throw new ArgumentError(\n        'Minimum version (\"$min\") must be less than maximum (\"$max\").');\n  }\n\n  if (!alwaysIncludeMaxPreRelease &amp;&amp;\n      !includeMax &amp;&amp;\n      max != null &amp;&amp;\n      !max.isPreRelease &amp;&amp;\n      max.build.isEmpty &amp;&amp;\n      (min == null ||\n          !min.isPreRelease ||\n          !equalsWithoutPreRelease(min, max))) {\n    max = max.firstPreRelease;\n  }\n\n  return new VersionRange._(min, max, includeMin, includeMax);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "allows",
-            "type": "dart:core.bool",
             "desc": "<p>Tests if <code>other<\/code> falls within this version range.<\/p>\n    ",
-            "static": false,
-            "memberOf": "pub_semver.VersionRange",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "pub_semver.Version",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/allows.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool allows(Version other) {\n  if (min != null) {\n    if (other &lt; min) return false;\n    if (!includeMin &amp;&amp; other == min) return false;\n  }\n\n  if (max != null) {\n    if (other &gt; max) return false;\n    if (!includeMax &amp;&amp; other == max) return false;\n  }\n\n  return true;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "package-pub_semver_pub_semver\/VersionRange\/allows.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "pub_semver.VersionRange",
+            "params": [
+                {
+                    "name": "other",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "pub_semver.Version"
+                }
+            ]
         },
         {
-            "name": "allowsAll",
-            "type": "dart:core.bool",
             "desc": "<p>Returns <code>true<\/code> if this constraint allows all the versions that <code>other<\/code>\nallows.<\/p>\n    ",
-            "static": false,
-            "memberOf": "pub_semver.VersionRange",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "pub_semver.VersionConstraint",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/allowsAll.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool allowsAll(VersionConstraint other) {\n  if (other.isEmpty) return true;\n  if (other is Version) return allows(other);\n\n  if (other is VersionUnion) {\n    return other.ranges.every((constraint) =&gt; allowsAll(constraint));\n  }\n\n  if (other is VersionRange) {\n    return !allowsLower(other, this) &amp;&amp; !allowsHigher(other, this);\n  }\n\n  throw new ArgumentError('Unknown VersionConstraint type $other.');\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "allowsAny",
+            "href": "package-pub_semver_pub_semver\/VersionRange\/allowsAll.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "pub_semver.VersionRange",
+            "params": [
+                {
+                    "name": "other",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "pub_semver.VersionConstraint"
+                }
+            ]
+        },
+        {
             "desc": "<p>Returns <code>true<\/code> if this constraint allows any of the versions that <code>other<\/code>\nallows.<\/p>\n    ",
-            "static": false,
-            "memberOf": "pub_semver.VersionRange",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "pub_semver.VersionConstraint",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/allowsAny.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool allowsAny(VersionConstraint other) {\n  if (other.isEmpty) return false;\n  if (other is Version) return allows(other);\n\n  if (other is VersionUnion) {\n    return other.ranges.any((constraint) =&gt; allowsAny(constraint));\n  }\n\n  if (other is VersionRange) {\n    return !strictlyLower(other, this) &amp;&amp; !strictlyHigher(other, this);\n  }\n\n  throw new ArgumentError('Unknown VersionConstraint type $other.');\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "package-pub_semver_pub_semver\/VersionRange\/allowsAny.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "pub_semver.VersionRange",
+            "params": [
+                {
+                    "name": "other",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "pub_semver.VersionConstraint"
+                }
+            ]
         },
         {
-            "name": "compareTo",
-            "type": "dart:core.int",
             "desc": "<p>Compares this object to another <a href=\"dart-core\/Comparable-class.html\">Comparable<\/a><\/p>\n<p>Returns a value like a <a href=\"dart-core\/Comparator.html\">Comparator<\/a> when comparing <code>this<\/code> to <code>other<\/code>.\nThat is, it returns a negative integer if <code>this<\/code> is ordered before <code>other<\/code>,\na positive integer if <code>this<\/code> is ordered after <code>other<\/code>,\nand zero if <code>this<\/code> and <code>other<\/code> are ordered together.<\/p>\n<p>The <code>other<\/code> argument must be a value that is comparable to this object.<\/p>\n    ",
-            "static": false,
-            "memberOf": "pub_semver.VersionRange",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "pub_semver.VersionRange",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/compareTo.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">int compareTo(VersionRange other) {\n  if (min == null) {\n    if (other.min == null) return _compareMax(other);\n    return -1;\n  } else if (other.min == null) {\n    return 1;\n  }\n\n  var result = min.compareTo(other.min);\n  if (result != 0) return result;\n  if (includeMin != other.includeMin) return includeMin ? -1 : 1;\n\n  return _compareMax(other);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "package-pub_semver_pub_semver\/VersionRange\/compareTo.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "pub_semver.VersionRange",
+            "params": [
+                {
+                    "name": "other",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "pub_semver.VersionRange"
+                }
+            ]
         },
         {
-            "name": "difference",
-            "type": "pub_semver.VersionConstraint",
             "desc": "<p>Returns a <a href=\"package-pub_semver_pub_semver\/VersionConstraint-class.html\">VersionConstraint<\/a> that allows <a href=\"package-pub_semver_pub_semver\/Version-class.html\">Version<\/a>s allowed by this but\nnot <code>other<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "pub_semver.VersionRange",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "pub_semver.VersionConstraint",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/difference.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">VersionConstraint difference(VersionConstraint other) {\n  if (other.isEmpty) return this;\n\n  if (other is Version) {\n    if (!allows(other)) return this;\n\n    if (other == min) {\n      if (!includeMin) return this;\n      return new VersionRange(\n          min: min,\n          max: max,\n          includeMin: false,\n          includeMax: includeMax,\n          alwaysIncludeMaxPreRelease: true);\n    }\n\n    if (other == max) {\n      if (!includeMax) return this;\n      return new VersionRange(\n          min: min,\n          max: max,\n          includeMin: includeMin,\n          includeMax: false,\n          alwaysIncludeMaxPreRelease: true);\n    }\n\n    return new VersionUnion.fromRanges([\n      new VersionRange(\n          min: min,\n          max: other,\n          includeMin: includeMin,\n          includeMax: false,\n          alwaysIncludeMaxPreRelease: true),\n      new VersionRange(\n          min: other,\n          max: max,\n          includeMin: false,\n          includeMax: includeMax,\n          alwaysIncludeMaxPreRelease: true)\n    ]);\n  } else if (other is VersionRange) {\n    if (!allowsAny(other)) return this;\n\n    VersionRange before;\n    if (!allowsLower(this, other)) {\n      before = null;\n    } else if (min == other.min) {\n      assert(includeMin &amp;&amp; !other.includeMin);\n      assert(min != null);\n      before = min;\n    } else {\n      before = new VersionRange(\n          min: min,\n          max: other.min,\n          includeMin: includeMin,\n          includeMax: !other.includeMin,\n          alwaysIncludeMaxPreRelease: true);\n    }\n\n    VersionRange after;\n    if (!allowsHigher(this, other)) {\n      after = null;\n    } else if (max == other.max) {\n      assert(includeMax &amp;&amp; !other.includeMax);\n      assert(max != null);\n      after = max;\n    } else {\n      after = new VersionRange(\n          min: other.max,\n          max: max,\n          includeMin: !other.includeMax,\n          includeMax: includeMax,\n          alwaysIncludeMaxPreRelease: true);\n    }\n\n    if (before == null &amp;&amp; after == null) return VersionConstraint.empty;\n    if (before == null) return after;\n    if (after == null) return before;\n    return new VersionUnion.fromRanges([before, after]);\n  } else if (other is VersionUnion) {\n    var ranges = &lt;VersionRange&gt;[];\n    var current = this;\n\n    for (var range in other.ranges) {\n      \/\/ Skip any ranges that are strictly lower than [current].\n      if (strictlyLower(range, current)) continue;\n\n      \/\/ If we reach a range strictly higher than [current], no more ranges\n      \/\/ will be relevant so we can bail early.\n      if (strictlyHigher(range, current)) break;\n\n      var difference = current.difference(range);\n      if (difference.isEmpty) {\n        return VersionConstraint.empty;\n      } else if (difference is VersionUnion) {\n        \/\/ If [range] split [current] in half, we only need to continue\n        \/\/ checking future ranges against the latter half.\n        assert(difference.ranges.length == 2);\n        ranges.add(difference.ranges.first);\n        current = difference.ranges.last;\n      } else {\n        current = difference as VersionRange;\n      }\n    }\n\n    if (ranges.isEmpty) return current;\n    return new VersionUnion.fromRanges(ranges..add(current));\n  }\n\n  throw new ArgumentError('Unknown VersionConstraint type $other.');\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "package-pub_semver_pub_semver\/VersionRange\/difference.html",
+            "isDeprecated": "0",
+            "type": "pub_semver.VersionConstraint",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "pub_semver.VersionRange",
+            "params": [
+                {
+                    "name": "other",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "pub_semver.VersionConstraint"
+                }
+            ]
         },
         {
-            "name": "intersect",
-            "type": "pub_semver.VersionConstraint",
             "desc": "<p>Returns a <a href=\"package-pub_semver_pub_semver\/VersionConstraint-class.html\">VersionConstraint<\/a> that only allows <a href=\"package-pub_semver_pub_semver\/Version-class.html\">Version<\/a>s allowed by both\nthis and <code>other<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "pub_semver.VersionRange",
-            "sig": "",
-            "params": [
-                {
-                    "name": "other",
-                    "type": "pub_semver.VersionConstraint",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/intersect.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">VersionConstraint intersect(VersionConstraint other) {\n  if (other.isEmpty) return other;\n  if (other is VersionUnion) return other.intersect(this);\n\n  \/\/ A range and a Version just yields the version if it's in the range.\n  if (other is Version) {\n    return allows(other) ? other : VersionConstraint.empty;\n  }\n\n  if (other is VersionRange) {\n    \/\/ Intersect the two ranges.\n    Version intersectMin;\n    bool intersectIncludeMin;\n    if (allowsLower(this, other)) {\n      if (strictlyLower(this, other)) return VersionConstraint.empty;\n      intersectMin = other.min;\n      intersectIncludeMin = other.includeMin;\n    } else {\n      if (strictlyLower(other, this)) return VersionConstraint.empty;\n      intersectMin = this.min;\n      intersectIncludeMin = this.includeMin;\n    }\n\n    Version intersectMax;\n    bool intersectIncludeMax;\n    if (allowsHigher(this, other)) {\n      intersectMax = other.max;\n      intersectIncludeMax = other.includeMax;\n    } else {\n      intersectMax = this.max;\n      intersectIncludeMax = this.includeMax;\n    }\n\n    if (intersectMin == null &amp;&amp; intersectMax == null) {\n      \/\/ Open range.\n      return new VersionRange();\n    }\n\n    \/\/ If the range is just a single version.\n    if (intersectMin == intersectMax) {\n      \/\/ Because we already verified that the lower range isn't strictly\n      \/\/ lower, there must be some overlap.\n      assert(intersectIncludeMin &amp;&amp; intersectIncludeMax);\n      return intersectMin;\n    }\n\n    \/\/ If we got here, there is an actual range.\n    return new VersionRange(\n        min: intersectMin,\n        max: intersectMax,\n        includeMin: intersectIncludeMin,\n        includeMax: intersectIncludeMax,\n        alwaysIncludeMaxPreRelease: true);\n  }\n\n  throw new ArgumentError('Unknown VersionConstraint type $other.');\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "toString",
-            "type": "dart:core.String",
-            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
-            "static": false,
-            "memberOf": "pub_semver.VersionRange",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/toString.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() {\n  var buffer = new StringBuffer();\n\n  if (min != null) {\n    buffer.write(includeMin ? '&gt;=' : '&gt;');\n    buffer.write(min);\n  }\n\n  if (max != null) {\n    if (min != null) buffer.write(' ');\n    if (includeMax) {\n      buffer.write('&lt;=');\n      buffer.write(max);\n    } else {\n      buffer.write('&lt;');\n      if (max.isFirstPreRelease) {\n        \/\/ Since `\"&lt;$max\"` would parse the same as `\"&lt;$max-0\"`, we just emit\n        \/\/ `&lt;$max` to avoid confusing \"-0\" suffixes.\n        buffer.write(\"${max.major}.${max.minor}.${max.patch}\");\n      } else {\n        buffer.write(max);\n\n        \/\/ If `\"&gt;=$min &lt;$max\"` would parse as `\"&gt;=$min &lt;$max-0\"`, add `-*` to\n        \/\/ indicate that actually does allow pre-release versions.\n        var minIsPreReleaseOfMax = min != null &amp;&amp;\n            min.isPreRelease &amp;&amp;\n            equalsWithoutPreRelease(min, max);\n        if (!max.isPreRelease &amp;&amp; max.build.isEmpty &amp;&amp; !minIsPreReleaseOfMax) {\n          buffer.write(\"-\u221e\");\n        }\n      }\n    }\n  }\n\n  if (min == null &amp;&amp; max == null) buffer.write('any');\n  return buffer.toString();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "union",
+            "href": "package-pub_semver_pub_semver\/VersionRange\/intersect.html",
+            "isDeprecated": "0",
             "type": "pub_semver.VersionConstraint",
-            "desc": "<p>Returns a <a href=\"package-pub_semver_pub_semver\/VersionConstraint-class.html\">VersionConstraint<\/a> that allows <a href=\"dart-ui\/Versions-class.html\">Versions<\/a>s allowed by either\nthis or <code>other<\/code>.<\/p>\n    ",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "pub_semver.VersionRange",
-            "sig": "",
             "params": [
                 {
                     "name": "other",
-                    "type": "pub_semver.VersionConstraint",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "pub_semver.VersionConstraint"
                 }
-            ],
+            ]
+        },
+        {
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() {\n  var buffer = new StringBuffer();\n\n  if (min != null) {\n    buffer.write(includeMin ? '&gt;=' : '&gt;');\n    buffer.write(min);\n  }\n\n  if (max != null) {\n    if (min != null) buffer.write(' ');\n    if (includeMax) {\n      buffer.write('&lt;=');\n      buffer.write(max);\n    } else {\n      buffer.write('&lt;');\n      if (max.isFirstPreRelease) {\n        \/\/ Since `\"&lt;$max\"` would parse the same as `\"&lt;$max-0\"`, we just emit\n        \/\/ `&lt;$max` to avoid confusing \"-0\" suffixes.\n        buffer.write(\"${max.major}.${max.minor}.${max.patch}\");\n      } else {\n        buffer.write(max);\n\n        \/\/ If `\"&gt;=$min &lt;$max\"` would parse as `\"&gt;=$min &lt;$max-0\"`, add `-*` to\n        \/\/ indicate that actually does allow pre-release versions.\n        var minIsPreReleaseOfMax = min != null &amp;&amp;\n            min.isPreRelease &amp;&amp;\n            equalsWithoutPreRelease(min, max);\n        if (!max.isPreRelease &amp;&amp; max.build.isEmpty &amp;&amp; !minIsPreReleaseOfMax) {\n          buffer.write(\"-\u221e\");\n        }\n      }\n    }\n  }\n\n  if (min == null &amp;&amp; max == null) buffer.write('any');\n  return buffer.toString();\n}<\/code><\/pre>\n    ",
+            "href": "package-pub_semver_pub_semver\/VersionRange\/toString.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/union.html",
+            "static": false,
+            "memberOf": "pub_semver.VersionRange",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns a <a href=\"package-pub_semver_pub_semver\/VersionConstraint-class.html\">VersionConstraint<\/a> that allows <a href=\"dart-ui\/Versions-class.html\">Versions<\/a>s allowed by either\nthis or <code>other<\/code>.<\/p>\n    ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">VersionConstraint union(VersionConstraint other) {\n  if (other is Version) {\n    if (allows(other)) return this;\n\n    if (other == min) {\n      return new VersionRange(\n          min: this.min,\n          max: this.max,\n          includeMin: true,\n          includeMax: this.includeMax,\n          alwaysIncludeMaxPreRelease: true);\n    }\n\n    if (other == max) {\n      return new VersionRange(\n          min: this.min,\n          max: this.max,\n          includeMin: this.includeMin,\n          includeMax: true,\n          alwaysIncludeMaxPreRelease: true);\n    }\n\n    return new VersionConstraint.unionOf([this, other]);\n  }\n\n  if (other is VersionRange) {\n    \/\/ If the two ranges don't overlap, we won't be able to create a single\n    \/\/ VersionRange for both of them.\n    var edgesTouch = (max == other.min &amp;&amp; (includeMax || other.includeMin)) ||\n        (min == other.max &amp;&amp; (includeMin || other.includeMax));\n    if (!edgesTouch &amp;&amp; !allowsAny(other)) {\n      return new VersionConstraint.unionOf([this, other]);\n    }\n\n    Version unionMin;\n    bool unionIncludeMin;\n    if (allowsLower(this, other)) {\n      unionMin = this.min;\n      unionIncludeMin = this.includeMin;\n    } else {\n      unionMin = other.min;\n      unionIncludeMin = other.includeMin;\n    }\n\n    Version unionMax;\n    bool unionIncludeMax;\n    if (allowsHigher(this, other)) {\n      unionMax = this.max;\n      unionIncludeMax = this.includeMax;\n    } else {\n      unionMax = other.max;\n      unionIncludeMax = other.includeMax;\n    }\n\n    return new VersionRange(\n        min: unionMin,\n        max: unionMax,\n        includeMin: unionIncludeMin,\n        includeMax: unionIncludeMax,\n        alwaysIncludeMaxPreRelease: true);\n  }\n\n  return new VersionConstraint.unionOf([this, other]);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "href": "package-pub_semver_pub_semver\/VersionRange\/union.html",
+            "isDeprecated": "0",
+            "type": "pub_semver.VersionConstraint",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "pub_semver.VersionRange",
+            "params": [
+                {
+                    "name": "other",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "pub_semver.VersionConstraint"
+                }
+            ]
         }
     ],
     "props": [
         {
-            "name": "hashCode",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The hash code for this object.<\/p>\n<p>A hash code is a single integer which represents the state of the object\nthat affects <a href=\"package-pub_semver_pub_semver\/VersionRange\/operator_equals.html\">operator ==<\/a> comparisons.<\/p>\n<p>All objects have hash codes.\nThe default hash code represents only the identity of the object,\nthe same way as the default <a href=\"package-pub_semver_pub_semver\/VersionRange\/operator_equals.html\">operator ==<\/a> implementation only considers objects\nequal if they are identical (see <a href=\"dart-core\/identityHashCode.html\">identityHashCode<\/a>).<\/p>\n<p>If <a href=\"package-pub_semver_pub_semver\/VersionRange\/operator_equals.html\">operator ==<\/a> is overridden to use the object state instead,\nthe hash code must also be changed to represent that state.<\/p>\n<p>Hash codes must be the same for objects that are equal to each other\naccording to <a href=\"package-pub_semver_pub_semver\/VersionRange\/operator_equals.html\">operator ==<\/a>.\nThe hash code of an object should only change if the object changes\nin a way that affects equality.\nThere are no further requirements for the hash codes.\nThey need not be consistent between executions of the same program\nand there are no distribution guarantees.<\/p>\n<p>Objects that are not equal are allowed to have the same hash code,\nit is even technically allowed that all instances have the same hash code,\nbut if clashes happen too often, it may reduce the efficiency of hash-based\ndata structures like <a href=\"dart-collection\/HashSet-class.html\">HashSet<\/a> or <a href=\"dart-collection\/HashMap-class.html\">HashMap<\/a>.<\/p>\n<p>If a subclass overrides <a href=\"package-pub_semver_pub_semver\/VersionRange\/hashCode.html\">hashCode<\/a>, it should override the\n<a href=\"package-pub_semver_pub_semver\/VersionRange\/operator_equals.html\">operator ==<\/a> operator as well to maintain consistency.<\/p>\n        ",
-            "memberOf": "pub_semver.VersionRange",
-            "isConstant": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/hashCode.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get hashCode =&gt;\n    min.hashCode ^\n    (max.hashCode * 3) ^\n    (includeMin.hashCode * 5) ^\n    (includeMax.hashCode * 7);<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-pub_semver_pub_semver\/VersionRange\/hashCode.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "pub_semver.VersionRange",
+            "params": []
         },
         {
-            "name": "includeMax",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>If <code>true<\/code>, then <a href=\"package-pub_semver_pub_semver\/VersionRange\/max.html\">max<\/a> is allowed by the range.<\/p>\n        ",
-            "memberOf": "pub_semver.VersionRange",
-            "isConstant": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/includeMax.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool includeMax\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-pub_semver_pub_semver\/VersionRange\/includeMax.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "pub_semver.VersionRange",
+            "params": []
         },
         {
-            "name": "includeMin",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>If <code>true<\/code> then <a href=\"package-pub_semver_pub_semver\/VersionRange\/min.html\">min<\/a> is allowed by the range.<\/p>\n        ",
-            "memberOf": "pub_semver.VersionRange",
-            "isConstant": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/includeMin.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final bool includeMin\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-pub_semver_pub_semver\/VersionRange\/includeMin.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "pub_semver.VersionRange",
+            "params": []
         },
         {
-            "name": "isAny",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Returns <code>true<\/code> if this constraint allows all versions.<\/p>\n        ",
-            "memberOf": "pub_semver.VersionRange",
-            "isConstant": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/isAny.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isAny =&gt; min == null &amp;&amp; max == null;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "isEmpty",
+            "href": "package-pub_semver_pub_semver\/VersionRange\/isAny.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "types": [],
+            "memberOf": "pub_semver.VersionRange",
+            "params": []
+        },
+        {
             "desc": "<p>Returns <code>true<\/code> if this constraint allows no versions.<\/p>\n        ",
-            "memberOf": "pub_semver.VersionRange",
-            "isConstant": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/isEmpty.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isEmpty =&gt; false;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-pub_semver_pub_semver\/VersionRange\/isEmpty.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "pub_semver.VersionRange",
+            "params": []
         },
         {
-            "name": "max",
-            "type": "pub_semver.Version",
-            "types": [],
             "desc": "<p>The maximum end of the range.<\/p>\n<p>If <a href=\"package-pub_semver_pub_semver\/VersionRange\/includeMax.html\">includeMax<\/a> is <code>true<\/code>, this will be the maximum allowed version.\nOtherwise, it will be the lowest version above the range that is not\nallowed.<\/p>\n<p>This may be <code>null<\/code> in which case the range has no maximum end and allows\nany version greater than the minimum.<\/p>\n        ",
-            "memberOf": "pub_semver.VersionRange",
-            "isConstant": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/max.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Version max\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-pub_semver_pub_semver\/VersionRange\/max.html",
+            "isDeprecated": "0",
+            "type": "pub_semver.Version",
+            "memberOf": "pub_semver.VersionRange",
+            "params": []
         },
         {
-            "name": "min",
-            "type": "pub_semver.Version",
-            "types": [],
             "desc": "<p>The minimum end of the range.<\/p>\n<p>If <a href=\"package-pub_semver_pub_semver\/VersionRange\/includeMin.html\">includeMin<\/a> is <code>true<\/code>, this will be the minimum allowed version.\nOtherwise, it will be the highest version below the range that is not\nallowed.<\/p>\n<p>This may be <code>null<\/code> in which case the range has no minimum end and allows\nany version less than the maximum.<\/p>\n        ",
-            "memberOf": "pub_semver.VersionRange",
-            "isConstant": false,
-            "href": "package-pub_semver_pub_semver\/VersionRange\/min.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Version min\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-pub_semver_pub_semver\/VersionRange\/min.html",
+            "isDeprecated": "0",
+            "type": "pub_semver.Version",
+            "memberOf": "pub_semver.VersionRange",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-pub_semver_pub_semver\/VersionRange-class.html",
-    "desc": "<p>Constrains versions to a fall within a given range.<\/p>\n<p>If there is a minimum, then this only allows versions that are at that\nminimum or greater. If there is a maximum, then only versions less than\nthat are allowed. In other words, this allows <code>&gt;= min, &lt; max<\/code>.<\/p>\n<p>Version ranges are ordered first by their lower bounds, then by their upper\nbounds. For example, <code>&gt;=1.0.0 &lt;2.0.0<\/code> is before <code>&gt;=1.5.0 &lt;2.0.0<\/code> is before\n<code>&gt;=1.5.0 &lt;3.0.0<\/code>.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "VersionRange"
+    ]
 }

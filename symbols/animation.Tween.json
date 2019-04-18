@@ -1,194 +1,110 @@
 {
+    "desc": "<p>A linear interpolation between a beginning and ending value.<\/p>\n<p><a href=\"animation\/Tween-class.html\">Tween<\/a> is useful if you want to interpolate across a range.<\/p>\n<p>To use a <a href=\"animation\/Tween-class.html\">Tween<\/a> object with an animation, call the <a href=\"animation\/Tween-class.html\">Tween<\/a> object's\n<a href=\"animation\/Animatable\/animate.html\">animate<\/a> method and pass it the <a href=\"animation\/Animation-class.html\">Animation<\/a> object that you want to\nmodify.<\/p>\n<p>You can chain <a href=\"animation\/Tween-class.html\">Tween<\/a> objects together using the <a href=\"animation\/Animatable\/chain.html\">chain<\/a> method, so that a\nsingle <a href=\"animation\/Animation-class.html\">Animation<\/a> object is configured by multiple <a href=\"animation\/Tween-class.html\">Tween<\/a> objects called\nin succession. This is different than calling the <a href=\"animation\/Animatable\/animate.html\">animate<\/a> method twice,\nwhich results in two separate <a href=\"animation\/Animation-class.html\">Animation<\/a> objects, each configured with a\nsingle <a href=\"animation\/Tween-class.html\">Tween<\/a>.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nSuppose <code>_controller<\/code> is an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>, and we want to create an\n<a href=\"animation\/Animation-class.html\">Animation&lt;Offset&gt;<\/a> that is controlled by that controller, and save it in\n<code>_animation<\/code>. Here are two possible ways of expressing this:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">_animation = _controller.drive(\n  Tween&lt;Offset&gt;(\n    begin: const Offset(100.0, 50.0),\n    end: const Offset(200.0, 300.0),\n  ),\n);<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">_animation = Tween&lt;Offset&gt;(\n  begin: const Offset(100.0, 50.0),\n  end: const Offset(200.0, 300.0),\n).animate(_controller);<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>In both cases, the <code>_animation<\/code> variable holds an object that, over the\nlifetime of the <code>_controller<\/code>'s animation, returns a value\n(<code>_animation.value<\/code>) that depicts a point along the line between the two\noffsets above. If we used a <a href=\"material\/MaterialPointArcTween-class.html\">MaterialPointArcTween<\/a> instead of a\n<a href=\"animation\/Tween-class.html\">Tween&lt;Offset&gt;<\/a> in the code above, the points would follow a pleasing curve\ninstead of a straight line, with no other changes necessary.<\/p>\n<h2 id=\"performance-optimizations\">Performance optimizations<\/h2>\n<p>Tweens are mutable; specifically, their <a href=\"animation\/Tween\/begin.html\">begin<\/a> and <a href=\"animation\/Tween\/end.html\">end<\/a> values can be\nchanged at runtime. An object created with <a href=\"animation\/Animation\/drive.html\">Animation.drive<\/a> using a <a href=\"animation\/Tween-class.html\">Tween<\/a>\nwill immediately honor changes to that underlying <a href=\"animation\/Tween-class.html\">Tween<\/a> (though the\nlisteners will only be triggered if the <a href=\"animation\/Animation-class.html\">Animation<\/a> is actively animating).\nThis can be used to change an animation on the fly without having to\nrecreate all the objects in the chain from the <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> to the\nfinal <a href=\"animation\/Tween-class.html\">Tween<\/a>.<\/p>\n<p>If a <a href=\"animation\/Tween-class.html\">Tween<\/a>'s values are never changed, however, a further optimization can\nbe applied: the object can be stored in a <code>static final<\/code> variable, so that\nthe exact same instance is used whenever the <a href=\"animation\/Tween-class.html\">Tween<\/a> is needed. This is\npreferable to creating an identical <a href=\"animation\/Tween-class.html\">Tween<\/a> afresh each time a <a href=\"widgets\/State\/build.html\">State.build<\/a>\nmethod is called, for example.<\/p>\n<h2 id=\"types-with-special-considerations\">Types with special considerations<\/h2>\n<p>Classes with <a href=\"animation\/Tween\/lerp.html\">lerp<\/a> static methods typically have corresponding dedicated\n<a href=\"animation\/Tween-class.html\">Tween<\/a> subclasses that call that method. For example, <a href=\"animation\/ColorTween-class.html\">ColorTween<\/a> uses\n<a href=\"animation\/Tween\/lerp.html\">Color.lerp<\/a> to implement the <a href=\"animation\/Tween\/lerp.html\">ColorTween.lerp<\/a> method.<\/p>\n<p>Types that define <code>+<\/code> and <code>-<\/code> operators to combine values (<code>T + T \u2192 T<\/code> and\n<code>T - T \u2192 T<\/code>) and an <code>*<\/code> operator to scale by multiplying with a double (<code>T *\ndouble \u2192 T<\/code>) can be directly used with <code>Tween&lt;T&gt;<\/code>.<\/p>\n<p>This does not extend to any type with <code>+<\/code>, <code>-<\/code>, and <code>*<\/code> operators. In\nparticular, <a href=\"dart-core\/int-class.html\">int<\/a> does not satisfy this precise contract (<code>int * double<\/code>\nactually returns <a href=\"dart-core\/num-class.html\">num<\/a>, not <a href=\"dart-core\/int-class.html\">int<\/a>). There are therefore two specific classes\nthat can be used to interpolate integers:<\/p>\n<ul>\n<li>\n<a href=\"animation\/IntTween-class.html\">IntTween<\/a>, which is an approximation of a linear interpolation (using\n<a href=\"dart-core\/double\/round.html\">double.round<\/a>).<\/li>\n<li>\n<a href=\"animation\/StepTween-class.html\">StepTween<\/a>, which uses <a href=\"dart-core\/double\/floor.html\">double.floor<\/a> to ensure that the result is\nnever greater than it would be using if a <code>Tween&lt;double&gt;<\/code>.<\/li>\n<\/ul>\n<p>The relevant operators on <a href=\"dart-ui\/Size-class.html\">Size<\/a> also don't fulfill this contract, so\n<a href=\"animation\/SizeTween-class.html\">SizeTween<\/a> uses <a href=\"animation\/Tween\/lerp.html\">Size.lerp<\/a>.<\/p>\n<p>In addition, some of the types that <em>do<\/em> have suitable <code>+<\/code>, <code>-<\/code>, and <code>*<\/code>\noperators still have dedicated <a href=\"animation\/Tween-class.html\">Tween<\/a> subclasses that perform the\ninterpolation in a more specialized manner. One such class is\n<a href=\"material\/MaterialPointArcTween-class.html\">MaterialPointArcTween<\/a>, which is mentioned above. The <a href=\"rendering\/AlignmentTween-class.html\">AlignmentTween<\/a>, and\n<a href=\"rendering\/AlignmentGeometryTween-class.html\">AlignmentGeometryTween<\/a>, and <a href=\"rendering\/FractionalOffsetTween-class.html\">FractionalOffsetTween<\/a> are another group of\n<a href=\"animation\/Tween-class.html\">Tween<\/a>s that use dedicated <code>lerp<\/code> methods instead of merely relying on the\noperators (in particular, this allows them to handle null values in a more\nuseful manner).<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "animation\/Tween-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "animation",
     "name": "animation.Tween",
+    "shortname": "Tween",
     "extends": [
         "animation.Animatable",
         "dart:core.Object"
     ],
-    "memberOf": "animation",
     "events": [],
     "methods": [
         {
-            "name": "Tween",
-            "type": "",
             "desc": "<p>Creates a tween.<\/p>\n<p>The <code>begin<\/code> and <code>end<\/code> properties must be non-null before the tween is\nfirst used, but the arguments can be null if the values are going to be\nfilled in later.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Tween({ this.begin, this.end });<\/code><\/pre>\n    ",
+            "href": "animation\/Tween\/Tween.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "animation.Tween",
-            "sig": "",
             "params": [
                 {
                     "name": "begin",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "<T>"
                 },
                 {
                     "name": "end",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "<T>"
                 }
-            ],
-            "isConstructor": true,
-            "href": "animation\/Tween\/Tween.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Tween({ this.begin, this.end });<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "lerp",
-            "type": "",
             "desc": "<p>Returns the value this variable has at the given animation clock value.<\/p>\n<p>The default implementation of this method uses the <code>+<\/code>, <code>-<\/code>, and <code>*<\/code>\noperators on <code>T<\/code>. The <a href=\"animation\/Tween\/begin.html\">begin<\/a> and <a href=\"animation\/Tween\/end.html\">end<\/a> properties must therefore be\nnon-null by the time this method is called.<\/p>\n    ",
-            "static": false,
-            "memberOf": "animation.Tween",
-            "sig": "",
-            "params": [
-                {
-                    "name": "t",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "animation\/Tween\/lerp.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@protected\nT lerp(double t) {\n  assert(begin != null);\n  assert(end != null);\n  return begin + (end - begin) * t;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "toString",
-            "type": "dart:core.String",
-            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
-            "static": false,
-            "memberOf": "animation.Tween",
-            "sig": "",
-            "params": [],
+            "href": "animation\/Tween\/lerp.html",
+            "isDeprecated": "0",
+            "type": "<T>",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "animation\/Tween\/toString.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; '$runtimeType($begin \\u2192 $end)';<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "transform",
-            "type": "",
-            "desc": "<p>Returns the interpolated value for the current value of the given animation.<\/p>\n<p>This method returns <code>begin<\/code> and <code>end<\/code> when the animation values are 0.0 or\n1.0, respectively.<\/p>\n<p>This function is implemented by deferring to <a href=\"animation\/Tween\/lerp.html\">lerp<\/a>. Subclasses that want\nto provide custom behavior should override <a href=\"animation\/Tween\/lerp.html\">lerp<\/a>, not <a href=\"animation\/Tween\/transform.html\">transform<\/a> (nor\n<a href=\"animation\/Animatable\/evaluate.html\">evaluate<\/a>).<\/p>\n<p>See the constructor for details about whether the <a href=\"animation\/Tween\/begin.html\">begin<\/a> and <a href=\"animation\/Tween\/end.html\">end<\/a>\nproperties may be null when this is called. It varies from subclass to\nsubclass.<\/p>\n    ",
             "static": false,
             "memberOf": "animation.Tween",
-            "sig": "",
             "params": [
                 {
                     "name": "t",
-                    "type": "dart:core.double",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
                 }
-            ],
-            "isConstructor": false,
-            "href": "animation\/Tween\/transform.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nT transform(double t) {\n  if (t == 0.0)\n    return begin;\n  if (t == 1.0)\n    return end;\n  return lerp(t);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        }
-    ],
-    "props": [
-        {
-            "name": "begin",
-            "type": "",
-            "types": [],
-            "desc": "<p>The value this variable has at the beginning of the animation.<\/p>\n<p>See the constructor for details about whether this property may be null\n(it varies from subclass to subclass).<\/p>\n        ",
-            "memberOf": "animation.Tween",
-            "isConstant": false,
-            "href": "animation\/Tween\/begin.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">T begin\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "end",
-            "type": "",
-            "types": [],
-            "desc": "<p>The value this variable has at the end of the animation.<\/p>\n<p>See the constructor for details about whether this property may be null\n(it varies from subclass to subclass).<\/p>\n        ",
+            "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toString() =&gt; '$runtimeType($begin \\u2192 $end)';<\/code><\/pre>\n    ",
+            "href": "animation\/Tween\/toString.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
             "memberOf": "animation.Tween",
-            "isConstant": false,
-            "href": "animation\/Tween\/end.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">T end\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
+        },
+        {
+            "desc": "<p>Returns the interpolated value for the current value of the given animation.<\/p>\n<p>This method returns <code>begin<\/code> and <code>end<\/code> when the animation values are 0.0 or\n1.0, respectively.<\/p>\n<p>This function is implemented by deferring to <a href=\"animation\/Tween\/lerp.html\">lerp<\/a>. Subclasses that want\nto provide custom behavior should override <a href=\"animation\/Tween\/lerp.html\">lerp<\/a>, not <a href=\"animation\/Tween\/transform.html\">transform<\/a> (nor\n<a href=\"animation\/Animatable\/evaluate.html\">evaluate<\/a>).<\/p>\n<p>See the constructor for details about whether the <a href=\"animation\/Tween\/begin.html\">begin<\/a> and <a href=\"animation\/Tween\/end.html\">end<\/a>\nproperties may be null when this is called. It varies from subclass to\nsubclass.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nT transform(double t) {\n  if (t == 0.0)\n    return begin;\n  if (t == 1.0)\n    return end;\n  return lerp(t);\n}<\/code><\/pre>\n    ",
+            "href": "animation\/Tween\/transform.html",
+            "isDeprecated": "0",
+            "type": "<T>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "animation.Tween",
+            "params": [
+                {
+                    "name": "t",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.double"
+                }
+            ]
         }
     ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [
-        "animation.ColorTween",
-        "animation.ConstantTween",
-        "animation.IntTween",
-        "animation.RectTween",
-        "animation.ReverseTween",
-        "animation.SizeTween",
-        "animation.StepTween",
-        "material.MaterialPointArcTween",
-        "material.MaterialRectArcTween",
-        "material.MaterialRectCenterArcTween",
-        "material.ShapeBorderTween",
-        "material.ThemeDataTween",
-        "rendering.AlignmentGeometryTween",
-        "rendering.AlignmentTween",
-        "rendering.FractionalOffsetTween",
-        "widgets.BorderRadiusTween",
-        "widgets.BorderTween",
-        "widgets.BoxConstraintsTween",
-        "widgets.DecorationTween",
-        "widgets.EdgeInsetsGeometryTween",
-        "widgets.EdgeInsetsTween",
-        "widgets.Matrix4Tween",
-        "widgets.RelativeRectTween",
-        "widgets.TextStyleTween"
-    ],
-    "realImplementors": [
-        "animation.ColorTween",
-        "animation.ConstantTween",
-        "animation.IntTween",
-        "animation.RectTween",
-        "animation.ReverseTween",
-        "animation.SizeTween",
-        "animation.StepTween",
-        "material.MaterialPointArcTween",
-        "material.MaterialRectArcTween",
-        "material.MaterialRectCenterArcTween",
-        "material.ShapeBorderTween",
-        "material.ThemeDataTween",
-        "rendering.AlignmentGeometryTween",
-        "rendering.AlignmentTween",
-        "rendering.FractionalOffsetTween",
-        "widgets.BorderRadiusTween",
-        "widgets.BorderTween",
-        "widgets.BoxConstraintsTween",
-        "widgets.DecorationTween",
-        "widgets.EdgeInsetsGeometryTween",
-        "widgets.EdgeInsetsTween",
-        "widgets.Matrix4Tween",
-        "widgets.RelativeRectTween",
-        "widgets.TextStyleTween"
-    ],
-    "cn": [],
-    "href": "animation\/Tween-class.html",
-    "desc": "<p>A linear interpolation between a beginning and ending value.<\/p>\n<p><a href=\"animation\/Tween-class.html\">Tween<\/a> is useful if you want to interpolate across a range.<\/p>\n<p>To use a <a href=\"animation\/Tween-class.html\">Tween<\/a> object with an animation, call the <a href=\"animation\/Tween-class.html\">Tween<\/a> object's\n<a href=\"animation\/Animatable\/animate.html\">animate<\/a> method and pass it the <a href=\"animation\/Animation-class.html\">Animation<\/a> object that you want to\nmodify.<\/p>\n<p>You can chain <a href=\"animation\/Tween-class.html\">Tween<\/a> objects together using the <a href=\"animation\/Animatable\/chain.html\">chain<\/a> method, so that a\nsingle <a href=\"animation\/Animation-class.html\">Animation<\/a> object is configured by multiple <a href=\"animation\/Tween-class.html\">Tween<\/a> objects called\nin succession. This is different than calling the <a href=\"animation\/Animatable\/animate.html\">animate<\/a> method twice,\nwhich results in two separate <a href=\"animation\/Animation-class.html\">Animation<\/a> objects, each configured with a\nsingle <a href=\"animation\/Tween-class.html\">Tween<\/a>.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nSuppose <code>_controller<\/code> is an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>, and we want to create an\n<a href=\"animation\/Animation-class.html\">Animation&lt;Offset&gt;<\/a> that is controlled by that controller, and save it in\n<code>_animation<\/code>. Here are two possible ways of expressing this:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">_animation = _controller.drive(\n  Tween&lt;Offset&gt;(\n    begin: const Offset(100.0, 50.0),\n    end: const Offset(200.0, 300.0),\n  ),\n);<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">_animation = Tween&lt;Offset&gt;(\n  begin: const Offset(100.0, 50.0),\n  end: const Offset(200.0, 300.0),\n).animate(_controller);<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>In both cases, the <code>_animation<\/code> variable holds an object that, over the\nlifetime of the <code>_controller<\/code>'s animation, returns a value\n(<code>_animation.value<\/code>) that depicts a point along the line between the two\noffsets above. If we used a <a href=\"material\/MaterialPointArcTween-class.html\">MaterialPointArcTween<\/a> instead of a\n<a href=\"animation\/Tween-class.html\">Tween&lt;Offset&gt;<\/a> in the code above, the points would follow a pleasing curve\ninstead of a straight line, with no other changes necessary.<\/p>\n<h2 id=\"performance-optimizations\">Performance optimizations<\/h2>\n<p>Tweens are mutable; specifically, their <a href=\"animation\/Tween\/begin.html\">begin<\/a> and <a href=\"animation\/Tween\/end.html\">end<\/a> values can be\nchanged at runtime. An object created with <a href=\"animation\/Animation\/drive.html\">Animation.drive<\/a> using a <a href=\"animation\/Tween-class.html\">Tween<\/a>\nwill immediately honor changes to that underlying <a href=\"animation\/Tween-class.html\">Tween<\/a> (though the\nlisteners will only be triggered if the <a href=\"animation\/Animation-class.html\">Animation<\/a> is actively animating).\nThis can be used to change an animation on the fly without having to\nrecreate all the objects in the chain from the <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> to the\nfinal <a href=\"animation\/Tween-class.html\">Tween<\/a>.<\/p>\n<p>If a <a href=\"animation\/Tween-class.html\">Tween<\/a>'s values are never changed, however, a further optimization can\nbe applied: the object can be stored in a <code>static final<\/code> variable, so that\nthe exact same instance is used whenever the <a href=\"animation\/Tween-class.html\">Tween<\/a> is needed. This is\npreferable to creating an identical <a href=\"animation\/Tween-class.html\">Tween<\/a> afresh each time a <a href=\"widgets\/State\/build.html\">State.build<\/a>\nmethod is called, for example.<\/p>\n<h2 id=\"types-with-special-considerations\">Types with special considerations<\/h2>\n<p>Classes with <a href=\"animation\/Tween\/lerp.html\">lerp<\/a> static methods typically have corresponding dedicated\n<a href=\"animation\/Tween-class.html\">Tween<\/a> subclasses that call that method. For example, <a href=\"animation\/ColorTween-class.html\">ColorTween<\/a> uses\n<a href=\"animation\/Tween\/lerp.html\">Color.lerp<\/a> to implement the <a href=\"animation\/Tween\/lerp.html\">ColorTween.lerp<\/a> method.<\/p>\n<p>Types that define <code>+<\/code> and <code>-<\/code> operators to combine values (<code>T + T \u2192 T<\/code> and\n<code>T - T \u2192 T<\/code>) and an <code>*<\/code> operator to scale by multiplying with a double (<code>T *\ndouble \u2192 T<\/code>) can be directly used with <code>Tween&lt;T&gt;<\/code>.<\/p>\n<p>This does not extend to any type with <code>+<\/code>, <code>-<\/code>, and <code>*<\/code> operators. In\nparticular, <a href=\"dart-core\/int-class.html\">int<\/a> does not satisfy this precise contract (<code>int * double<\/code>\nactually returns <a href=\"dart-core\/num-class.html\">num<\/a>, not <a href=\"dart-core\/int-class.html\">int<\/a>). There are therefore two specific classes\nthat can be used to interpolate integers:<\/p>\n<ul>\n<li>\n<a href=\"animation\/IntTween-class.html\">IntTween<\/a>, which is an approximation of a linear interpolation (using\n<a href=\"dart-core\/double\/round.html\">double.round<\/a>).<\/li>\n<li>\n<a href=\"animation\/StepTween-class.html\">StepTween<\/a>, which uses <a href=\"dart-core\/double\/floor.html\">double.floor<\/a> to ensure that the result is\nnever greater than it would be using if a <code>Tween&lt;double&gt;<\/code>.<\/li>\n<\/ul>\n<p>The relevant operators on <a href=\"dart-ui\/Size-class.html\">Size<\/a> also don't fulfill this contract, so\n<a href=\"animation\/SizeTween-class.html\">SizeTween<\/a> uses <a href=\"animation\/Tween\/lerp.html\">Size.lerp<\/a>.<\/p>\n<p>In addition, some of the types that <em>do<\/em> have suitable <code>+<\/code>, <code>-<\/code>, and <code>*<\/code>\noperators still have dedicated <a href=\"animation\/Tween-class.html\">Tween<\/a> subclasses that perform the\ninterpolation in a more specialized manner. One such class is\n<a href=\"material\/MaterialPointArcTween-class.html\">MaterialPointArcTween<\/a>, which is mentioned above. The <a href=\"rendering\/AlignmentTween-class.html\">AlignmentTween<\/a>, and\n<a href=\"rendering\/AlignmentGeometryTween-class.html\">AlignmentGeometryTween<\/a>, and <a href=\"rendering\/FractionalOffsetTween-class.html\">FractionalOffsetTween<\/a> are another group of\n<a href=\"animation\/Tween-class.html\">Tween<\/a>s that use dedicated <code>lerp<\/code> methods instead of merely relying on the\noperators (in particular, this allows them to handle null values in a more\nuseful manner).<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "Tween"
+    "props": []
 }

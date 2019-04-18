@@ -1,150 +1,119 @@
 {
-    "name": "process.ProcessWrapper",
-    "extends": [],
+    "desc": "<p>A wrapper around an <a href=\"dart-io\/Process-class.html\">io.Process<\/a> class that adds some convenience methods.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "package-process_process\/ProcessWrapper-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
     "memberOf": "process",
+    "name": "process.ProcessWrapper",
+    "shortname": "ProcessWrapper",
+    "extends": [],
     "events": [],
     "methods": [
         {
-            "name": "ProcessWrapper",
-            "type": "",
             "desc": "<p>Constructs a <a href=\"package-process_process\/ProcessWrapper-class.html\">ProcessWrapper<\/a> object that delegates to the specified\nunderlying object.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ProcessWrapper(this._delegate)\n    : _stdout = new StreamController&lt;List&lt;int&gt;&gt;(),\n      _stderr = new StreamController&lt;List&lt;int&gt;&gt;(),\n      _stdoutDone = new Completer&lt;void&gt;(),\n      _stderrDone = new Completer&lt;void&gt;() {\n  _monitorStdioStream(_delegate.stdout, _stdout, _stdoutDone);\n  _monitorStdioStream(_delegate.stderr, _stderr, _stderrDone);\n}<\/code><\/pre>\n    ",
+            "href": "package-process_process\/ProcessWrapper\/ProcessWrapper.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "process.ProcessWrapper",
-            "sig": "",
             "params": [
                 {
                     "name": "_delegate",
-                    "type": "dart:io.Process",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:io.Process"
                 }
-            ],
-            "isConstructor": true,
-            "href": "package-process_process\/ProcessWrapper\/ProcessWrapper.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">ProcessWrapper(this._delegate)\n    : _stdout = new StreamController&lt;List&lt;int&gt;&gt;(),\n      _stderr = new StreamController&lt;List&lt;int&gt;&gt;(),\n      _stdoutDone = new Completer&lt;void&gt;(),\n      _stderrDone = new Completer&lt;void&gt;() {\n  _monitorStdioStream(_delegate.stdout, _stdout, _stdoutDone);\n  _monitorStdioStream(_delegate.stderr, _stderr, _stderrDone);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "kill",
-            "type": "dart:core.bool",
             "desc": "<p>Kills the process.<\/p>\n<p>Where possible, sends the <code>signal<\/code> to the process. This includes\nLinux and OS X. The default signal is <a href=\"dart-io\/ProcessSignal\/sigterm-constant.html\">ProcessSignal.sigterm<\/a>\nwhich will normally terminate the process.<\/p>\n<p>On platforms without signal support, including Windows, the call\njust terminates the process in a platform specific way, and the\n<code>signal<\/code> parameter is ignored.<\/p>\n<p>Returns <code>true<\/code> if the signal is successfully delivered to the\nprocess. Otherwise the signal could not be sent, usually meaning\nthat the process is already dead.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool kill([io.ProcessSignal signal = io.ProcessSignal.sigterm]) {\n  return _delegate.kill(signal);\n}<\/code><\/pre>\n    ",
+            "href": "package-process_process\/ProcessWrapper\/kill.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "process.ProcessWrapper",
-            "sig": "",
             "params": [
                 {
                     "name": "signal",
-                    "type": "dart:io.ProcessSignal",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:io.ProcessSignal"
                 }
-            ],
-            "isConstructor": false,
-            "href": "package-process_process\/ProcessWrapper\/kill.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool kill([io.ProcessSignal signal = io.ProcessSignal.sigterm]) {\n  return _delegate.kill(signal);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         }
     ],
     "props": [
         {
-            "name": "done",
-            "type": "dart:async.Future<dart:core.int>",
-            "types": [
-                "dart:async.Future",
-                "dart:core.int"
-            ],
             "desc": "<p>A <a href=\"dart-async\/Future-class.html\">Future<\/a> that completes when the process has exited and its standard\noutput and error streams have closed.<\/p>\n<p>This exists as an alternative to <a href=\"package-process_process\/ProcessWrapper\/exitCode.html\">exitCode<\/a>, which does not guarantee\nthat the stdio streams have closed (it is possible for the exit code to\nbe available before stdout and stderr have closed).<\/p>\n<p>The future returned here will complete with the exit code of the process.<\/p>\n        ",
-            "memberOf": "process.ProcessWrapper",
-            "isConstant": false,
-            "href": "package-process_process\/ProcessWrapper\/done.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;int&gt; get done async {\n  int result;\n  await Future.wait&lt;void&gt;(&lt;Future&lt;void&gt;&gt;[\n    _stdoutDone.future,\n    _stderrDone.future,\n    _delegate.exitCode.then((int value) {\n      result = value;\n    }),\n  ]);\n  assert(result != null);\n  return result;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "exitCode",
+            "href": "package-process_process\/ProcessWrapper\/done.html",
+            "isDeprecated": "0",
             "type": "dart:async.Future<dart:core.int>",
-            "types": [
-                "dart:async.Future",
-                "dart:core.int"
-            ],
+            "memberOf": "process.ProcessWrapper",
+            "params": []
+        },
+        {
             "desc": "<p>Returns a <code>Future<\/code> which completes with the exit code of the process\nwhen the process completes.<\/p>\n<p>The handling of exit codes is platform specific.<\/p>\n<p>On Linux and OS X a normal exit code will be a positive value in\nthe range <code>0..255<\/code>. If the process was terminated due to a signal\nthe exit code will be a negative value in the range <code>-255..-1<\/code>,\nwhere the absolute value of the exit code is the signal\nnumber. For example, if a process crashes due to a segmentation\nviolation the exit code will be -11, as the signal SIGSEGV has the\nnumber 11.<\/p>\n<p>On Windows a process can report any 32-bit value as an exit\ncode. When returning the exit code this exit code is turned into\na signed value. Some special values are used to report\ntermination due to some system event. E.g. if a process crashes\ndue to an access violation the 32-bit exit code is <code>0xc0000005<\/code>,\nwhich will be returned as the negative number <code>-1073741819<\/code>. To\nget the original 32-bit value use <code>(0x100000000 + exitCode) &amp;\n0xffffffff<\/code>.<\/p>\n<p>There is no guarantee that <a href=\"package-process_process\/ProcessWrapper\/stdout.html\">stdout<\/a> and <a href=\"package-process_process\/ProcessWrapper\/stderr.html\">stderr<\/a> have finished reporting\nthe buffered output of the process when the returned future completes.\nTo be sure that all output is captured,\nwait for the done event on the streams.<\/p>\n        ",
-            "memberOf": "process.ProcessWrapper",
-            "isConstant": false,
-            "href": "package-process_process\/ProcessWrapper\/exitCode.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;int&gt; get exitCode =&gt; _delegate.exitCode;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-process_process\/ProcessWrapper\/exitCode.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Future<dart:core.int>",
+            "memberOf": "process.ProcessWrapper",
+            "params": []
         },
         {
-            "name": "pid",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>Returns the process id of the process.<\/p>\n        ",
-            "memberOf": "process.ProcessWrapper",
-            "isConstant": false,
-            "href": "package-process_process\/ProcessWrapper\/pid.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nint get pid =&gt; _delegate.pid;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-process_process\/ProcessWrapper\/pid.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "process.ProcessWrapper",
+            "params": []
         },
         {
-            "name": "stderr",
-            "type": "dart:async.Stream<dart:core.List<dart:core.int>>",
-            "types": [
-                "dart:async.Stream",
-                "dart:core.List",
-                "dart:core.int"
-            ],
             "desc": "<p>Returns the standard error stream of the process as a <code>Stream<\/code>.<\/p>\n        ",
-            "memberOf": "process.ProcessWrapper",
-            "isConstant": false,
-            "href": "package-process_process\/ProcessWrapper\/stderr.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nStream&lt;List&lt;int&gt;&gt; get stderr =&gt; _stderr.stream;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "stdin",
-            "type": "dart:io.IOSink",
-            "types": [],
-            "desc": "<p>Returns the standard input stream of the process as an <a href=\"dart-io\/IOSink-class.html\">IOSink<\/a>.<\/p>\n        ",
-            "memberOf": "process.ProcessWrapper",
-            "isConstant": false,
-            "href": "package-process_process\/ProcessWrapper\/stdin.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nio.IOSink get stdin =&gt; _delegate.stdin;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "stdout",
+            "href": "package-process_process\/ProcessWrapper\/stderr.html",
+            "isDeprecated": "0",
             "type": "dart:async.Stream<dart:core.List<dart:core.int>>",
-            "types": [
-                "dart:async.Stream",
-                "dart:core.List",
-                "dart:core.int"
-            ],
-            "desc": "<p>Returns the standard output stream of the process as a <code>Stream<\/code>.<\/p>\n        ",
             "memberOf": "process.ProcessWrapper",
-            "isConstant": false,
-            "href": "package-process_process\/ProcessWrapper\/stdout.html",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns the standard input stream of the process as an <a href=\"dart-io\/IOSink-class.html\">IOSink<\/a>.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nio.IOSink get stdin =&gt; _delegate.stdin;<\/code><\/pre>\n        ",
+            "href": "package-process_process\/ProcessWrapper\/stdin.html",
+            "isDeprecated": "0",
+            "type": "dart:io.IOSink",
+            "memberOf": "process.ProcessWrapper",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns the standard output stream of the process as a <code>Stream<\/code>.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nStream&lt;List&lt;int&gt;&gt; get stdout =&gt; _stdout.stream;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "package-process_process\/ProcessWrapper\/stdout.html",
+            "isDeprecated": "0",
+            "type": "dart:async.Stream<dart:core.List<dart:core.int>>",
+            "memberOf": "process.ProcessWrapper",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "package-process_process\/ProcessWrapper-class.html",
-    "desc": "<p>A wrapper around an <a href=\"dart-io\/Process-class.html\">io.Process<\/a> class that adds some convenience methods.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "ProcessWrapper"
+    ]
 }

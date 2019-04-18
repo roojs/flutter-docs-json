@@ -1,855 +1,705 @@
 {
+    "desc": "<p>A node that represents some semantic data.<\/p>\n<p>The semantics tree is maintained during the semantics phase of the pipeline\n(i.e., during <a href=\"rendering\/PipelineOwner\/flushSemantics.html\">PipelineOwner.flushSemantics<\/a>), which happens after\ncompositing. The semantics tree is then uploaded into the engine for use\nby assistive technology.<\/p>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "semantics\/SemanticsNode-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "semantics",
     "name": "semantics.SemanticsNode",
+    "shortname": "SemanticsNode",
     "extends": [
         "foundation.AbstractNode",
         "dart:core.Object"
     ],
-    "memberOf": "semantics",
     "events": [],
     "methods": [
         {
-            "name": "SemanticsNode",
-            "type": "",
             "desc": "<p>Creates a semantic node.<\/p>\n<p>Each semantic node has a unique identifier that is assigned when the node\nis created.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">SemanticsNode({\n  this.key,\n  VoidCallback showOnScreen,\n}) : id = _generateNewId(),\n     _showOnScreen = showOnScreen;<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/SemanticsNode.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "semantics.SemanticsNode",
-            "sig": "",
             "params": [
                 {
                     "name": "key",
-                    "type": "foundation.Key",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "foundation.Key"
                 },
                 {
                     "name": "showOnScreen",
-                    "type": "dart:ui.VoidCallback",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "semantics\/SemanticsNode\/SemanticsNode.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">SemanticsNode({\n  this.key,\n  VoidCallback showOnScreen,\n}) : id = _generateNewId(),\n     _showOnScreen = showOnScreen;<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "attach",
-            "type": "",
-            "desc": "<p>Mark this node as attached to the given owner.<\/p>\n<p>Typically called only from the <a href=\"semantics\/SemanticsNode\/parent.html\">parent<\/a>'s <a href=\"semantics\/SemanticsNode\/attach.html\">attach<\/a> method, and by the\n<code>owner<\/code> to mark the root of a tree as attached.<\/p>\n<p>Subclasses with children should override this method to first call their\ninherited <a href=\"semantics\/SemanticsNode\/attach.html\">attach<\/a> method, and then <a href=\"semantics\/SemanticsNode\/attach.html\">attach<\/a> all their children to the\nsame <code>owner<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "semantics.SemanticsNode",
-            "sig": "",
-            "params": [
-                {
-                    "name": "owner",
-                    "type": "semantics.SemanticsOwner",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "dart:ui.VoidCallback"
                 }
-            ],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/attach.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid attach(SemanticsOwner owner) {\n  super.attach(owner);\n  assert(!owner._nodes.containsKey(id));\n  owner._nodes[id] = this;\n  owner._detachedNodes.remove(this);\n  if (_dirty) {\n    _dirty = false;\n    _markDirty();\n  }\n  if (_children != null) {\n    for (SemanticsNode child in _children)\n      child.attach(owner);\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "debugDescribeChildren",
-            "type": "dart:core.List<foundation.DiagnosticsNode>",
-            "desc": "<p>Returns a list of <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> objects describing this node's\nchildren.<\/p>\n<p>Children that are offstage should be added with <code>style<\/code> set to\n<a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle.offstage<\/a> to indicate that they are offstage.<\/p>\n<p>The list must not contain any null entries. If there are explicit null\nchildren to report, consider <a href=\"foundation\/DiagnosticsNode\/DiagnosticsNode.message.html\">new DiagnosticsNode.message<\/a> or\n<a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty&lt;Object&gt;<\/a> as possible <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> objects to\nprovide.<\/p>\n<p>Used by <a href=\"semantics\/SemanticsNode\/toStringDeep.html\">toStringDeep<\/a>, <a href=\"semantics\/SemanticsNode\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/DiagnosticableTreeMixin\/toStringShallow.html\">toStringShallow<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"semantics\/SemanticsNode\/debugDescribeChildren.html\">RenderTable.debugDescribeChildren<\/a>, which provides high quality custom\ndescriptions for its child nodes.<\/li><\/ul>",
-            "static": false,
-            "memberOf": "semantics.SemanticsNode",
-            "sig": "",
-            "params": [
-                {
-                    "name": "childOrder",
-                    "type": "semantics.DebugSemanticsDumpOrder",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/debugDescribeChildren.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nList&lt;DiagnosticsNode&gt; debugDescribeChildren({ DebugSemanticsDumpOrder childOrder = DebugSemanticsDumpOrder.inverseHitTest }) {\n  return debugListChildrenInOrder(childOrder)\n    .map&lt;DiagnosticsNode&gt;((SemanticsNode node) =&gt; node.toDiagnosticsNode(childOrder: childOrder))\n    .toList();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:core.List",
-                "foundation.DiagnosticsNode"
             ]
         },
         {
-            "name": "debugFillProperties",
-            "type": "",
-            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"semantics\/SemanticsNode\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"semantics\/SemanticsNode\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/DiagnosticableTreeMixin\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "desc": "<p>Mark this node as attached to the given owner.<\/p>\n<p>Typically called only from the <a href=\"semantics\/SemanticsNode\/parent.html\">parent<\/a>'s <a href=\"semantics\/SemanticsNode\/attach.html\">attach<\/a> method, and by the\n<code>owner<\/code> to mark the root of a tree as attached.<\/p>\n<p>Subclasses with children should override this method to first call their\ninherited <a href=\"semantics\/SemanticsNode\/attach.html\">attach<\/a> method, and then <a href=\"semantics\/SemanticsNode\/attach.html\">attach<\/a> all their children to the\nsame <code>owner<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid attach(SemanticsOwner owner) {\n  super.attach(owner);\n  assert(!owner._nodes.containsKey(id));\n  owner._nodes[id] = this;\n  owner._detachedNodes.remove(this);\n  if (_dirty) {\n    _dirty = false;\n    _markDirty();\n  }\n  if (_children != null) {\n    for (SemanticsNode child in _children)\n      child.attach(owner);\n  }\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/attach.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsNode",
-            "sig": "",
+            "params": [
+                {
+                    "name": "owner",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "semantics.SemanticsOwner"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Returns a list of <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> objects describing this node's\nchildren.<\/p>\n<p>Children that are offstage should be added with <code>style<\/code> set to\n<a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle.offstage<\/a> to indicate that they are offstage.<\/p>\n<p>The list must not contain any null entries. If there are explicit null\nchildren to report, consider <a href=\"foundation\/DiagnosticsNode\/DiagnosticsNode.message.html\">new DiagnosticsNode.message<\/a> or\n<a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty&lt;Object&gt;<\/a> as possible <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> objects to\nprovide.<\/p>\n<p>Used by <a href=\"semantics\/SemanticsNode\/toStringDeep.html\">toStringDeep<\/a>, <a href=\"semantics\/SemanticsNode\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/DiagnosticableTreeMixin\/toStringShallow.html\">toStringShallow<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"semantics\/SemanticsNode\/debugDescribeChildren.html\">RenderTable.debugDescribeChildren<\/a>, which provides high quality custom\ndescriptions for its child nodes.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nList&lt;DiagnosticsNode&gt; debugDescribeChildren({ DebugSemanticsDumpOrder childOrder = DebugSemanticsDumpOrder.inverseHitTest }) {\n  return debugListChildrenInOrder(childOrder)\n    .map&lt;DiagnosticsNode&gt;((SemanticsNode node) =&gt; node.toDiagnosticsNode(childOrder: childOrder))\n    .toList();\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/debugDescribeChildren.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<foundation.DiagnosticsNode>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "semantics.SemanticsNode",
+            "params": [
+                {
+                    "name": "childOrder",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "semantics.DebugSemanticsDumpOrder"
+                }
+            ]
+        },
+        {
+            "desc": "<p>Add additional properties associated with the node.<\/p>\n<p>Use the most specific <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> existing subclass to describe\neach property instead of the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> base class. There are\nonly a small number of <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses each covering a\ncommon use case. Consider what values a property is relevant for users\ndebugging as users debugging large trees are overloaded with information.\nCommon named parameters in <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a> subclasses help filter when\nand how properties are displayed.<\/p>\n<p><code>defaultValue<\/code>, <code>showName<\/code>, <code>showSeparator<\/code>, and <code>level<\/code> keep string\nrepresentations of diagnostics terse and hide properties when they are not\nvery useful.<\/p>\n<ul>\n<li>Use <code>defaultValue<\/code> any time the default value of a property is\nuninteresting. For example, specify a default value of null any time\na property being null does not indicate an error.<\/li>\n<li>Avoid specifying the <code>level<\/code> parameter unless the result you want\ncannot be achieved by using the <code>defaultValue<\/code> parameter or using\nthe <a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a> class to conditionally display the property\nas a flag.<\/li>\n<li>Specify <code>showName<\/code> and <code>showSeparator<\/code> in rare cases where the string\noutput would look clumsy if they were not set.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;Object&gt;('child(3, 4)', null, ifNull: 'is null', showSeparator: false).toString()\n<\/code><\/pre>Shows using <code>showSeparator<\/code> to get output <code>child(3, 4) is null<\/code> which\nis more polished than <code>child(3, 4): is null<\/code>.\n<pre class=\"language-dart\"><code class=\"language-dart\">DiagnosticsProperty&lt;IconData&gt;('icon', icon, ifNull: '&lt;empty&gt;', showName: false)).toString()\n<\/code><\/pre>Shows using <code>showName<\/code> to omit the property name as in this context the\nproperty name does not add useful information.<\/li>\n<\/ul>\n<p><code>ifNull<\/code>, <code>ifEmpty<\/code>, <code>unit<\/code>, and <code>tooltip<\/code> make property\ndescriptions clearer. The examples in the code sample below illustrate\ngood uses of all of these parameters.<\/p>\n<h2 id=\"diagnosticsproperty-subclasses-for-primitive-types\">DiagnosticsProperty subclasses for primitive types<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/StringProperty-class.html\">StringProperty<\/a>, which supports automatically enclosing a <a href=\"dart-core\/String-class.html\">String<\/a>\nvalue in quotes.<\/li>\n<li>\n<a href=\"foundation\/DoubleProperty-class.html\">DoubleProperty<\/a>, which supports specifying a unit of measurement for\na <a href=\"dart-core\/double-class.html\">double<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/PercentProperty-class.html\">PercentProperty<\/a>, which clamps a <a href=\"dart-core\/double-class.html\">double<\/a> to between 0 and 1 and\nformats it as a percentage.<\/li>\n<li>\n<a href=\"foundation\/IntProperty-class.html\">IntProperty<\/a>, which supports specifying a unit of measurement for an\n<a href=\"dart-core\/int-class.html\">int<\/a> value.<\/li>\n<li>\n<a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a>, which formats a <a href=\"dart-core\/bool-class.html\">bool<\/a> value as one or more flags.\nDepending on the use case it is better to format a bool as\n<code>DiagnosticsProperty&lt;bool&gt;<\/code> instead of using <a href=\"foundation\/FlagProperty-class.html\">FlagProperty<\/a> as the\noutput is more verbose but unambiguous.<\/li>\n<\/ul>\n<h2 id=\"other-important-diagnosticsproperty-variants\">Other important <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> variants<\/h2>\n<ul>\n<li>\n<a href=\"foundation\/EnumProperty-class.html\">EnumProperty<\/a>, which provides terse descriptions of enum values\nworking around limitations of the <code>toString<\/code> implementation for Dart\nenum types.<\/li>\n<li>\n<a href=\"foundation\/IterableProperty-class.html\">IterableProperty<\/a>, which handles iterable values with display\ncustomizable depending on the <a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle<\/a> used.<\/li>\n<li>\n<a href=\"foundation\/ObjectFlagProperty-class.html\">ObjectFlagProperty<\/a>, which provides terse descriptions of whether a\nproperty value is present or not. For example, whether an <code>onClick<\/code>\ncallback is specified or an animation is in progress.<\/li>\n<\/ul>\n<p>If none of these subclasses apply, use the <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nconstructor or in rare cases create your own <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\nsubclass as in the case for <a href=\"painting\/TransformProperty-class.html\">TransformProperty<\/a> which handles <a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a>\nthat represent transforms. Generally any property value with a good\n<code>toString<\/code> method implementation works fine using <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a>\ndirectly.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows best practices for implementing <a href=\"semantics\/SemanticsNode\/debugFillProperties.html\">debugFillProperties<\/a>\nillustrating use of all common <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> subclasses and all\ncommon <a href=\"foundation\/DiagnosticsProperty-class.html\">DiagnosticsProperty<\/a> parameters.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class ExampleObject extends ExampleSuperclass {\n\n  \/\/ ...various members and properties...\n\n  @override\n  void debugFillProperties(DiagnosticPropertiesBuilder properties) {\n    \/\/ Always add properties from the base class first.\n    super.debugFillProperties(properties);\n\n    \/\/ Omit the property name 'message' when displaying this String property\n    \/\/ as it would just add visual noise.\n    properties.add(StringProperty('message', message, showName: false));\n\n    properties.add(DoubleProperty('stepWidth', stepWidth));\n\n    \/\/ A scale of 1.0 does nothing so should be hidden.\n    properties.add(DoubleProperty('scale', scale, defaultValue: 1.0));\n\n    \/\/ If the hitTestExtent matches the paintExtent, it is just set to its\n    \/\/ default value so is not relevant.\n    properties.add(DoubleProperty('hitTestExtent', hitTestExtent, defaultValue: paintExtent));\n\n    \/\/ maxWidth of double.infinity indicates the width is unconstrained and\n    \/\/ so maxWidth has no impact.,\n    properties.add(DoubleProperty('maxWidth', maxWidth, defaultValue: double.infinity));\n\n    \/\/ Progress is a value between 0 and 1 or null. Showing it as a\n    \/\/ percentage makes the meaning clear enough that the name can be\n    \/\/ hidden.\n    properties.add(PercentProperty(\n      'progress',\n      progress,\n      showName: false,\n      ifNull: '&lt;indeterminate&gt;',\n    ));\n\n    \/\/ Most text fields have maxLines set to 1.\n    properties.add(IntProperty('maxLines', maxLines, defaultValue: 1));\n\n    \/\/ Specify the unit as otherwise it would be unclear that time is in\n    \/\/ milliseconds.\n    properties.add(IntProperty('duration', duration.inMilliseconds, unit: 'ms'));\n\n    \/\/ Tooltip is used instead of unit for this case as a unit should be a\n    \/\/ terse description appropriate to display directly after a number\n    \/\/ without a space.\n    properties.add(DoubleProperty(\n      'device pixel ratio',\n      ui.window.devicePixelRatio,\n      tooltip: 'physical pixels per logical pixel',\n    ));\n\n    \/\/ Displaying the depth value would be distracting. Instead only display\n    \/\/ if the depth value is missing.\n    properties.add(ObjectFlagProperty&lt;int&gt;('depth', depth, ifNull: 'no depth'));\n\n    \/\/ bool flag that is only shown when the value is true.\n    properties.add(FlagProperty('using primary controller', value: primary));\n\n    properties.add(FlagProperty(\n      'isCurrent',\n      value: isCurrent,\n      ifTrue: 'active',\n      ifFalse: 'inactive',\n      showName: false,\n    ));\n\n    properties.add(DiagnosticsProperty&lt;bool&gt;('keepAlive', keepAlive));\n\n    \/\/ FlagProperty could have also been used in this case.\n    \/\/ This option results in the text \"obscureText: true\" instead\n    \/\/ of \"obscureText\" which is a bit more verbose but a bit clearer.\n    properties.add(DiagnosticsProperty&lt;bool&gt;('obscureText', obscureText, defaultValue: false));\n\n    properties.add(EnumProperty&lt;TextAlign&gt;('textAlign', textAlign, defaultValue: null));\n    properties.add(EnumProperty&lt;ImageRepeat&gt;('repeat', repeat, defaultValue: ImageRepeat.noRepeat));\n\n    \/\/ Warn users when the widget is missing but do not show the value.\n    properties.add(ObjectFlagProperty&lt;Widget&gt;('widget', widget, ifNull: 'no widget'));\n\n    properties.add(IterableProperty&lt;BoxShadow&gt;(\n      'boxShadow',\n      boxShadow,\n      defaultValue: null,\n      style: style,\n    ));\n\n    \/\/ Getting the value of size throws an exception unless hasSize is true.\n    properties.add(DiagnosticsProperty&lt;Size&gt;.lazy(\n      'size',\n      () =&gt; size,\n      description: '${ hasSize ? size : \"MISSING\" }',\n    ));\n\n    \/\/ If the `toString` method for the property value does not provide a\n    \/\/ good terse description, write a DiagnosticsProperty subclass as in\n    \/\/ the case of TransformProperty which displays a nice debugging view\n    \/\/ of a Matrix4 that represents a transform.\n    properties.add(TransformProperty('transform', transform));\n\n    \/\/ If the value class has a good `toString` method, use\n    \/\/ DiagnosticsProperty&lt;YourValueType&gt;. Specifying the value type ensures\n    \/\/ that debugging tools always know the type of the field and so can\n    \/\/ provide the right UI affordances. For example, in this case even\n    \/\/ if color is null, a debugging tool still knows the value is a Color\n    \/\/ and can display relevant color related UI.\n    properties.add(DiagnosticsProperty&lt;Color&gt;('color', color));\n\n    \/\/ Use a custom description to generate a more terse summary than the\n    \/\/ `toString` method on the map class.\n    properties.add(DiagnosticsProperty&lt;Map&lt;Listenable, VoidCallback&gt;&gt;(\n      'handles',\n      handles,\n      description: handles != null ?\n      '${handles.length} active client${ handles.length == 1 ? \"\" : \"s\" }' :\n      null,\n      ifNull: 'no notifications ever received',\n      showName: false,\n    ));\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>Used by <a href=\"semantics\/SemanticsNode\/toDiagnosticsNode.html\">toDiagnosticsNode<\/a> and <a href=\"foundation\/DiagnosticableTreeMixin\/toString.html\">toString<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  bool hideOwner = true;\n  if (_dirty) {\n    final bool inDirtyNodes = owner != null &amp;&amp; owner._dirtyNodes.contains(this);\n    properties.add(FlagProperty('inDirtyNodes', value: inDirtyNodes, ifTrue: 'dirty', ifFalse: 'STALE'));\n    hideOwner = inDirtyNodes;\n  }\n  properties.add(DiagnosticsProperty&lt;SemanticsOwner&gt;('owner', owner, level: hideOwner ? DiagnosticLevel.hidden : DiagnosticLevel.info));\n  properties.add(FlagProperty('isMergedIntoParent', value: isMergedIntoParent, ifTrue: 'merged up \u2b06\ufe0f'));\n  properties.add(FlagProperty('mergeAllDescendantsIntoThisNode', value: mergeAllDescendantsIntoThisNode, ifTrue: 'merge boundary \u26d4\ufe0f'));\n  final Offset offset = transform != null ? MatrixUtils.getAsTranslation(transform) : null;\n  if (offset != null) {\n    properties.add(DiagnosticsProperty&lt;Rect&gt;('rect', rect.shift(offset), showName: false));\n  } else {\n    final double scale = transform != null ? MatrixUtils.getAsScale(transform) : null;\n    String description;\n    if (scale != null) {\n      description = '$rect scaled by ${scale.toStringAsFixed(1)}x';\n    } else if (transform != null &amp;&amp; !MatrixUtils.isIdentity(transform)) {\n      final String matrix = transform.toString().split('\\n').take(4).map&lt;String&gt;((String line) =&gt; line.substring(4)).join('; ');\n      description = '$rect with transform [$matrix]';\n    }\n    properties.add(DiagnosticsProperty&lt;Rect&gt;('rect', rect, description: description, showName: false));\n  }\n  final List&lt;String&gt; actions = _actions.keys.map&lt;String&gt;((SemanticsAction action) =&gt; describeEnum(action)).toList()..sort();\n  final List&lt;String&gt; customSemanticsActions = _customSemanticsActions.keys\n    .map&lt;String&gt;((CustomSemanticsAction action) =&gt; action.label)\n    .toList();\n  properties.add(IterableProperty&lt;String&gt;('actions', actions, ifEmpty: null));\n  properties.add(IterableProperty&lt;String&gt;('customActions', customSemanticsActions, ifEmpty: null));\n  final List&lt;String&gt; flags = SemanticsFlag.values.values.where((SemanticsFlag flag) =&gt; hasFlag(flag)).map((SemanticsFlag flag) =&gt; flag.toString().substring('SemanticsFlag.'.length)).toList();\n  properties.add(IterableProperty&lt;String&gt;('flags', flags, ifEmpty: null));\n  properties.add(FlagProperty('isInvisible', value: isInvisible, ifTrue: 'invisible'));\n  properties.add(FlagProperty('isHidden', value: hasFlag(SemanticsFlag.isHidden), ifTrue: 'HIDDEN'));\n  properties.add(StringProperty('label', _label, defaultValue: ''));\n  properties.add(StringProperty('value', _value, defaultValue: ''));\n  properties.add(StringProperty('increasedValue', _increasedValue, defaultValue: ''));\n  properties.add(StringProperty('decreasedValue', _decreasedValue, defaultValue: ''));\n  properties.add(StringProperty('hint', _hint, defaultValue: ''));\n  properties.add(EnumProperty&lt;TextDirection&gt;('textDirection', _textDirection, defaultValue: null));\n  properties.add(DiagnosticsProperty&lt;SemanticsSortKey&gt;('sortKey', sortKey, defaultValue: null));\n  if (_textSelection?.isValid == true)\n    properties.add(MessageProperty('text selection', '[${_textSelection.start}, ${_textSelection.end}]'));\n  properties.add(IntProperty('platformViewId', platformViewId, defaultValue: null));\n  properties.add(IntProperty('scrollChildren', scrollChildCount, defaultValue: null));\n  properties.add(IntProperty('scrollIndex', scrollIndex, defaultValue: null));\n  properties.add(DoubleProperty('scrollExtentMin', scrollExtentMin, defaultValue: null));\n  properties.add(DoubleProperty('scrollPosition', scrollPosition, defaultValue: null));\n  properties.add(DoubleProperty('scrollExtentMax', scrollExtentMax, defaultValue: null));\n  properties.add(DoubleProperty('elevation', elevation, defaultValue: 0.0));\n  properties.add(DoubleProperty('thicknes', thickness, defaultValue: 0.0));\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/debugFillProperties.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "semantics.SemanticsNode",
             "params": [
                 {
                     "name": "properties",
-                    "type": "foundation.DiagnosticPropertiesBuilder",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "foundation.DiagnosticPropertiesBuilder"
                 }
-            ],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/debugFillProperties.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid debugFillProperties(DiagnosticPropertiesBuilder properties) {\n  bool hideOwner = true;\n  if (_dirty) {\n    final bool inDirtyNodes = owner != null &amp;&amp; owner._dirtyNodes.contains(this);\n    properties.add(FlagProperty('inDirtyNodes', value: inDirtyNodes, ifTrue: 'dirty', ifFalse: 'STALE'));\n    hideOwner = inDirtyNodes;\n  }\n  properties.add(DiagnosticsProperty&lt;SemanticsOwner&gt;('owner', owner, level: hideOwner ? DiagnosticLevel.hidden : DiagnosticLevel.info));\n  properties.add(FlagProperty('isMergedIntoParent', value: isMergedIntoParent, ifTrue: 'merged up \u2b06\ufe0f'));\n  properties.add(FlagProperty('mergeAllDescendantsIntoThisNode', value: mergeAllDescendantsIntoThisNode, ifTrue: 'merge boundary \u26d4\ufe0f'));\n  final Offset offset = transform != null ? MatrixUtils.getAsTranslation(transform) : null;\n  if (offset != null) {\n    properties.add(DiagnosticsProperty&lt;Rect&gt;('rect', rect.shift(offset), showName: false));\n  } else {\n    final double scale = transform != null ? MatrixUtils.getAsScale(transform) : null;\n    String description;\n    if (scale != null) {\n      description = '$rect scaled by ${scale.toStringAsFixed(1)}x';\n    } else if (transform != null &amp;&amp; !MatrixUtils.isIdentity(transform)) {\n      final String matrix = transform.toString().split('\\n').take(4).map&lt;String&gt;((String line) =&gt; line.substring(4)).join('; ');\n      description = '$rect with transform [$matrix]';\n    }\n    properties.add(DiagnosticsProperty&lt;Rect&gt;('rect', rect, description: description, showName: false));\n  }\n  final List&lt;String&gt; actions = _actions.keys.map&lt;String&gt;((SemanticsAction action) =&gt; describeEnum(action)).toList()..sort();\n  final List&lt;String&gt; customSemanticsActions = _customSemanticsActions.keys\n    .map&lt;String&gt;((CustomSemanticsAction action) =&gt; action.label)\n    .toList();\n  properties.add(IterableProperty&lt;String&gt;('actions', actions, ifEmpty: null));\n  properties.add(IterableProperty&lt;String&gt;('customActions', customSemanticsActions, ifEmpty: null));\n  final List&lt;String&gt; flags = SemanticsFlag.values.values.where((SemanticsFlag flag) =&gt; hasFlag(flag)).map((SemanticsFlag flag) =&gt; flag.toString().substring('SemanticsFlag.'.length)).toList();\n  properties.add(IterableProperty&lt;String&gt;('flags', flags, ifEmpty: null));\n  properties.add(FlagProperty('isInvisible', value: isInvisible, ifTrue: 'invisible'));\n  properties.add(FlagProperty('isHidden', value: hasFlag(SemanticsFlag.isHidden), ifTrue: 'HIDDEN'));\n  properties.add(StringProperty('label', _label, defaultValue: ''));\n  properties.add(StringProperty('value', _value, defaultValue: ''));\n  properties.add(StringProperty('increasedValue', _increasedValue, defaultValue: ''));\n  properties.add(StringProperty('decreasedValue', _decreasedValue, defaultValue: ''));\n  properties.add(StringProperty('hint', _hint, defaultValue: ''));\n  properties.add(EnumProperty&lt;TextDirection&gt;('textDirection', _textDirection, defaultValue: null));\n  properties.add(DiagnosticsProperty&lt;SemanticsSortKey&gt;('sortKey', sortKey, defaultValue: null));\n  if (_textSelection?.isValid == true)\n    properties.add(MessageProperty('text selection', '[${_textSelection.start}, ${_textSelection.end}]'));\n  properties.add(IntProperty('platformViewId', platformViewId, defaultValue: null));\n  properties.add(IntProperty('scrollChildren', scrollChildCount, defaultValue: null));\n  properties.add(IntProperty('scrollIndex', scrollIndex, defaultValue: null));\n  properties.add(DoubleProperty('scrollExtentMin', scrollExtentMin, defaultValue: null));\n  properties.add(DoubleProperty('scrollPosition', scrollPosition, defaultValue: null));\n  properties.add(DoubleProperty('scrollExtentMax', scrollExtentMax, defaultValue: null));\n  properties.add(DoubleProperty('elevation', elevation, defaultValue: 0.0));\n  properties.add(DoubleProperty('thicknes', thickness, defaultValue: 0.0));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "debugListChildrenInOrder",
-            "type": "dart:core.List<semantics.SemanticsNode>",
-            "desc": "<p>Returns the list of direct children of this node in the specified order.<\/p>\n    ",
-            "static": false,
-            "memberOf": "semantics.SemanticsNode",
-            "sig": "",
-            "params": [
-                {
-                    "name": "childOrder",
-                    "type": "semantics.DebugSemanticsDumpOrder",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/debugListChildrenInOrder.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;SemanticsNode&gt; debugListChildrenInOrder(DebugSemanticsDumpOrder childOrder) {\n  assert(childOrder != null);\n  if (_children == null)\n    return const &lt;SemanticsNode&gt;[];\n\n  switch (childOrder) {\n    case DebugSemanticsDumpOrder.inverseHitTest:\n      return _children;\n    case DebugSemanticsDumpOrder.traversalOrder:\n      return _childrenInTraversalOrder();\n  }\n  assert(false);\n  return null;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:core.List",
-                "semantics.SemanticsNode"
             ]
         },
         {
-            "name": "detach",
-            "type": "",
+            "desc": "<p>Returns the list of direct children of this node in the specified order.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;SemanticsNode&gt; debugListChildrenInOrder(DebugSemanticsDumpOrder childOrder) {\n  assert(childOrder != null);\n  if (_children == null)\n    return const &lt;SemanticsNode&gt;[];\n\n  switch (childOrder) {\n    case DebugSemanticsDumpOrder.inverseHitTest:\n      return _children;\n    case DebugSemanticsDumpOrder.traversalOrder:\n      return _childrenInTraversalOrder();\n  }\n  assert(false);\n  return null;\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/debugListChildrenInOrder.html",
+            "isDeprecated": "0",
+            "type": "dart:core.List<semantics.SemanticsNode>",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "semantics.SemanticsNode",
+            "params": [
+                {
+                    "name": "childOrder",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "semantics.DebugSemanticsDumpOrder"
+                }
+            ]
+        },
+        {
             "desc": "<p>Mark this node as detached.<\/p>\n<p>Typically called only from the <a href=\"semantics\/SemanticsNode\/parent.html\">parent<\/a>'s <a href=\"semantics\/SemanticsNode\/detach.html\">detach<\/a>, and by the <a href=\"semantics\/SemanticsNode\/owner.html\">owner<\/a> to\nmark the root of a tree as detached.<\/p>\n<p>Subclasses with children should override this method to first call their\ninherited <a href=\"semantics\/SemanticsNode\/detach.html\">detach<\/a> method, and then <a href=\"semantics\/SemanticsNode\/detach.html\">detach<\/a> all their children.<\/p>\n    ",
-            "static": false,
-            "memberOf": "semantics.SemanticsNode",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/detach.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid detach() {\n  assert(owner._nodes.containsKey(id));\n  assert(!owner._detachedNodes.contains(this));\n  owner._nodes.remove(id);\n  owner._detachedNodes.add(this);\n  super.detach();\n  assert(owner == null);\n  if (_children != null) {\n    for (SemanticsNode child in _children) {\n      \/\/ The list of children may be stale and may contain nodes that have\n      \/\/ been assigned to a different parent.\n      if (child.parent == this)\n        child.detach();\n    }\n  }\n  \/\/ The other side will have forgotten this node if we ever send\n  \/\/ it again, so make sure to mark it dirty so that it'll get\n  \/\/ sent if it is resurrected.\n  _markDirty();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "getSemanticsData",
-            "type": "semantics.SemanticsData",
-            "desc": "<p>Returns a summary of the semantics for this node.<\/p>\n<p>If this node has <a href=\"semantics\/SemanticsNode\/mergeAllDescendantsIntoThisNode.html\">mergeAllDescendantsIntoThisNode<\/a>, then the returned data\nincludes the information from this node's descendants. Otherwise, the\nreturned data matches the data on this node.<\/p>\n    ",
-            "static": false,
-            "memberOf": "semantics.SemanticsNode",
-            "sig": "",
-            "params": [],
+            "href": "semantics\/SemanticsNode\/detach.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
             "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/getSemanticsData.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">SemanticsData getSemanticsData() {\n  int flags = _flags;\n  int actions = _actionsAsBits;\n  String label = _label;\n  String hint = _hint;\n  String value = _value;\n  String increasedValue = _increasedValue;\n  String decreasedValue = _decreasedValue;\n  TextDirection textDirection = _textDirection;\n  Set&lt;SemanticsTag&gt; mergedTags = tags == null ? null : Set&lt;SemanticsTag&gt;.from(tags);\n  TextSelection textSelection = _textSelection;\n  int scrollChildCount = _scrollChildCount;\n  int scrollIndex = _scrollIndex;\n  double scrollPosition = _scrollPosition;\n  double scrollExtentMax = _scrollExtentMax;\n  double scrollExtentMin = _scrollExtentMin;\n  int platformViewId = _platformViewId;\n  final double elevation = _elevation;\n  double thickness = _thickness;\n  final Set&lt;int&gt; customSemanticsActionIds = &lt;int&gt;{};\n  for (CustomSemanticsAction action in _customSemanticsActions.keys)\n    customSemanticsActionIds.add(CustomSemanticsAction.getIdentifier(action));\n  if (hintOverrides != null) {\n    if (hintOverrides.onTapHint != null) {\n      final CustomSemanticsAction action = CustomSemanticsAction.overridingAction(\n        hint: hintOverrides.onTapHint,\n        action: SemanticsAction.tap,\n      );\n      customSemanticsActionIds.add(CustomSemanticsAction.getIdentifier(action));\n    }\n    if (hintOverrides.onLongPressHint != null) {\n      final CustomSemanticsAction action = CustomSemanticsAction.overridingAction(\n        hint: hintOverrides.onLongPressHint,\n        action: SemanticsAction.longPress,\n      );\n      customSemanticsActionIds.add(CustomSemanticsAction.getIdentifier(action));\n    }\n  }\n\n  if (mergeAllDescendantsIntoThisNode) {\n    _visitDescendants((SemanticsNode node) {\n      assert(node.isMergedIntoParent);\n      flags |= node._flags;\n      actions |= node._actionsAsBits;\n      textDirection ??= node._textDirection;\n      textSelection ??= node._textSelection;\n      scrollChildCount ??= node._scrollChildCount;\n      scrollIndex ??= node._scrollIndex;\n      scrollPosition ??= node._scrollPosition;\n      scrollExtentMax ??= node._scrollExtentMax;\n      scrollExtentMin ??= node._scrollExtentMin;\n      platformViewId ??= node._platformViewId;\n      if (value == '' || value == null)\n        value = node._value;\n      if (increasedValue == '' || increasedValue == null)\n        increasedValue = node._increasedValue;\n      if (decreasedValue == '' || decreasedValue == null)\n        decreasedValue = node._decreasedValue;\n      if (node.tags != null) {\n        mergedTags ??= &lt;SemanticsTag&gt;{};\n        mergedTags.addAll(node.tags);\n      }\n      if (node._customSemanticsActions != null) {\n        for (CustomSemanticsAction action in _customSemanticsActions.keys)\n          customSemanticsActionIds.add(CustomSemanticsAction.getIdentifier(action));\n      }\n      if (node.hintOverrides != null) {\n        if (node.hintOverrides.onTapHint != null) {\n          final CustomSemanticsAction action = CustomSemanticsAction.overridingAction(\n            hint: node.hintOverrides.onTapHint,\n            action: SemanticsAction.tap,\n          );\n          customSemanticsActionIds.add(CustomSemanticsAction.getIdentifier(action));\n        }\n        if (node.hintOverrides.onLongPressHint != null) {\n          final CustomSemanticsAction action = CustomSemanticsAction.overridingAction(\n            hint: node.hintOverrides.onLongPressHint,\n            action: SemanticsAction.longPress,\n          );\n          customSemanticsActionIds.add(CustomSemanticsAction.getIdentifier(action));\n        }\n      }\n      label = _concatStrings(\n        thisString: label,\n        thisTextDirection: textDirection,\n        otherString: node._label,\n        otherTextDirection: node._textDirection,\n      );\n      hint = _concatStrings(\n        thisString: hint,\n        thisTextDirection: textDirection,\n        otherString: node._hint,\n        otherTextDirection: node._textDirection,\n      );\n\n      thickness = math.max(thickness, node._thickness + node._elevation);\n\n      return true;\n    });\n  }\n\n  return SemanticsData(\n    flags: flags,\n    actions: actions,\n    label: label,\n    value: value,\n    increasedValue: increasedValue,\n    decreasedValue: decreasedValue,\n    hint: hint,\n    textDirection: textDirection,\n    rect: rect,\n    transform: transform,\n    elevation: elevation,\n    thickness: thickness,\n    tags: mergedTags,\n    textSelection: textSelection,\n    scrollChildCount: scrollChildCount,\n    scrollIndex: scrollIndex,\n    scrollPosition: scrollPosition,\n    scrollExtentMax: scrollExtentMax,\n    scrollExtentMin: scrollExtentMin,\n    platformViewId: platformViewId,\n    customSemanticsActionIds: customSemanticsActionIds.toList()..sort(),\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "hasFlag",
-            "type": "dart:core.bool",
-            "desc": "<p>Whether this node currently has a given <a href=\"dart-ui\/SemanticsFlag-class.html\">SemanticsFlag<\/a>.<\/p>\n    ",
             "static": false,
             "memberOf": "semantics.SemanticsNode",
-            "sig": "",
+            "params": []
+        },
+        {
+            "desc": "<p>Returns a summary of the semantics for this node.<\/p>\n<p>If this node has <a href=\"semantics\/SemanticsNode\/mergeAllDescendantsIntoThisNode.html\">mergeAllDescendantsIntoThisNode<\/a>, then the returned data\nincludes the information from this node's descendants. Otherwise, the\nreturned data matches the data on this node.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">SemanticsData getSemanticsData() {\n  int flags = _flags;\n  int actions = _actionsAsBits;\n  String label = _label;\n  String hint = _hint;\n  String value = _value;\n  String increasedValue = _increasedValue;\n  String decreasedValue = _decreasedValue;\n  TextDirection textDirection = _textDirection;\n  Set&lt;SemanticsTag&gt; mergedTags = tags == null ? null : Set&lt;SemanticsTag&gt;.from(tags);\n  TextSelection textSelection = _textSelection;\n  int scrollChildCount = _scrollChildCount;\n  int scrollIndex = _scrollIndex;\n  double scrollPosition = _scrollPosition;\n  double scrollExtentMax = _scrollExtentMax;\n  double scrollExtentMin = _scrollExtentMin;\n  int platformViewId = _platformViewId;\n  final double elevation = _elevation;\n  double thickness = _thickness;\n  final Set&lt;int&gt; customSemanticsActionIds = &lt;int&gt;{};\n  for (CustomSemanticsAction action in _customSemanticsActions.keys)\n    customSemanticsActionIds.add(CustomSemanticsAction.getIdentifier(action));\n  if (hintOverrides != null) {\n    if (hintOverrides.onTapHint != null) {\n      final CustomSemanticsAction action = CustomSemanticsAction.overridingAction(\n        hint: hintOverrides.onTapHint,\n        action: SemanticsAction.tap,\n      );\n      customSemanticsActionIds.add(CustomSemanticsAction.getIdentifier(action));\n    }\n    if (hintOverrides.onLongPressHint != null) {\n      final CustomSemanticsAction action = CustomSemanticsAction.overridingAction(\n        hint: hintOverrides.onLongPressHint,\n        action: SemanticsAction.longPress,\n      );\n      customSemanticsActionIds.add(CustomSemanticsAction.getIdentifier(action));\n    }\n  }\n\n  if (mergeAllDescendantsIntoThisNode) {\n    _visitDescendants((SemanticsNode node) {\n      assert(node.isMergedIntoParent);\n      flags |= node._flags;\n      actions |= node._actionsAsBits;\n      textDirection ??= node._textDirection;\n      textSelection ??= node._textSelection;\n      scrollChildCount ??= node._scrollChildCount;\n      scrollIndex ??= node._scrollIndex;\n      scrollPosition ??= node._scrollPosition;\n      scrollExtentMax ??= node._scrollExtentMax;\n      scrollExtentMin ??= node._scrollExtentMin;\n      platformViewId ??= node._platformViewId;\n      if (value == '' || value == null)\n        value = node._value;\n      if (increasedValue == '' || increasedValue == null)\n        increasedValue = node._increasedValue;\n      if (decreasedValue == '' || decreasedValue == null)\n        decreasedValue = node._decreasedValue;\n      if (node.tags != null) {\n        mergedTags ??= &lt;SemanticsTag&gt;{};\n        mergedTags.addAll(node.tags);\n      }\n      if (node._customSemanticsActions != null) {\n        for (CustomSemanticsAction action in _customSemanticsActions.keys)\n          customSemanticsActionIds.add(CustomSemanticsAction.getIdentifier(action));\n      }\n      if (node.hintOverrides != null) {\n        if (node.hintOverrides.onTapHint != null) {\n          final CustomSemanticsAction action = CustomSemanticsAction.overridingAction(\n            hint: node.hintOverrides.onTapHint,\n            action: SemanticsAction.tap,\n          );\n          customSemanticsActionIds.add(CustomSemanticsAction.getIdentifier(action));\n        }\n        if (node.hintOverrides.onLongPressHint != null) {\n          final CustomSemanticsAction action = CustomSemanticsAction.overridingAction(\n            hint: node.hintOverrides.onLongPressHint,\n            action: SemanticsAction.longPress,\n          );\n          customSemanticsActionIds.add(CustomSemanticsAction.getIdentifier(action));\n        }\n      }\n      label = _concatStrings(\n        thisString: label,\n        thisTextDirection: textDirection,\n        otherString: node._label,\n        otherTextDirection: node._textDirection,\n      );\n      hint = _concatStrings(\n        thisString: hint,\n        thisTextDirection: textDirection,\n        otherString: node._hint,\n        otherTextDirection: node._textDirection,\n      );\n\n      thickness = math.max(thickness, node._thickness + node._elevation);\n\n      return true;\n    });\n  }\n\n  return SemanticsData(\n    flags: flags,\n    actions: actions,\n    label: label,\n    value: value,\n    increasedValue: increasedValue,\n    decreasedValue: decreasedValue,\n    hint: hint,\n    textDirection: textDirection,\n    rect: rect,\n    transform: transform,\n    elevation: elevation,\n    thickness: thickness,\n    tags: mergedTags,\n    textSelection: textSelection,\n    scrollChildCount: scrollChildCount,\n    scrollIndex: scrollIndex,\n    scrollPosition: scrollPosition,\n    scrollExtentMax: scrollExtentMax,\n    scrollExtentMin: scrollExtentMin,\n    platformViewId: platformViewId,\n    customSemanticsActionIds: customSemanticsActionIds.toList()..sort(),\n  );\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/getSemanticsData.html",
+            "isDeprecated": "0",
+            "type": "semantics.SemanticsData",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether this node currently has a given <a href=\"dart-ui\/SemanticsFlag-class.html\">SemanticsFlag<\/a>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool hasFlag(SemanticsFlag flag) =&gt; _flags &amp; flag.index != 0;<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/hasFlag.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
+            "static": false,
+            "memberOf": "semantics.SemanticsNode",
             "params": [
                 {
                     "name": "flag",
-                    "type": "dart:ui.SemanticsFlag",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:ui.SemanticsFlag"
                 }
-            ],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/hasFlag.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool hasFlag(SemanticsFlag flag) =&gt; _flags &amp; flag.index != 0;<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "isTagged",
-            "type": "dart:core.bool",
             "desc": "<p>Whether this node is tagged with <code>tag<\/code>.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool isTagged(SemanticsTag tag) =&gt; tags != null &amp;&amp; tags.contains(tag);<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/isTagged.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsNode",
-            "sig": "",
             "params": [
                 {
                     "name": "tag",
-                    "type": "semantics.SemanticsTag",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "semantics.SemanticsTag"
                 }
-            ],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/isTagged.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool isTagged(SemanticsTag tag) =&gt; tags != null &amp;&amp; tags.contains(tag);<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "redepthChildren",
-            "type": "",
             "desc": "<p>Adjust the <a href=\"foundation\/AbstractNode\/depth.html\">depth<\/a> of this node's children, if any.<\/p>\n<p>Override this method in subclasses with child nodes to call <a href=\"foundation\/AbstractNode\/redepthChild.html\">redepthChild<\/a>\nfor each child. Do not call this method directly.<\/p>\n    ",
-            "static": false,
-            "memberOf": "semantics.SemanticsNode",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/redepthChildren.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid redepthChildren() {\n  _children?.forEach(redepthChild);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "SemanticsNode.root",
-            "type": "",
-            "desc": "<p>Creates a semantic node to represent the root of the semantics tree.<\/p>\n<p>The root node is assigned an identifier of zero.<\/p>\n    ",
+            "href": "semantics\/SemanticsNode\/redepthChildren.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsNode",
-            "sig": "",
-            "params": [
-                {
-                    "name": "key",
-                    "type": "foundation.Key",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "showOnScreen",
-                    "type": "dart:ui.VoidCallback",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "owner",
-                    "type": "semantics.SemanticsOwner",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": true,
-            "href": "semantics\/SemanticsNode\/SemanticsNode.root.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">SemanticsNode.root({\n  this.key,\n  VoidCallback showOnScreen,\n  SemanticsOwner owner,\n}) : id = 0,\n     _showOnScreen = showOnScreen {\n  attach(owner);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "sendEvent",
-            "type": "",
             "desc": "<p>Sends a <a href=\"semantics\/SemanticsEvent-class.html\">SemanticsEvent<\/a> associated with this <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>.<\/p>\n<p>Semantics events should be sent to inform interested parties (like\nthe accessibility system of the operating system) about changes to the UI.<\/p>\n<p>For example, if this semantics node represents a scrollable list, a\n<code>ScrollCompletedSemanticsEvent<\/code> should be sent after a scroll action is completed.\nThat way, the operating system can give additional feedback to the user\nabout the state of the UI (e.g. on Android a ping sound is played to\nindicate a successful scroll in accessibility mode).<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void sendEvent(SemanticsEvent event) {\n  if (!attached)\n    return;\n  SystemChannels.accessibility.send(event.toMap(nodeId: id));\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/sendEvent.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsNode",
-            "sig": "",
             "params": [
                 {
                     "name": "event",
-                    "type": "semantics.SemanticsEvent",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "semantics.SemanticsEvent"
                 }
-            ],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/sendEvent.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void sendEvent(SemanticsEvent event) {\n  if (!attached)\n    return;\n  SystemChannels.accessibility.send(event.toMap(nodeId: id));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "toDiagnosticsNode",
-            "type": "foundation.DiagnosticsNode",
             "desc": "<p>Returns a debug representation of the object that is used by debugging\ntools and by <a href=\"semantics\/SemanticsNode\/toStringDeep.html\">DiagnosticsNode.toStringDeep<\/a>.<\/p>\n<p>Leave <code>name<\/code> as null if there is not a meaningful description of the\nrelationship between the this node and its parent.<\/p>\n<p>Typically the <code>style<\/code> argument is only specified to indicate an atypical\nrelationship between the parent and the node. For example, pass\n<a href=\"foundation\/DiagnosticsTreeStyle-class.html\">DiagnosticsTreeStyle.offstage<\/a> to indicate that a node is offstage.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nDiagnosticsNode toDiagnosticsNode({\n  String name,\n  DiagnosticsTreeStyle style = DiagnosticsTreeStyle.sparse,\n  DebugSemanticsDumpOrder childOrder = DebugSemanticsDumpOrder.traversalOrder,\n}) {\n  return _SemanticsDiagnosticableNode(\n    name: name,\n    value: this,\n    style: style,\n    childOrder: childOrder,\n  );\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/toDiagnosticsNode.html",
+            "isDeprecated": "0",
+            "type": "foundation.DiagnosticsNode",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsNode",
-            "sig": "",
             "params": [
                 {
-                    "name": "name",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "childOrder",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "semantics.DebugSemanticsDumpOrder"
+                },
+                {
+                    "name": "name",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 },
                 {
                     "name": "style",
-                    "type": "foundation.DiagnosticsTreeStyle",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "childOrder",
-                    "type": "semantics.DebugSemanticsDumpOrder",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "foundation.DiagnosticsTreeStyle"
                 }
-            ],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/toDiagnosticsNode.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nDiagnosticsNode toDiagnosticsNode({\n  String name,\n  DiagnosticsTreeStyle style = DiagnosticsTreeStyle.sparse,\n  DebugSemanticsDumpOrder childOrder = DebugSemanticsDumpOrder.traversalOrder,\n}) {\n  return _SemanticsDiagnosticableNode(\n    name: name,\n    value: this,\n    style: style,\n    childOrder: childOrder,\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "toStringDeep",
-            "type": "dart:core.String",
             "desc": "<p>Returns a string representation of this node and its descendants.<\/p>\n<p>The order in which the children of the <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> will be printed is\ncontrolled by the <code>childOrder<\/code> parameter.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toStringDeep({\n  String prefixLineOne = '',\n  String prefixOtherLines,\n  DiagnosticLevel minLevel = DiagnosticLevel.debug,\n  DebugSemanticsDumpOrder childOrder = DebugSemanticsDumpOrder.traversalOrder,\n}) {\n  assert(childOrder != null);\n  return toDiagnosticsNode(childOrder: childOrder).toStringDeep(prefixLineOne: prefixLineOne, prefixOtherLines: prefixOtherLines, minLevel: minLevel);\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/toStringDeep.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsNode",
-            "sig": "",
             "params": [
                 {
-                    "name": "prefixLineOne",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "childOrder",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "prefixOtherLines",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "semantics.DebugSemanticsDumpOrder"
                 },
                 {
                     "name": "minLevel",
-                    "type": "foundation.DiagnosticLevel",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "foundation.DiagnosticLevel"
                 },
                 {
-                    "name": "childOrder",
-                    "type": "semantics.DebugSemanticsDumpOrder",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "prefixLineOne",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
+                },
+                {
+                    "name": "prefixOtherLines",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.String"
                 }
-            ],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/toStringDeep.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toStringDeep({\n  String prefixLineOne = '',\n  String prefixOtherLines,\n  DiagnosticLevel minLevel = DiagnosticLevel.debug,\n  DebugSemanticsDumpOrder childOrder = DebugSemanticsDumpOrder.traversalOrder,\n}) {\n  assert(childOrder != null);\n  return toDiagnosticsNode(childOrder: childOrder).toStringDeep(prefixLineOne: prefixLineOne, prefixOtherLines: prefixOtherLines, minLevel: minLevel);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "toStringShort",
-            "type": "dart:core.String",
             "desc": "<p>A brief description of this object, usually just the <a href=\"dart-core\/Object\/runtimeType.html\">runtimeType<\/a> and the\n<a href=\"dart-core\/Object\/hashCode.html\">hashCode<\/a>.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"foundation\/DiagnosticableTreeMixin\/toString.html\">toString<\/a>, for a detailed description of the object.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toStringShort() =&gt; '$runtimeType#$id';<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/toStringShort.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsNode",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/toStringShort.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nString toStringShort() =&gt; '$runtimeType#$id';<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "updateWith",
-            "type": "",
             "desc": "<p>Reconfigures the properties of this object to describe the configuration\nprovided in the <code>config<\/code> argument and the children listed in the\n<code>childrenInInversePaintOrder<\/code> argument.<\/p>\n<p>The arguments may be null; this represents an empty configuration (all\nvalues at their defaults, no children).<\/p>\n<p>No reference is kept to the <a href=\"semantics\/SemanticsConfiguration-class.html\">SemanticsConfiguration<\/a> object, but the child\nlist is used as-is and should therefore not be changed after this call.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void updateWith({\n  @required SemanticsConfiguration config,\n  List&lt;SemanticsNode&gt; childrenInInversePaintOrder,\n}) {\n  config ??= _kEmptyConfig;\n  if (_isDifferentFromCurrentSemanticAnnotation(config))\n    _markDirty();\n\n  assert(\n    config.platformViewId == null || childrenInInversePaintOrder.isEmpty,\n    'SemanticsNodes with children must not specify a platformViewId.'\n  );\n\n  _label = config.label;\n  _decreasedValue = config.decreasedValue;\n  _value = config.value;\n  _increasedValue = config.increasedValue;\n  _hint = config.hint;\n  _hintOverrides = config.hintOverrides;\n  _elevation = config.elevation;\n  _thickness = config.thickness;\n  _flags = config._flags;\n  _textDirection = config.textDirection;\n  _sortKey = config.sortKey;\n  _actions = Map&lt;SemanticsAction, _SemanticsActionHandler&gt;.from(config._actions);\n  _customSemanticsActions = Map&lt;CustomSemanticsAction, VoidCallback&gt;.from(config._customSemanticsActions);\n  _actionsAsBits = config._actionsAsBits;\n  _textSelection = config._textSelection;\n  _scrollPosition = config._scrollPosition;\n  _scrollExtentMax = config._scrollExtentMax;\n  _scrollExtentMin = config._scrollExtentMin;\n  _mergeAllDescendantsIntoThisNode = config.isMergingSemanticsOfDescendants;\n  _scrollChildCount = config.scrollChildCount;\n  _scrollIndex = config.scrollIndex;\n  indexInParent = config.indexInParent;\n  _platformViewId = config._platformViewId;\n  _replaceChildren(childrenInInversePaintOrder ?? const &lt;SemanticsNode&gt;[]);\n\n  assert(\n    !_canPerformAction(SemanticsAction.increase) || (_value == '') == (_increasedValue == ''),\n    'A SemanticsNode with action \"increase\" needs to be annotated with either both \"value\" and \"increasedValue\" or neither',\n  );\n  assert(\n    !_canPerformAction(SemanticsAction.decrease) || (_value == '') == (_decreasedValue == ''),\n    'A SemanticsNode with action \"increase\" needs to be annotated with either both \"value\" and \"decreasedValue\" or neither',\n  );\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/updateWith.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsNode",
-            "sig": "",
             "params": [
                 {
-                    "name": "config",
-                    "type": "semantics.SemanticsConfiguration",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "childrenInInversePaintOrder",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "dart:core.List<semantics.SemanticsNode>"
                 },
                 {
-                    "name": "childrenInInversePaintOrder",
-                    "type": "dart:core.List<semantics.SemanticsNode>",
-                    "desc": "",
-                    "isOptional": true,
+                    "name": "config",
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.List",
-                        "semantics.SemanticsNode"
-                    ]
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "semantics.SemanticsConfiguration"
                 }
-            ],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/updateWith.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void updateWith({\n  @required SemanticsConfiguration config,\n  List&lt;SemanticsNode&gt; childrenInInversePaintOrder,\n}) {\n  config ??= _kEmptyConfig;\n  if (_isDifferentFromCurrentSemanticAnnotation(config))\n    _markDirty();\n\n  assert(\n    config.platformViewId == null || childrenInInversePaintOrder.isEmpty,\n    'SemanticsNodes with children must not specify a platformViewId.'\n  );\n\n  _label = config.label;\n  _decreasedValue = config.decreasedValue;\n  _value = config.value;\n  _increasedValue = config.increasedValue;\n  _hint = config.hint;\n  _hintOverrides = config.hintOverrides;\n  _elevation = config.elevation;\n  _thickness = config.thickness;\n  _flags = config._flags;\n  _textDirection = config.textDirection;\n  _sortKey = config.sortKey;\n  _actions = Map&lt;SemanticsAction, _SemanticsActionHandler&gt;.from(config._actions);\n  _customSemanticsActions = Map&lt;CustomSemanticsAction, VoidCallback&gt;.from(config._customSemanticsActions);\n  _actionsAsBits = config._actionsAsBits;\n  _textSelection = config._textSelection;\n  _scrollPosition = config._scrollPosition;\n  _scrollExtentMax = config._scrollExtentMax;\n  _scrollExtentMin = config._scrollExtentMin;\n  _mergeAllDescendantsIntoThisNode = config.isMergingSemanticsOfDescendants;\n  _scrollChildCount = config.scrollChildCount;\n  _scrollIndex = config.scrollIndex;\n  indexInParent = config.indexInParent;\n  _platformViewId = config._platformViewId;\n  _replaceChildren(childrenInInversePaintOrder ?? const &lt;SemanticsNode&gt;[]);\n\n  assert(\n    !_canPerformAction(SemanticsAction.increase) || (_value == '') == (_increasedValue == ''),\n    'A SemanticsNode with action \"increase\" needs to be annotated with either both \"value\" and \"increasedValue\" or neither',\n  );\n  assert(\n    !_canPerformAction(SemanticsAction.decrease) || (_value == '') == (_decreasedValue == ''),\n    'A SemanticsNode with action \"increase\" needs to be annotated with either both \"value\" and \"decreasedValue\" or neither',\n  );\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "visitChildren",
-            "type": "",
             "desc": "<p>Visits the immediate children of this node.<\/p>\n<p>This function calls visitor for each immediate child until visitor returns\nfalse. Returns true if all the visitor calls returned true, otherwise\nreturns false.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void visitChildren(SemanticsNodeVisitor visitor) {\n  if (_children != null) {\n    for (SemanticsNode child in _children) {\n      if (!visitor(child))\n        return;\n    }\n  }\n}<\/code><\/pre>\n    ",
+            "href": "semantics\/SemanticsNode\/visitChildren.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "semantics.SemanticsNode",
-            "sig": "",
             "params": [
                 {
                     "name": "visitor",
-                    "type": "semantics.SemanticsNodeVisitor",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "semantics.SemanticsNodeVisitor"
                 }
-            ],
-            "isConstructor": false,
-            "href": "semantics\/SemanticsNode\/visitChildren.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void visitChildren(SemanticsNodeVisitor visitor) {\n  if (_children != null) {\n    for (SemanticsNode child in _children) {\n      if (!visitor(child))\n        return;\n    }\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
     "props": [
         {
-            "name": "childrenCount",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The number of children this node has.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/childrenCount.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get childrenCount =&gt; hasChildren ? _children.length : 0;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsNode\/childrenCount.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
         },
         {
-            "name": "decreasedValue",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>The value that <a href=\"semantics\/SemanticsNode\/value.html\">value<\/a> will have after a <a href=\"dart-ui\/SemanticsAction\/decrease-constant.html\">SemanticsAction.decrease<\/a> action\nhas been performed.<\/p>\n<p>This property is only valid if the <a href=\"dart-ui\/SemanticsAction\/decrease-constant.html\">SemanticsAction.decrease<\/a> action is\navailable on this node.<\/p>\n<p>The reading direction is given by <a href=\"semantics\/SemanticsNode\/textDirection.html\">textDirection<\/a>.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/decreasedValue.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get decreasedValue =&gt; _decreasedValue;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsNode\/decreasedValue.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
         },
         {
-            "name": "elevation",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The elevation along the z-axis at which the <a href=\"semantics\/SemanticsNode\/rect.html\">rect<\/a> of this <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>\nis located above its parent.<\/p>\n<p>The value is relative to the parent's <a href=\"semantics\/SemanticsNode\/elevation.html\">elevation<\/a>. The sum of the\n<a href=\"semantics\/SemanticsNode\/elevation.html\">elevation<\/a>s of all ancestor node plus this value determines the absolute\nelevation of this <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"semantics\/SemanticsNode\/thickness.html\">thickness<\/a>, which describes how much space in z-direction this\n<a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> occupies starting at this <a href=\"semantics\/SemanticsNode\/elevation.html\">elevation<\/a>.<\/li>\n<li>\n<a href=\"semantics\/SemanticsNode\/elevationAdjustment.html\">elevationAdjustment<\/a>, which has been used to calculate this value.<\/li>\n<\/ul>",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/elevation.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get elevation =&gt; _elevation;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsNode\/elevation.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
         },
         {
-            "name": "elevationAdjustment",
-            "type": "dart:core.double",
-            "types": [],
             "desc": "<p>The elevation adjustment that the parent imposes on this node.<\/p>\n<p>The <a href=\"semantics\/SemanticsNode\/elevation.html\">elevation<\/a> property is relative to the elevation of the parent\n<a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>. However, as <a href=\"semantics\/SemanticsConfiguration-class.html\">SemanticsConfiguration<\/a>s from various\nascending <code>RenderObjects<\/code> are merged into each other to form that\n<a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> the parent\u2019s elevation may change. This requires an\nadjustment of the child\u2019s relative elevation which is represented by this\nvalue.<\/p>\n<p>The value is rarely accessed directly. Instead, for most use cases the\n<a href=\"semantics\/SemanticsNode\/elevation.html\">elevation<\/a> value should be used, which includes this adjustment.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"semantics\/SemanticsNode\/elevation.html\">elevation<\/a>, the actual elevation of this <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>.<\/li><\/ul>",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/elevationAdjustment.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double elevationAdjustment\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsNode\/elevationAdjustment.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
         },
         {
-            "name": "hasChildren",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether this node has a non-zero number of children.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/hasChildren.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get hasChildren =&gt; _children?.isNotEmpty ?? false;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsNode\/hasChildren.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
         },
         {
-            "name": "hint",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>A brief description of the result of performing an action on this node.<\/p>\n<p>The reading direction is given by <a href=\"semantics\/SemanticsNode\/textDirection.html\">textDirection<\/a>.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/hint.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get hint =&gt; _hint;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsNode\/hint.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
         },
         {
-            "name": "hintOverrides",
-            "type": "semantics.SemanticsHintOverrides",
-            "types": [],
             "desc": "<p>Provides hint values which override the default hints on supported\nplatforms.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/hintOverrides.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">SemanticsHintOverrides get hintOverrides =&gt; _hintOverrides;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsNode\/hintOverrides.html",
+            "isDeprecated": "0",
+            "type": "semantics.SemanticsHintOverrides",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
         },
         {
-            "name": "id",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The unique identifier for this node.<\/p>\n<p>The root node has an id of zero. Other nodes are given a unique id when\nthey are created.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/id.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final int id\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsNode\/id.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
         },
         {
-            "name": "increasedValue",
-            "type": "dart:core.String",
-            "types": [],
             "desc": "<p>The value that <a href=\"semantics\/SemanticsNode\/value.html\">value<\/a> will have after a <a href=\"dart-ui\/SemanticsAction\/increase-constant.html\">SemanticsAction.increase<\/a> action\nhas been performed.<\/p>\n<p>This property is only valid if the <a href=\"dart-ui\/SemanticsAction\/increase-constant.html\">SemanticsAction.increase<\/a> action is\navailable on this node.<\/p>\n<p>The reading direction is given by <a href=\"semantics\/SemanticsNode\/textDirection.html\">textDirection<\/a>.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/increasedValue.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get increasedValue =&gt; _increasedValue;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsNode\/increasedValue.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
         },
         {
-            "name": "indexInParent",
-            "type": "dart:core.int",
-            "types": [],
             "desc": "<p>The index of this node within the parent's list of semantic children.<\/p>\n<p>This includes all semantic nodes, not just those currently in the\nchild list. For example, if a scrollable has five children but the first\ntwo are not visible (and thus not included in the list of children), then\nthe index of the last node will still be 4.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/indexInParent.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int indexInParent\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsNode\/indexInParent.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
         },
         {
-            "name": "isInvisible",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether the node is invisible.<\/p>\n<p>A node whose <a href=\"semantics\/SemanticsNode\/rect.html\">rect<\/a> is outside of the bounds of the screen and hence not\nreachable for users is considered invisible if its semantic information\nis not merged into a (partially) visible parent as indicated by\n<a href=\"semantics\/SemanticsNode\/isMergedIntoParent.html\">isMergedIntoParent<\/a>.<\/p>\n<p>An invisible node can be safely dropped from the semantic tree without\nloosing semantic information that is relevant for describing the content\ncurrently shown on screen.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/isInvisible.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isInvisible =&gt; !isMergedIntoParent &amp;&amp; rect.isEmpty;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsNode\/isInvisible.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
         },
         {
-            "name": "isMergedIntoParent",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether this node merges its semantic information into an ancestor node.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/isMergedIntoParent.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isMergedIntoParent =&gt; _isMergedIntoParent;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsNode\/isMergedIntoParent.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
         },
         {
-            "name": "isPartOfNodeMerging",
-            "type": "dart:core.bool",
-            "types": [],
             "desc": "<p>Whether this node is taking part in a merge of semantic information.<\/p>\n<p>This returns true if the node is either merged into an ancestor node or if\ndecedent nodes are merged into this node.<\/p>\n<p>See also:<\/p>\n<ul>\n<li><a href=\"semantics\/SemanticsNode\/isMergedIntoParent.html\">isMergedIntoParent<\/a><\/li>\n<li><a href=\"semantics\/SemanticsNode\/mergeAllDescendantsIntoThisNode.html\">mergeAllDescendantsIntoThisNode<\/a><\/li>\n<\/ul>",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/isPartOfNodeMerging.html",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isPartOfNodeMerging =&gt; mergeAllDescendantsIntoThisNode || isMergedIntoParent;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "key",
-            "type": "foundation.Key",
-            "types": [],
-            "desc": "<p>Uniquely identifies this node in the list of sibling nodes.<\/p>\n<p>Keys are used during the construction of the semantics tree. They are not\ntransferred to the engine.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/key.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Key key\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "label",
-            "type": "dart:core.String",
-            "types": [],
-            "desc": "<p>A textual description of this node.<\/p>\n<p>The reading direction is given by <a href=\"semantics\/SemanticsNode\/textDirection.html\">textDirection<\/a>.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/label.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get label =&gt; _label;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "mergeAllDescendantsIntoThisNode",
+            "href": "semantics\/SemanticsNode\/isPartOfNodeMerging.html",
+            "isDeprecated": "0",
             "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether this node and all of its descendants should be treated as one logical entity.<\/p>\n        ",
             "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/mergeAllDescendantsIntoThisNode.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get mergeAllDescendantsIntoThisNode =&gt; _mergeAllDescendantsIntoThisNode;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "owner",
-            "type": "semantics.SemanticsOwner",
-            "types": [],
-            "desc": "<p>The owner for this node (null if unattached).<\/p>\n<p>The entire subtree that this node belongs to will have the same owner.<\/p>\n        ",
+            "desc": "<p>Uniquely identifies this node in the list of sibling nodes.<\/p>\n<p>Keys are used during the construction of the semantics tree. They are not\ntransferred to the engine.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Key key\n\n<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/key.html",
+            "isDeprecated": "0",
+            "type": "foundation.Key",
             "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/owner.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nSemanticsOwner get owner =&gt; super.owner;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "params": []
         },
         {
-            "name": "parent",
-            "type": "semantics.SemanticsNode",
-            "types": [],
-            "desc": "<p>The parent of this node in the tree.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/parent.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nSemanticsNode get parent =&gt; super.parent;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "parentPaintClipRect",
-            "type": "dart:ui.Rect",
-            "types": [],
-            "desc": "<p>The paint clip from an ancestor that was applied to this node.<\/p>\n<p>Expressed in the coordinate system of the node. May be null if no clip has\nbeen applied.<\/p>\n<p>Descendant <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s that are positioned outside of this rect will\neither be excluded from the semantics tree (if they have no overlap with\n<a href=\"semantics\/SemanticsNode\/parentSemanticsClipRect.html\">parentSemanticsClipRect<\/a>) or they will be included and marked as hidden\n(if they are overlapping with <a href=\"semantics\/SemanticsNode\/parentSemanticsClipRect.html\">parentSemanticsClipRect<\/a>).<\/p>\n<p>This rect is completely enclosed by <a href=\"semantics\/SemanticsNode\/parentSemanticsClipRect.html\">parentSemanticsClipRect<\/a>.<\/p>\n<p>If this rect is null <a href=\"semantics\/SemanticsNode\/parentSemanticsClipRect.html\">parentSemanticsClipRect<\/a> also has to be null.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/parentPaintClipRect.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect parentPaintClipRect\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "parentSemanticsClipRect",
-            "type": "dart:ui.Rect",
-            "types": [],
-            "desc": "<p>The semantic clip from an ancestor that was applied to this node.<\/p>\n<p>Expressed in the coordinate system of the node. May be null if no clip has\nbeen applied.<\/p>\n<p>Descendant <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s that are positioned outside of this rect will\nbe excluded from the semantics tree. Descendant <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s that are\noverlapping with this rect, but are outside of <a href=\"semantics\/SemanticsNode\/parentPaintClipRect.html\">parentPaintClipRect<\/a> will\nbe included in the tree, but they will be marked as hidden because they\nare assumed to be not visible on screen.<\/p>\n<p>If this rect is null, all descendant <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s outside of\n<a href=\"semantics\/SemanticsNode\/parentPaintClipRect.html\">parentPaintClipRect<\/a> will be excluded from the tree.<\/p>\n<p>If this rect is non-null it has to completely enclose\n<a href=\"semantics\/SemanticsNode\/parentPaintClipRect.html\">parentPaintClipRect<\/a>. If <a href=\"semantics\/SemanticsNode\/parentPaintClipRect.html\">parentPaintClipRect<\/a> is null this property is\nalso null.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/parentSemanticsClipRect.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect parentSemanticsClipRect\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "platformViewId",
-            "type": "dart:core.int",
-            "types": [],
-            "desc": "<p>The id of the platform view, whose semantics nodes will be added as\nchildren to this node.<\/p>\n<p>If this value is non-null, the SemanticsNode must not have any children\nas those would be replaced by the semantics nodes of the referenced\nplatform view.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/AndroidView-class.html\">AndroidView<\/a>, which is the platform view for Android.<\/li>\n<li>\n<a href=\"widgets\/UiKitView-class.html\">UiKitView<\/a>, which is the platform view for iOS.<\/li>\n<\/ul>",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/platformViewId.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get platformViewId =&gt; _platformViewId;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "rect",
-            "type": "dart:ui.Rect",
-            "types": [],
-            "desc": "<p>The bounding box for this node in its coordinate system.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/rect.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect get rect =&gt; _rect;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "scrollChildCount",
-            "type": "dart:core.int",
-            "types": [],
-            "desc": "<p>The total number of scrollable children that contribute to semantics.<\/p>\n<p>If the number of children are unknown or unbounded, this value will be\nnull.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/scrollChildCount.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get scrollChildCount =&gt; _scrollChildCount;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "scrollExtentMax",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>Indicates the maximum in-range value for <a href=\"semantics\/SemanticsNode\/scrollPosition.html\">scrollPosition<\/a> if the node is\nscrollable.<\/p>\n<p>This value may be infinity if the scroll is unbound.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/ScrollPosition\/maxScrollExtent.html\">ScrollPosition.maxScrollExtent<\/a>, from where this value is usually taken.<\/li><\/ul>",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/scrollExtentMax.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get scrollExtentMax =&gt; _scrollExtentMax;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "scrollExtentMin",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>Indicates the minimum in-range value for <a href=\"semantics\/SemanticsNode\/scrollPosition.html\">scrollPosition<\/a> if the node is\nscrollable.<\/p>\n<p>This value may be infinity if the scroll is unbound.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/ScrollPosition\/minScrollExtent.html\">ScrollPosition.minScrollExtent<\/a> from where this value is usually taken.<\/li><\/ul>",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/scrollExtentMin.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get scrollExtentMin =&gt; _scrollExtentMin;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "scrollIndex",
-            "type": "dart:core.int",
-            "types": [],
-            "desc": "<p>The index of the first visible semantic child of a scroll node.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/scrollIndex.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get scrollIndex =&gt; _scrollIndex;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "scrollPosition",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>Indicates the current scrolling position in logical pixels if the node is\nscrollable.<\/p>\n<p>The properties <a href=\"semantics\/SemanticsNode\/scrollExtentMin.html\">scrollExtentMin<\/a> and <a href=\"semantics\/SemanticsNode\/scrollExtentMax.html\">scrollExtentMax<\/a> indicate the valid\nin-range values for this property. The value for <a href=\"semantics\/SemanticsNode\/scrollPosition.html\">scrollPosition<\/a> may\n(temporarily) be outside that range, e.g. during an overscroll.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/ScrollPosition\/pixels.html\">ScrollPosition.pixels<\/a>, from where this value is usually taken.<\/li><\/ul>",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/scrollPosition.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get scrollPosition =&gt; _scrollPosition;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "sortKey",
-            "type": "semantics.SemanticsSortKey",
-            "types": [],
-            "desc": "<p>Determines the position of this node among its siblings in the traversal\nsort order.<\/p>\n<p>This is used to describe the order in which the semantic node should be\ntraversed by the accessibility services on the platform (e.g. VoiceOver\non iOS and TalkBack on Android).<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/sortKey.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">SemanticsSortKey get sortKey =&gt; _sortKey;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "tags",
-            "type": "dart:core.Set<semantics.SemanticsTag>",
-            "types": [
-                "dart:core.Set",
-                "semantics.SemanticsTag"
-            ],
-            "desc": "<p>The <a href=\"semantics\/SemanticsTag-class.html\">SemanticsTag<\/a>s this node is tagged with.<\/p>\n<p>Tags are used during the construction of the semantics tree. They are not\ntransferred to the engine.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/tags.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Set&lt;SemanticsTag&gt; tags\n\n<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "textDirection",
-            "type": "dart:ui.TextDirection",
-            "types": [],
-            "desc": "<p>The reading direction for <a href=\"semantics\/SemanticsNode\/label.html\">label<\/a>, <a href=\"semantics\/SemanticsNode\/value.html\">value<\/a>, <a href=\"semantics\/SemanticsNode\/hint.html\">hint<\/a>, <a href=\"semantics\/SemanticsNode\/increasedValue.html\">increasedValue<\/a>, and\n<a href=\"semantics\/SemanticsNode\/decreasedValue.html\">decreasedValue<\/a>.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/textDirection.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">TextDirection get textDirection =&gt; _textDirection;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "textSelection",
-            "type": "services.TextSelection",
-            "types": [],
-            "desc": "<p>The currently selected text (or the position of the cursor) within <a href=\"semantics\/SemanticsNode\/value.html\">value<\/a>\nif this node represents a text field.<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/textSelection.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">TextSelection get textSelection =&gt; _textSelection;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "thickness",
-            "type": "dart:core.double",
-            "types": [],
-            "desc": "<p>Describes how much space the <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> takes up along the z-axis.<\/p>\n<p>A <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> represents multiple <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s, which can be\nlocated at various elevations in 3D. The <a href=\"semantics\/SemanticsNode\/thickness.html\">thickness<\/a> is the difference\nbetween the absolute elevations of the lowest and highest <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>\nrepresented by this <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>. In other words, the thickness\ndescribes how high the box is that this <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> occupies in three\ndimensional space. The two other dimensions are defined by <a href=\"semantics\/SemanticsNode\/rect.html\">rect<\/a>.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following code stacks three <a href=\"widgets\/PhysicalModel-class.html\">PhysicalModel<\/a>s on top of each other\nseparated by non-zero elevations.\n<p><a href=\"widgets\/PhysicalModel-class.html\">PhysicalModel<\/a> C is elevated 10.0 above <a href=\"widgets\/PhysicalModel-class.html\">PhysicalModel<\/a> B, which in turn\nis elevated 5.0 above <a href=\"widgets\/PhysicalModel-class.html\">PhysicalModel<\/a> A. The side view of this\nconstellation looks as follows:<\/p>\n<p><img alt=\"A diagram illustrating the elevations of three PhysicalModels and their\ncorresponding SemanticsNodes.\" src=\"https:\/\/flutter.github.io\/assets-for-api-docs\/assets\/semantics\/SemanticsNode.thickness.png\"><\/p>\n<p>In this example the <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s for <a href=\"widgets\/PhysicalModel-class.html\">PhysicalModel<\/a> C and B share one\n<a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> Y. Given the elevations of those <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s, this\n<a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> has a <a href=\"semantics\/SemanticsNode\/thickness.html\">thickness<\/a> of 10.0 and an elevation of 5.0 over\nits parent <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> X.\n<\/p>\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">PhysicalModel( \/\/ A\n  color: Colors.amber,\n  elevation: 0.0,\n  child: Semantics(\n    explicitChildNodes: true,\n    child: PhysicalModel( \/\/ B\n      color: Colors.brown,\n      elevation: 5.0,\n      child: PhysicalModel( \/\/ C\n        color: Colors.cyan,\n        elevation: 10.0,\n        child: Placeholder(),\n      ),\n    ),\n  ),\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul><li>\n<a href=\"semantics\/SemanticsNode\/elevation.html\">elevation<\/a>, which describes the elevation of the box defined by\n<a href=\"semantics\/SemanticsNode\/thickness.html\">thickness<\/a> and <a href=\"semantics\/SemanticsNode\/rect.html\">rect<\/a> relative to the parent of this <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>.<\/li><\/ul>",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/thickness.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get thickness =&gt; _thickness;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "transform",
-            "type": "vector_math_64.Matrix4",
-            "types": [],
-            "desc": "<p>The transform from this node's coordinate system to its parent's coordinate system.<\/p>\n<p>By default, the transform is null, which represents the identity\ntransformation (i.e., that this node has the same coordinate system as its\nparent).<\/p>\n        ",
-            "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/transform.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Matrix4 get transform =&gt; _transform;<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        },
-        {
-            "name": "value",
+            "desc": "<p>A textual description of this node.<\/p>\n<p>The reading direction is given by <a href=\"semantics\/SemanticsNode\/textDirection.html\">textDirection<\/a>.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get label =&gt; _label;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/label.html",
+            "isDeprecated": "0",
             "type": "dart:core.String",
-            "types": [],
-            "desc": "<p>A textual description for the current value of the node.<\/p>\n<p>The reading direction is given by <a href=\"semantics\/SemanticsNode\/textDirection.html\">textDirection<\/a>.<\/p>\n        ",
             "memberOf": "semantics.SemanticsNode",
-            "isConstant": false,
-            "href": "semantics\/SemanticsNode\/value.html",
+            "params": []
+        },
+        {
+            "desc": "<p>Whether this node and all of its descendants should be treated as one logical entity.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get mergeAllDescendantsIntoThisNode =&gt; _mergeAllDescendantsIntoThisNode;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/mergeAllDescendantsIntoThisNode.html",
+            "isDeprecated": "0",
+            "type": "dart:core.bool",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>The owner for this node (null if unattached).<\/p>\n<p>The entire subtree that this node belongs to will have the same owner.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nSemanticsOwner get owner =&gt; super.owner;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/owner.html",
+            "isDeprecated": "0",
+            "type": "semantics.SemanticsOwner",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>The parent of this node in the tree.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nSemanticsNode get parent =&gt; super.parent;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/parent.html",
+            "isDeprecated": "0",
+            "type": "semantics.SemanticsNode",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>The paint clip from an ancestor that was applied to this node.<\/p>\n<p>Expressed in the coordinate system of the node. May be null if no clip has\nbeen applied.<\/p>\n<p>Descendant <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s that are positioned outside of this rect will\neither be excluded from the semantics tree (if they have no overlap with\n<a href=\"semantics\/SemanticsNode\/parentSemanticsClipRect.html\">parentSemanticsClipRect<\/a>) or they will be included and marked as hidden\n(if they are overlapping with <a href=\"semantics\/SemanticsNode\/parentSemanticsClipRect.html\">parentSemanticsClipRect<\/a>).<\/p>\n<p>This rect is completely enclosed by <a href=\"semantics\/SemanticsNode\/parentSemanticsClipRect.html\">parentSemanticsClipRect<\/a>.<\/p>\n<p>If this rect is null <a href=\"semantics\/SemanticsNode\/parentSemanticsClipRect.html\">parentSemanticsClipRect<\/a> also has to be null.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect parentPaintClipRect\n\n<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/parentPaintClipRect.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Rect",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>The semantic clip from an ancestor that was applied to this node.<\/p>\n<p>Expressed in the coordinate system of the node. May be null if no clip has\nbeen applied.<\/p>\n<p>Descendant <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s that are positioned outside of this rect will\nbe excluded from the semantics tree. Descendant <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s that are\noverlapping with this rect, but are outside of <a href=\"semantics\/SemanticsNode\/parentPaintClipRect.html\">parentPaintClipRect<\/a> will\nbe included in the tree, but they will be marked as hidden because they\nare assumed to be not visible on screen.<\/p>\n<p>If this rect is null, all descendant <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>s outside of\n<a href=\"semantics\/SemanticsNode\/parentPaintClipRect.html\">parentPaintClipRect<\/a> will be excluded from the tree.<\/p>\n<p>If this rect is non-null it has to completely enclose\n<a href=\"semantics\/SemanticsNode\/parentPaintClipRect.html\">parentPaintClipRect<\/a>. If <a href=\"semantics\/SemanticsNode\/parentPaintClipRect.html\">parentPaintClipRect<\/a> is null this property is\nalso null.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect parentSemanticsClipRect\n\n<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/parentSemanticsClipRect.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Rect",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>The id of the platform view, whose semantics nodes will be added as\nchildren to this node.<\/p>\n<p>If this value is non-null, the SemanticsNode must not have any children\nas those would be replaced by the semantics nodes of the referenced\nplatform view.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/AndroidView-class.html\">AndroidView<\/a>, which is the platform view for Android.<\/li>\n<li>\n<a href=\"widgets\/UiKitView-class.html\">UiKitView<\/a>, which is the platform view for iOS.<\/li>\n<\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get platformViewId =&gt; _platformViewId;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/platformViewId.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>The bounding box for this node in its coordinate system.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Rect get rect =&gt; _rect;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/rect.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.Rect",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>The total number of scrollable children that contribute to semantics.<\/p>\n<p>If the number of children are unknown or unbounded, this value will be\nnull.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get scrollChildCount =&gt; _scrollChildCount;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/scrollChildCount.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>Indicates the maximum in-range value for <a href=\"semantics\/SemanticsNode\/scrollPosition.html\">scrollPosition<\/a> if the node is\nscrollable.<\/p>\n<p>This value may be infinity if the scroll is unbound.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/ScrollPosition\/maxScrollExtent.html\">ScrollPosition.maxScrollExtent<\/a>, from where this value is usually taken.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get scrollExtentMax =&gt; _scrollExtentMax;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/scrollExtentMax.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>Indicates the minimum in-range value for <a href=\"semantics\/SemanticsNode\/scrollPosition.html\">scrollPosition<\/a> if the node is\nscrollable.<\/p>\n<p>This value may be infinity if the scroll is unbound.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/ScrollPosition\/minScrollExtent.html\">ScrollPosition.minScrollExtent<\/a> from where this value is usually taken.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get scrollExtentMin =&gt; _scrollExtentMin;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/scrollExtentMin.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>The index of the first visible semantic child of a scroll node.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get scrollIndex =&gt; _scrollIndex;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/scrollIndex.html",
+            "isDeprecated": "0",
+            "type": "dart:core.int",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>Indicates the current scrolling position in logical pixels if the node is\nscrollable.<\/p>\n<p>The properties <a href=\"semantics\/SemanticsNode\/scrollExtentMin.html\">scrollExtentMin<\/a> and <a href=\"semantics\/SemanticsNode\/scrollExtentMax.html\">scrollExtentMax<\/a> indicate the valid\nin-range values for this property. The value for <a href=\"semantics\/SemanticsNode\/scrollPosition.html\">scrollPosition<\/a> may\n(temporarily) be outside that range, e.g. during an overscroll.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"widgets\/ScrollPosition\/pixels.html\">ScrollPosition.pixels<\/a>, from where this value is usually taken.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get scrollPosition =&gt; _scrollPosition;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/scrollPosition.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>Determines the position of this node among its siblings in the traversal\nsort order.<\/p>\n<p>This is used to describe the order in which the semantic node should be\ntraversed by the accessibility services on the platform (e.g. VoiceOver\non iOS and TalkBack on Android).<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">SemanticsSortKey get sortKey =&gt; _sortKey;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/sortKey.html",
+            "isDeprecated": "0",
+            "type": "semantics.SemanticsSortKey",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>The <a href=\"semantics\/SemanticsTag-class.html\">SemanticsTag<\/a>s this node is tagged with.<\/p>\n<p>Tags are used during the construction of the semantics tree. They are not\ntransferred to the engine.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Set&lt;SemanticsTag&gt; tags\n\n<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/tags.html",
+            "isDeprecated": "0",
+            "type": "dart:core.Set<semantics.SemanticsTag>",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>The reading direction for <a href=\"semantics\/SemanticsNode\/label.html\">label<\/a>, <a href=\"semantics\/SemanticsNode\/value.html\">value<\/a>, <a href=\"semantics\/SemanticsNode\/hint.html\">hint<\/a>, <a href=\"semantics\/SemanticsNode\/increasedValue.html\">increasedValue<\/a>, and\n<a href=\"semantics\/SemanticsNode\/decreasedValue.html\">decreasedValue<\/a>.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">TextDirection get textDirection =&gt; _textDirection;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/textDirection.html",
+            "isDeprecated": "0",
+            "type": "dart:ui.TextDirection",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>The currently selected text (or the position of the cursor) within <a href=\"semantics\/SemanticsNode\/value.html\">value<\/a>\nif this node represents a text field.<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">TextSelection get textSelection =&gt; _textSelection;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/textSelection.html",
+            "isDeprecated": "0",
+            "type": "services.TextSelection",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>Describes how much space the <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> takes up along the z-axis.<\/p>\n<p>A <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> represents multiple <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s, which can be\nlocated at various elevations in 3D. The <a href=\"semantics\/SemanticsNode\/thickness.html\">thickness<\/a> is the difference\nbetween the absolute elevations of the lowest and highest <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>\nrepresented by this <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>. In other words, the thickness\ndescribes how high the box is that this <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> occupies in three\ndimensional space. The two other dimensions are defined by <a href=\"semantics\/SemanticsNode\/rect.html\">rect<\/a>.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following code stacks three <a href=\"widgets\/PhysicalModel-class.html\">PhysicalModel<\/a>s on top of each other\nseparated by non-zero elevations.\n<p><a href=\"widgets\/PhysicalModel-class.html\">PhysicalModel<\/a> C is elevated 10.0 above <a href=\"widgets\/PhysicalModel-class.html\">PhysicalModel<\/a> B, which in turn\nis elevated 5.0 above <a href=\"widgets\/PhysicalModel-class.html\">PhysicalModel<\/a> A. The side view of this\nconstellation looks as follows:<\/p>\n<p><img alt=\"A diagram illustrating the elevations of three PhysicalModels and their\ncorresponding SemanticsNodes.\" src=\"https:\/\/flutter.github.io\/assets-for-api-docs\/assets\/semantics\/SemanticsNode.thickness.png\"><\/p>\n<p>In this example the <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s for <a href=\"widgets\/PhysicalModel-class.html\">PhysicalModel<\/a> C and B share one\n<a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> Y. Given the elevations of those <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s, this\n<a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> has a <a href=\"semantics\/SemanticsNode\/thickness.html\">thickness<\/a> of 10.0 and an elevation of 5.0 over\nits parent <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a> X.\n<\/p>\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">PhysicalModel( \/\/ A\n  color: Colors.amber,\n  elevation: 0.0,\n  child: Semantics(\n    explicitChildNodes: true,\n    child: PhysicalModel( \/\/ B\n      color: Colors.brown,\n      elevation: 5.0,\n      child: PhysicalModel( \/\/ C\n        color: Colors.cyan,\n        elevation: 10.0,\n        child: Placeholder(),\n      ),\n    ),\n  ),\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul><li>\n<a href=\"semantics\/SemanticsNode\/elevation.html\">elevation<\/a>, which describes the elevation of the box defined by\n<a href=\"semantics\/SemanticsNode\/thickness.html\">thickness<\/a> and <a href=\"semantics\/SemanticsNode\/rect.html\">rect<\/a> relative to the parent of this <a href=\"semantics\/SemanticsNode-class.html\">SemanticsNode<\/a>.<\/li><\/ul>",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">double get thickness =&gt; _thickness;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/thickness.html",
+            "isDeprecated": "0",
+            "type": "dart:core.double",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>The transform from this node's coordinate system to its parent's coordinate system.<\/p>\n<p>By default, the transform is null, which represents the identity\ntransformation (i.e., that this node has the same coordinate system as its\nparent).<\/p>\n        ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Matrix4 get transform =&gt; _transform;<\/code><\/pre>\n        ",
+            "href": "semantics\/SemanticsNode\/transform.html",
+            "isDeprecated": "0",
+            "type": "vector_math_64.Matrix4",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
+        },
+        {
+            "desc": "<p>A textual description for the current value of the node.<\/p>\n<p>The reading direction is given by <a href=\"semantics\/SemanticsNode\/textDirection.html\">textDirection<\/a>.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">String get value =&gt; _value;<\/code><\/pre>\n        ",
-            "isDeprecated": false
+            "href": "semantics\/SemanticsNode\/value.html",
+            "isDeprecated": "0",
+            "type": "dart:core.String",
+            "memberOf": "semantics.SemanticsNode",
+            "params": []
         }
-    ],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "semantics\/SemanticsNode-class.html",
-    "desc": "<p>A node that represents some semantic data.<\/p>\n<p>The semantics tree is maintained during the semantics phase of the pipeline\n(i.e., during <a href=\"rendering\/PipelineOwner\/flushSemantics.html\">PipelineOwner.flushSemantics<\/a>), which happens after\ncompositing. The semantics tree is then uploaded into the engine for use\nby assistive technology.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "SemanticsNode"
+    ]
 }

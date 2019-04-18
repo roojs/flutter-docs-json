@@ -1,129 +1,117 @@
 {
+    "desc": "<p>Manages the decoding and scheduling of image frames.<\/p>\n<p>New frames will only be emitted while there are registered listeners to the\nstream (registered with <a href=\"painting\/MultiFrameImageStreamCompleter\/addListener.html\">addListener<\/a>).<\/p>\n<p>This class deals with 2 types of frames:<\/p>\n<ul>\n<li>image frames - image frames of an animated image.<\/li>\n<li>app frames - frames that the flutter engine is drawing to the screen to\nshow the app GUI.<\/li>\n<\/ul>\n<p>For single frame images the stream will only complete once.<\/p>\n<p>For animated images, this class eagerly decodes the next image frame,\nand notifies the listeners that a new frame is ready on the first app frame\nthat is scheduled after the image frame duration has passed.<\/p>\n<p>Scheduling new timers only from scheduled app frames, makes sure we pause\nthe animation when the app is not visible (as new app frames will not be\nscheduled).<\/p>\n<p>See the following timeline example:<\/p>\n<pre class=\"language-dart\"><code>| Time | Event                                      | Comment                   |\n|------|--------------------------------------------|---------------------------|\n| t1   | App frame scheduled (image frame A posted) |                           |\n| t2   | App frame scheduled                        |                           |\n| t3   | App frame scheduled                        |                           |\n| t4   | Image frame B decoded                      |                           |\n| t5   | App frame scheduled                        | t5 - t1 &lt; frameB_duration |\n| t6   | App frame scheduled (image frame B posted) | t6 - t1 &gt; frameB_duration |\n<\/code><\/pre>\n    ",
+    "dtype": "class",
+    "example": null,
+    "href": "painting\/MultiFrameImageStreamCompleter-class.html",
+    "isAbstract": "0",
+    "isConstant": "0",
+    "isDeprecated": "0",
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "painting",
     "name": "painting.MultiFrameImageStreamCompleter",
+    "shortname": "MultiFrameImageStreamCompleter",
     "extends": [
         "painting.ImageStreamCompleter",
         "foundation.Diagnosticable",
         "dart:core.Object"
     ],
-    "memberOf": "painting",
     "events": [],
     "methods": [
         {
-            "name": "MultiFrameImageStreamCompleter",
-            "type": "",
             "desc": "<p>Creates a image stream completer.<\/p>\n<p>Immediately starts decoding the first image frame when the codec is ready.<\/p>\n<p><code>codec<\/code> is a future for an initialized <a href=\"dart-ui\/Codec-class.html\">ui.Codec<\/a> that will be used to\ndecode the image.\n<code>scale<\/code> is the linear scale factor for drawing this frames of this image\nat their intended size.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">MultiFrameImageStreamCompleter({\n  @required Future&lt;ui.Codec&gt; codec,\n  @required double scale,\n  InformationCollector informationCollector,\n}) : assert(codec != null),\n     _informationCollector = informationCollector,\n     _scale = scale,\n     _framesEmitted = 0,\n     _timer = null {\n  codec.then&lt;void&gt;(_handleCodecReady, onError: (dynamic error, StackTrace stack) {\n    reportError(\n      context: 'resolving an image codec',\n      exception: error,\n      stack: stack,\n      informationCollector: informationCollector,\n      silent: true,\n    );\n  });\n}<\/code><\/pre>\n    ",
+            "href": "painting\/MultiFrameImageStreamCompleter\/MultiFrameImageStreamCompleter.html",
+            "isDeprecated": "0",
+            "type": "",
+            "dtype": "constructor",
+            "isConstructor": true,
             "static": false,
             "memberOf": "painting.MultiFrameImageStreamCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "codec",
-                    "type": "dart:async.Future<dart:ui.Codec>",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:async.Future",
-                        "dart:ui.Codec"
-                    ]
-                },
-                {
-                    "name": "scale",
-                    "type": "dart:core.double",
-                    "desc": "",
+                    "isDeprecated": "0",
                     "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "type": "dart:async.Future<dart:ui.Codec>"
                 },
                 {
                     "name": "informationCollector",
-                    "type": "foundation.InformationCollector",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "foundation.InformationCollector"
+                },
+                {
+                    "name": "scale",
+                    "desc": null,
+                    "example": null,
+                    "href": "",
+                    "isDeprecated": "0",
+                    "isOptional": true,
+                    "type": "dart:core.double"
                 }
-            ],
-            "isConstructor": true,
-            "href": "painting\/MultiFrameImageStreamCompleter\/MultiFrameImageStreamCompleter.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">MultiFrameImageStreamCompleter({\n  @required Future&lt;ui.Codec&gt; codec,\n  @required double scale,\n  InformationCollector informationCollector,\n}) : assert(codec != null),\n     _informationCollector = informationCollector,\n     _scale = scale,\n     _framesEmitted = 0,\n     _timer = null {\n  codec.then&lt;void&gt;(_handleCodecReady, onError: (dynamic error, StackTrace stack) {\n    reportError(\n      context: 'resolving an image codec',\n      exception: error,\n      stack: stack,\n      informationCollector: informationCollector,\n      silent: true,\n    );\n  });\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            ]
         },
         {
-            "name": "addListener",
-            "type": "",
             "desc": "<p>Adds a listener callback that is called whenever a new concrete <a href=\"painting\/ImageInfo-class.html\">ImageInfo<\/a>\nobject is available or an error is reported. If a concrete image is\nalready available, or if an error has been already reported, this object\nwill call the listener or error listener synchronously.<\/p>\n<p>If the <a href=\"painting\/ImageStreamCompleter-class.html\">ImageStreamCompleter<\/a> completes multiple images over its lifetime,\nthis listener will fire multiple times.<\/p>\n<p>The listener will be passed a flag indicating whether a synchronous call\noccurred. If the listener is added within a render object paint function,\nthen use this flag to avoid calling <a href=\"rendering\/RenderObject\/markNeedsPaint.html\">RenderObject.markNeedsPaint<\/a> during\na paint.<\/p>\n<p>An <a href=\"painting\/ImageErrorListener.html\">ImageErrorListener<\/a> can also optionally be added along with the\n<code>listener<\/code>. If an error occurred, <code>onError<\/code> will be called instead of\n<code>listener<\/code>.<\/p>\n<p>If a <code>listener<\/code> or <code>onError<\/code> handler is registered multiple times, then it\nwill be called multiple times when the image stream completes (whether\nbecause a new image is available or because an error occurs,\nrespectively). In general, registering a listener multiple times is\ndiscouraged because <a href=\"painting\/MultiFrameImageStreamCompleter\/removeListener.html\">removeListener<\/a> will remove the first instance that\nwas added, even if it was added with a different <code>onError<\/code> than the\nintended paired <code>addListener<\/code> call.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid addListener(ImageListener listener, { ImageErrorListener onError }) {\n  if (!hasListeners &amp;&amp; _codec != null)\n    _decodeNextFrameAndSchedule();\n  super.addListener(listener, onError: onError);\n}<\/code><\/pre>\n    ",
+            "href": "painting\/MultiFrameImageStreamCompleter\/addListener.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.MultiFrameImageStreamCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "listener",
-                    "type": "painting.ImageListener",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageListener"
                 },
                 {
                     "name": "onError",
-                    "type": "painting.ImageErrorListener",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageErrorListener"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/MultiFrameImageStreamCompleter\/addListener.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid addListener(ImageListener listener, { ImageErrorListener onError }) {\n  if (!hasListeners &amp;&amp; _codec != null)\n    _decodeNextFrameAndSchedule();\n  super.addListener(listener, onError: onError);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         },
         {
-            "name": "removeListener",
-            "type": "",
             "desc": "<p>Stop listening for new concrete <a href=\"painting\/ImageInfo-class.html\">ImageInfo<\/a> objects and errors from\nits associated <a href=\"painting\/ImageErrorListener.html\">ImageErrorListener<\/a>.<\/p>\n<p>If <code>listener<\/code> has been added multiple times, this removes the first\ninstance of the listener, along with the <code>onError<\/code> listener that was\nregistered with that first instance. This might not be the instance that\nthe <code>addListener<\/code> corresponding to this <code>removeListener<\/code> had added.<\/p>\n    ",
+            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid removeListener(ImageListener listener) {\n  super.removeListener(listener);\n  if (!hasListeners) {\n    _timer?.cancel();\n    _timer = null;\n  }\n}<\/code><\/pre>\n    ",
+            "href": "painting\/MultiFrameImageStreamCompleter\/removeListener.html",
+            "isDeprecated": "0",
+            "type": "<void>",
+            "dtype": "method",
+            "isConstructor": false,
             "static": false,
             "memberOf": "painting.MultiFrameImageStreamCompleter",
-            "sig": "",
             "params": [
                 {
                     "name": "listener",
-                    "type": "painting.ImageListener",
-                    "desc": "",
-                    "isOptional": true,
+                    "desc": null,
+                    "example": null,
                     "href": "",
-                    "example": "",
-                    "isDeprecated": false
+                    "isDeprecated": "0",
+                    "isOptional": false,
+                    "type": "painting.ImageListener"
                 }
-            ],
-            "isConstructor": false,
-            "href": "painting\/MultiFrameImageStreamCompleter\/removeListener.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nvoid removeListener(ImageListener listener) {\n  super.removeListener(listener);\n  if (!hasListeners) {\n    _timer?.cancel();\n    _timer = null;\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
+            ]
         }
     ],
-    "props": [],
-    "isMixin": false,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "painting\/MultiFrameImageStreamCompleter-class.html",
-    "desc": "<p>Manages the decoding and scheduling of image frames.<\/p>\n<p>New frames will only be emitted while there are registered listeners to the\nstream (registered with <a href=\"painting\/MultiFrameImageStreamCompleter\/addListener.html\">addListener<\/a>).<\/p>\n<p>This class deals with 2 types of frames:<\/p>\n<ul>\n<li>image frames - image frames of an animated image.<\/li>\n<li>app frames - frames that the flutter engine is drawing to the screen to\nshow the app GUI.<\/li>\n<\/ul>\n<p>For single frame images the stream will only complete once.<\/p>\n<p>For animated images, this class eagerly decodes the next image frame,\nand notifies the listeners that a new frame is ready on the first app frame\nthat is scheduled after the image frame duration has passed.<\/p>\n<p>Scheduling new timers only from scheduled app frames, makes sure we pause\nthe animation when the app is not visible (as new app frames will not be\nscheduled).<\/p>\n<p>See the following timeline example:<\/p>\n<pre class=\"language-dart\"><code>| Time | Event                                      | Comment                   |\n|------|--------------------------------------------|---------------------------|\n| t1   | App frame scheduled (image frame A posted) |                           |\n| t2   | App frame scheduled                        |                           |\n| t3   | App frame scheduled                        |                           |\n| t4   | Image frame B decoded                      |                           |\n| t5   | App frame scheduled                        | t5 - t1 &lt; frameB_duration |\n| t6   | App frame scheduled (image frame B posted) | t6 - t1 &gt; frameB_duration |\n<\/code><\/pre>\n    ",
-    "example": "",
-    "isDeprecated": false,
-    "dtype": "class",
-    "shortname": "MultiFrameImageStreamCompleter"
+    "props": []
 }
