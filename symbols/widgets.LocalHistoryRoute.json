@@ -1,137 +1,20 @@
 {
-    "name": "widgets.LocalHistoryRoute",
-    "extends": [],
-    "memberOf": "widgets",
-    "events": [],
-    "methods": [
-        {
-            "name": "LocalHistoryRoute",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "widgets.LocalHistoryRoute",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "widgets\/LocalHistoryRoute\/LocalHistoryRoute.html",
-            "example": "",
-            "isDeprecated": false
-        },
-        {
-            "name": "addLocalHistoryEntry",
-            "type": "",
-            "desc": "<p>Adds a local history entry to this route.<\/p>\n<p>When asked to pop, if this route has any local history entries, this route\nwill handle the pop internally by removing the most recently added local\nhistory entry.<\/p>\n<p>The given local history entry must not already be part of another local\nhistory route.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following example is an app with 2 pages: <code>HomePage<\/code> and <code>SecondPage<\/code>.\nThe <code>HomePage<\/code> can navigate to the <code>SecondPage<\/code>.\n<p>The <code>SecondPage<\/code> uses a <a href=\"widgets\/LocalHistoryEntry-class.html\">LocalHistoryEntry<\/a> to implement local navigation\nwithin that page. Pressing 'show rectangle' displays a red rectangle and\nadds a local history entry. At that point, pressing the '&lt; back' button\npops the latest route, which is the local history entry, and the red\nrectangle disappears. Pressing the '&lt; back' button a second time\nonce again pops the latest route, which is the <code>SecondPage<\/code>, itself.\nTherefore, the second press navigates back to the <code>HomePage<\/code>.\n<\/p>\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class App extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      initialRoute: '\/',\n      routes: {\n        '\/': (BuildContext context) =&gt; HomePage(),\n        '\/second_page': (BuildContext context) =&gt; SecondPage(),\n      },\n    );\n  }\n}\n\nclass HomePage extends StatefulWidget {\n  HomePage();\n\n  @override\n  _HomePageState createState() =&gt; _HomePageState();\n}\n\nclass _HomePageState extends State&lt;HomePage&gt; {\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n      body: Center(\n        child: Column(\n          mainAxisSize: MainAxisSize.min,\n          children: &lt;Widget&gt;[\n            Text('HomePage'),\n            \/\/ Press this button to open the SecondPage.\n            RaisedButton(\n              child: Text('Second Page &gt;'),\n              onPressed: () {\n                Navigator.pushNamed(context, '\/second_page');\n              },\n            ),\n          ],\n        ),\n      ),\n    );\n  }\n}\n\nclass SecondPage extends StatefulWidget {\n  @override\n  _SecondPageState createState() =&gt; _SecondPageState();\n}\n\nclass _SecondPageState extends State&lt;SecondPage&gt; {\n\n  bool _showRectangle = false;\n\n  void _navigateLocallyToShowRectangle() async {\n    \/\/ This local history entry essentially represents the display of the red\n    \/\/ rectangle. When this local history entry is removed, we hide the red\n    \/\/ rectangle.\n    setState(() =&gt; _showRectangle = true);\n    ModalRoute.of(context).addLocalHistoryEntry(\n        LocalHistoryEntry(\n            onRemove: () {\n              \/\/ Hide the red rectangle.\n              setState(() =&gt; _showRectangle = false);\n            }\n        )\n    );\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    final localNavContent = _showRectangle\n      ? Container(\n          width: 100.0,\n          height: 100.0,\n          color: Colors.red,\n        )\n      : RaisedButton(\n          child: Text('Show Rectangle'),\n          onPressed: _navigateLocallyToShowRectangle,\n        );\n\n    return Scaffold(\n      body: Center(\n        child: Column(\n          mainAxisAlignment: MainAxisAlignment.center,\n          children: &lt;Widget&gt;[\n            localNavContent,\n            RaisedButton(\n              child: Text('&lt; Back'),\n              onPressed: () {\n                \/\/ Pop a route. If this is pressed while the red rectangle is\n                \/\/ visible then it will will pop our local history entry, which\n                \/\/ will hide the red rectangle. Otherwise, the SecondPage will\n                \/\/ navigate back to the HomePage.\n                Navigator.of(context).pop();\n              },\n            ),\n          ],\n        ),\n      ),\n    );\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
-            "static": false,
-            "memberOf": "widgets.LocalHistoryRoute",
-            "sig": "",
-            "params": [
-                {
-                    "name": "entry",
-                    "type": "widgets.LocalHistoryEntry",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/LocalHistoryRoute\/addLocalHistoryEntry.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addLocalHistoryEntry(LocalHistoryEntry entry) {\n  assert(entry._owner == null);\n  entry._owner = this;\n  _localHistory ??= &lt;LocalHistoryEntry&gt;[];\n  final bool wasEmpty = _localHistory.isEmpty;\n  _localHistory.add(entry);\n  if (wasEmpty)\n    changedInternalState();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "didPop",
-            "type": "dart:core.bool",
-            "desc": "<p>A request was made to pop this route. If the route can handle it\ninternally (e.g. because it has its own stack of internal state) then\nreturn false, otherwise return true (by return the value of calling\n<code>super.didPop<\/code>). Returning false will prevent the default behavior of\n<a href=\"widgets\/NavigatorState\/pop.html\">NavigatorState.pop<\/a>.<\/p>\n<p>When this function returns true, the navigator removes this route from\nthe history but does not yet call <a href=\"widgets\/Route\/dispose.html\">dispose<\/a>. Instead, it is the route's\nresponsibility to call <a href=\"widgets\/NavigatorState\/finalizeRoute.html\">NavigatorState.finalizeRoute<\/a>, which will in turn\ncall <a href=\"widgets\/Route\/dispose.html\">dispose<\/a> on the route. This sequence lets the route perform an\nexit animation (or some other visual effect) after being popped but prior\nto being disposed.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.LocalHistoryRoute",
-            "sig": "",
-            "params": [
-                {
-                    "name": "result",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/LocalHistoryRoute\/didPop.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool didPop(T result) {\n  if (_localHistory != null &amp;&amp; _localHistory.isNotEmpty) {\n    final LocalHistoryEntry entry = _localHistory.removeLast();\n    assert(entry._owner == this);\n    entry._owner = null;\n    entry._notifyRemoved();\n    if (_localHistory.isEmpty)\n      changedInternalState();\n    return false;\n  }\n  return super.didPop(result);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "removeLocalHistoryEntry",
-            "type": "",
-            "desc": "<p>Remove a local history entry from this route.<\/p>\n<p>The entry's <a href=\"widgets\/LocalHistoryEntry\/onRemove.html\">LocalHistoryEntry.onRemove<\/a> callback, if any, will be called\nsynchronously.<\/p>\n    ",
-            "static": false,
-            "memberOf": "widgets.LocalHistoryRoute",
-            "sig": "",
-            "params": [
-                {
-                    "name": "entry",
-                    "type": "widgets.LocalHistoryEntry",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "widgets\/LocalHistoryRoute\/removeLocalHistoryEntry.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void removeLocalHistoryEntry(LocalHistoryEntry entry) {\n  assert(entry != null);\n  assert(entry._owner == this);\n  assert(_localHistory.contains(entry));\n  _localHistory.remove(entry);\n  entry._owner = null;\n  entry._notifyRemoved();\n  if (_localHistory.isEmpty)\n    changedInternalState();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "willPop",
-            "type": "dart:async.Future<widgets.RoutePopDisposition>",
-            "desc": "<p>Returns false if this route wants to veto a <a href=\"widgets\/Navigator\/pop.html\">Navigator.pop<\/a>. This method is\ncalled by <a href=\"widgets\/Navigator\/maybePop.html\">Navigator.maybePop<\/a>.<\/p>\n<p>By default, routes veto a pop if they're the first route in the history\n(i.e., if <a href=\"widgets\/Route\/isFirst.html\">isFirst<\/a>). This behavior prevents the user from popping the\nfirst route off the history and being stranded at a blank screen.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/Form-class.html\">Form<\/a>, which provides a <a href=\"widgets\/Form\/onWillPop.html\">Form.onWillPop<\/a> callback that uses this\nmechanism.<\/li>\n<li>\n<a href=\"widgets\/WillPopScope-class.html\">WillPopScope<\/a>, another widget that provides a way to intercept the\nback button.<\/li>\n<\/ul>",
-            "static": false,
-            "memberOf": "widgets.LocalHistoryRoute",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "widgets\/LocalHistoryRoute\/willPop.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture&lt;RoutePopDisposition&gt; willPop() async {\n  if (willHandlePopInternally)\n    return RoutePopDisposition.pop;\n  return await super.willPop();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": [
-                "dart:async.Future",
-                "widgets.RoutePopDisposition"
-            ]
-        }
-    ],
-    "props": [
-        {
-            "name": "willHandlePopInternally",
-            "type": "dart:core.bool",
-            "types": [],
-            "desc": "<p>Whether calling <a href=\"widgets\/LocalHistoryRoute\/didPop.html\">didPop<\/a> would return false.<\/p>\n        ",
-            "memberOf": "widgets.LocalHistoryRoute",
-            "isConstant": false,
-            "href": "widgets\/LocalHistoryRoute\/willHandlePopInternally.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get willHandlePopInternally {\n  return _localHistory != null &amp;&amp; _localHistory.isNotEmpty;\n}<\/code><\/pre>\n        ",
-            "isDeprecated": false
-        }
-    ],
-    "isMixin": true,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "widgets\/LocalHistoryRoute-mixin.html",
     "desc": "<p>A mixin used by routes to handle back navigations internally by popping a list.<\/p>\n<p>When a <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> is instructed to pop, the current route is given an\nopportunity to handle the pop internally. A <code>LocalHistoryRoute<\/code> handles the\npop internally if its list of local history entries is non-empty. Rather\nthan being removed as the current route, the most recent <a href=\"widgets\/LocalHistoryEntry-class.html\">LocalHistoryEntry<\/a>\nis removed from the list and its <a href=\"widgets\/LocalHistoryEntry\/onRemove.html\">LocalHistoryEntry.onRemove<\/a> is called.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
     "dtype": "mixin",
-    "shortname": "LocalHistoryRoute"
+    "example": "",
+    "href": "widgets\/LocalHistoryRoute-mixin.html",
+    "isAbstract": false,
+    "isConstant": "0",
+    "isDeprecated": false,
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "widgets",
+    "name": "widgets.LocalHistoryRoute",
+    "shortname": "LocalHistoryRoute",
+    "extends": [],
+    "realImplementors": [],
+    "events": [],
+    "methods": [],
+    "props": []
 }

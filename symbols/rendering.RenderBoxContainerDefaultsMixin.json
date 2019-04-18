@@ -1,160 +1,20 @@
 {
-    "name": "rendering.RenderBoxContainerDefaultsMixin",
-    "extends": [],
-    "memberOf": "rendering",
-    "events": [],
-    "methods": [
-        {
-            "name": "RenderBoxContainerDefaultsMixin",
-            "type": "",
-            "desc": "",
-            "static": false,
-            "memberOf": "rendering.RenderBoxContainerDefaultsMixin",
-            "sig": "",
-            "params": [],
-            "isConstructor": true,
-            "href": "rendering\/RenderBoxContainerDefaultsMixin\/RenderBoxContainerDefaultsMixin.html",
-            "example": "",
-            "isDeprecated": false
-        },
-        {
-            "name": "defaultComputeDistanceToFirstActualBaseline",
-            "type": "dart:core.double",
-            "desc": "<p>Returns the baseline of the first child with a baseline.<\/p>\n<p>Useful when the children are displayed vertically in the same order they\nappear in the child list.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.RenderBoxContainerDefaultsMixin",
-            "sig": "",
-            "params": [
-                {
-                    "name": "baseline",
-                    "type": "dart:ui.TextBaseline",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderBoxContainerDefaultsMixin\/defaultComputeDistanceToFirstActualBaseline.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double defaultComputeDistanceToFirstActualBaseline(TextBaseline baseline) {\n  assert(!debugNeedsLayout);\n  ChildType child = firstChild;\n  while (child != null) {\n    final ParentDataType childParentData = child.parentData;\n    final double result = child.getDistanceToActualBaseline(baseline);\n    if (result != null)\n      return result + childParentData.offset.dy;\n    child = childParentData.nextSibling;\n  }\n  return null;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "defaultComputeDistanceToHighestActualBaseline",
-            "type": "dart:core.double",
-            "desc": "<p>Returns the minimum baseline value among every child.<\/p>\n<p>Useful when the vertical position of the children isn't determined by the\norder in the child list.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.RenderBoxContainerDefaultsMixin",
-            "sig": "",
-            "params": [
-                {
-                    "name": "baseline",
-                    "type": "dart:ui.TextBaseline",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderBoxContainerDefaultsMixin\/defaultComputeDistanceToHighestActualBaseline.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">double defaultComputeDistanceToHighestActualBaseline(TextBaseline baseline) {\n  assert(!debugNeedsLayout);\n  double result;\n  ChildType child = firstChild;\n  while (child != null) {\n    final ParentDataType childParentData = child.parentData;\n    double candidate = child.getDistanceToActualBaseline(baseline);\n    if (candidate != null) {\n      candidate += childParentData.offset.dy;\n      if (result != null)\n        result = math.min(result, candidate);\n      else\n        result = candidate;\n    }\n    child = childParentData.nextSibling;\n  }\n  return result;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "defaultHitTestChildren",
-            "type": "dart:core.bool",
-            "desc": "<p>Performs a hit test on each child by walking the child list backwards.<\/p>\n<p>Stops walking once after the first child reports that it contains the\ngiven point. Returns whether any children contain the given point.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/RenderBoxContainerDefaultsMixin\/defaultPaint.html\">defaultPaint<\/a>, which paints the children appropriate for this\nhit-testing strategy.<\/li><\/ul>",
-            "static": false,
-            "memberOf": "rendering.RenderBoxContainerDefaultsMixin",
-            "sig": "",
-            "params": [
-                {
-                    "name": "result",
-                    "type": "gestures.HitTestResult",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "position",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderBoxContainerDefaultsMixin\/defaultHitTestChildren.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool defaultHitTestChildren(HitTestResult result, { Offset position }) {\n  \/\/ the x, y parameters have the top left of the node's box as the origin\n  ChildType child = lastChild;\n  while (child != null) {\n    final ParentDataType childParentData = child.parentData;\n    if (child.hitTest(result, position: position - childParentData.offset))\n      return true;\n    child = childParentData.previousSibling;\n  }\n  return false;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "defaultPaint",
-            "type": "",
-            "desc": "<p>Paints each child by walking the child list forwards.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"rendering\/RenderBoxContainerDefaultsMixin\/defaultHitTestChildren.html\">defaultHitTestChildren<\/a>, which implements hit-testing of the children\nin a manner appropriate for this painting strategy.<\/li><\/ul>",
-            "static": false,
-            "memberOf": "rendering.RenderBoxContainerDefaultsMixin",
-            "sig": "",
-            "params": [
-                {
-                    "name": "context",
-                    "type": "rendering.PaintingContext",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "offset",
-                    "type": "dart:ui.Offset",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "rendering\/RenderBoxContainerDefaultsMixin\/defaultPaint.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void defaultPaint(PaintingContext context, Offset offset) {\n  ChildType child = firstChild;\n  while (child != null) {\n    final ParentDataType childParentData = child.parentData;\n    context.paintChild(child, childParentData.offset + offset);\n    child = childParentData.nextSibling;\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "getChildrenAsList",
-            "type": "dart:core.List",
-            "desc": "<p>Returns a list containing the children of this render object.<\/p>\n<p>This function is useful when you need random-access to the children of\nthis render object. If you're accessing the children in order, consider\nwalking the child list directly.<\/p>\n    ",
-            "static": false,
-            "memberOf": "rendering.RenderBoxContainerDefaultsMixin",
-            "sig": "",
-            "params": [],
-            "isConstructor": false,
-            "href": "rendering\/RenderBoxContainerDefaultsMixin\/getChildrenAsList.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">List&lt;ChildType&gt; getChildrenAsList() {\n  final List&lt;ChildType&gt; result = &lt;ChildType&gt;[];\n  RenderBox child = firstChild;\n  while (child != null) {\n    final ParentDataType childParentData = child.parentData;\n    result.add(child);\n    child = childParentData.nextSibling;\n  }\n  return result;\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        }
-    ],
-    "props": [],
-    "isMixin": true,
-    "isEnum": false,
-    "isTypedef": false,
-    "isConstant": false,
-    "isAbstract": false,
-    "implementors": [],
-    "realImplementors": [],
-    "cn": [],
-    "href": "rendering\/RenderBoxContainerDefaultsMixin-mixin.html",
     "desc": "<p>A mixin that provides useful default behaviors for boxes with children\nmanaged by the <a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> mixin.<\/p>\n<p>By convention, this class doesn't override any members of the superclass.\nInstead, it provides helpful functions that subclasses can call as\nappropriate.<\/p>\n    ",
-    "example": "",
-    "isDeprecated": false,
     "dtype": "mixin",
-    "shortname": "RenderBoxContainerDefaultsMixin"
+    "example": "",
+    "href": "rendering\/RenderBoxContainerDefaultsMixin-mixin.html",
+    "isAbstract": false,
+    "isConstant": "0",
+    "isDeprecated": false,
+    "is_enum": 1,
+    "is_mixin": 1,
+    "is_typedef": 1,
+    "memberOf": "rendering",
+    "name": "rendering.RenderBoxContainerDefaultsMixin",
+    "shortname": "RenderBoxContainerDefaultsMixin",
+    "extends": [],
+    "realImplementors": [],
+    "events": [],
+    "methods": [],
+    "props": []
 }
