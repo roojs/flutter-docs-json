@@ -3,9 +3,9 @@
     "dtype": "class",
     "example": "",
     "href": "foundation\/LicenseEntryWithLineBreaks-class.html",
-    "isAbstract": "0",
+    "isAbstract": false,
     "isConstant": "0",
-    "isDeprecated": "0",
+    "isDeprecated": false,
     "is_enum": 1,
     "is_mixin": 1,
     "is_typedef": 1,
@@ -25,6 +25,7 @@
             "href": "foundation\/LicenseEntryWithLineBreaks\/LicenseEntryWithLineBreaks.html",
             "isDeprecated": "0",
             "type": "",
+            "name": "LicenseEntryWithLineBreaks",
             "dtype": "constructor",
             "isConstructor": true,
             "static": false,
@@ -35,7 +36,7 @@
                     "desc": null,
                     "example": "",
                     "href": "",
-                    "isDeprecated": "0",
+                    "isDeprecated": false,
                     "isOptional": true,
                     "type": "dart:core.List<dart:core.String>"
                 },
@@ -44,7 +45,7 @@
                     "desc": null,
                     "example": "",
                     "href": "",
-                    "isDeprecated": "0",
+                    "isDeprecated": false,
                     "isOptional": true,
                     "type": "dart:core.String"
                 }
@@ -56,7 +57,8 @@
             "desc": "<p>The names of the packages that this license entry applies to.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final List&lt;String&gt; packages\n\n<\/code><\/pre>\n        ",
             "href": "foundation\/LicenseEntryWithLineBreaks\/packages.html",
-            "isDeprecated": "0",
+            "name": "packages",
+            "isDeprecated": false,
             "type": "dart:core.List<dart:core.String>",
             "memberOf": "foundation.LicenseEntryWithLineBreaks",
             "params": []
@@ -65,7 +67,8 @@
             "desc": "<p>The paragraphs of the license, each as a <a href=\"foundation\/LicenseParagraph-class.html\">LicenseParagraph<\/a> consisting of\na string and some formatting information. Paragraphs can include newline\ncharacters, but this is discouraged as it results in ugliness.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">@override\nIterable&lt;LicenseParagraph&gt; get paragraphs sync* {\n  int lineStart = 0;\n  int currentPosition = 0;\n  int lastLineIndent = 0;\n  int currentLineIndent = 0;\n  int currentParagraphIndentation;\n  _LicenseEntryWithLineBreaksParserState state = _LicenseEntryWithLineBreaksParserState.beforeParagraph;\n  final List&lt;String&gt; lines = &lt;String&gt;[];\n\n  void addLine() {\n    assert(lineStart &lt; currentPosition);\n    lines.add(text.substring(lineStart, currentPosition));\n  }\n\n  LicenseParagraph getParagraph() {\n    assert(lines.isNotEmpty);\n    assert(currentParagraphIndentation != null);\n    final LicenseParagraph result = LicenseParagraph(lines.join(' '), currentParagraphIndentation);\n    assert(result.text.trimLeft() == result.text);\n    assert(result.text.isNotEmpty);\n    lines.clear();\n    return result;\n  }\n\n  while (currentPosition &lt; text.length) {\n    switch (state) {\n      case _LicenseEntryWithLineBreaksParserState.beforeParagraph:\n        assert(lineStart == currentPosition);\n        switch (text[currentPosition]) {\n          case ' ':\n            lineStart = currentPosition + 1;\n            currentLineIndent += 1;\n            state = _LicenseEntryWithLineBreaksParserState.beforeParagraph;\n            break;\n          case '\\t':\n            lineStart = currentPosition + 1;\n            currentLineIndent += 8;\n            state = _LicenseEntryWithLineBreaksParserState.beforeParagraph;\n            break;\n          case '\\n':\n          case '\\f':\n            if (lines.isNotEmpty) {\n              yield getParagraph();\n            }\n            lastLineIndent = 0;\n            currentLineIndent = 0;\n            currentParagraphIndentation = null;\n            lineStart = currentPosition + 1;\n            state = _LicenseEntryWithLineBreaksParserState.beforeParagraph;\n            break;\n          case '[':\n            \/\/ This is a bit of a hack for the LGPL 2.1, which does something like this:\n            \/\/\n            \/\/   [this is a\n            \/\/    single paragraph]\n            \/\/\n            \/\/ ...near the top.\n            currentLineIndent += 1;\n            continue startParagraph;\n          startParagraph:\n          default:\n            if (lines.isNotEmpty &amp;&amp; currentLineIndent &gt; lastLineIndent) {\n              yield getParagraph();\n              currentParagraphIndentation = null;\n            }\n            \/\/ The following is a wild heuristic for guessing the indentation level.\n            \/\/ It happens to work for common variants of the BSD and LGPL licenses.\n            if (currentParagraphIndentation == null) {\n              if (currentLineIndent &gt; 10)\n                currentParagraphIndentation = LicenseParagraph.centeredIndent;\n              else\n                currentParagraphIndentation = currentLineIndent ~\/ 3;\n            }\n            state = _LicenseEntryWithLineBreaksParserState.inParagraph;\n        }\n        break;\n      case _LicenseEntryWithLineBreaksParserState.inParagraph:\n        switch (text[currentPosition]) {\n          case '\\n':\n            addLine();\n            lastLineIndent = currentLineIndent;\n            currentLineIndent = 0;\n            lineStart = currentPosition + 1;\n            state = _LicenseEntryWithLineBreaksParserState.beforeParagraph;\n            break;\n          case '\\f':\n            addLine();\n            yield getParagraph();\n            lastLineIndent = 0;\n            currentLineIndent = 0;\n            currentParagraphIndentation = null;\n            lineStart = currentPosition + 1;\n            state = _LicenseEntryWithLineBreaksParserState.beforeParagraph;\n            break;\n          default:\n            state = _LicenseEntryWithLineBreaksParserState.inParagraph;\n        }\n        break;\n    }\n    currentPosition += 1;\n  }\n  switch (state) {\n    case _LicenseEntryWithLineBreaksParserState.beforeParagraph:\n      if (lines.isNotEmpty) {\n        yield getParagraph();\n      }\n      break;\n    case _LicenseEntryWithLineBreaksParserState.inParagraph:\n      addLine();\n      yield getParagraph();\n      break;\n  }\n}<\/code><\/pre>\n        ",
             "href": "foundation\/LicenseEntryWithLineBreaks\/paragraphs.html",
-            "isDeprecated": "0",
+            "name": "paragraphs",
+            "isDeprecated": false,
             "type": "dart:core.Iterable<foundation.LicenseParagraph>",
             "memberOf": "foundation.LicenseEntryWithLineBreaks",
             "params": []
@@ -74,7 +77,8 @@
             "desc": "<p>The text of the license.<\/p>\n<p>The text will be split into paragraphs according to the following\nconventions:<\/p>\n<ul>\n<li>Lines starting with a different number of space characters than the\nprevious line start a new paragraph, with those spaces removed.<\/li>\n<li>Blank lines start a new paragraph.<\/li>\n<li>Other line breaks are replaced by a single space character.<\/li>\n<li>Leading spaces on a line are removed.<\/li>\n<\/ul>\n<p>For each paragraph, the algorithm attempts (using some rough heuristics)\nto identify how indented the paragraph is, or whether it is centered.<\/p>\n        ",
             "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final String text\n\n<\/code><\/pre>\n        ",
             "href": "foundation\/LicenseEntryWithLineBreaks\/text.html",
-            "isDeprecated": "0",
+            "name": "text",
+            "isDeprecated": false,
             "type": "dart:core.String",
             "memberOf": "foundation.LicenseEntryWithLineBreaks",
             "params": []
