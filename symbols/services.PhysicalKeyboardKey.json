@@ -1,7 +1,7 @@
 {
     "desc": "<p>A class with static values that describe the keys that are returned from\n<a href=\"services\/RawKeyEvent\/physicalKey.html\">RawKeyEvent.physicalKey<\/a>.<\/p>\n<p>These represent <em>physical<\/em> keys, which are keys which represent a particular\nkey location on a QWERTY keyboard. It ignores any modifiers, modes, or\nkeyboard layouts which may be in effect. This is contrast to\n<a href=\"services\/LogicalKeyboardKey-class.html\">LogicalKeyboardKey<\/a>, which represents a logical key interpreted in the\ncontext of modifiers, modes, and\/or keyboard layouts.<\/p>\n<p>As an example, if you wanted a game where the key next to the CAPS LOCK (the\n\"A\" key on a QWERTY keyboard) moved the player to the left, you'd want to\nlook at the physical key to make sure that regardless of the character the\nkey produces, you got the key that is in that location on the keyboard.<\/p>\n<p>Conversely, if you wanted to implement an app where the \"Q\" key \"quit\"\nsomething, you'd want to look at the logical key to detect this, since you\nwould like to have it match the key with \"Q\" on it, instead of always\nlooking for \"the key next next to the TAB key\", since on a French keyboard,\nthe key next to the TAB key has an \"A\" on it.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <script>var visibleSnippet1 = \"shortSnippet1\";<\/script><button id=\"shortSnippet1Button\" onclick=\"visibleSnippet1 = showSnippet('shortSnippet1', visibleSnippet1);\" selected>Sample<\/button>\n  <button id=\"longSnippet1Button\" onclick=\"visibleSnippet1 = showSnippet('longSnippet1', visibleSnippet1);\">Sample in an App<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\" id=\"shortSnippet1\">\n    <div class=\"snippet-description\">\nThis example shows how to detect if the user has selected the physical key\nto the right of the CAPS LOCK key.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(visibleSnippet1);\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\"><code class=\"language-dart\">import 'package:flutter\/services.dart';\n\n\/\/ ...\n\n\/\/ The node used to request the keyboard focus.\nfinal FocusNode _focusNode = FocusNode();\n\/\/ The message to display.\nString _message;\n\n\/\/ Focus nodes need to be disposed.\n@override\nvoid dispose() {\n  _focusNode.dispose();\n  super.dispose();\n}\n\n\/\/ Handles the key events from the RawKeyboardListener and update the\n\/\/ _message.\nvoid _handleKeyEvent(RawKeyEvent event) {\n  setState(() {\n    if (event.physicalKey == PhysicalKeyboardKey.keyA) {\n      _message = 'Pressed the key next to CAPS LOCK!';\n    } else {\n      _message = 'Wrong key.';\n    }\n  });\n}\n\n@override\nWidget build(BuildContext context) {\n  final TextTheme textTheme = Theme.of(context).textTheme;\n  return Container(\n    color: Colors.white,\n    alignment: Alignment.center,\n    child: DefaultTextStyle(\n      style: textTheme.display1,\n      child: RawKeyboardListener(\n        focusNode: _focusNode,\n        onKey: _handleKeyEvent,\n        child: AnimatedBuilder(\n          animation: _focusNode,\n          builder: (BuildContext context, Widget child) {\n            if (!_focusNode.hasFocus) {\n              return GestureDetector(\n                onTap: () {\n                  FocusScope.of(context).requestFocus(_focusNode);\n                },\n                child: Text('Tap to focus'),\n              );\n            }\n            return Text(_message ?? 'Press a key');\n          },\n        ),\n      ),\n    ),\n  );\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n  <div class=\"snippet\" id=\"longSnippet1\" hidden>\n    <div class=\"snippet-description\">To create a sample project with this code snippet, run:<br><span class=\"snippet-create-command\">flutter create --sample=services.PhysicalKeyboardKey.1 mysample<\/span>\n    <\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(visibleSnippet1);\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/ Flutter code sample for services.PhysicalKeyboardKey.1\n\n\/\/ This example shows how to detect if the user has selected the physical key\n\/\/ to the right of the CAPS LOCK key.\n\nimport 'package:flutter\/material.dart';\n\nimport 'package:flutter\/services.dart';\n\nvoid main() =&gt; runApp(MyApp());\n\n\/\/\/ This Widget is the main application widget.\nclass MyApp extends StatelessWidget {\n  static const String _title = 'Flutter Code Sample';\n\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: _title,\n      home: Scaffold(\n        appBar: AppBar(title: Text(_title)),\n        body: MyStatefulWidget(),\n      ),\n    );\n  }\n}\n\nclass MyStatefulWidget extends StatefulWidget {\n  MyStatefulWidget({Key key}) : super(key: key);\n\n  @override\n  _MyStatefulWidgetState createState() =&gt; _MyStatefulWidgetState();\n}\n\nclass _MyStatefulWidgetState extends State&lt;MyStatefulWidget&gt; {\n  \/\/ The node used to request the keyboard focus.\n  final FocusNode _focusNode = FocusNode();\n\/\/ The message to display.\n  String _message;\n\n\/\/ Focus nodes need to be disposed.\n  @override\n  void dispose() {\n    _focusNode.dispose();\n    super.dispose();\n  }\n\n\/\/ Handles the key events from the RawKeyboardListener and update the\n\/\/ _message.\n  void _handleKeyEvent(RawKeyEvent event) {\n    setState(() {\n      if (event.physicalKey == PhysicalKeyboardKey.keyA) {\n        _message = 'Pressed the key next to CAPS LOCK!';\n      } else {\n        _message = 'Wrong key.';\n      }\n    });\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    final TextTheme textTheme = Theme.of(context).textTheme;\n    return Container(\n      color: Colors.white,\n      alignment: Alignment.center,\n      child: DefaultTextStyle(\n        style: textTheme.display1,\n        child: RawKeyboardListener(\n          focusNode: _focusNode,\n          onKey: _handleKeyEvent,\n          child: AnimatedBuilder(\n            animation: _focusNode,\n            builder: (BuildContext context, Widget child) {\n              if (!_focusNode.hasFocus) {\n                return GestureDetector(\n                  onTap: () {\n                    FocusScope.of(context).requestFocus(_focusNode);\n                  },\n                  child: Text('Tap to focus'),\n                );\n              }\n              return Text(_message ?? 'Press a key');\n            },\n          ),\n        ),\n      ),\n    );\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"services\/RawKeyEvent-class.html\">RawKeyEvent<\/a>, the keyboard event object received by widgets that listen\nto keyboard events.<\/li>\n<li>\n<a href=\"widgets\/RawKeyboardListener-class.html\">RawKeyboardListener<\/a>, a widget used to listen to and supply handlers for\nkeyboard events.<\/li>\n<\/ul>",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "services\/PhysicalKeyboardKey-class.html",
     "isAbstract": "0",
     "isConstant": "0",
@@ -32,7 +32,7 @@
                 {
                     "name": "debugName",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -41,7 +41,7 @@
                 {
                     "name": "usbHidUsage",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -63,7 +63,7 @@
                 {
                     "name": "properties",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -85,7 +85,7 @@
                 {
                     "name": "usageCode",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

@@ -1,7 +1,7 @@
 {
     "desc": "<p>Defines the strut, which sets the minimum height a line can be\nrelative to the baseline. Strut applies to all lines in the paragraph.<\/p>\n<p>Strut is a feature that allows minimum line heights to be set. The effect is as\nif a zero width space was included at the beginning of each line in the\nparagraph. This imaginary space is 'shaped' according the properties defined\nin this class. Flutter's strut is based on <a href=\"https:\/\/en.wikipedia.org\/wiki\/Strut_(typesetting)\">typesetting strut<\/a>\nand CSS's <a href=\"https:\/\/www.w3.org\/TR\/CSS2\/visudet.html#line-height\">line-height<\/a>.<\/p>\n<p>No lines may be shorter than the strut. The ascent and descent of the strut\nare calculated, and any laid out text that has a shorter ascent or descent than\nthe strut's ascent or descent will take the ascent and descent of the strut.\nText with ascents or descents larger than the strut's ascent or descent will lay\nout as normal and extend past the strut.<\/p>\n<p>Strut is defined independently from any text content or <a href=\"painting\/TextStyle-class.html\">TextStyle<\/a>s.<\/p>\n<p>The vertical components of strut are as follows:<\/p>\n<ul>\n<li>\n<code>leading * fontSize \/ 2<\/code> or half the font leading if <code>leading<\/code> is undefined (half leading)<\/li>\n<li><code>ascent * height<\/code><\/li>\n<li><code>descent * height<\/code><\/li>\n<li>\n<code>leading * fontSize \/ 2<\/code> or half the font leading if <code>leading<\/code> is undefined (half leading)<\/li>\n<\/ul>\n<p>The sum of these four values is the total height of the line.<\/p>\n<p>The <code>ascent + descent<\/code> is equivalent to the <a href=\"painting\/StrutStyle\/fontSize.html\">fontSize<\/a>. Ascent is the font's\nspacing above the baseline without leading and descent is the spacing below the\nbaseline without leading. Leading is split evenly between the top and bottom.\nThe values for <code>ascent<\/code> and <code>descent<\/code> are provided by the font named by\n<a href=\"painting\/StrutStyle\/fontFamily.html\">fontFamily<\/a>. If no <a href=\"painting\/StrutStyle\/fontFamily.html\">fontFamily<\/a> or <a href=\"painting\/StrutStyle\/fontFamilyFallback.html\">fontFamilyFallback<\/a> is provided, then the\nplatform's default family will be used.<\/p>\n<p>Each line's spacing above the baseline will be at least as tall as the half\nleading plus ascent. Each line's spacing below the baseline will be at least as\ntall as the half leading plus descent.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"https:\/\/api.flutter.dev\/flutter\/dart-ui\/StrutStyle-class.html\">StrutStyle<\/a>, the class in the <a href=\"dart-ui\/dart-ui-library.html\">dart:ui<\/a> library.<\/li><\/ul>\n<h3 id=\"fields-and-their-default-values\">Fields and their default values.<\/h3>\n<p>Omitted or null properties will take the default values specified below:<\/p>\n<ul>\n<li>\n<p><a href=\"painting\/StrutStyle\/fontFamily.html\">fontFamily<\/a>: the name of the font to use when calculating the strut\n(e.g., Roboto). No glyphs from the font will be drawn and the font will\nbe used purely for metrics.<\/p>\n<\/li>\n<li>\n<p><a href=\"painting\/StrutStyle\/fontFamilyFallback.html\">fontFamilyFallback<\/a>: an ordered list of font family names that will be searched for when\nthe font in <a href=\"painting\/StrutStyle\/fontFamily.html\">fontFamily<\/a> cannot be found. When all specified font families have been\nexhausted an no match was found, the default platform font will be used.<\/p>\n<\/li>\n<li>\n<p><a href=\"painting\/StrutStyle\/fontSize.html\">fontSize<\/a>: the size of the ascent plus descent in logical pixels. This\nis also used as the basis of the custom leading calculation. This value\ncannot be negative.\nDefault is 14 logical pixels.<\/p>\n<\/li>\n<li>\n<p><a href=\"painting\/StrutStyle\/height.html\">height<\/a>: the multiple of <a href=\"painting\/StrutStyle\/fontSize.html\">fontSize<\/a> to multiply the ascent and descent by.\nThe <a href=\"painting\/StrutStyle\/height.html\">height<\/a> will impact the spacing above and below the baseline differently\ndepending on the ratios between the font's ascent and descent. This property is\nseparate from the leading multiplier, which is controlled through <a href=\"painting\/StrutStyle\/leading.html\">leading<\/a>.\nDefault is 1.0.<\/p>\n<\/li>\n<li>\n<p><a href=\"painting\/StrutStyle\/leading.html\">leading<\/a>: the custom leading to apply to the strut as a multiple of <a href=\"painting\/StrutStyle\/fontSize.html\">fontSize<\/a>.\nLeading is additional spacing between lines. Half of the leading is added\nto the top and the other half to the bottom of the line height. This differs\nfrom <a href=\"painting\/StrutStyle\/height.html\">height<\/a> since the spacing is equally distributed above and below the\nbaseline.\nDefault is <code>null<\/code>, which will use the font-specified leading.<\/p>\n<\/li>\n<li>\n<p><a href=\"painting\/StrutStyle\/fontWeight.html\">fontWeight<\/a>: the typeface thickness to use when calculating the strut (e.g., bold).\nDefault is <a href=\"dart-ui\/FontWeight\/w400-constant.html\">FontWeight.w400<\/a>.<\/p>\n<\/li>\n<li>\n<p><a href=\"painting\/StrutStyle\/fontStyle.html\">fontStyle<\/a>: the typeface variant to use when calculating the strut (e.g., italic).\nDefault is <a href=\"dart-ui\/FontStyle-class.html\">FontStyle.normal<\/a>.<\/p>\n<\/li>\n<li>\n<p><a href=\"painting\/StrutStyle\/forceStrutHeight.html\">forceStrutHeight<\/a>: when true, all lines will be laid out with the height of the\nstrut. All line and run-specific metrics will be ignored\/overridden and only strut\nmetrics will be used instead. This property guarantees uniform line spacing, however\ntext in adjacent lines may overlap. This property should be enabled with caution as\nit bypasses a large portion of the vertical layout system.\nThe default value is false.<\/p>\n<\/li>\n<\/ul>\n<h3 id=\"examples\">Examples<\/h3>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nIn this simple case, the text will be rendered at font size 10, however, the vertical\nheight of each line will be the strut height (Roboto in font size 30 * 1.5) as the text\nitself is shorter than the strut.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">const Text(\n  'Hello, world!\\nSecond line!',\n  style: TextStyle(\n    fontSize: 10,\n    fontFamily: 'Raleway',\n  ),\n  strutStyle: StrutStyle(\n    fontFamily: 'Roboto',\n    fontSize: 30,\n    height: 1.5,\n  ),\n),<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nHere, strut is used to absorb the additional line height in the second line.\nThe strut <a href=\"painting\/StrutStyle\/height.html\">height<\/a> was defined as 1.5 (the default font size is 14), which\ncaused all lines to be laid out taller than without strut. This extra space\nwas able to accommodate the larger font size of <code>Second line!<\/code> without\ncausing the line height to change for the second line only. All lines in\nthis example are thus the same height (<code>14 * 1.5<\/code>).\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">const Text.rich(\n  TextSpan(\n    text: 'First line!\\n',\n    style: TextStyle(\n      fontSize: 14,\n      fontFamily: 'Roboto'\n    ),\n    children: &lt;TextSpan&gt;[\n      TextSpan(\n        text: 'Second line!\\n',\n        style: TextStyle(\n          fontSize: 16,\n          fontFamily: 'Roboto',\n        ),\n      ),\n      TextSpan(\n        text: 'Third line!\\n',\n        style: TextStyle(\n          fontSize: 14,\n          fontFamily: 'Roboto',\n        ),\n      ),\n    ],\n  ),\n  strutStyle: StrutStyle(\n    fontFamily: 'Roboto',\n    height: 1.5,\n  ),\n),<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nHere, strut is used to enable strange and overlapping text to achieve unique\neffects. The <code>M<\/code>s in lines 2 and 3 are able to extend above their lines and\nfill empty space in lines above. The <a href=\"painting\/StrutStyle\/forceStrutHeight.html\">forceStrutHeight<\/a> is enabled and functions\nas a 'grid' for the glyphs to draw on.\n<p><img alt=\"The result of the example below.\" src=\"https:\/\/flutter.github.io\/assets-for-api-docs\/assets\/painting\/strut_force_example.png\"><\/p>\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">const Text.rich(\n  TextSpan(\n    text: '---------         ---------\\n',\n    style: TextStyle(\n      fontSize: 14,\n      fontFamily: 'Roboto',\n    ),\n    children: &lt;TextSpan&gt;[\n      TextSpan(\n        text: '^^^M^^^\\n',\n        style: TextStyle(\n          fontSize: 30,\n          fontFamily: 'Roboto',\n        ),\n      ),\n      TextSpan(\n        text: 'M------M\\n',\n        style: TextStyle(\n          fontSize: 30,\n          fontFamily: 'Roboto',\n        ),\n      ),\n    ],\n  ),\n  strutStyle: StrutStyle(\n    fontFamily: 'Roboto',\n    fontSize: 14,\n    height: 1,\n    forceStrutHeight: true,\n  ),\n),<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example uses forceStrutHeight to create a 'drop cap' for the 'T' in 'The'.\nBy locking the line heights to the metrics of the 14pt serif font, we are able\nto lay out a large 37pt 'T' on the second line to take up space on both the first\nand second lines.\n<p><img alt=\"The result of the example below.\" src=\"https:\/\/flutter.github.io\/assets-for-api-docs\/assets\/painting\/strut_force_example_2.png\"><\/p>\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">Text.rich(\n  TextSpan(\n    text: '      \u2009he candle flickered\\n',\n    style: TextStyle(\n      fontSize: 14,\n      fontFamily: 'Serif'\n    ),\n    children: &lt;TextSpan&gt;[\n      TextSpan(\n        text: 'T',\n        style: TextStyle(\n          fontSize: 37,\n          fontFamily: 'Serif'\n        ),\n      ),\n      TextSpan(\n        text: 'in the moonlight as\\n',\n        style: TextStyle(\n          fontSize: 14,\n          fontFamily: 'Serif'\n        ),\n      ),\n      TextSpan(\n        text: 'Dash the bird fluttered\\n',\n        style: TextStyle(\n          fontSize: 14,\n          fontFamily: 'Serif'\n        ),\n      ),\n      TextSpan(\n        text: 'off into the distance.',\n        style: TextStyle(\n          fontSize: 14,\n          fontFamily: 'Serif'\n        ),\n      ),\n    ],\n  ),\n  strutStyle: StrutStyle(\n    fontFamily: 'Serif',\n    fontSize: 14,\n    forceStrutHeight: true,\n  ),\n),<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "painting\/StrutStyle-class.html",
     "isAbstract": "0",
     "isConstant": "0",
@@ -32,7 +32,7 @@
                 {
                     "name": "debugLabel",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -41,7 +41,7 @@
                 {
                     "name": "fontFamily",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -50,7 +50,7 @@
                 {
                     "name": "fontFamilyFallback",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -59,7 +59,7 @@
                 {
                     "name": "fontSize",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -68,7 +68,7 @@
                 {
                     "name": "fontStyle",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -77,7 +77,7 @@
                 {
                     "name": "fontWeight",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -86,7 +86,7 @@
                 {
                     "name": "forceStrutHeight",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -95,7 +95,7 @@
                 {
                     "name": "height",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -104,7 +104,7 @@
                 {
                     "name": "leading",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -113,7 +113,7 @@
                 {
                     "name": "package",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -135,7 +135,7 @@
                 {
                     "name": "other",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -157,7 +157,7 @@
                 {
                     "name": "prefix",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -166,7 +166,7 @@
                 {
                     "name": "properties",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -188,7 +188,7 @@
                 {
                     "name": "other",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

@@ -1,7 +1,7 @@
 {
     "desc": "<p>A scrollable list of widgets arranged linearly.<\/p>\n<p><a href=\"widgets\/ListView-class.html\">ListView<\/a> is the most commonly used scrolling widget. It displays its\nchildren one after another in the scroll direction. In the cross axis, the\nchildren are required to fill the <a href=\"widgets\/ListView-class.html\">ListView<\/a>.<\/p>\n<p>If non-null, the <a href=\"widgets\/ListView\/itemExtent.html\">itemExtent<\/a> forces the children to have the given extent\nin the scroll direction. Specifying an <a href=\"widgets\/ListView\/itemExtent.html\">itemExtent<\/a> is more efficient than\nletting the children determine their own extent because the scrolling\nmachinery can make use of the foreknowledge of the children's extent to save\nwork, for example when the scroll position changes drastically.<\/p>\n<p>There are four options for constructing a <a href=\"widgets\/ListView-class.html\">ListView<\/a>:<\/p>\n<ol>\n<li>\n<p>The default constructor takes an explicit <a href=\"dart-core\/List-class.html\">List&lt;Widget&gt;<\/a> of children. This\nconstructor is appropriate for list views with a small number of\nchildren because constructing the <a href=\"dart-core\/List-class.html\">List<\/a> requires doing work for every\nchild that could possibly be displayed in the list view instead of just\nthose children that are actually visible.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"widgets\/ListView\/ListView.builder.html\">ListView.builder<\/a> constructor takes an <a href=\"widgets\/IndexedWidgetBuilder.html\">IndexedWidgetBuilder<\/a>, which\nbuilds the children on demand. This constructor is appropriate for list views\nwith a large (or infinite) number of children because the builder is called\nonly for those children that are actually visible.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"widgets\/ListView\/ListView.separated.html\">ListView.separated<\/a> constructor takes two <a href=\"widgets\/IndexedWidgetBuilder.html\">IndexedWidgetBuilder<\/a>s:\n<code>itemBuilder<\/code> builds child items on demand, and <code>separatorBuilder<\/code>\nsimilarly builds separator children which appear in between the child items.\nThis constructor is appropriate for list views with a fixed number of children.<\/p>\n<\/li>\n<li>\n<p>The <a href=\"widgets\/ListView\/ListView.custom.html\">ListView.custom<\/a> constructor takes a <a href=\"widgets\/SliverChildDelegate-class.html\">SliverChildDelegate<\/a>, which provides\nthe ability to customize additional aspects of the child model. For example,\na <a href=\"widgets\/SliverChildDelegate-class.html\">SliverChildDelegate<\/a> can control the algorithm used to estimate the\nsize of children that are not actually visible.<\/p>\n<\/li>\n<\/ol>\n<p>To control the initial scroll offset of the scroll view, provide a\n<a href=\"widgets\/ScrollView\/controller.html\">controller<\/a> with its <a href=\"widgets\/ScrollController\/initialScrollOffset.html\">ScrollController.initialScrollOffset<\/a> property set.<\/p>\n<p>By default, <a href=\"widgets\/ListView-class.html\">ListView<\/a> will automatically pad the list's scrollable\nextremities to avoid partial obstructions indicated by <a href=\"widgets\/MediaQuery-class.html\">MediaQuery<\/a>'s\npadding. To avoid this behavior, override with a zero <a href=\"widgets\/BoxScrollView\/padding.html\">padding<\/a> property.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example uses the default constructor for <a href=\"widgets\/ListView-class.html\">ListView<\/a> which takes an\nexplicit <a href=\"dart-core\/List-class.html\">List&lt;Widget&gt;<\/a> of children. This <a href=\"widgets\/ListView-class.html\">ListView<\/a>'s children are made up\nof <a href=\"widgets\/Container-class.html\">Container<\/a>s with <a href=\"widgets\/Text-class.html\">Text<\/a>.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">ListView(\n  padding: const EdgeInsets.all(8.0),\n  children: &lt;Widget&gt;[\n    Container(\n      height: 50,\n      color: Colors.amber[600],\n      child: const Center(child: Text('Entry A')),\n    ),\n    Container(\n      height: 50,\n      color: Colors.amber[500],\n      child: const Center(child: Text('Entry B')),\n    ),\n    Container(\n      height: 50,\n      color: Colors.amber[100],\n      child: const Center(child: Text('Entry C')),\n    ),\n  ],\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example mirrors the previous one, creating the same list using the\n<a href=\"widgets\/ListView\/ListView.builder.html\">ListView.builder<\/a> constructor. Using the <a href=\"widgets\/IndexedWidgetBuilder.html\">IndexedWidgetBuilder<\/a>, children\nare built lazily and can be infinite in number.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">final List&lt;String&gt; entries = &lt;String&gt;['A', 'B', 'C'];\nfinal List&lt;int&gt; colorCodes = &lt;int&gt;[600, 500, 100];\n\nListView.builder(\n  padding: const EdgeInsets.all(8.0),\n  itemCount: entries.length,\n  itemBuilder: (BuildContext context, int index) {\n    return Container(\n      height: 50,\n      color: Colors.amber[colorCodes[index]],\n      child: Center(child: Text('Entry ${entries[index]}')),\n    );\n  }\n);<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example continues to build from our the previous ones, creating a\nsimilar list using <a href=\"widgets\/ListView\/ListView.separated.html\">ListView.separated<\/a>. Here, a <a href=\"material\/Divider-class.html\">Divider<\/a> is used as a\nseparator.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">final List&lt;String&gt; entries = &lt;String&gt;['A', 'B', 'C'];\nfinal List&lt;int&gt; colorCodes = &lt;int&gt;[600, 500, 100];\n\nListView.separated(\n  padding: const EdgeInsets.all(8.0),\n  itemCount: entries.length,\n  itemBuilder: (BuildContext context, int index) {\n    return Container(\n      height: 50,\n      color: Colors.amber[colorCodes[index]],\n      child: Center(child: Text('Entry ${entries[index]}')),\n    );\n  },\n  separatorBuilder: (BuildContext context, int index) =&gt; const Divider(),\n);<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<h2 id=\"child-elements-lifecycle\">Child elements' lifecycle<\/h2>\n<h3 id=\"creation\">Creation<\/h3>\n<p>While laying out the list, visible children's elements, states and render\nobjects will be created lazily based on existing widgets (such as when using\nthe default constructor) or lazily provided ones (such as when using the\n<a href=\"widgets\/ListView\/ListView.builder.html\">ListView.builder<\/a> constructor).<\/p>\n<h3 id=\"destruction\">Destruction<\/h3>\n<p>When a child is scrolled out of view, the associated element subtree,\nstates and render objects are destroyed. A new child at the same position\nin the list will be lazily recreated along with new elements, states and\nrender objects when it is scrolled back.<\/p>\n<h3 id=\"destruction-mitigation\">Destruction mitigation<\/h3>\n<p>In order to preserve state as child elements are scrolled in and out of\nview, the following options are possible:<\/p>\n<ul>\n<li>\n<p>Moving the ownership of non-trivial UI-state-driving business logic\nout of the list child subtree. For instance, if a list contains posts\nwith their number of upvotes coming from a cached network response, store\nthe list of posts and upvote number in a data model outside the list. Let\nthe list child UI subtree be easily recreate-able from the\nsource-of-truth model object. Use <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>s in the child\nwidget subtree to store instantaneous UI state only.<\/p>\n<\/li>\n<li>\n<p>Letting <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a> be the root widget of the list child widget subtree\nthat needs to be preserved. The <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a> widget marks the child\nsubtree's top render object child for keep-alive. When the associated top\nrender object is scrolled out of view, the list keeps the child's render\nobject (and by extension, its associated elements and states) in a cache\nlist instead of destroying them. When scrolled back into view, the render\nobject is repainted as-is (if it wasn't marked dirty in the interim).<\/p>\n<p>This only works if <code>addAutomaticKeepAlives<\/code> and <code>addRepaintBoundaries<\/code>\nare false since those parameters cause the <a href=\"widgets\/ListView-class.html\">ListView<\/a> to wrap each child\nwidget subtree with other widgets.<\/p>\n<\/li>\n<li>\n<p>Using <a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> widgets (inserted by default when\n<code>addAutomaticKeepAlives<\/code> is true). Instead of unconditionally caching the\nchild element subtree when scrolling off-screen like <a href=\"widgets\/KeepAlive-class.html\">KeepAlive<\/a>,\n<a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> can let whether to cache the subtree be determined\nby descendant logic in the subtree.<\/p>\n<p>As an example, the <a href=\"widgets\/EditableText-class.html\">EditableText<\/a> widget signals its list child element\nsubtree to stay alive while its text field has input focus. If it doesn't\nhave focus and no other descendants signaled for keep-alive via a\n<a href=\"widgets\/KeepAliveNotification-class.html\">KeepAliveNotification<\/a>, the list child element subtree will be destroyed\nwhen scrolled away.<\/p>\n<p><a href=\"widgets\/AutomaticKeepAlive-class.html\">AutomaticKeepAlive<\/a> descendants typically signal it to be kept alive\nby using the <a href=\"widgets\/AutomaticKeepAliveClientMixin-mixin.html\">AutomaticKeepAliveClientMixin<\/a>, then implementing the\n<code>wantKeepAlive<\/code> getter and calling <code>updateKeepAlive<\/code>.<\/p>\n<\/li>\n<\/ul>\n<h2 id=\"transitioning-to-customscrollview\">Transitioning to <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>\n<\/h2>\n<p>A <a href=\"widgets\/ListView-class.html\">ListView<\/a> is basically a <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a> with a single <a href=\"widgets\/SliverList-class.html\">SliverList<\/a> in\nits <a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a> property.<\/p>\n<p>If <a href=\"widgets\/ListView-class.html\">ListView<\/a> is no longer sufficient, for example because the scroll view\nis to have both a list and a grid, or because the list is to be combined\nwith a <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a>, etc, it is straight-forward to port code from using\n<a href=\"widgets\/ListView-class.html\">ListView<\/a> to using <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a> directly.<\/p>\n<p>The <a href=\"widgets\/Widget\/key.html\">key<\/a>, <a href=\"widgets\/ScrollView\/scrollDirection.html\">scrollDirection<\/a>, <a href=\"widgets\/ScrollView\/reverse.html\">reverse<\/a>, <a href=\"widgets\/ScrollView\/controller.html\">controller<\/a>, <a href=\"widgets\/ScrollView\/primary.html\">primary<\/a>, <a href=\"widgets\/ScrollView\/physics.html\">physics<\/a>,\nand <a href=\"widgets\/ScrollView\/shrinkWrap.html\">shrinkWrap<\/a> properties on <a href=\"widgets\/ListView-class.html\">ListView<\/a> map directly to the identically\nnamed properties on <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>.<\/p>\n<p>The <a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a> property should be a list containing either a\n<a href=\"widgets\/SliverList-class.html\">SliverList<\/a> or a <a href=\"widgets\/SliverFixedExtentList-class.html\">SliverFixedExtentList<\/a>; the former if <a href=\"widgets\/ListView\/itemExtent.html\">itemExtent<\/a> on the\n<a href=\"widgets\/ListView-class.html\">ListView<\/a> was null, and the latter if <a href=\"widgets\/ListView\/itemExtent.html\">itemExtent<\/a> was not null.<\/p>\n<p>The <a href=\"widgets\/ListView\/childrenDelegate.html\">childrenDelegate<\/a> property on <a href=\"widgets\/ListView-class.html\">ListView<\/a> corresponds to the\n<a href=\"widgets\/SliverMultiBoxAdaptorWidget\/delegate.html\">SliverList.delegate<\/a> (or <a href=\"widgets\/SliverMultiBoxAdaptorWidget\/delegate.html\">SliverFixedExtentList.delegate<\/a>) property. The\n<a href=\"widgets\/ListView\/ListView.html\">new ListView<\/a> constructor's <code>children<\/code> argument corresponds to the\n<a href=\"widgets\/ListView\/childrenDelegate.html\">childrenDelegate<\/a> being a <a href=\"widgets\/SliverChildListDelegate-class.html\">SliverChildListDelegate<\/a> with that same\nargument. The <a href=\"widgets\/ListView\/ListView.builder.html\">new ListView.builder<\/a> constructor's <code>itemBuilder<\/code> and\n<code>childCount<\/code> arguments correspond to the <a href=\"widgets\/ListView\/childrenDelegate.html\">childrenDelegate<\/a> being a\n<a href=\"widgets\/SliverChildBuilderDelegate-class.html\">SliverChildBuilderDelegate<\/a> with the matching arguments.<\/p>\n<p>The <a href=\"widgets\/BoxScrollView\/padding.html\">padding<\/a> property corresponds to having a <a href=\"widgets\/SliverPadding-class.html\">SliverPadding<\/a> in the\n<a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a> property instead of the list itself, and having\nthe <a href=\"widgets\/SliverList-class.html\">SliverList<\/a> instead be a child of the <a href=\"widgets\/SliverPadding-class.html\">SliverPadding<\/a>.<\/p>\n<p><a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>s don't automatically avoid obstructions from <a href=\"widgets\/MediaQuery-class.html\">MediaQuery<\/a>\nlike <a href=\"widgets\/ListView-class.html\">ListView<\/a>s do. To reproduce the behavior, wrap the slivers in\n<a href=\"widgets\/SliverSafeArea-class.html\">SliverSafeArea<\/a>s.<\/p>\n<p>Once code has been ported to use <a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>, other slivers, such as\n<a href=\"widgets\/SliverGrid-class.html\">SliverGrid<\/a> or <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a>, can be put in the <a href=\"widgets\/CustomScrollView\/slivers.html\">CustomScrollView.slivers<\/a>\nlist.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nHere are two brief snippets showing a <a href=\"widgets\/ListView-class.html\">ListView<\/a> and its equivalent using\n<a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">ListView(\n  shrinkWrap: true,\n  padding: const EdgeInsets.all(20.0),\n  children: &lt;Widget&gt;[\n    const Text('I\\'m dedicating every day to you'),\n    const Text('Domestic life was never quite my style'),\n    const Text('When you smile, you knock me out, I fall apart'),\n    const Text('And I thought I was so smart'),\n  ],\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">CustomScrollView(\n  shrinkWrap: true,\n  slivers: &lt;Widget&gt;[\n    SliverPadding(\n      padding: const EdgeInsets.all(20.0),\n      sliver: SliverList(\n        delegate: SliverChildListDelegate(\n          &lt;Widget&gt;[\n            const Text('I\\'m dedicating every day to you'),\n            const Text('Domestic life was never quite my style'),\n            const Text('When you smile, you knock me out, I fall apart'),\n            const Text('And I thought I was so smart'),\n          ],\n        ),\n      ),\n    ),\n  ],\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/SingleChildScrollView-class.html\">SingleChildScrollView<\/a>, which is a scrollable widget that has a single\nchild.<\/li>\n<li>\n<a href=\"widgets\/PageView-class.html\">PageView<\/a>, which is a scrolling list of child widgets that are each the\nsize of the viewport.<\/li>\n<li>\n<a href=\"widgets\/GridView-class.html\">GridView<\/a>, which is scrollable, 2D array of widgets.<\/li>\n<li>\n<a href=\"widgets\/CustomScrollView-class.html\">CustomScrollView<\/a>, which is a scrollable widget that creates custom\nscroll effects using slivers.<\/li>\n<li>\n<a href=\"widgets\/ListBody-class.html\">ListBody<\/a>, which arranges its children in a similar manner, but without\nscrolling.<\/li>\n<li>\n<a href=\"widgets\/ScrollNotification-class.html\">ScrollNotification<\/a> and <a href=\"widgets\/NotificationListener-class.html\">NotificationListener<\/a>, which can be used to watch\nthe scroll position without using a <a href=\"widgets\/ScrollController-class.html\">ScrollController<\/a>.<\/li>\n<\/ul>",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "widgets\/ListView-class.html",
     "isAbstract": "0",
     "isConstant": "0",
@@ -37,7 +37,7 @@
                 {
                     "name": "addAutomaticKeepAlives",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -46,7 +46,7 @@
                 {
                     "name": "addRepaintBoundaries",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -55,7 +55,7 @@
                 {
                     "name": "addSemanticIndexes",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -64,7 +64,7 @@
                 {
                     "name": "cacheExtent",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -73,7 +73,7 @@
                 {
                     "name": "children",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -82,7 +82,7 @@
                 {
                     "name": "controller",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -91,7 +91,7 @@
                 {
                     "name": "dragStartBehavior",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -100,7 +100,7 @@
                 {
                     "name": "itemExtent",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -109,7 +109,7 @@
                 {
                     "name": "key",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -118,7 +118,7 @@
                 {
                     "name": "padding",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -127,7 +127,7 @@
                 {
                     "name": "physics",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -136,7 +136,7 @@
                 {
                     "name": "primary",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -145,7 +145,7 @@
                 {
                     "name": "reverse",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -154,7 +154,7 @@
                 {
                     "name": "scrollDirection",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -163,7 +163,7 @@
                 {
                     "name": "semanticChildCount",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -172,7 +172,7 @@
                 {
                     "name": "shrinkWrap",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -194,7 +194,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -216,7 +216,7 @@
                 {
                     "name": "properties",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

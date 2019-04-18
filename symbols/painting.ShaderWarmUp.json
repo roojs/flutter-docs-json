@@ -1,7 +1,7 @@
 {
     "desc": "<p>Interface for drawing an image to warm up Skia shader compilations.<\/p>\n<p>When Skia first sees a certain type of draw operation on the GPU, it needs\nto compile the corresponding shader. The compilation can be slow (20ms-\n200ms). Having that time as startup latency is often better than having\njank in the middle of an animation.<\/p>\n<p>Therefore, we use this during the <a href=\"painting\/PaintingBinding\/initInstances.html\">PaintingBinding.initInstances<\/a> call to\nmove common shader compilations from animation time to startup time. By\ndefault, a <a href=\"painting\/DefaultShaderWarmUp-class.html\">DefaultShaderWarmUp<\/a> is used. If needed, app developers can\ncreate a custom <a href=\"painting\/ShaderWarmUp-class.html\">ShaderWarmUp<\/a> subclass and hand it to\n<a href=\"painting\/PaintingBinding\/shaderWarmUp.html\">PaintingBinding.shaderWarmUp<\/a> (so it replaces <a href=\"painting\/DefaultShaderWarmUp-class.html\">DefaultShaderWarmUp<\/a>)\nbefore <a href=\"painting\/PaintingBinding\/initInstances.html\">PaintingBinding.initInstances<\/a> is called. Usually, that can be\ndone before calling <a href=\"widgets\/runApp.html\">runApp<\/a>.<\/p>\n<p>To determine whether a draw operation is useful for warming up shaders,\ncheck whether it improves the slowest GPU frame. Also, tracing with\n<code>flutter run --profile --trace-skia<\/code> may reveal whether there is shader-\ncompilation-related jank. If there is such jank, some long\n<code>GrGLProgramBuilder::finalize<\/code> calls would appear in the middle of an\nanimation. Their parent calls, which look like <code>XyzOp<\/code> (e.g., <code>FillRecOp<\/code>,\n<code>CircularRRectOp<\/code>) would suggest Xyz draw operations are causing the\nshaders to be compiled. A useful shader warm-up draw operation would\neliminate such long compilation calls in the animation. To double-check\nthe warm-up, trace with <code>flutter run --profile --trace-skia --start-\npaused<\/code>. The <code>GrGLProgramBuilder<\/code> with the associated <code>XyzOp<\/code> should\nappear during startup rather than in the middle of a later animation.<\/p>\n<p>This warm-up needs to be run on each individual device because the shader\ncompilation depends on the specific GPU hardware and driver a device has. It\ncan't be pre-computed during the Flutter engine compilation as the engine is\ndevice-agnostic.<\/p>\n<p>If no warm-up is desired (e.g., when the startup latency is crucial), set\n<a href=\"painting\/PaintingBinding\/shaderWarmUp.html\">PaintingBinding.shaderWarmUp<\/a> either to a custom ShaderWarmUp with an empty\n<a href=\"painting\/ShaderWarmUp\/warmUpOnCanvas.html\">warmUpOnCanvas<\/a> or null.<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"painting\/PaintingBinding\/shaderWarmUp.html\">PaintingBinding.shaderWarmUp<\/a>, the actual instance of <a href=\"painting\/ShaderWarmUp-class.html\">ShaderWarmUp<\/a>\nthat's used to warm up the shaders.<\/li><\/ul>",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "painting\/ShaderWarmUp-class.html",
     "isAbstract": "1",
     "isConstant": "0",
@@ -53,7 +53,7 @@
                 {
                     "name": "canvas",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

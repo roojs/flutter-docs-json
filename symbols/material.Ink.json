@@ -1,7 +1,7 @@
 {
     "desc": "<p>A convenience widget for drawing images and other decorations on <a href=\"material\/Material-class.html\">Material<\/a>\nwidgets, so that <a href=\"material\/InkWell-class.html\">InkWell<\/a> and <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> splashes will render over them.<\/p>\n<p>Ink splashes and highlights, as rendered by <a href=\"material\/InkWell-class.html\">InkWell<\/a> and <a href=\"material\/InkResponse-class.html\">InkResponse<\/a>,\ndraw on the actual underlying <a href=\"material\/Material-class.html\">Material<\/a>, under whatever widgets are drawn\nover the material (such as <a href=\"widgets\/Text-class.html\">Text<\/a> and <a href=\"widgets\/Icon-class.html\">Icon<\/a>s). If an opaque image is drawn\nover the <a href=\"material\/Material-class.html\">Material<\/a> (maybe using a <a href=\"widgets\/Container-class.html\">Container<\/a> or <a href=\"widgets\/DecoratedBox-class.html\">DecoratedBox<\/a>), these ink\neffects will not be visible, as they will be entirely obscured by the opaque\ngraphics drawn above the <a href=\"material\/Material-class.html\">Material<\/a>.<\/p>\n<p>This widget draws the given <a href=\"painting\/Decoration-class.html\">Decoration<\/a> directly on the <a href=\"material\/Material-class.html\">Material<\/a>, in the\nsame way that <a href=\"material\/InkWell-class.html\">InkWell<\/a> and <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> draw there. This allows the\nsplashes to be drawn above the otherwise opaque graphics.<\/p>\n<p>An alternative solution is to use a <a href=\"material\/MaterialType-class.html\">MaterialType.transparency<\/a> material\nabove the opaque graphics, so that the ink responses from <a href=\"material\/InkWell-class.html\">InkWell<\/a>s and\n<a href=\"material\/InkResponse-class.html\">InkResponse<\/a>s will be drawn on the transparent material on top of the\nopaque graphics, rather than under the opaque graphics on the underlying\n<a href=\"material\/Material-class.html\">Material<\/a>.<\/p>\n<h2 id=\"limitations\">Limitations<\/h2>\n<p>This widget is subject to the same limitations as other ink effects, as\ndescribed in the documentation for <a href=\"material\/Material-class.html\">Material<\/a>. Most notably, the position of\nan <a href=\"material\/Ink-class.html\">Ink<\/a> widget must not change during the lifetime of the <a href=\"material\/Material-class.html\">Material<\/a> object\nunless a <a href=\"widgets\/LayoutChangedNotification-class.html\">LayoutChangedNotification<\/a> is dispatched each frame that the\nposition changes. This is done automatically for <a href=\"widgets\/ListView-class.html\">ListView<\/a> and other\nscrolling widgets, but is not done for animated transitions such as\n<a href=\"widgets\/SlideTransition-class.html\">SlideTransition<\/a>.<\/p>\n<p>Additionally, if multiple <a href=\"material\/Ink-class.html\">Ink<\/a> widgets paint on the same <a href=\"material\/Material-class.html\">Material<\/a> in the\nsame location, their relative order is not guaranteed. The decorations will\nbe painted in the order that they were added to the material, which\ngenerally speaking will match the order they are given in the widget tree,\nbut this order may appear to be somewhat random in more dynamic situations.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows how a <a href=\"material\/Material-class.html\">Material<\/a> widget can have a yellow rectangle drawn\non it using <a href=\"material\/Ink-class.html\">Ink<\/a>, while still having ink effects over the yellow rectangle:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">Material(\n  color: Colors.teal[900],\n  child: Center(\n    child: Ink(\n      color: Colors.yellow,\n      width: 200.0,\n      height: 100.0,\n      child: InkWell(\n        onTap: () { \/* ... *\/ },\n        child: Center(\n          child: Text('YELLOW'),\n        )\n      ),\n    ),\n  ),\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following example shows how an image can be printed on a <a href=\"material\/Material-class.html\">Material<\/a>\nwidget with an <a href=\"material\/InkWell-class.html\">InkWell<\/a> above it:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">Material(\n  color: Colors.grey[800],\n  child: Center(\n    child: Ink.image(\n      image: AssetImage('cat.jpeg'),\n      fit: BoxFit.cover,\n      width: 300.0,\n      height: 200.0,\n      child: InkWell(\n        onTap: () { \/* ... *\/ },\n        child: Align(\n          alignment: Alignment.topLeft,\n          child: Padding(\n            padding: const EdgeInsets.all(10.0),\n            child: Text('KITTEN', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white)),\n          ),\n        )\n      ),\n    ),\n  ),\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/Container-class.html\">Container<\/a>, a more generic form of this widget which paints itself,\nrather that deferring to the nearest <a href=\"material\/Material-class.html\">Material<\/a> widget.<\/li>\n<li>\n<a href=\"material\/InkDecoration-class.html\">InkDecoration<\/a>, the <a href=\"material\/InkFeature-class.html\">InkFeature<\/a> subclass used by this widget to paint\non <a href=\"material\/Material-class.html\">Material<\/a> widgets.<\/li>\n<li>\n<a href=\"material\/InkWell-class.html\">InkWell<\/a> and <a href=\"material\/InkResponse-class.html\">InkResponse<\/a>, which also draw on <a href=\"material\/Material-class.html\">Material<\/a> widgets.<\/li>\n<\/ul>",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "material\/Ink-class.html",
     "isAbstract": "0",
     "isConstant": "0",
@@ -35,7 +35,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -44,7 +44,7 @@
                 {
                     "name": "color",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -53,7 +53,7 @@
                 {
                     "name": "decoration",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -62,7 +62,7 @@
                 {
                     "name": "height",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -71,7 +71,7 @@
                 {
                     "name": "key",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -80,7 +80,7 @@
                 {
                     "name": "padding",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -89,7 +89,7 @@
                 {
                     "name": "width",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -123,7 +123,7 @@
                 {
                     "name": "properties",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

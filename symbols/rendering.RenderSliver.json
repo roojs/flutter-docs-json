@@ -1,7 +1,7 @@
 {
     "desc": "<p>Base class for the render objects that implement scroll effects in viewports.<\/p>\n<p>A <a href=\"rendering\/RenderViewport-class.html\">RenderViewport<\/a> has a list of child slivers. Each sliver \u2014 literally a\nslice of the viewport's contents \u2014 is laid out in turn, covering the\nviewport in the process. (Every sliver is laid out each time, including\nthose that have zero extent because they are \"scrolled off\" or are beyond\nthe end of the viewport.)<\/p>\n<p>Slivers participate in the <em>sliver protocol<\/em>, wherein during <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> each\nsliver receives a <a href=\"rendering\/SliverConstraints-class.html\">SliverConstraints<\/a> object and computes a corresponding\n<a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a> that describes where it fits in the viewport. This is\nanalogous to the box protocol used by <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, which gets a\n<a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> as input and computes a <a href=\"dart-ui\/Size-class.html\">Size<\/a>.<\/p>\n<p>Slivers have a leading edge, which is where the position described by\n<a href=\"rendering\/SliverConstraints\/scrollOffset.html\">SliverConstraints.scrollOffset<\/a> for this sliver begins. Slivers have\nseveral dimensions, the primary of which is <a href=\"rendering\/SliverGeometry\/paintExtent.html\">SliverGeometry.paintExtent<\/a>,\nwhich describes the extent of the sliver along the main axis, starting from\nthe leading edge, reaching either the end of the viewport or the end of the\nsliver, whichever comes first.<\/p>\n<p>Slivers can change dimensions based on the changing constraints in a\nnon-linear fashion, to achieve various scroll effects. For example, the\nvarious <a href=\"rendering\/RenderSliverPersistentHeader-class.html\">RenderSliverPersistentHeader<\/a> subclasses, on which <a href=\"material\/SliverAppBar-class.html\">SliverAppBar<\/a>\nis based, achieve effects such as staying visible despite the scroll offset,\nor reappearing at different offsets based on the user's scroll direction\n(<a href=\"rendering\/SliverConstraints\/userScrollDirection.html\">SliverConstraints.userScrollDirection<\/a>).<\/p>\n<h2 id=\"writing-a-rendersliver-subclass\">Writing a RenderSliver subclass<\/h2>\n<p>Slivers can have sliver children, or children from another coordinate\nsystem, typically box children. (For details on the box protocol, see\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>.) Slivers can also have different child models, typically having\neither one child, or a list of children.<\/p>\n<h3 id=\"examples-of-slivers\">Examples of slivers<\/h3>\n<p>A good example of a sliver with a single child that is also itself a sliver\nis <a href=\"rendering\/RenderSliverPadding-class.html\">RenderSliverPadding<\/a>, which indents its child. A sliver-to-sliver render\nobject such as this must construct a <a href=\"rendering\/SliverConstraints-class.html\">SliverConstraints<\/a> object for its\nchild, then must take its child's <a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a> and use it to form its\nown <a href=\"rendering\/RenderSliver\/geometry.html\">geometry<\/a>.<\/p>\n<p>The other common kind of one-child sliver is a sliver that has a single\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> child. An example of that would be <a href=\"rendering\/RenderSliverToBoxAdapter-class.html\">RenderSliverToBoxAdapter<\/a>,\nwhich lays out a single box and sizes itself around the box. Such a sliver\nmust use its <a href=\"rendering\/SliverConstraints-class.html\">SliverConstraints<\/a> to create a <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> for the\nchild, lay the child out (using the child's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> method), and then use\nthe child's <a href=\"rendering\/RenderBox\/size.html\">RenderBox.size<\/a> to generate the sliver's <a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a>.<\/p>\n<p>The most common kind of sliver though is one with multiple children. The\nmost straight-forward example of this is <a href=\"rendering\/RenderSliverList-class.html\">RenderSliverList<\/a>, which arranges\nits children one after the other in the main axis direction. As with the\none-box-child sliver case, it uses its <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> to create a\n<a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> for the children, and then it uses the aggregate\ninformation from all its children to generate its <a href=\"rendering\/RenderSliver\/geometry.html\">geometry<\/a>. Unlike the\none-child cases, however, it is judicious in which children it actually lays\nout (and later paints). If the scroll offset is 1000 pixels, and it\npreviously determined that the first three children are each 400 pixels\ntall, then it will skip the first two and start the layout with its third\nchild.<\/p>\n<h3 id=\"layout\">Layout<\/h3>\n<p>As they are laid out, slivers decide their <a href=\"rendering\/RenderSliver\/geometry.html\">geometry<\/a>, which includes their\nsize (<a href=\"rendering\/SliverGeometry\/paintExtent.html\">SliverGeometry.paintExtent<\/a>) and the position of the next sliver\n(<a href=\"rendering\/SliverGeometry\/layoutExtent.html\">SliverGeometry.layoutExtent<\/a>), as well as the position of each of their\nchildren, based on the input <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> from the viewport such as the\nscroll offset (<a href=\"rendering\/SliverConstraints\/scrollOffset.html\">SliverConstraints.scrollOffset<\/a>).<\/p>\n<p>For example, a sliver that just paints a box 100 pixels high would say its\n<a href=\"rendering\/SliverGeometry\/paintExtent.html\">SliverGeometry.paintExtent<\/a> was 100 pixels when the scroll offset was zero,\nbut would say its <a href=\"rendering\/SliverGeometry\/paintExtent.html\">SliverGeometry.paintExtent<\/a> was 25 pixels when the scroll\noffset was 75 pixels, and would say it was zero when the scroll offset was\n100 pixels or more. (This is assuming that\n<a href=\"rendering\/SliverConstraints\/remainingPaintExtent.html\">SliverConstraints.remainingPaintExtent<\/a> was more than 100 pixels.)<\/p>\n<p>The various dimensions that are provided as input to this system are in the\n<a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a>. They are described in detail in the documentation for the\n<a href=\"rendering\/SliverConstraints-class.html\">SliverConstraints<\/a> class.<\/p>\n<p>The <a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a> function must take these <a href=\"rendering\/RenderSliver\/constraints.html\">constraints<\/a> and create a\n<a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a> object that it must then assign to the <a href=\"rendering\/RenderSliver\/geometry.html\">geometry<\/a> property.\nThe different dimensions of the geometry that can be configured are\ndescribed in detail in the documentation for the <a href=\"rendering\/SliverGeometry-class.html\">SliverGeometry<\/a> class.<\/p>\n<h3 id=\"painting\">Painting<\/h3>\n<p>In addition to implementing layout, a sliver must also implement painting.\nThis is achieved by overriding the <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method.<\/p>\n<p>The <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method is called with an <a href=\"dart-ui\/Offset-class.html\">Offset<\/a> from the <a href=\"dart-ui\/Canvas-class.html\">Canvas<\/a> origin to\nthe top-left corner of the sliver, <em>regardless of the axis direction<\/em>.<\/p>\n<p>Subclasses should also override <a href=\"rendering\/RenderSliver\/applyPaintTransform.html\">applyPaintTransform<\/a> to provide the\n<a href=\"vector_math_64\/Matrix4-class.html\">Matrix4<\/a> describing the position of each child relative to the sliver.\n(This is used by, among other things, the accessibility layer, to determine\nthe bounds of the child.)<\/p>\n<h3 id=\"hit-testing\">Hit testing<\/h3>\n<p>To implement hit testing, either override the <a href=\"rendering\/RenderSliver\/hitTestSelf.html\">hitTestSelf<\/a> and\n<a href=\"rendering\/RenderSliver\/hitTestChildren.html\">hitTestChildren<\/a> methods, or, for more complex cases, instead override the\n<a href=\"rendering\/RenderSliver\/hitTest.html\">hitTest<\/a> method directly.<\/p>\n<p>To actually react to pointer events, the <a href=\"rendering\/RenderSliver\/handleEvent.html\">handleEvent<\/a> method may be\nimplemented. By default it does nothing. (Typically gestures are handled by\nwidgets in the box protocol, not by slivers directly.)<\/p>\n<h3 id=\"helper-methods\">Helper methods<\/h3>\n<p>There are a number of methods that a sliver should implement which will make\nthe other methods easier to implement. Each method listed below has detailed\ndocumentation. In addition, the <a href=\"rendering\/RenderSliverHelpers-class.html\">RenderSliverHelpers<\/a> class can be used to\nmix in some helpful methods.<\/p>\n<h4 id=\"childscrolloffset\">childScrollOffset<\/h4>\n<p>If the subclass positions children anywhere other than at scroll offset\nzero, it should override <a href=\"rendering\/RenderSliver\/childScrollOffset.html\">childScrollOffset<\/a>. For example,\n<a href=\"rendering\/RenderSliverList-class.html\">RenderSliverList<\/a> and <a href=\"rendering\/RenderSliverGrid-class.html\">RenderSliverGrid<\/a> override this method, but\n<a href=\"rendering\/RenderSliverToBoxAdapter-class.html\">RenderSliverToBoxAdapter<\/a> does not.<\/p>\n<p>This is used by, among other things, <a href=\"widgets\/Scrollable\/ensureVisible.html\">Scrollable.ensureVisible<\/a>.<\/p>\n<h4 id=\"childmainaxisposition\">childMainAxisPosition<\/h4>\n<p>Subclasses should implement <a href=\"rendering\/RenderSliver\/childMainAxisPosition.html\">childMainAxisPosition<\/a> to describe where their\nchildren are positioned.<\/p>\n<h4 id=\"childcrossaxisposition\">childCrossAxisPosition<\/h4>\n<p>If the subclass positions children in the cross-axis at a position other\nthan zero, then it should override <a href=\"rendering\/RenderSliver\/childCrossAxisPosition.html\">childCrossAxisPosition<\/a>. For example\n<a href=\"rendering\/RenderSliverGrid-class.html\">RenderSliverGrid<\/a> overrides this method.<\/p>\n    ",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "rendering\/RenderSliver-class.html",
     "isAbstract": "1",
     "isConstant": "0",
@@ -21,7 +21,7 @@
     "methods": [
         {
             "desc": null,
-            "example": null,
+            "example": "",
             "href": "rendering\/RenderSliver\/RenderSliver.html",
             "isDeprecated": "0",
             "type": "",
@@ -45,7 +45,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -54,7 +54,7 @@
                 {
                     "name": "transform",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -76,7 +76,7 @@
                 {
                     "name": "constraints",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -85,7 +85,7 @@
                 {
                     "name": "from",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -94,7 +94,7 @@
                 {
                     "name": "to",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -116,7 +116,7 @@
                 {
                     "name": "constraints",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -125,7 +125,7 @@
                 {
                     "name": "from",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -134,7 +134,7 @@
                 {
                     "name": "to",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -156,7 +156,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -178,7 +178,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -200,7 +200,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -234,7 +234,7 @@
                 {
                     "name": "properties",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -256,7 +256,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -265,7 +265,7 @@
                 {
                     "name": "offset",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -311,7 +311,7 @@
                 {
                     "name": "entry",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -320,7 +320,7 @@
                 {
                     "name": "event",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -342,7 +342,7 @@
                 {
                     "name": "crossAxisPosition",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -351,7 +351,7 @@
                 {
                     "name": "mainAxisPosition",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -360,7 +360,7 @@
                 {
                     "name": "result",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -382,7 +382,7 @@
                 {
                     "name": "crossAxisPosition",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -391,7 +391,7 @@
                 {
                     "name": "mainAxisPosition",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -400,7 +400,7 @@
                 {
                     "name": "result",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -422,7 +422,7 @@
                 {
                     "name": "crossAxisPosition",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -431,7 +431,7 @@
                 {
                     "name": "mainAxisPosition",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

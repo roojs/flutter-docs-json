@@ -1,7 +1,7 @@
 {
     "desc": "<p>A reference to a file on the file system.<\/p>\n<p>A File instance is an object that holds a <a href=\"dart-io\/File\/path.html\">path<\/a> on which operations can\nbe performed.\nYou can get the parent directory of the file using the getter <a href=\"dart-io\/FileSystemEntity\/parent.html\">parent<\/a>,\na property inherited from <a href=\"dart-io\/FileSystemEntity-class.html\">FileSystemEntity<\/a>.<\/p>\n<p>Create a new File object with a pathname to access the specified file on the\nfile system from your program.<\/p>\n<pre class=\"language-dart\"><code>var myFile = new File('file.txt');\n<\/code><\/pre>\n<p>The File class contains methods for manipulating files and their contents.\nUsing methods in this class, you can open and close files, read to and write\nfrom them, create and delete them, and check for their existence.<\/p>\n<p>When reading or writing a file, you can use streams (with <a href=\"dart-io\/File\/openRead.html\">openRead<\/a>),\nrandom access operations (with <a href=\"dart-io\/File\/open.html\">open<\/a>),\nor convenience methods such as <a href=\"dart-io\/File\/readAsString.html\">readAsString<\/a>,<\/p>\n<p>Most methods in this class occur in synchronous and asynchronous pairs,\nfor example, <a href=\"dart-io\/File\/readAsString.html\">readAsString<\/a> and <a href=\"dart-io\/File\/readAsStringSync.html\">readAsStringSync<\/a>.\nUnless you have a specific reason for using the synchronous version\nof a method, prefer the asynchronous version to avoid blocking your program.<\/p>\n<h2 id=\"if-path-is-a-link\">If path is a link<\/h2>\n<p>If <a href=\"dart-io\/File\/path.html\">path<\/a> is a symbolic link, rather than a file,\nthen the methods of File operate on the ultimate target of the\nlink, except for <a href=\"dart-io\/FileSystemEntity\/delete.html\">delete<\/a> and <a href=\"dart-io\/FileSystemEntity\/deleteSync.html\">deleteSync<\/a>, which operate on\nthe link.<\/p>\n<h2 id=\"read-from-a-file\">Read from a file<\/h2>\n<p>The following code sample reads the entire contents from a file as a string\nusing the asynchronous <a href=\"dart-io\/File\/readAsString.html\">readAsString<\/a> method:<\/p>\n<pre class=\"language-dart\"><code>import 'dart:async';\nimport 'dart:io';\n\nvoid main() {\n  new File('file.txt').readAsString().then((String contents) {\n    print(contents);\n  });\n}\n<\/code><\/pre>\n<p>A more flexible and useful way to read a file is with a <a href=\"dart-async\/Stream-class.html\">Stream<\/a>.\nOpen the file with <a href=\"dart-io\/File\/openRead.html\">openRead<\/a>, which returns a stream that\nprovides the data in the file as chunks of bytes.\nListen to the stream for data and process as needed.\nYou can use various transformers in succession to manipulate the\ndata into the required format or to prepare it for output.<\/p>\n<p>You might want to use a stream to read large files,\nto manipulate the data with transformers,\nor for compatibility with another API, such as <a href=\"dart-io\/WebSocket-class.html\">WebSocket<\/a>s.<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\nimport 'dart:convert';\nimport 'dart:async';\n\nmain() {\n  final file = new File('file.txt');\n  Stream&lt;List&lt;int&gt;&gt; inputStream = file.openRead();\n\n  inputStream\n    .transform(utf8.decoder)       \/\/ Decode bytes to UTF-8.\n    .transform(new LineSplitter()) \/\/ Convert stream to individual lines.\n    .listen((String line) {        \/\/ Process results.\n        print('$line: ${line.length} bytes');\n      },\n      onDone: () { print('File is now closed.'); },\n      onError: (e) { print(e.toString()); });\n}\n<\/code><\/pre>\n<h2 id=\"write-to-a-file\">Write to a file<\/h2>\n<p>To write a string to a file, use the <a href=\"dart-io\/File\/writeAsString.html\">writeAsString<\/a> method:<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\n\nvoid main() {\n  final filename = 'file.txt';\n  new File(filename).writeAsString('some content')\n    .then((File file) {\n      \/\/ Do something with the file.\n    });\n}\n<\/code><\/pre>\n<p>You can also write to a file using a <a href=\"dart-async\/Stream-class.html\">Stream<\/a>. Open the file with\n<a href=\"dart-io\/File\/openWrite.html\">openWrite<\/a>, which returns an <a href=\"dart-io\/IOSink-class.html\">IOSink<\/a> to which you can write data.\nBe sure to close the sink with the <a href=\"dart-io\/IOSink\/close.html\">IOSink.close<\/a> method.<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\n\nvoid main() {\n  var file = new File('file.txt');\n  var sink = file.openWrite();\n  sink.write('FILE ACCESSED ${new DateTime.now()}\\n');\n\n  \/\/ Close the IOSink to free system resources.\n  sink.close();\n}\n<\/code><\/pre>\n<h2 id=\"the-use-of-futures\">The use of Futures<\/h2>\n<p>To avoid unintentional blocking of the program,\nseveral methods use a <a href=\"dart-async\/Future-class.html\">Future<\/a> to return a value. For example,\nthe <a href=\"dart-io\/File\/length.html\">length<\/a> method, which gets the length of a file, returns a Future.\nUse <code>then<\/code> to register a callback function, which is called when\nthe value is ready.<\/p>\n<pre class=\"language-dart\"><code>import 'dart:io';\n\nmain() {\n  final file = new File('file.txt');\n\n  file.length().then((len) {\n    print(len);\n  });\n}\n<\/code><\/pre>\n<p>In addition to length, the <a href=\"dart-io\/FileSystemEntity\/exists.html\">exists<\/a>, <a href=\"dart-io\/File\/lastModified.html\">lastModified<\/a>, <a href=\"dart-io\/FileSystemEntity\/stat.html\">stat<\/a>, and\nother methods, return Futures.<\/p>\n<h2 id=\"other-resources\">Other resources<\/h2>\n<ul>\n<li>\n<p><a href=\"https:\/\/www.dartlang.org\/dart-by-example\/#files-directories-and-symlinks\">Dart by Example<\/a>\nprovides additional task-oriented code samples that show how to use\nvarious API from the Directory class and the related <a href=\"dart-io\/File-class.html\">File<\/a> class.<\/p>\n<\/li>\n<li>\n<p><a href=\"https:\/\/www.dartlang.org\/docs\/dart-up-and-running\/ch03.html#dartio---io-for-command-line-apps\">I\/O for Command-Line\nApps<\/a>\na section from <em>A Tour of the Dart Libraries<\/em> covers files and directories.<\/p>\n<\/li>\n<li>\n<p><a href=\"https:\/\/www.dartlang.org\/docs\/tutorials\/cmdline\/\">Write Command-Line Apps<\/a>,\na tutorial about writing command-line apps, includes information about\nfiles and directories.<\/p>\n<\/li>\n<\/ul>",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "dart-io\/File-class.html",
     "isAbstract": "1",
     "isConstant": "0",
@@ -29,7 +29,7 @@
                 {
                     "name": "path",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -51,7 +51,7 @@
                 {
                     "name": "newPath",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -73,7 +73,7 @@
                 {
                     "name": "newPath",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -95,7 +95,7 @@
                 {
                     "name": "recursive",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -117,7 +117,7 @@
                 {
                     "name": "recursive",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -211,7 +211,7 @@
                 {
                     "name": "mode",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -233,7 +233,7 @@
                 {
                     "name": "end",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -242,7 +242,7 @@
                 {
                     "name": "start",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -264,7 +264,7 @@
                 {
                     "name": "mode",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -286,7 +286,7 @@
                 {
                     "name": "encoding",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -295,7 +295,7 @@
                 {
                     "name": "mode",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -341,7 +341,7 @@
                 {
                     "name": "encoding",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -363,7 +363,7 @@
                 {
                     "name": "encoding",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -385,7 +385,7 @@
                 {
                     "name": "encoding",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -407,7 +407,7 @@
                 {
                     "name": "encoding",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -429,7 +429,7 @@
                 {
                     "name": "newPath",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -451,7 +451,7 @@
                 {
                     "name": "newPath",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -473,7 +473,7 @@
                 {
                     "name": "time",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -495,7 +495,7 @@
                 {
                     "name": "time",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -517,7 +517,7 @@
                 {
                     "name": "time",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -539,7 +539,7 @@
                 {
                     "name": "time",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -561,7 +561,7 @@
                 {
                     "name": "bytes",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -570,7 +570,7 @@
                 {
                     "name": "flush",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -579,7 +579,7 @@
                 {
                     "name": "mode",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -601,7 +601,7 @@
                 {
                     "name": "bytes",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -610,7 +610,7 @@
                 {
                     "name": "flush",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -619,7 +619,7 @@
                 {
                     "name": "mode",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -641,7 +641,7 @@
                 {
                     "name": "contents",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -650,7 +650,7 @@
                 {
                     "name": "encoding",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -659,7 +659,7 @@
                 {
                     "name": "flush",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -668,7 +668,7 @@
                 {
                     "name": "mode",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -690,7 +690,7 @@
                 {
                     "name": "contents",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -699,7 +699,7 @@
                 {
                     "name": "encoding",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -708,7 +708,7 @@
                 {
                     "name": "flush",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -717,7 +717,7 @@
                 {
                     "name": "mode",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

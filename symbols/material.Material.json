@@ -1,7 +1,7 @@
 {
     "desc": "<p>A piece of material.<\/p>\n<p>The Material widget is responsible for:<\/p>\n<ol>\n<li>Clipping: If <a href=\"material\/Material\/clipBehavior.html\">clipBehavior<\/a> is not <a href=\"dart-ui\/Clip-class.html\">Clip.none<\/a>, Material clips its widget\nsub-tree to the shape specified by <a href=\"material\/Material\/shape.html\">shape<\/a>, <a href=\"material\/Material\/type.html\">type<\/a>, and <a href=\"material\/Material\/borderRadius.html\">borderRadius<\/a>.\nBy default, <a href=\"material\/Material\/clipBehavior.html\">clipBehavior<\/a> is <a href=\"dart-ui\/Clip-class.html\">Clip.none<\/a> for performance considerations.<\/li>\n<li>Elevation: Material elevates its widget sub-tree on the Z axis by\n<a href=\"material\/Material\/elevation.html\">elevation<\/a> pixels, and draws the appropriate shadow.<\/li>\n<li>Ink effects: Material shows ink effects implemented by <a href=\"material\/InkFeature-class.html\">InkFeature<\/a>s\nlike <a href=\"material\/InkSplash-class.html\">InkSplash<\/a> and <a href=\"material\/InkHighlight-class.html\">InkHighlight<\/a> below its children.<\/li>\n<\/ol>\n<h2 id=\"the-material-metaphor\">The Material Metaphor<\/h2>\n<p>Material is the central metaphor in material design. Each piece of material\nexists at a given elevation, which influences how that piece of material\nvisually relates to other pieces of material and how that material casts\nshadows.<\/p>\n<p>Most user interface elements are either conceptually printed on a piece of\nmaterial or themselves made of material. Material reacts to user input using\n<a href=\"material\/InkSplash-class.html\">InkSplash<\/a> and <a href=\"material\/InkHighlight-class.html\">InkHighlight<\/a> effects. To trigger a reaction on the\nmaterial, use a <a href=\"material\/MaterialInkController-class.html\">MaterialInkController<\/a> obtained via <a href=\"material\/Material\/of.html\">Material.of<\/a>.<\/p>\n<p>In general, the features of a <a href=\"material\/Material-class.html\">Material<\/a> should not change over time (e.g. a\n<a href=\"material\/Material-class.html\">Material<\/a> should not change its <a href=\"material\/Material\/color.html\">color<\/a>, <a href=\"material\/Material\/shadowColor.html\">shadowColor<\/a> or <a href=\"material\/Material\/type.html\">type<\/a>).\nChanges to <a href=\"material\/Material\/elevation.html\">elevation<\/a> and <a href=\"material\/Material\/shadowColor.html\">shadowColor<\/a> are animated for <a href=\"material\/Material\/animationDuration.html\">animationDuration<\/a>.\nChanges to <a href=\"material\/Material\/shape.html\">shape<\/a> are animated if <a href=\"material\/Material\/type.html\">type<\/a> is not <a href=\"material\/MaterialType-class.html\">MaterialType.transparency<\/a>\nand <a href=\"painting\/ShapeBorder\/lerp.html\">ShapeBorder.lerp<\/a> between the previous and next <a href=\"material\/Material\/shape.html\">shape<\/a> values is\nsupported. Shape changes are also animated for <a href=\"material\/Material\/animationDuration.html\">animationDuration<\/a>.<\/p>\n<h2 id=\"shape\">Shape<\/h2>\n<p>The shape for material is determined by <a href=\"material\/Material\/shape.html\">shape<\/a>, <a href=\"material\/Material\/type.html\">type<\/a>, and <a href=\"material\/Material\/borderRadius.html\">borderRadius<\/a>.<\/p>\n<ul>\n<li>If <a href=\"material\/Material\/shape.html\">shape<\/a> is non null, it determines the shape.<\/li>\n<li>If <a href=\"material\/Material\/shape.html\">shape<\/a> is null and <a href=\"material\/Material\/borderRadius.html\">borderRadius<\/a> is non null, the shape is a\nrounded rectangle, with corners specified by <a href=\"material\/Material\/borderRadius.html\">borderRadius<\/a>.<\/li>\n<li>If <a href=\"material\/Material\/shape.html\">shape<\/a> and <a href=\"material\/Material\/borderRadius.html\">borderRadius<\/a> are null, <a href=\"material\/Material\/type.html\">type<\/a> determines the\nshape as follows:<ul>\n<li>\n<a href=\"material\/MaterialType-class.html\">MaterialType.canvas<\/a>: the default material shape is a rectangle.<\/li>\n<li>\n<a href=\"material\/MaterialType-class.html\">MaterialType.card<\/a>: the default material shape is a rectangle with\nrounded edges. The edge radii is specified by <a href=\"material\/kMaterialEdges.html\">kMaterialEdges<\/a>.<\/li>\n<li>\n<a href=\"material\/MaterialType-class.html\">MaterialType.circle<\/a>: the default material shape is a circle.<\/li>\n<li>\n<a href=\"material\/MaterialType-class.html\">MaterialType.button<\/a>: the default material shape is a rectangle with\nrounded edges. The edge radii is specified by <a href=\"material\/kMaterialEdges.html\">kMaterialEdges<\/a>.<\/li>\n<li>\n<a href=\"material\/MaterialType-class.html\">MaterialType.transparency<\/a>: the default material shape is a rectangle.<\/li>\n<\/ul>\n<\/li>\n<\/ul>\n<h2 id=\"border\">Border<\/h2>\n<p>If <a href=\"material\/Material\/shape.html\">shape<\/a> is not null, then its border will also be painted (if any).<\/p>\n<h2 id=\"layout-change-notifications\">Layout change notifications<\/h2>\n<p>If the layout changes (e.g. because there's a list on the material, and it's\nbeen scrolled), a <a href=\"widgets\/LayoutChangedNotification-class.html\">LayoutChangedNotification<\/a> must be dispatched at the\nrelevant subtree. This in particular means that transitions (e.g.\n<a href=\"widgets\/SlideTransition-class.html\">SlideTransition<\/a>) should not be placed inside <a href=\"material\/Material-class.html\">Material<\/a> widgets so as to\nmove subtrees that contain <a href=\"material\/InkResponse-class.html\">InkResponse<\/a>s, <a href=\"material\/InkWell-class.html\">InkWell<\/a>s, <a href=\"material\/Ink-class.html\">Ink<\/a>s, or other\nwidgets that use the <a href=\"material\/InkFeature-class.html\">InkFeature<\/a> mechanism. Otherwise, in-progress ink\nfeatures (e.g., ink splashes and ink highlights) won't move to account for\nthe new layout.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"material\/MergeableMaterial-class.html\">MergeableMaterial<\/a>, a piece of material that can split and re-merge.<\/li>\n<li>\n<a href=\"material\/Card-class.html\">Card<\/a>, a wrapper for a <a href=\"material\/Material-class.html\">Material<\/a> of <a href=\"material\/Material\/type.html\">type<\/a> <a href=\"material\/MaterialType-class.html\">MaterialType.card<\/a>.<\/li>\n<li><a href=\"https:\/\/material.io\/design\/\">material.io\/design\/<\/a><\/li>\n<\/ul>",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "material\/Material-class.html",
     "isAbstract": "0",
     "isConstant": "0",
@@ -35,7 +35,7 @@
                 {
                     "name": "animationDuration",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -44,7 +44,7 @@
                 {
                     "name": "borderOnForeground",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -53,7 +53,7 @@
                 {
                     "name": "borderRadius",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -62,7 +62,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -71,7 +71,7 @@
                 {
                     "name": "clipBehavior",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -80,7 +80,7 @@
                 {
                     "name": "color",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -89,7 +89,7 @@
                 {
                     "name": "elevation",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -98,7 +98,7 @@
                 {
                     "name": "key",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -107,7 +107,7 @@
                 {
                     "name": "shadowColor",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -116,7 +116,7 @@
                 {
                     "name": "shape",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -125,7 +125,7 @@
                 {
                     "name": "textStyle",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -134,7 +134,7 @@
                 {
                     "name": "type",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -168,7 +168,7 @@
                 {
                     "name": "properties",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -190,7 +190,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

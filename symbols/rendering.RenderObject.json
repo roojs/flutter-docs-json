@@ -1,7 +1,7 @@
 {
     "desc": "<p>An object in the render tree.<\/p>\n<p>The <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> class hierarchy is the core of the rendering\nlibrary's reason for being.<\/p>\n<p><a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s have a <a href=\"foundation\/AbstractNode\/parent.html\">parent<\/a>, and have a slot called <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> in\nwhich the parent <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> can store child-specific data, for example,\nthe child position. The <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> class also implements the basic\nlayout and paint protocols.<\/p>\n<p>The <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> class, however, does not define a child model (e.g.\nwhether a node has zero, one, or more children). It also doesn't define a\ncoordinate system (e.g. whether children are positioned in Cartesian\ncoordinates, in polar coordinates, etc) or a specific layout protocol (e.g.\nwhether the layout is width-in-height-out, or constraint-in-size-out, or\nwhether the parent sets the size and position of the child before or after\nthe child lays out, etc; or indeed whether the children are allowed to read\ntheir parent's <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> slot).<\/p>\n<p>The <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass introduces the opinion that the layout\nsystem uses Cartesian coordinates.<\/p>\n<h2 id=\"writing-a-renderobject-subclass\">Writing a RenderObject subclass<\/h2>\n<p>In most cases, subclassing <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> itself is overkill, and\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> would be a better starting point. However, if a render object\ndoesn't want to use a Cartesian coordinate system, then it should indeed\ninherit from <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> directly. This allows it to define its own\nlayout protocol by using a new subclass of <a href=\"rendering\/Constraints-class.html\">Constraints<\/a> rather than using\n<a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a>, and by potentially using an entirely new set of objects\nand values to represent the result of the output rather than just a <a href=\"dart-ui\/Size-class.html\">Size<\/a>.\nThis increased flexibility comes at the cost of not being able to rely on\nthe features of <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>. For example, <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> implements an\nintrinsic sizing protocol that allows you to measure a child without fully\nlaying it out, in such a way that if that child changes size, the parent\nwill be laid out again (to take into account the new dimensions of the\nchild). This is a subtle and bug-prone feature to get right.<\/p>\n<p>Most aspects of writing a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> apply to writing a <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> as\nwell, and therefore the discussion at <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> is recommended background\nreading. The main differences are around layout and hit testing, since those\nare the aspects that <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> primarily specializes.<\/p>\n<h3 id=\"layout\">Layout<\/h3>\n<p>A layout protocol begins with a subclass of <a href=\"rendering\/Constraints-class.html\">Constraints<\/a>. See the\ndiscussion at <a href=\"rendering\/Constraints-class.html\">Constraints<\/a> for more information on how to write a\n<a href=\"rendering\/Constraints-class.html\">Constraints<\/a> subclass.<\/p>\n<p>The <a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a> method should take the <a href=\"rendering\/RenderObject\/constraints.html\">constraints<\/a>, and apply them.\nThe output of the layout algorithm is fields set on the object that describe\nthe geometry of the object for the purposes of the parent's layout. For\nexample, with <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> the output is the <a href=\"rendering\/RenderBox\/size.html\">RenderBox.size<\/a> field. This\noutput should only be read by the parent if the parent specified\n<code>parentUsesSize<\/code> as true when calling <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> on the child.<\/p>\n<p>Anytime anything changes on a render object that would affect the layout of\nthat object, it should call <a href=\"rendering\/RenderObject\/markNeedsLayout.html\">markNeedsLayout<\/a>.<\/p>\n<h3 id=\"hit-testing\">Hit Testing<\/h3>\n<p>Hit testing is even more open-ended than layout. There is no method to\noverride, you are expected to provide one.<\/p>\n<p>The general behavior of your hit-testing method should be similar to the\nbehavior described for <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>. The main difference is that the input\nneed not be an <a href=\"dart-ui\/Offset-class.html\">Offset<\/a>. You are also allowed to use a different subclass of\n<a href=\"gestures\/HitTestEntry-class.html\">HitTestEntry<\/a> when adding entries to the <a href=\"gestures\/HitTestResult-class.html\">HitTestResult<\/a>. When the\n<a href=\"rendering\/RenderObject\/handleEvent.html\">handleEvent<\/a> method is called, the same object that was added to the\n<a href=\"gestures\/HitTestResult-class.html\">HitTestResult<\/a> will be passed in, so it can be used to track information\nlike the precise coordinate of the hit, in whatever coordinate system is\nused by the new layout protocol.<\/p>\n<h3 id=\"adapting-from-one-protocol-to-another\">Adapting from one protocol to another<\/h3>\n<p>In general, the root of a Flutter render object tree is a <a href=\"rendering\/RenderView-class.html\">RenderView<\/a>. This\nobject has a single child, which must be a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>. Thus, if you want to\nhave a custom <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> subclass in the render tree, you have two\nchoices: you either need to replace the <a href=\"rendering\/RenderView-class.html\">RenderView<\/a> itself, or you need to\nhave a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> that has your class as its child. (The latter is the much\nmore common case.)<\/p>\n<p>This <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass converts from the box protocol to the protocol of\nyour class.<\/p>\n<p>In particular, this means that for hit testing it overrides\n<a href=\"rendering\/RenderBox\/hitTest.html\">RenderBox.hitTest<\/a>, and calls whatever method you have in your class for\nhit testing.<\/p>\n<p>Similarly, it overrides <a href=\"rendering\/RenderObject\/performLayout.html\">performLayout<\/a> to create a <a href=\"rendering\/Constraints-class.html\">Constraints<\/a> object\nappropriate for your class and passes that to the child's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> method.<\/p>\n<h3 id=\"layout-interactions-between-render-objects\">Layout interactions between render objects<\/h3>\n<p>In general, the layout of a render object should only depend on the output of\nits child's layout, and then only if <code>parentUsesSize<\/code> is set to true in the\n<a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> call. Furthermore, if it is set to true, the parent must call the\nchild's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> if the child is to be rendered, because otherwise the\nparent will not be notified when the child changes its layout outputs.<\/p>\n<p>It is possible to set up render object protocols that transfer additional\ninformation. For example, in the <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> protocol you can query your\nchildren's intrinsic dimensions and baseline geometry. However, if this is\ndone then it is imperative that the child call <a href=\"rendering\/RenderObject\/markNeedsLayout.html\">markNeedsLayout<\/a> on the\nparent any time that additional information changes, if the parent used it\nin the last layout phase. For an example of how to implement this, see the\n<a href=\"rendering\/RenderObject\/markNeedsLayout.html\">RenderBox.markNeedsLayout<\/a> method. It overrides\n<a href=\"rendering\/RenderObject\/markNeedsLayout.html\">RenderObject.markNeedsLayout<\/a> so that if a parent has queried the intrinsic\nor baseline information, it gets marked dirty whenever the child's geometry\nchanges.<\/p>\n    ",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "rendering\/RenderObject-class.html",
     "isAbstract": "1",
     "isConstant": "0",
@@ -44,7 +44,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -66,7 +66,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -75,7 +75,7 @@
                 {
                     "name": "transform",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -97,7 +97,7 @@
                 {
                     "name": "children",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -106,7 +106,7 @@
                 {
                     "name": "config",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -115,7 +115,7 @@
                 {
                     "name": "node",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -137,7 +137,7 @@
                 {
                     "name": "owner",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -195,7 +195,7 @@
                 {
                     "name": "properties",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -217,7 +217,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -226,7 +226,7 @@
                 {
                     "name": "offset",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -248,7 +248,7 @@
                 {
                     "name": "includedChild",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -257,7 +257,7 @@
                 {
                     "name": "includedParent",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -291,7 +291,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -313,7 +313,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -335,7 +335,7 @@
                 {
                     "name": "config",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -357,7 +357,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -379,7 +379,7 @@
                 {
                     "name": "ancestor",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -401,7 +401,7 @@
                 {
                     "name": "entry",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -410,7 +410,7 @@
                 {
                     "name": "event",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -432,7 +432,7 @@
                 {
                     "name": "callback",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -454,7 +454,7 @@
                 {
                     "name": "constraints",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -463,7 +463,7 @@
                 {
                     "name": "parentUsesSize",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -557,7 +557,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -566,7 +566,7 @@
                 {
                     "name": "offset",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -624,7 +624,7 @@
                 {
                     "name": "rootLayer",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -646,7 +646,7 @@
                 {
                     "name": "newAngle",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -655,7 +655,7 @@
                 {
                     "name": "oldAngle",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -664,7 +664,7 @@
                 {
                     "name": "time",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -698,7 +698,7 @@
                 {
                     "name": "rootLayer",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -732,7 +732,7 @@
                 {
                     "name": "semanticsEvent",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -754,7 +754,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -776,7 +776,7 @@
                 {
                     "name": "curve",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -785,7 +785,7 @@
                 {
                     "name": "descendant",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -794,7 +794,7 @@
                 {
                     "name": "duration",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -803,7 +803,7 @@
                 {
                     "name": "rect",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -825,7 +825,7 @@
                 {
                     "name": "minLevel",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -847,7 +847,7 @@
                 {
                     "name": "minLevel",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -856,7 +856,7 @@
                 {
                     "name": "prefixLineOne",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -865,7 +865,7 @@
                 {
                     "name": "prefixOtherLines",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -887,7 +887,7 @@
                 {
                     "name": "joiner",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -896,7 +896,7 @@
                 {
                     "name": "minLevel",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -930,7 +930,7 @@
                 {
                     "name": "visitor",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -952,7 +952,7 @@
                 {
                     "name": "visitor",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

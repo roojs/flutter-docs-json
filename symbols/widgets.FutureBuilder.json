@@ -1,7 +1,7 @@
 {
     "desc": "<p>Widget that builds itself based on the latest snapshot of interaction with\na <a href=\"dart-async\/Future-class.html\">Future<\/a>.<\/p>\n<p>The <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> must have been obtained earlier, e.g. during <a href=\"widgets\/State\/initState.html\">State.initState<\/a>,\n<code>State.didUpdateConfig<\/code>, or <a href=\"widgets\/State\/didChangeDependencies.html\">State.didChangeDependencies<\/a>. It must not be\ncreated during the <a href=\"widgets\/State\/build.html\">State.build<\/a> or <a href=\"widgets\/StatelessWidget\/build.html\">StatelessWidget.build<\/a> method call when\nconstructing the <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a>. If the <a href=\"widgets\/FutureBuilder\/future.html\">future<\/a> is created at the same\ntime as the <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a>, then every time the <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a>'s parent is\nrebuilt, the asynchronous task will be restarted.<\/p>\n<p>A general guideline is to assume that every <code>build<\/code> method could get called\nevery frame, and to treat omitted calls as an optimization.<\/p>\n<h2 id=\"timing\">Timing<\/h2>\n<p>Widget rebuilding is scheduled by the completion of the future, using\n<a href=\"widgets\/State\/setState.html\">State.setState<\/a>, but is otherwise decoupled from the timing of the future.\nThe <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> callback is called at the discretion of the Flutter pipeline, and\nwill thus receive a timing-dependent sub-sequence of the snapshots that\nrepresent the interaction with the future.<\/p>\n<p>A side-effect of this is that providing a new but already-completed future\nto a <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a> will result in a single frame in the\n<a href=\"widgets\/ConnectionState-class.html\">ConnectionState.waiting<\/a> state. This is because there is no way to\nsynchronously determine that a <a href=\"dart-async\/Future-class.html\">Future<\/a> has already completed.<\/p>\n<h2 id=\"builder-contract\">Builder contract<\/h2>\n<p>For a future that completes successfully with data, assuming <a href=\"widgets\/FutureBuilder\/initialData.html\">initialData<\/a>\nis null, the <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> will be called with either both or only the latter of\nthe following snapshots:<\/p>\n<ul>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.waiting, null)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.done, 'some data')<\/code><\/li>\n<\/ul>\n<p>If that same future instead completed with an error, the <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> would be\ncalled with either both or only the latter of:<\/p>\n<ul>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.waiting, null)<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;String&gt;.withError(ConnectionState.done, 'some error')<\/code><\/li>\n<\/ul>\n<p>The initial snapshot data can be controlled by specifying <a href=\"widgets\/FutureBuilder\/initialData.html\">initialData<\/a>. You\nwould use this facility to ensure that if the <a href=\"widgets\/FutureBuilder\/builder.html\">builder<\/a> is invoked before\nthe future completes, the snapshot carries data of your choice rather than\nthe default null value.<\/p>\n<p>The data and error fields of the snapshot change only as the connection\nstate field transitions from <code>waiting<\/code> to <code>done<\/code>, and they will be retained\nwhen changing the <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a> configuration to another future. If the\nold future has already completed successfully with data as above, changing\nconfiguration to a new future results in snapshot pairs of the form:<\/p>\n<ul>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.none, 'data of first future')<\/code><\/li>\n<li><code>new AsyncSnapshot&lt;String&gt;.withData(ConnectionState.waiting, 'data of second future')<\/code><\/li>\n<\/ul>\n<p>In general, the latter will be produced only when the new future is\nnon-null, and the former only when the old future is non-null.<\/p>\n<p>A <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a> behaves identically to a <a href=\"widgets\/StreamBuilder-class.html\">StreamBuilder<\/a> configured with\n<code>future?.asStream()<\/code>, except that snapshots with <code>ConnectionState.active<\/code>\nmay appear for the latter, depending on how the stream is implemented.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis sample shows a <a href=\"widgets\/FutureBuilder-class.html\">FutureBuilder<\/a> configuring a text label to show the\nstate of an asynchronous calculation returning a string. Assume the\n<code>_calculation<\/code> field is set by pressing a button elsewhere in the UI.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">FutureBuilder&lt;String&gt;(\n  future: _calculation, \/\/ a previously-obtained Future&lt;String&gt; or null\n  builder: (BuildContext context, AsyncSnapshot&lt;String&gt; snapshot) {\n    switch (snapshot.connectionState) {\n      case ConnectionState.none:\n        return Text('Press button to start.');\n      case ConnectionState.active:\n      case ConnectionState.waiting:\n        return Text('Awaiting result...');\n      case ConnectionState.done:\n        if (snapshot.hasError)\n          return Text('Error: ${snapshot.error}');\n        return Text('Result: ${snapshot.data}');\n    }\n    return null; \/\/ unreachable\n  },\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n    ",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "widgets\/FutureBuilder-class.html",
     "isAbstract": "0",
     "isConstant": "0",
@@ -45,7 +45,7 @@
                 {
                     "name": "builder",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -54,7 +54,7 @@
                 {
                     "name": "future",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -63,7 +63,7 @@
                 {
                     "name": "initialData",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -72,7 +72,7 @@
                 {
                     "name": "key",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,

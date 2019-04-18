@@ -1,7 +1,7 @@
 {
     "desc": "<p>A stream controller that delivers its events synchronously.<\/p>\n<p>A synchronous stream controller is intended for cases where\nan already asynchronous event triggers an event on a stream.<\/p>\n<p>Instead of adding the event to the stream in a later microtask,\ncausing extra latency, the event is instead fired immediately by the\nsynchronous stream controller, as if the stream event was\nthe current event or microtask.<\/p>\n<p>The synchronous stream controller can be used to break the contract\non <a href=\"dart-async\/Stream-class.html\">Stream<\/a>, and it must be used carefully to avoid doing so.<\/p>\n<p>The only advantage to using a <a href=\"dart-async\/SynchronousStreamController-class.html\">SynchronousStreamController<\/a> over a\nnormal <a href=\"dart-async\/StreamController-class.html\">StreamController<\/a> is the improved latency.\nOnly use the synchronous version if the improvement is significant,\nand if its use is safe. Otherwise just use a normal stream controller,\nwhich will always have the correct behavior for a <a href=\"dart-async\/Stream-class.html\">Stream<\/a>, and won't\naccidentally break other code.<\/p>\n<p>Adding events to a synchronous controller should only happen as the\nvery last part of the handling of the original event.\nAt that point, adding an event to the stream is equivalent to\nreturning to the event loop and adding the event in the next microtask.<\/p>\n<p>Each listener callback will be run as if it was a top-level event\nor microtask. This means that if it throws, the error will be reported as\nuncaught as soon as possible.\nThis is one reason to add the event as the last thing in the original event\nhandler - any action done after adding the event will delay the report of\nerrors in the event listener callbacks.<\/p>\n<p>If an event is added in a setting that isn't known to be another event,\nit may cause the stream's listener to get that event before the listener\nis ready to handle it. We promise that after calling <a href=\"dart-async\/Stream\/listen.html\">Stream.listen<\/a>,\nyou won't get any events until the code doing the listen has completed.\nCalling <a href=\"dart-async\/SynchronousStreamController\/add.html\">add<\/a> in response to a function call of unknown origin may break\nthat promise.<\/p>\n<p>An <a href=\"dart-async\/StreamController\/onListen.html\">onListen<\/a> callback from the controller is <em>not<\/em> an asynchronous event,\nand adding events to the controller in the <code>onListen<\/code> callback is always\nwrong. The events will be delivered before the listener has even received\nthe subscription yet.<\/p>\n<p>The synchronous broadcast stream controller also has a restrictions that a\nnormal stream controller does not:\nThe <a href=\"dart-async\/SynchronousStreamController\/add.html\">add<\/a>, <a href=\"dart-async\/SynchronousStreamController\/addError.html\">addError<\/a>, <a href=\"dart-async\/SynchronousStreamController\/close.html\">close<\/a> and <a href=\"dart-async\/StreamController\/addStream.html\">addStream<\/a> methods <em>must not<\/em> be\ncalled while an event is being delivered.\nThat is, if a callback on a subscription on the controller's stream causes\na call to any of the functions above, the call will fail.\nA broadcast stream may have more than one listener, and if an\nevent is added synchronously while another is being also in the process\nof being added, the latter event might reach some listeners before\nthe former. To prevent that, an event cannot be added while a previous\nevent is being fired.\nThis guarantees that an event is fully delivered when the\nfirst <a href=\"dart-async\/SynchronousStreamController\/add.html\">add<\/a>, <a href=\"dart-async\/SynchronousStreamController\/addError.html\">addError<\/a> or <a href=\"dart-async\/SynchronousStreamController\/close.html\">close<\/a> returns,\nand further events will be delivered in the correct order.<\/p>\n<p>This still only guarantees that the event is delivered to the subscription.\nIf the subscription is paused, the actual callback may still happen later,\nand the event will instead be buffered by the subscription.\nBarring pausing, and the following buffered events that haven't been\ndelivered yet, callbacks will be called synchronously when an event is added.<\/p>\n<p>Adding an event to a synchronous non-broadcast stream controller while\nanother event is in progress may cause the second event to be delayed\nand not be delivered synchronously, and until that event is delivered,\nthe controller will not act synchronously.<\/p>\n    ",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "dart-async\/SynchronousStreamController-class.html",
     "isAbstract": "1",
     "isConstant": "0",
@@ -17,7 +17,7 @@
     "methods": [
         {
             "desc": null,
-            "example": null,
+            "example": "",
             "href": "dart-async\/SynchronousStreamController\/SynchronousStreamController.html",
             "isDeprecated": "0",
             "type": "",
@@ -41,7 +41,7 @@
                 {
                     "name": "data",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -63,7 +63,7 @@
                 {
                     "name": "error",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -72,7 +72,7 @@
                 {
                     "name": "stackTrace",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

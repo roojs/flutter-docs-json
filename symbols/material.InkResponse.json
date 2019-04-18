@@ -1,7 +1,7 @@
 {
     "desc": "<p>An area of a <a href=\"material\/Material-class.html\">Material<\/a> that responds to touch. Has a configurable shape and\ncan be configured to clip splashes that extend outside its bounds or not.<\/p>\n<p>For a variant of this widget that is specialized for rectangular areas that\nalways clip splashes, see <a href=\"material\/InkWell-class.html\">InkWell<\/a>.<\/p>\n<p>An <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> widget does two things when responding to a tap:<\/p>\n<ul>\n<li>\n<p>It starts to animate a <em>highlight<\/em>. The shape of the highlight is\ndetermined by <a href=\"material\/InkResponse\/highlightShape.html\">highlightShape<\/a>. If it is a <a href=\"painting\/BoxShape-class.html\">BoxShape.circle<\/a>, the\ndefault, then the highlight is a circle of fixed size centered in the\n<a href=\"material\/InkResponse-class.html\">InkResponse<\/a>. If it is <a href=\"painting\/BoxShape-class.html\">BoxShape.rectangle<\/a>, then the highlight is a box\nthe size of the <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> itself, unless <a href=\"material\/InkResponse\/getRectCallback.html\">getRectCallback<\/a> is\nprovided, in which case that callback defines the rectangle. The color of\nthe highlight is set by <a href=\"material\/InkResponse\/highlightColor.html\">highlightColor<\/a>.<\/p>\n<\/li>\n<li>\n<p>Simultaneously, it starts to animate a <em>splash<\/em>. This is a growing circle\ninitially centered on the tap location. If this is a <a href=\"material\/InkResponse\/containedInkWell.html\">containedInkWell<\/a>,\nthe splash grows to the <a href=\"material\/InkResponse\/radius.html\">radius<\/a> while remaining centered at the tap\nlocation. Otherwise, the splash migrates to the center of the box as it\ngrows.<\/p>\n<\/li>\n<\/ul>\n<p>The following two diagrams show how <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> looks when tapped if the\n<a href=\"material\/InkResponse\/highlightShape.html\">highlightShape<\/a> is <a href=\"painting\/BoxShape-class.html\">BoxShape.circle<\/a> (the default) and <a href=\"material\/InkResponse\/containedInkWell.html\">containedInkWell<\/a>\nis false (also the default).<\/p>\n<p>The first diagram shows how it looks if the <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> is relatively\nlarge:<\/p>\n<p><img alt=\"The highlight is a disc centered in the box, smaller than the child widget.\" src=\"https:\/\/flutter.github.io\/assets-for-api-docs\/assets\/material\/ink_response_large.png\"><\/p>\n<p>The second diagram shows how it looks if the <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> is small:<\/p>\n<p><img alt=\"The highlight is a disc overflowing the box, centered on the child.\" src=\"https:\/\/flutter.github.io\/assets-for-api-docs\/assets\/material\/ink_response_small.png\"><\/p>\n<p>The main thing to notice from these diagrams is that the splashes happily\nexceed the bounds of the widget (because <a href=\"material\/InkResponse\/containedInkWell.html\">containedInkWell<\/a> is false).<\/p>\n<p>The following diagram shows the effect when the <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> has a\n<a href=\"material\/InkResponse\/highlightShape.html\">highlightShape<\/a> of <a href=\"painting\/BoxShape-class.html\">BoxShape.rectangle<\/a> with <a href=\"material\/InkResponse\/containedInkWell.html\">containedInkWell<\/a> set to\ntrue. These are the values used by <a href=\"material\/InkWell-class.html\">InkWell<\/a>.<\/p>\n<p><img alt=\"The highlight is a rectangle the size of the box.\" src=\"https:\/\/flutter.github.io\/assets-for-api-docs\/assets\/material\/ink_well.png\"><\/p>\n<p>The <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> widget must have a <a href=\"material\/Material-class.html\">Material<\/a> widget as an ancestor. The\n<a href=\"material\/Material-class.html\">Material<\/a> widget is where the ink reactions are actually painted. This\nmatches the material design premise wherein the <a href=\"material\/Material-class.html\">Material<\/a> is what is\nactually reacting to touches by spreading ink.<\/p>\n<p>If a Widget uses this class directly, it should include the following line\nat the top of its build function to call <a href=\"material\/debugCheckHasMaterial.html\">debugCheckHasMaterial<\/a>:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">assert(debugCheckHasMaterial(context));\n<\/code><\/pre>\n<h2 id=\"troubleshooting\">Troubleshooting<\/h2>\n<h3 id=\"the-ink-splashes-arent-visible\">The ink splashes aren't visible!<\/h3>\n<p>If there is an opaque graphic, e.g. painted using a <a href=\"widgets\/Container-class.html\">Container<\/a>, <a href=\"widgets\/Image-class.html\">Image<\/a>, or\n<a href=\"widgets\/DecoratedBox-class.html\">DecoratedBox<\/a>, between the <a href=\"material\/Material-class.html\">Material<\/a> widget and the <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> widget,\nthen the splash won't be visible because it will be under the opaque graphic.\nThis is because ink splashes draw on the underlying <a href=\"material\/Material-class.html\">Material<\/a> itself, as\nif the ink was spreading inside the material.<\/p>\n<p>The <a href=\"material\/Ink-class.html\">Ink<\/a> widget can be used as a replacement for <a href=\"widgets\/Image-class.html\">Image<\/a>, <a href=\"widgets\/Container-class.html\">Container<\/a>, or\n<a href=\"widgets\/DecoratedBox-class.html\">DecoratedBox<\/a> to ensure that the image or decoration also paints in the\n<a href=\"material\/Material-class.html\">Material<\/a> itself, below the ink.<\/p>\n<p>If this is not possible for some reason, e.g. because you are using an\nopaque <a href=\"widgets\/CustomPaint-class.html\">CustomPaint<\/a> widget, alternatively consider using a second\n<a href=\"material\/Material-class.html\">Material<\/a> above the opaque widget but below the <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> (as an\nancestor to the ink response). The <a href=\"material\/MaterialType-class.html\">MaterialType.transparency<\/a> material\nkind can be used for this purpose.<\/p>\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/GestureDetector-class.html\">GestureDetector<\/a>, for listening for gestures without ink splashes.<\/li>\n<li>\n<a href=\"material\/RaisedButton-class.html\">RaisedButton<\/a> and <a href=\"material\/FlatButton-class.html\">FlatButton<\/a>, two kinds of buttons in material design.<\/li>\n<li>\n<a href=\"material\/IconButton-class.html\">IconButton<\/a>, which combines <a href=\"material\/InkResponse-class.html\">InkResponse<\/a> with an <a href=\"widgets\/Icon-class.html\">Icon<\/a>.<\/li>\n<\/ul>",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "material\/InkResponse-class.html",
     "isAbstract": "0",
     "isConstant": "0",
@@ -90,7 +90,7 @@
                 {
                     "name": "borderRadius",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -99,7 +99,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -108,7 +108,7 @@
                 {
                     "name": "containedInkWell",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -117,7 +117,7 @@
                 {
                     "name": "customBorder",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -126,7 +126,7 @@
                 {
                     "name": "enableFeedback",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -135,7 +135,7 @@
                 {
                     "name": "excludeFromSemantics",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -144,7 +144,7 @@
                 {
                     "name": "highlightColor",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -153,7 +153,7 @@
                 {
                     "name": "highlightShape",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -162,7 +162,7 @@
                 {
                     "name": "key",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -171,7 +171,7 @@
                 {
                     "name": "onDoubleTap",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -180,7 +180,7 @@
                 {
                     "name": "onHighlightChanged",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -189,7 +189,7 @@
                 {
                     "name": "onLongPress",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -198,7 +198,7 @@
                 {
                     "name": "onTap",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -207,7 +207,7 @@
                 {
                     "name": "onTapCancel",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -216,7 +216,7 @@
                 {
                     "name": "onTapDown",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -225,7 +225,7 @@
                 {
                     "name": "radius",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -234,7 +234,7 @@
                 {
                     "name": "splashColor",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -243,7 +243,7 @@
                 {
                     "name": "splashFactory",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -277,7 +277,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -299,7 +299,7 @@
                 {
                     "name": "properties",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -321,7 +321,7 @@
                 {
                     "name": "referenceBox",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

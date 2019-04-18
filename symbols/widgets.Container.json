@@ -1,7 +1,7 @@
 {
     "desc": "<p>A convenience widget that combines common painting, positioning, and sizing\nwidgets.<\/p>\n<p>A container first surrounds the child with <a href=\"widgets\/Container\/padding.html\">padding<\/a> (inflated by any\nborders present in the <a href=\"widgets\/Container\/decoration.html\">decoration<\/a>) and then applies additional\n<a href=\"widgets\/Container\/constraints.html\">constraints<\/a> to the padded extent (incorporating the <code>width<\/code> and <code>height<\/code>\nas constraints, if either is non-null). The container is then surrounded by\nadditional empty space described from the <a href=\"widgets\/Container\/margin.html\">margin<\/a>.<\/p>\n<p>During painting, the container first applies the given <a href=\"widgets\/Container\/transform.html\">transform<\/a>, then\npaints the <a href=\"widgets\/Container\/decoration.html\">decoration<\/a> to fill the padded extent, then it paints the child,\nand finally paints the <a href=\"widgets\/Container\/foregroundDecoration.html\">foregroundDecoration<\/a>, also filling the padded\nextent.<\/p>\n<p>Containers with no children try to be as big as possible unless the incoming\nconstraints are unbounded, in which case they try to be as small as\npossible. Containers with children size themselves to their children. The\n<code>width<\/code>, <code>height<\/code>, and <a href=\"widgets\/Container\/constraints.html\">constraints<\/a> arguments to the constructor override\nthis.<\/p>\n<h2 id=\"layout-behavior\">Layout behavior<\/h2>\n<p><em>See <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> for an introduction to box layout models.<\/em><\/p>\n<p>Since <a href=\"widgets\/Container-class.html\">Container<\/a> combines a number of other widgets each with their own\nlayout behavior, <a href=\"widgets\/Container-class.html\">Container<\/a>'s layout behavior is somewhat complicated.<\/p>\n<p>Summary: <a href=\"widgets\/Container-class.html\">Container<\/a> tries, in order: to honor <a href=\"widgets\/Container\/alignment.html\">alignment<\/a>, to size itself\nto the <a href=\"widgets\/Container\/child.html\">child<\/a>, to honor the <code>width<\/code>, <code>height<\/code>, and <a href=\"widgets\/Container\/constraints.html\">constraints<\/a>, to expand\nto fit the parent, to be as small as possible.<\/p>\n<p>More specifically:<\/p>\n<p>If the widget has no child, no <code>height<\/code>, no <code>width<\/code>, no <a href=\"widgets\/Container\/constraints.html\">constraints<\/a>,\nand the parent provides unbounded constraints, then <a href=\"widgets\/Container-class.html\">Container<\/a> tries to\nsize as small as possible.<\/p>\n<p>If the widget has no child and no <a href=\"widgets\/Container\/alignment.html\">alignment<\/a>, but a <code>height<\/code>, <code>width<\/code>, or\n<a href=\"widgets\/Container\/constraints.html\">constraints<\/a> are provided, then the <a href=\"widgets\/Container-class.html\">Container<\/a> tries to be as small as\npossible given the combination of those constraints and the parent's\nconstraints.<\/p>\n<p>If the widget has no child, no <code>height<\/code>, no <code>width<\/code>, no <a href=\"widgets\/Container\/constraints.html\">constraints<\/a>, and\nno <a href=\"widgets\/Container\/alignment.html\">alignment<\/a>, but the parent provides bounded constraints, then\n<a href=\"widgets\/Container-class.html\">Container<\/a> expands to fit the constraints provided by the parent.<\/p>\n<p>If the widget has an <a href=\"widgets\/Container\/alignment.html\">alignment<\/a>, and the parent provides unbounded\nconstraints, then the <a href=\"widgets\/Container-class.html\">Container<\/a> tries to size itself around the child.<\/p>\n<p>If the widget has an <a href=\"widgets\/Container\/alignment.html\">alignment<\/a>, and the parent provides bounded\nconstraints, then the <a href=\"widgets\/Container-class.html\">Container<\/a> tries to expand to fit the parent, and\nthen positions the child within itself as per the <a href=\"widgets\/Container\/alignment.html\">alignment<\/a>.<\/p>\n<p>Otherwise, the widget has a <a href=\"widgets\/Container\/child.html\">child<\/a> but no <code>height<\/code>, no <code>width<\/code>, no\n<a href=\"widgets\/Container\/constraints.html\">constraints<\/a>, and no <a href=\"widgets\/Container\/alignment.html\">alignment<\/a>, and the <a href=\"widgets\/Container-class.html\">Container<\/a> passes the\nconstraints from the parent to the child and sizes itself to match the\nchild.<\/p>\n<p>The <a href=\"widgets\/Container\/margin.html\">margin<\/a> and <a href=\"widgets\/Container\/padding.html\">padding<\/a> properties also affect the layout, as described\nin the documentation for those properties. (Their effects merely augment the\nrules described above.) The <a href=\"widgets\/Container\/decoration.html\">decoration<\/a> can implicitly increase the\n<a href=\"widgets\/Container\/padding.html\">padding<\/a> (e.g. borders in a <a href=\"painting\/BoxDecoration-class.html\">BoxDecoration<\/a> contribute to the <a href=\"widgets\/Container\/padding.html\">padding<\/a>);\nsee <a href=\"widgets\/Container\/padding.html\">Decoration.padding<\/a>.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows a 48x48 amber square (placed inside a <a href=\"widgets\/Center-class.html\">Center<\/a> widget in\ncase the parent widget has its own opinions regarding the size that the\n<a href=\"widgets\/Container-class.html\">Container<\/a> should take), with a margin so that it stays away from\nneighboring widgets:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">Center(\n  child: Container(\n    margin: const EdgeInsets.all(10.0),\n    color: Colors.amber[600],\n    width: 48.0,\n    height: 48.0,\n  ),\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThis example shows how to use many of the features of <a href=\"widgets\/Container-class.html\">Container<\/a> at once.\nThe <a href=\"widgets\/Container\/constraints.html\">constraints<\/a> are set to fit the font size plus ample headroom\nvertically, while expanding horizontally to fit the parent. The <a href=\"widgets\/Container\/padding.html\">padding<\/a> is\nused to make sure there is space between the contents and the text. The\n<code>color<\/code> makes the box blue. The <a href=\"widgets\/Container\/alignment.html\">alignment<\/a> causes the <a href=\"widgets\/Container\/child.html\">child<\/a> to be\ncentered in the box. Finally, the <a href=\"widgets\/Container\/transform.html\">transform<\/a> applies a slight rotation to the\nentire contraption to complete the effect.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">Container(\n  constraints: BoxConstraints.expand(\n    height: Theme.of(context).textTheme.display1.fontSize * 1.1 + 200.0,\n  ),\n  padding: const EdgeInsets.all(8.0),\n  color: Colors.blue[600],\n  alignment: Alignment.center,\n  child: Text('Hello World',\n    style: Theme.of(context)\n        .textTheme\n        .display1\n        .copyWith(color: Colors.white)),\n  transform: Matrix4.rotationZ(0.1),\n)<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul>\n<li>\n<a href=\"widgets\/AnimatedContainer-class.html\">AnimatedContainer<\/a>, a variant that smoothly animates the properties when\nthey change.<\/li>\n<li>\n<a href=\"painting\/Border-class.html\">Border<\/a>, which has a sample which uses <a href=\"widgets\/Container-class.html\">Container<\/a> heavily.<\/li>\n<li>\n<a href=\"material\/Ink-class.html\">Ink<\/a>, which paints a <a href=\"painting\/Decoration-class.html\">Decoration<\/a> on a <a href=\"material\/Material-class.html\">Material<\/a>, allowing\n<a href=\"material\/InkResponse-class.html\">InkResponse<\/a> and <a href=\"material\/InkWell-class.html\">InkWell<\/a> splashes to paint over them.<\/li>\n<li>The <a href=\"https:\/\/flutter.io\/widgets\/layout\/\">catalog of layout widgets<\/a>.<\/li>\n<\/ul>",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "widgets\/Container-class.html",
     "isAbstract": "0",
     "isConstant": "0",
@@ -35,7 +35,7 @@
                 {
                     "name": "alignment",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -44,7 +44,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -53,7 +53,7 @@
                 {
                     "name": "color",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -62,7 +62,7 @@
                 {
                     "name": "constraints",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -71,7 +71,7 @@
                 {
                     "name": "decoration",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -80,7 +80,7 @@
                 {
                     "name": "foregroundDecoration",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -89,7 +89,7 @@
                 {
                     "name": "height",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -98,7 +98,7 @@
                 {
                     "name": "key",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -107,7 +107,7 @@
                 {
                     "name": "margin",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -116,7 +116,7 @@
                 {
                     "name": "padding",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -125,7 +125,7 @@
                 {
                     "name": "transform",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -134,7 +134,7 @@
                 {
                     "name": "width",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -156,7 +156,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -178,7 +178,7 @@
                 {
                     "name": "properties",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

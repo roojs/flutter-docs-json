@@ -1,7 +1,7 @@
 {
     "desc": "<p>An object representing a delayed computation.<\/p>\n<p>A <a href=\"dart-async\/Future-class.html\">Future<\/a> is used to represent a potential value, or error,\nthat will be available at some time in the future.\nReceivers of a <a href=\"dart-async\/Future-class.html\">Future<\/a> can register callbacks\nthat handle the value or error once it is available.\nFor example:<\/p>\n<pre class=\"language-dart\"><code>Future&lt;int&gt; future = getFuture();\nfuture.then((value) =&gt; handleValue(value))\n      .catchError((error) =&gt; handleError(error));\n<\/code><\/pre>\n<p>A <a href=\"dart-async\/Future-class.html\">Future<\/a> can be completed in two ways:\nwith a value (\"the future succeeds\")\nor with an error (\"the future fails\").\nUsers can install callbacks for each case.<\/p>\n<p>In some cases we say that a future is completed with another future.\nThis is a short way of stating that the future is completed in the same way,\nwith the same value or error,\nas the other future once that completes.\nWhenever a function in the core library may complete a future\n(for example <a href=\"dart-async\/Completer\/complete.html\">Completer.complete<\/a> or <a href=\"dart-async\/Future\/Future.value.html\">new Future.value<\/a>),\nthen it also accepts another future and does this work for the developer.<\/p>\n<p>The result of registering a pair of callbacks is a new Future (the\n\"successor\") which in turn is completed with the result of invoking the\ncorresponding callback.\nThe successor is completed with an error if the invoked callback throws.\nFor example:<\/p>\n<pre class=\"language-dart\"><code>Future&lt;int&gt; successor = future.then((int value) {\n    \/\/ Invoked when the future is completed with a value.\n    return 42;  \/\/ The successor is completed with the value 42.\n  },\n  onError: (e) {\n    \/\/ Invoked when the future is completed with an error.\n    if (canHandle(e)) {\n      return 499;  \/\/ The successor is completed with the value 499.\n    } else {\n      throw e;  \/\/ The successor is completed with the error e.\n    }\n  });\n<\/code><\/pre>\n<p>If a future does not have a successor when it completes with an error,\nit forwards the error message to the global error-handler.\nThis behavior makes sure that no error is silently dropped.\nHowever, it also means that error handlers should be installed early,\nso that they are present as soon as a future is completed with an error.\nThe following example demonstrates this potential bug:<\/p>\n<pre class=\"language-dart\"><code>var future = getFuture();\nnew Timer(new Duration(milliseconds: 5), () {\n  \/\/ The error-handler is not attached until 5 ms after the future has\n  \/\/ been received. If the future fails before that, the error is\n  \/\/ forwarded to the global error-handler, even though there is code\n  \/\/ (just below) to eventually handle the error.\n  future.then((value) { useValue(value); },\n              onError: (e) { handleError(e); });\n});\n<\/code><\/pre>\n<p>When registering callbacks, it's often more readable to register the two\ncallbacks separately, by first using <a href=\"dart-async\/Future\/then.html\">then<\/a> with one argument\n(the value handler) and using a second <a href=\"dart-async\/Future\/catchError.html\">catchError<\/a> for handling errors.\nEach of these will forward the result that they don't handle\nto their successors, and together they handle both value and error result.\nIt also has the additional benefit of the <a href=\"dart-async\/Future\/catchError.html\">catchError<\/a> handling errors in the\n<a href=\"dart-async\/Future\/then.html\">then<\/a> value callback too.\nUsing sequential handlers instead of parallel ones often leads to code that\nis easier to reason about.\nIt also makes asynchronous code very similar to synchronous code:<\/p>\n<pre class=\"language-dart\"><code>\/\/ Synchronous code.\ntry {\n  int value = foo();\n  return bar(value);\n} catch (e) {\n  return 499;\n}\n<\/code><\/pre>\n<p>Equivalent asynchronous code, based on futures:<\/p>\n<pre class=\"language-dart\"><code>Future&lt;int&gt; future = new Future(foo);  \/\/ Result of foo() as a future.\nfuture.then((int value) =&gt; bar(value))\n      .catchError((e) =&gt; 499);\n<\/code><\/pre>\n<p>Similar to the synchronous code, the error handler (registered with\n<a href=\"dart-async\/Future\/catchError.html\">catchError<\/a>) is handling any errors thrown by either <code>foo<\/code> or <code>bar<\/code>.\nIf the error-handler had been registered as the <code>onError<\/code> parameter of\nthe <code>then<\/code> call, it would not catch errors from the <code>bar<\/code> call.<\/p>\n<p>Futures can have more than one callback-pair registered. Each successor is\ntreated independently and is handled as if it was the only successor.<\/p>\n<p>A future may also fail to ever complete. In that case, no callbacks are\ncalled.<\/p>\n    ",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "dart-async\/Future-class.html",
     "isAbstract": "1",
     "isConstant": "0",
@@ -29,7 +29,7 @@
                 {
                     "name": "computation",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -51,7 +51,7 @@
                 {
                     "name": "futures",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -85,7 +85,7 @@
                 {
                     "name": "error",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -94,7 +94,7 @@
                 {
                     "name": "onError",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -116,7 +116,7 @@
                 {
                     "name": "action",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -138,7 +138,7 @@
                 {
                     "name": "element",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -147,7 +147,7 @@
                 {
                     "name": "elements",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -169,7 +169,7 @@
                 {
                     "name": "onError",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -178,7 +178,7 @@
                 {
                     "name": "value",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -200,7 +200,7 @@
                 {
                     "name": "onTimeout",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -209,7 +209,7 @@
                 {
                     "name": "timeLimit",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -231,7 +231,7 @@
                 {
                     "name": "eagerError",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -240,7 +240,7 @@
                 {
                     "name": "futures",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -249,7 +249,7 @@
                 {
                     "name": "successValue",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -271,7 +271,7 @@
                 {
                     "name": "action",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

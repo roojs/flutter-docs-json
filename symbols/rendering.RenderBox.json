@@ -1,7 +1,7 @@
 {
     "desc": "<p>A render object in a 2D Cartesian coordinate system.<\/p>\n<p>The <a href=\"rendering\/RenderBox\/size.html\">size<\/a> of each box is expressed as a width and a height. Each box has\nits own coordinate system in which its upper left corner is placed at (0,\n0). The lower right corner of the box is therefore at (width, height). The\nbox contains all the points including the upper left corner and extending\nto, but not including, the lower right corner.<\/p>\n<p>Box layout is performed by passing a <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> object down the tree.\nThe box constraints establish a min and max value for the child's width and\nheight. In determining its size, the child must respect the constraints\ngiven to it by its parent.<\/p>\n<p>This protocol is sufficient for expressing a number of common box layout\ndata flows. For example, to implement a width-in-height-out data flow, call\nyour child's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> function with a set of box constraints with a tight\nwidth value (and pass true for parentUsesSize). After the child determines\nits height, use the child's height to determine your size.<\/p>\n<h2 id=\"writing-a-renderbox-subclass\">Writing a RenderBox subclass<\/h2>\n<p>One would implement a new <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass to describe a new layout\nmodel, new paint model, new hit-testing model, or new semantics model, while\nremaining in the Cartesian space defined by the <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> protocol.<\/p>\n<p>To create a new protocol, consider subclassing <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> instead.<\/p>\n<h3 id=\"constructors-and-properties-of-a-new-renderbox-subclass\">Constructors and properties of a new RenderBox subclass<\/h3>\n<p>The constructor will typically take a named argument for each property of\nthe class. The value is then passed to a private field of the class and the\nconstructor asserts its correctness (e.g. if it should not be null, it\nasserts it's not null).<\/p>\n<p>Properties have the form of a getter\/setter\/field group like the following:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">AxisDirection get axis =&gt; _axis;\nAxisDirection _axis;\nset axis(AxisDirection value) {\n  assert(value != null); \/\/ same check as in the constructor\n  if (value == _axis)\n    return;\n  _axis = value;\n  markNeedsLayout();\n}\n<\/code><\/pre>\n<p>The setter will typically finish with either a call to <a href=\"rendering\/RenderBox\/markNeedsLayout.html\">markNeedsLayout<\/a>, if\nthe layout uses this property, or <a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a>, if only the painter\nfunction does. (No need to call both, <a href=\"rendering\/RenderBox\/markNeedsLayout.html\">markNeedsLayout<\/a> implies\n<a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a>.)<\/p>\n<p>Consider layout and paint to be expensive; be conservative about calling\n<a href=\"rendering\/RenderBox\/markNeedsLayout.html\">markNeedsLayout<\/a> or <a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a>. They should only be called if the\nlayout (or paint, respectively) has actually changed.<\/p>\n<h3 id=\"children\">Children<\/h3>\n<p>If a render object is a leaf, that is, it cannot have any children, then\nignore this section. (Examples of leaf render objects are <a href=\"rendering\/RenderImage-class.html\">RenderImage<\/a> and\n<a href=\"rendering\/RenderParagraph-class.html\">RenderParagraph<\/a>.)<\/p>\n<p>For render objects with children, there are four possible scenarios:<\/p>\n<ul>\n<li>\n<p>A single <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> child. In this scenario, consider inheriting from\n<a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> (if the render object sizes itself to match the child) or\n<a href=\"rendering\/RenderShiftedBox-class.html\">RenderShiftedBox<\/a> (if the child will be smaller than the box and the box\nwill align the child inside itself).<\/p>\n<\/li>\n<li>\n<p>A single child, but it isn't a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>. Use the\n<a href=\"rendering\/RenderObjectWithChildMixin-mixin.html\">RenderObjectWithChildMixin<\/a> mixin.<\/p>\n<\/li>\n<li>\n<p>A single list of children. Use the <a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> mixin.<\/p>\n<\/li>\n<li>\n<p>A more complicated child model.<\/p>\n<\/li>\n<\/ul>\n<h4 id=\"using-renderproxybox\">Using RenderProxyBox<\/h4>\n<p>By default, a <a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> render object sizes itself to fit its child, or\nto be as small as possible if there is no child; it passes all hit testing\nand painting on to the child, and intrinsic dimensions and baseline\nmeasurements similarly are proxied to the child.<\/p>\n<p>A subclass of <a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> just needs to override the parts of the\n<a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> protocol that matter. For example, <a href=\"rendering\/RenderOpacity-class.html\">RenderOpacity<\/a> just\noverrides the paint method (and <a href=\"rendering\/RenderObject\/alwaysNeedsCompositing.html\">alwaysNeedsCompositing<\/a> to reflect what the\npaint method does, and the <a href=\"rendering\/RenderObject\/visitChildrenForSemantics.html\">visitChildrenForSemantics<\/a> method so that the\nchild is hidden from accessibility tools when it's invisible), and adds an\n<a href=\"rendering\/RenderOpacity\/opacity.html\">RenderOpacity.opacity<\/a> field.<\/p>\n<p><a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> assumes that the child is the size of the parent and\npositioned at 0,0. If this is not true, then use <a href=\"rendering\/RenderShiftedBox-class.html\">RenderShiftedBox<\/a> instead.<\/p>\n<p>See\n<a href=\"https:\/\/github.com\/flutter\/flutter\/blob\/master\/packages\/flutter\/lib\/src\/rendering\/proxy_box.dart\">proxy_box.dart<\/a>\nfor examples of inheriting from <a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a>.<\/p>\n<h4 id=\"using-rendershiftedbox\">Using RenderShiftedBox<\/h4>\n<p>By default, a <a href=\"rendering\/RenderShiftedBox-class.html\">RenderShiftedBox<\/a> acts much like a <a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> but\nwithout assuming that the child is positioned at 0,0 (the actual position\nrecorded in the child's <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> field is used), and without providing a\ndefault layout algorithm.<\/p>\n<p>See\n<a href=\"https:\/\/github.com\/flutter\/flutter\/blob\/master\/packages\/flutter\/lib\/src\/rendering\/shifted_box.dart\">shifted_box.dart<\/a>\nfor examples of inheriting from <a href=\"rendering\/RenderShiftedBox-class.html\">RenderShiftedBox<\/a>.<\/p>\n<h4 id=\"kinds-of-children-and-child-specific-data\">Kinds of children and child-specific data<\/h4>\n<p>A <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> doesn't have to have <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> children. One can use another\nsubclass of <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> for a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>'s children. See the discussion\nat <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>.<\/p>\n<p>Children can have additional data owned by the parent but stored on the\nchild using the <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> field. The class used for that data must\ninherit from <a href=\"rendering\/ParentData-class.html\">ParentData<\/a>. The <a href=\"rendering\/RenderBox\/setupParentData.html\">setupParentData<\/a> method is used to\ninitialize the <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> field of a child when the child is attached.<\/p>\n<p>By convention, <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> objects that have <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> children use the\n<a href=\"rendering\/BoxParentData-class.html\">BoxParentData<\/a> class, which has a <a href=\"rendering\/BoxParentData\/offset.html\">BoxParentData.offset<\/a> field to store the\nposition of the child relative to the parent. (<a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> does not\nneed this offset and therefore is an exception to this rule.)<\/p>\n<h4 id=\"using-renderobjectwithchildmixin\">Using RenderObjectWithChildMixin<\/h4>\n<p>If a render object has a single child but it isn't a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, then the\n<a href=\"rendering\/RenderObjectWithChildMixin-mixin.html\">RenderObjectWithChildMixin<\/a> class, which is a mixin that will handle the\nboilerplate of managing a child, will be useful.<\/p>\n<p>It's a generic class with one type argument, the type of the child. For\nexample, if you are building a <code>RenderFoo<\/code> class which takes a single\n<code>RenderBar<\/code> child, you would use the mixin as follows:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class RenderFoo extends RenderBox\n  with RenderObjectWithChildMixin&lt;RenderBar&gt; {\n  \/\/ ...\n}\n<\/code><\/pre>\n<p>Since the <code>RenderFoo<\/code> class itself is still a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> in this case, you\nstill have to implement the <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> layout algorithm, as well as\nfeatures like intrinsics and baselines, painting, and hit testing.<\/p>\n<h4 id=\"using-containerrenderobjectmixin\">Using ContainerRenderObjectMixin<\/h4>\n<p>If a render box can have multiple children, then the\n<a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> mixin can be used to handle the boilerplate. It\nuses a linked list to model the children in a manner that is easy to mutate\ndynamically and that can be walked efficiently. Random access is not\nefficient in this model; if you need random access to the children consider\nthe next section on more complicated child models.<\/p>\n<p>The <a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> class has two type arguments. The first is\nthe type of the child objects. The second is the type for their\n<a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a>. The class used for <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> must itself have the\n<a href=\"rendering\/ContainerParentDataMixin-mixin.html\">ContainerParentDataMixin<\/a> class mixed into it; this is where\n<a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> stores the linked list. A <a href=\"rendering\/ParentData-class.html\">ParentData<\/a> class\ncan extend <a href=\"rendering\/ContainerBoxParentData-class.html\">ContainerBoxParentData<\/a>; this is essentially\n<a href=\"rendering\/BoxParentData-class.html\">BoxParentData<\/a> mixed with <a href=\"rendering\/ContainerParentDataMixin-mixin.html\">ContainerParentDataMixin<\/a>. For example, if a\n<code>RenderFoo<\/code> class wanted to have a linked list of <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> children, one\nmight create a <code>FooParentData<\/code> class as follows:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class FooParentData extends ContainerBoxParentData&lt;RenderBox&gt; {\n  \/\/ (any fields you might need for these children)\n}\n<\/code><\/pre>\n<p>When using <a href=\"rendering\/ContainerRenderObjectMixin-mixin.html\">ContainerRenderObjectMixin<\/a> in a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, consider mixing in\n<a href=\"rendering\/RenderBoxContainerDefaultsMixin-mixin.html\">RenderBoxContainerDefaultsMixin<\/a>, which provides a collection of utility\nmethods that implement common parts of the <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> protocol (such as\npainting the children).<\/p>\n<p>The declaration of the <code>RenderFoo<\/code> class itself would thus look like this:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class RenderFoo extends RenderBox with\n  ContainerRenderObjectMixin&lt;RenderBox, FooParentData&gt;,\n  RenderBoxContainerDefaultsMixin&lt;RenderBox, FooParentData&gt; {\n  \/\/ ...\n}\n<\/code><\/pre>\n<p>When walking the children (e.g. during layout), the following pattern is\ncommonly used (in this case assuming that the children are all <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>\nobjects and that this render object uses <code>FooParentData<\/code> objects for its\nchildren's <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> fields):<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">RenderBox child = firstChild;\nwhile (child != null) {\n  final FooParentData childParentData = child.parentData;\n  \/\/ ...operate on child and childParentData...\n  assert(child.parentData == childParentData);\n  child = childParentData.nextSibling;\n}\n<\/code><\/pre>\n<h4 id=\"more-complicated-child-models\">More complicated child models<\/h4>\n<p>Render objects can have more complicated models, for example a map of\nchildren keyed on an enum, or a 2D grid of efficiently randomly-accessible\nchildren, or multiple lists of children, etc. If a render object has a model\nthat can't be handled by the mixins above, it must implement the\n<a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> child protocol, as follows:<\/p>\n<ul>\n<li>\n<p>Any time a child is removed, call <a href=\"rendering\/RenderObject\/dropChild.html\">dropChild<\/a> with the child.<\/p>\n<\/li>\n<li>\n<p>Any time a child is added, call <a href=\"rendering\/RenderObject\/adoptChild.html\">adoptChild<\/a> with the child.<\/p>\n<\/li>\n<li>\n<p>Implement the <a href=\"rendering\/RenderObject\/attach.html\">attach<\/a> method such that it calls <a href=\"rendering\/RenderObject\/attach.html\">attach<\/a> on each child.<\/p>\n<\/li>\n<li>\n<p>Implement the <a href=\"foundation\/AbstractNode\/detach.html\">detach<\/a> method such that it calls <a href=\"foundation\/AbstractNode\/detach.html\">detach<\/a> on each child.<\/p>\n<\/li>\n<li>\n<p>Implement the <a href=\"foundation\/AbstractNode\/redepthChildren.html\">redepthChildren<\/a> method such that it calls <a href=\"foundation\/AbstractNode\/redepthChild.html\">redepthChild<\/a>\non each child.<\/p>\n<\/li>\n<li>\n<p>Implement the <a href=\"rendering\/RenderObject\/visitChildren.html\">visitChildren<\/a> method such that it calls its argument for\neach child, typically in paint order (back-most to front-most).<\/p>\n<\/li>\n<li>\n<p>Implement <a href=\"rendering\/RenderObject\/debugDescribeChildren.html\">debugDescribeChildren<\/a> such that it outputs a <a href=\"foundation\/DiagnosticsNode-class.html\">DiagnosticsNode<\/a>\nfor each child.<\/p>\n<\/li>\n<\/ul>\n<p>Implementing these seven bullet points is essentially all that the two\naforementioned mixins do.<\/p>\n<h3 id=\"layout\">Layout<\/h3>\n<p><a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> classes implement a layout algorithm. They have a set of\nconstraints provided to them, and they size themselves based on those\nconstraints and whatever other inputs they may have (for example, their\nchildren or properties).<\/p>\n<p>When implementing a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> subclass, one must make a choice. Does it\nsize itself exclusively based on the constraints, or does it use any other\ninformation in sizing itself? An example of sizing purely based on the\nconstraints would be growing to fit the parent.<\/p>\n<p>Sizing purely based on the constraints allows the system to make some\nsignificant optimizations. Classes that use this approach should override\n<a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a> to return true, and then override <a href=\"rendering\/RenderBox\/performResize.html\">performResize<\/a> to set the\n<a href=\"rendering\/RenderBox\/size.html\">size<\/a> using nothing but the constraints, e.g.:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">@override\nbool get sizedByParent =&gt; true;\n\n@override\nvoid performResize() {\n  size = constraints.smallest;\n}\n<\/code><\/pre>\n<p>Otherwise, the size is set in the <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a> function.<\/p>\n<p>The <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a> function is where render boxes decide, if they are not\n<a href=\"rendering\/RenderObject\/sizedByParent.html\">sizedByParent<\/a>, what <a href=\"rendering\/RenderBox\/size.html\">size<\/a> they should be, and also where they decide\nwhere their children should be.<\/p>\n<h4 id=\"layout-of-renderbox-children\">Layout of RenderBox children<\/h4>\n<p>The <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a> function should call the <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> function of each (box)\nchild, passing it a <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> object describing the constraints\nwithin which the child can render. Passing tight constraints (see\n<a href=\"rendering\/BoxConstraints\/isTight.html\">BoxConstraints.isTight<\/a>) to the child will allow the rendering library to\napply some optimizations, as it knows that if the constraints are tight, the\nchild's dimensions cannot change even if the layout of the child itself\nchanges.<\/p>\n<p>If the <a href=\"rendering\/RenderBox\/performLayout.html\">performLayout<\/a> function will use the child's size to affect other\naspects of the layout, for example if the render box sizes itself around the\nchild, or positions several children based on the size of those children,\nthen it must specify the <code>parentUsesSize<\/code> argument to the child's <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a>\nfunction, setting it to true.<\/p>\n<p>This flag turns off some optimizations; algorithms that do not rely on the\nchildren's sizes will be more efficient. (In particular, relying on the\nchild's <a href=\"rendering\/RenderBox\/size.html\">size<\/a> means that if the child is marked dirty for layout, the\nparent will probably also be marked dirty for layout, unless the\n<a href=\"rendering\/RenderBox\/constraints.html\">constraints<\/a> given by the parent to the child were tight constraints.)<\/p>\n<p>For <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> classes that do not inherit from <a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a>, once they\nhave laid out their children, should also position them, by setting the\n<a href=\"rendering\/BoxParentData\/offset.html\">BoxParentData.offset<\/a> field of each child's <a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a> object.<\/p>\n<h4 id=\"layout-of-non-renderbox-children\">Layout of non-RenderBox children<\/h4>\n<p>The children of a <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> do not have to be <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>es themselves. If\nthey use another protocol (as discussed at <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>), then instead of\n<a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a>, the parent would pass in the appropriate <a href=\"rendering\/Constraints-class.html\">Constraints<\/a>\nsubclass, and instead of reading the child's size, the parent would read\nwhatever the output of <a href=\"rendering\/RenderObject\/layout.html\">layout<\/a> is for that layout protocol. The\n<code>parentUsesSize<\/code> flag is still used to indicate whether the parent is going\nto read that output, and optimizations still kick in if the child has tight\nconstraints (as defined by <a href=\"rendering\/Constraints\/isTight.html\">Constraints.isTight<\/a>).<\/p>\n<h3 id=\"painting\">Painting<\/h3>\n<p>To describe how a render box paints, implement the <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method. It is\ngiven a <a href=\"rendering\/PaintingContext-class.html\">PaintingContext<\/a> object and an <a href=\"dart-ui\/Offset-class.html\">Offset<\/a>. The painting context\nprovides methods to affect the layer tree as well as a\n<a href=\"rendering\/PaintingContext\/canvas.html\">PaintingContext.canvas<\/a> which can be used to add drawing commands. The\ncanvas object should not be cached across calls to the <a href=\"rendering\/PaintingContext-class.html\">PaintingContext<\/a>'s\nmethods; every time a method on <a href=\"rendering\/PaintingContext-class.html\">PaintingContext<\/a> is called, there is a\nchance that the canvas will change identity. The offset specifies the\nposition of the top left corner of the box in the coordinate system of the\n<a href=\"rendering\/PaintingContext\/canvas.html\">PaintingContext.canvas<\/a>.<\/p>\n<p>To draw text on a canvas, use a <a href=\"painting\/TextPainter-class.html\">TextPainter<\/a>.<\/p>\n<p>To draw an image to a canvas, use the <a href=\"painting\/paintImage.html\">paintImage<\/a> method.<\/p>\n<p>A <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> that uses methods on <a href=\"rendering\/PaintingContext-class.html\">PaintingContext<\/a> that introduce new\nlayers should override the <a href=\"rendering\/RenderObject\/alwaysNeedsCompositing.html\">alwaysNeedsCompositing<\/a> getter and set it to\ntrue. If the object sometimes does and sometimes does not, it can have that\ngetter return true in some cases and false in others. In that case, whenever\nthe return value would change, call <a href=\"rendering\/RenderObject\/markNeedsCompositingBitsUpdate.html\">markNeedsCompositingBitsUpdate<\/a>. (This\nis done automatically when a child is added or removed, so you don't have to\ncall it explicitly if the <a href=\"rendering\/RenderObject\/alwaysNeedsCompositing.html\">alwaysNeedsCompositing<\/a> getter only changes value\nbased on the presence or absence of children.)<\/p>\n<p>Anytime anything changes on the object that would cause the <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method\nto paint something different (but would not cause the layout to change),\nthe object should call <a href=\"rendering\/RenderObject\/markNeedsPaint.html\">markNeedsPaint<\/a>.<\/p>\n<h4 id=\"painting-children\">Painting children<\/h4>\n<p>The <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method's <code>context<\/code> argument has a <a href=\"rendering\/PaintingContext\/paintChild.html\">PaintingContext.paintChild<\/a>\nmethod, which should be called for each child that is to be painted. It\nshould be given a reference to the child, and an <a href=\"dart-ui\/Offset-class.html\">Offset<\/a> giving the\nposition of the child relative to the parent.<\/p>\n<p>If the <a href=\"rendering\/RenderObject\/paint.html\">paint<\/a> method applies a transform to the painting context before\npainting children (or generally applies an additional offset beyond the\noffset it was itself given as an argument), then the <a href=\"rendering\/RenderBox\/applyPaintTransform.html\">applyPaintTransform<\/a>\nmethod should also be overridden. That method must adjust the matrix that it\nis given in the same manner as it transformed the painting context and\noffset before painting the given child. This is used by the <a href=\"rendering\/RenderBox\/globalToLocal.html\">globalToLocal<\/a>\nand <a href=\"rendering\/RenderBox\/localToGlobal.html\">localToGlobal<\/a> methods.<\/p>\n<h4 id=\"hit-tests\">Hit Tests<\/h4>\n<p>Hit testing for render boxes is implemented by the <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> method. The\ndefault implementation of this method defers to <a href=\"rendering\/RenderBox\/hitTestSelf.html\">hitTestSelf<\/a> and\n<a href=\"rendering\/RenderBox\/hitTestChildren.html\">hitTestChildren<\/a>. When implementing hit testing, you can either override\nthese latter two methods, or ignore them and just override <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a>.<\/p>\n<p>The <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> method itself is given an <a href=\"dart-ui\/Offset-class.html\">Offset<\/a>, and must return true if the\nobject or one of its children has absorbed the hit (preventing objects below\nthis one from being hit), or false if the hit can continue to other objects\nbelow this one.<\/p>\n<p>For each child <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a>, the <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> method on the child should be\ncalled with the same <a href=\"gestures\/HitTestResult-class.html\">HitTestResult<\/a> argument and with the point transformed\ninto the child's coordinate space (in the same manner that the\n<a href=\"rendering\/RenderBox\/applyPaintTransform.html\">applyPaintTransform<\/a> method would). The default implementation defers to\n<a href=\"rendering\/RenderBox\/hitTestChildren.html\">hitTestChildren<\/a> to call the children. <a href=\"rendering\/RenderBoxContainerDefaultsMixin-mixin.html\">RenderBoxContainerDefaultsMixin<\/a>\nprovides a <a href=\"rendering\/RenderBoxContainerDefaultsMixin\/defaultHitTestChildren.html\">RenderBoxContainerDefaultsMixin.defaultHitTestChildren<\/a> method\nthat does this assuming that the children are axis-aligned, not transformed,\nand positioned according to the <a href=\"rendering\/BoxParentData\/offset.html\">BoxParentData.offset<\/a> field of the\n<a href=\"rendering\/RenderObject\/parentData.html\">parentData<\/a>; more elaborate boxes can override <a href=\"rendering\/RenderBox\/hitTestChildren.html\">hitTestChildren<\/a>\naccordingly.<\/p>\n<p>If the object is hit, then it should also add itself to the <a href=\"gestures\/HitTestResult-class.html\">HitTestResult<\/a>\nobject that is given as an argument to the <a href=\"rendering\/RenderBox\/hitTest.html\">hitTest<\/a> method, using\n<a href=\"gestures\/HitTestResult\/add.html\">HitTestResult.add<\/a>. The default implementation defers to <a href=\"rendering\/RenderBox\/hitTestSelf.html\">hitTestSelf<\/a> to\ndetermine if the box is hit. If the object adds itself before the children\ncan add themselves, then it will be as if the object was above the children.\nIf it adds itself after the children, then it will be as if it was below the\nchildren. Entries added to the <a href=\"gestures\/HitTestResult-class.html\">HitTestResult<\/a> object should use the\n<a href=\"rendering\/BoxHitTestEntry-class.html\">BoxHitTestEntry<\/a> class. The entries are subsequently walked by the system\nin the order they were added, and for each entry, the target's <a href=\"rendering\/RenderBox\/handleEvent.html\">handleEvent<\/a>\nmethod is called, passing in the <a href=\"gestures\/HitTestEntry-class.html\">HitTestEntry<\/a> object.<\/p>\n<p>Hit testing cannot rely on painting having happened.<\/p>\n<h3 id=\"semantics\">Semantics<\/h3>\n<p>For a render box to be accessible, implement the\n<a href=\"rendering\/RenderObject\/describeApproximatePaintClip.html\">describeApproximatePaintClip<\/a> and <a href=\"rendering\/RenderObject\/visitChildrenForSemantics.html\">visitChildrenForSemantics<\/a> methods, and\nthe <code>semanticsAnnotator<\/code> getter. The default implementations are sufficient\nfor objects that only affect layout, but nodes that represent interactive\ncomponents or information (diagrams, text, images, etc) should provide more\ncomplete implementations. For more information, see the documentation for\nthese members.<\/p>\n<h3 id=\"intrinsics-and-baselines\">Intrinsics and Baselines<\/h3>\n<p>The layout, painting, hit testing, and semantics protocols are common to all\nrender objects. <a href=\"rendering\/RenderBox-class.html\">RenderBox<\/a> objects must implement two additional protocols:\nintrinsic sizing and baseline measurements.<\/p>\n<p>There are four methods to implement for intrinsic sizing, to compute the\nminimum and maximum intrinsic width and height of the box. The documentation\nfor these methods discusses the protocol in detail:\n<a href=\"rendering\/RenderBox\/computeMinIntrinsicWidth.html\">computeMinIntrinsicWidth<\/a>, <a href=\"rendering\/RenderBox\/computeMaxIntrinsicWidth.html\">computeMaxIntrinsicWidth<\/a>,\n<a href=\"rendering\/RenderBox\/computeMinIntrinsicHeight.html\">computeMinIntrinsicHeight<\/a>, <a href=\"rendering\/RenderBox\/computeMaxIntrinsicHeight.html\">computeMaxIntrinsicHeight<\/a>.<\/p>\n<p>In addition, if the box has any children, it must implement\n<a href=\"rendering\/RenderBox\/computeDistanceToActualBaseline.html\">computeDistanceToActualBaseline<\/a>. <a href=\"rendering\/RenderProxyBox-class.html\">RenderProxyBox<\/a> provides a simple\nimplementation that forwards to the child; <a href=\"rendering\/RenderShiftedBox-class.html\">RenderShiftedBox<\/a> provides an\nimplementation that offsets the child's baseline information by the position\nof the child relative to the parent. If you do not inherited from either of\nthese classes, however, you must implement the algorithm yourself.<\/p>\n    ",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "rendering\/RenderBox-class.html",
     "isAbstract": "1",
     "isConstant": "0",
@@ -21,7 +21,7 @@
     "methods": [
         {
             "desc": null,
-            "example": null,
+            "example": "",
             "href": "rendering\/RenderBox\/RenderBox.html",
             "isDeprecated": "0",
             "type": "",
@@ -45,7 +45,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -54,7 +54,7 @@
                 {
                     "name": "transform",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -76,7 +76,7 @@
                 {
                     "name": "baseline",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -98,7 +98,7 @@
                 {
                     "name": "width",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -120,7 +120,7 @@
                 {
                     "name": "height",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -142,7 +142,7 @@
                 {
                     "name": "width",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -164,7 +164,7 @@
                 {
                     "name": "height",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -186,7 +186,7 @@
                 {
                     "name": "value",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -220,7 +220,7 @@
                 {
                     "name": "properties",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -242,7 +242,7 @@
                 {
                     "name": "entry",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -251,7 +251,7 @@
                 {
                     "name": "event",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -273,7 +273,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -282,7 +282,7 @@
                 {
                     "name": "offset",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -304,7 +304,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -313,7 +313,7 @@
                 {
                     "name": "offset",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -335,7 +335,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -344,7 +344,7 @@
                 {
                     "name": "offset",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -366,7 +366,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -375,7 +375,7 @@
                 {
                     "name": "offset",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -409,7 +409,7 @@
                 {
                     "name": "baseline",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -431,7 +431,7 @@
                 {
                     "name": "baseline",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -440,7 +440,7 @@
                 {
                     "name": "onlyReal",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -462,7 +462,7 @@
                 {
                     "name": "width",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -484,7 +484,7 @@
                 {
                     "name": "height",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -506,7 +506,7 @@
                 {
                     "name": "width",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -528,7 +528,7 @@
                 {
                     "name": "height",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -550,7 +550,7 @@
                 {
                     "name": "ancestor",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -559,7 +559,7 @@
                 {
                     "name": "point",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -581,7 +581,7 @@
                 {
                     "name": "entry",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -590,7 +590,7 @@
                 {
                     "name": "event",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -612,7 +612,7 @@
                 {
                     "name": "position",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -621,7 +621,7 @@
                 {
                     "name": "result",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -643,7 +643,7 @@
                 {
                     "name": "position",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -652,7 +652,7 @@
                 {
                     "name": "result",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -674,7 +674,7 @@
                 {
                     "name": "position",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -696,7 +696,7 @@
                 {
                     "name": "ancestor",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -705,7 +705,7 @@
                 {
                     "name": "point",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -763,7 +763,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

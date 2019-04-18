@@ -1,7 +1,7 @@
 {
     "desc": "<p>An <a href=\"widgets\/Element-class.html\">Element<\/a> that uses a <a href=\"widgets\/RenderObjectWidget-class.html\">RenderObjectWidget<\/a> as its configuration.<\/p>\n<p><a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> objects have an associated <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> widget in\nthe render tree, which handles concrete operations like laying out,\npainting, and hit testing.<\/p>\n<p>Contrast with <a href=\"widgets\/ComponentElement-class.html\">ComponentElement<\/a>.<\/p>\n<p>For details on the lifecycle of an element, see the discussion at <a href=\"widgets\/Element-class.html\">Element<\/a>.<\/p>\n<h2 id=\"writing-a-renderobjectelement-subclass\">Writing a RenderObjectElement subclass<\/h2>\n<p>There are three common child models used by most <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>s:<\/p>\n<ul>\n<li>\n<p>Leaf render objects, with no children: The <a href=\"widgets\/LeafRenderObjectElement-class.html\">LeafRenderObjectElement<\/a> class\nhandles this case.<\/p>\n<\/li>\n<li>\n<p>A single child: The <a href=\"widgets\/SingleChildRenderObjectElement-class.html\">SingleChildRenderObjectElement<\/a> class handles this\ncase.<\/p>\n<\/li>\n<li>\n<p>A linked list of children: The <a href=\"widgets\/MultiChildRenderObjectElement-class.html\">MultiChildRenderObjectElement<\/a> class\nhandles this case.<\/p>\n<\/li>\n<\/ul>\n<p>Sometimes, however, a render object's child model is more complicated. Maybe\nit has a two-dimensional array of children. Maybe it constructs children on\ndemand. Maybe it features multiple lists. In such situations, the\ncorresponding <a href=\"widgets\/Element-class.html\">Element<\/a> for the <a href=\"widgets\/Widget-class.html\">Widget<\/a> that configures that <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>\nwill be a new subclass of <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a>.<\/p>\n<p>Such a subclass is responsible for managing children, specifically the\n<a href=\"widgets\/Element-class.html\">Element<\/a> children of this object, and the <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> children of its\ncorresponding <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a>.<\/p>\n<h3 id=\"specializing-the-getters\">Specializing the getters<\/h3>\n<p><a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> objects spend much of their time acting as\nintermediaries between their <a href=\"widgets\/RenderObjectElement\/widget.html\">widget<\/a> and their <a href=\"widgets\/RenderObjectElement\/renderObject.html\">renderObject<\/a>. To make this\nmore tractable, most <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> subclasses override these getters\nso that they return the specific type that the element expects, e.g.:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class FooElement extends RenderObjectElement {\n\n  @override\n  Foo get widget =&gt; super.widget;\n\n  @override\n  RenderFoo get renderObject =&gt; super.renderObject;\n\n  \/\/ ...\n}\n<\/code><\/pre>\n<h3 id=\"slots\">Slots<\/h3>\n<p>Each child <a href=\"widgets\/Element-class.html\">Element<\/a> corresponds to a <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> which should be\nattached to this element's render object as a child.<\/p>\n<p>However, the immediate children of the element may not be the ones that\neventually produce the actual <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> that they correspond to. For\nexample a <a href=\"widgets\/StatelessElement-class.html\">StatelessElement<\/a> (the element of a <a href=\"widgets\/StatelessWidget-class.html\">StatelessWidget<\/a>) simply\ncorresponds to whatever <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> its child (the element returned by\nits <a href=\"widgets\/StatelessWidget\/build.html\">StatelessWidget.build<\/a> method) corresponds to.<\/p>\n<p>Each child is therefore assigned a <em>slot<\/em> token. This is an identifier whose\nmeaning is private to this <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> node. When the descendant\nthat finally produces the <a href=\"rendering\/RenderObject-class.html\">RenderObject<\/a> is ready to attach it to this\nnode's render object, it passes that slot token back to this node, and that\nallows this node to cheaply identify where to put the child render object\nrelative to the others in the parent render object.<\/p>\n<h3 id=\"updating-children\">Updating children<\/h3>\n<p>Early in the lifecycle of an element, the framework calls the <a href=\"widgets\/RenderObjectElement\/mount.html\">mount<\/a>\nmethod. This method should call <a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a> for each child, passing in\nthe widget for that child, and the slot for that child, thus obtaining a\nlist of child <a href=\"widgets\/Element-class.html\">Element<\/a>s.<\/p>\n<p>Subsequently, the framework will call the <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a> method. In this method,\nthe <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> should call <a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a> for each child, passing\nin the <a href=\"widgets\/Element-class.html\">Element<\/a> that was obtained during <a href=\"widgets\/RenderObjectElement\/mount.html\">mount<\/a> or the last time <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a>\nwas run (whichever happened most recently), the new <a href=\"widgets\/Widget-class.html\">Widget<\/a>, and the slot.\nThis provides the object with a new list of <a href=\"widgets\/Element-class.html\">Element<\/a> objects.<\/p>\n<p>Where possible, the <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a> method should attempt to map the elements from\nthe last pass to the widgets in the new pass. For example, if one of the\nelements from the last pass was configured with a particular <a href=\"foundation\/Key-class.html\">Key<\/a>, and one\nof the widgets in this new pass has that same key, they should be paired up,\nand the old element should be updated with the widget (and the slot\ncorresponding to the new widget's new position, also). The <a href=\"widgets\/RenderObjectElement\/updateChildren.html\">updateChildren<\/a>\nmethod may be useful in this regard.<\/p>\n<p><a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a> should be called for children in their logical order. The\norder can matter; for example, if two of the children use <a href=\"widgets\/PageStorage-class.html\">PageStorage<\/a>'s\n<code>writeState<\/code> feature in their build method (and neither has a <a href=\"widgets\/Widget\/key.html\">Widget.key<\/a>),\nthen the state written by the first will be overwritten by the second.<\/p>\n<h4 id=\"dynamically-determining-the-children-during-the-build-phase\">Dynamically determining the children during the build phase<\/h4>\n<p>The child widgets need not necessarily come from this element's widget\nverbatim. They could be generated dynamically from a callback, or generated\nin other more creative ways.<\/p>\n<h4 id=\"dynamically-determining-the-children-during-layout\">Dynamically determining the children during layout<\/h4>\n<p>If the widgets are to be generated at layout time, then generating them when\nthe <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a> method won't work: layout of this element's render object\nhasn't started yet at that point. Instead, the <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a> method can mark the\nrender object as needing layout (see <a href=\"rendering\/RenderObject\/markNeedsLayout.html\">RenderObject.markNeedsLayout<\/a>), and\nthen the render object's <a href=\"rendering\/RenderObject\/performLayout.html\">RenderObject.performLayout<\/a> method can call back\nto the element to have it generate the widgets and call <a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a>\naccordingly.<\/p>\n<p>For a render object to call an element during layout, it must use\n<a href=\"rendering\/RenderObject\/invokeLayoutCallback.html\">RenderObject.invokeLayoutCallback<\/a>. For an element to call <a href=\"widgets\/Element\/updateChild.html\">updateChild<\/a>\noutside of its <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a> method, it must use <a href=\"widgets\/BuildOwner\/buildScope.html\">BuildOwner.buildScope<\/a>.<\/p>\n<p>The framework provides many more checks in normal operation than it does\nwhen doing a build during layout. For this reason, creating widgets with\nlayout-time build semantics should be done with great care.<\/p>\n<h4 id=\"handling-errors-when-building\">Handling errors when building<\/h4>\n<p>If an element calls a builder function to obtain widgets for its children,\nit may find that the build throws an exception. Such exceptions should be\ncaught and reported using <a href=\"foundation\/FlutterError\/reportError.html\">FlutterError.reportError<\/a>. If a child is needed\nbut a builder has failed in this way, an instance of <a href=\"widgets\/ErrorWidget-class.html\">ErrorWidget<\/a> can be\nused instead.<\/p>\n<h3 id=\"detaching-children\">Detaching children<\/h3>\n<p>It is possible, when using <a href=\"widgets\/GlobalKey-class.html\">GlobalKey<\/a>s, for a child to be proactively\nremoved by another element before this element has been updated.\n(Specifically, this happens when the subtree rooted at a widget with a\nparticular <a href=\"widgets\/GlobalKey-class.html\">GlobalKey<\/a> is being moved from this element to an element\nprocessed earlier in the build phase.) When this happens, this element's\n<a href=\"widgets\/Element\/forgetChild.html\">forgetChild<\/a> method will be called with a reference to the affected child\nelement.<\/p>\n<p>The <a href=\"widgets\/Element\/forgetChild.html\">forgetChild<\/a> method of a <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> subclass must remove the\nchild element from its child list, so that when it next <a href=\"widgets\/RenderObjectElement\/update.html\">update<\/a>s its\nchildren, the removed child is not considered.<\/p>\n<p>For performance reasons, if there are many elements, it may be quicker to\ntrack which elements were forgotten by storing them in a <a href=\"dart-core\/Set-class.html\">Set<\/a>, rather than\nproactively mutating the local record of the child list and the identities\nof all the slots. For example, see the implementation of\n<a href=\"widgets\/MultiChildRenderObjectElement-class.html\">MultiChildRenderObjectElement<\/a>.<\/p>\n<h3 id=\"maintaining-the-render-object-tree\">Maintaining the render object tree<\/h3>\n<p>Once a descendant produces a render object, it will call\n<a href=\"widgets\/RenderObjectElement\/insertChildRenderObject.html\">insertChildRenderObject<\/a>. If the descendant's slot changes identity, it\nwill call <a href=\"widgets\/RenderObjectElement\/moveChildRenderObject.html\">moveChildRenderObject<\/a>. If a descendant goes away, it will call\n<a href=\"widgets\/RenderObjectElement\/removeChildRenderObject.html\">removeChildRenderObject<\/a>.<\/p>\n<p>These three methods should update the render tree accordingly, attaching,\nmoving, and detaching the given child render object from this element's own\nrender object respectively.<\/p>\n<h3 id=\"walking-the-children\">Walking the children<\/h3>\n<p>If a <a href=\"widgets\/RenderObjectElement-class.html\">RenderObjectElement<\/a> object has any children <a href=\"widgets\/Element-class.html\">Element<\/a>s, it must\nexpose them in its implementation of the <a href=\"widgets\/Element\/visitChildren.html\">visitChildren<\/a> method. This method\nis used by many of the framework's internal mechanisms, and so should be\nfast. It is also used by the test framework and <a href=\"widgets\/debugDumpApp.html\">debugDumpApp<\/a>.<\/p>\n    ",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "widgets\/RenderObjectElement-class.html",
     "isAbstract": "1",
     "isConstant": "0",
@@ -34,7 +34,7 @@
                 {
                     "name": "widget",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -56,7 +56,7 @@
                 {
                     "name": "newSlot",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -90,7 +90,7 @@
                 {
                     "name": "properties",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -124,7 +124,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -133,7 +133,7 @@
                 {
                     "name": "slot",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -155,7 +155,7 @@
                 {
                     "name": "newSlot",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -164,7 +164,7 @@
                 {
                     "name": "parent",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -186,7 +186,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -195,7 +195,7 @@
                 {
                     "name": "slot",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -229,7 +229,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -263,7 +263,7 @@
                 {
                     "name": "newWidget",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -285,7 +285,7 @@
                 {
                     "name": "forgottenChildren",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -294,7 +294,7 @@
                 {
                     "name": "newWidgets",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -303,7 +303,7 @@
                 {
                     "name": "oldChildren",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

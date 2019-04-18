@@ -1,7 +1,7 @@
 {
     "desc": "<p>A widget that manages a set of child widgets with a stack discipline.<\/p>\n<p>Many apps have a navigator near the top of their widget hierarchy in order\nto display their logical history using an <a href=\"widgets\/Overlay-class.html\">Overlay<\/a> with the most recently\nvisited pages visually on top of the older pages. Using this pattern lets\nthe navigator visually transition from one page to another by moving the widgets\naround in the overlay. Similarly, the navigator can be used to show a dialog\nby positioning the dialog widget above the current page.<\/p>\n<h2 id=\"using-the-navigator\">Using the Navigator<\/h2>\n<p>Mobile apps typically reveal their contents via full-screen elements\ncalled \"screens\" or \"pages\". In Flutter these elements are called\nroutes and they're managed by a <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> widget. The navigator\nmanages a stack of <a href=\"widgets\/Route-class.html\">Route<\/a> objects and provides methods for managing\nthe stack, like <a href=\"widgets\/Navigator\/push.html\">Navigator.push<\/a> and <a href=\"widgets\/Navigator\/pop.html\">Navigator.pop<\/a>.<\/p>\n<h3 id=\"displaying-a-full-screen-route\">Displaying a full-screen route<\/h3>\n<p>Although you can create a navigator directly, it's most common to use\nthe navigator created by a <a href=\"widgets\/WidgetsApp-class.html\">WidgetsApp<\/a> or a <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> widget. You\ncan refer to that navigator with <a href=\"widgets\/Navigator\/of.html\">Navigator.of<\/a>.<\/p>\n<p>A <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> is the simplest way to set things up. The <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a>'s\nhome becomes the route at the bottom of the <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>'s stack. It is what\nyou see when the app is launched.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">void main() {\n  runApp(MaterialApp(home: MyAppHome()));\n}\n<\/code><\/pre>\n<p>To push a new route on the stack you can create an instance of\n<a href=\"material\/MaterialPageRoute-class.html\">MaterialPageRoute<\/a> with a builder function that creates whatever you\nwant to appear on the screen. For example:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.push(context, MaterialPageRoute&lt;void&gt;(\n  builder: (BuildContext context) {\n    return Scaffold(\n      appBar: AppBar(title: Text('My Page')),\n      body: Center(\n        child: FlatButton(\n          child: Text('POP'),\n          onPressed: () {\n            Navigator.pop(context);\n          },\n        ),\n      ),\n    );\n  },\n));\n<\/code><\/pre>\n<p>The route defines its widget with a builder function instead of a\nchild widget because it will be built and rebuilt in different\ncontexts depending on when it's pushed and popped.<\/p>\n<p>As you can see, the new route can be popped, revealing the app's home\npage, with the Navigator's pop method:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.pop(context);\n<\/code><\/pre>\n<p>It usually isn't necessary to provide a widget that pops the Navigator\nin a route with a <a href=\"material\/Scaffold-class.html\">Scaffold<\/a> because the Scaffold automatically adds a\n'back' button to its AppBar. Pressing the back button causes\n<a href=\"widgets\/Navigator\/pop.html\">Navigator.pop<\/a> to be called. On Android, pressing the system back\nbutton does the same thing.<\/p>\n<h3 id=\"using-named-navigator-routes\">Using named navigator routes<\/h3>\n<p>Mobile apps often manage a large number of routes and it's often\neasiest to refer to them by name. Route names, by convention,\nuse a path-like structure (for example, '\/a\/b\/c').\nThe app's home page route is named '\/' by default.<\/p>\n<p>The <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> can be created\nwith a <code>Map&lt;String, WidgetBuilder&gt;<\/code> which maps from a route's name to\na builder function that will create it. The <a href=\"material\/MaterialApp-class.html\">MaterialApp<\/a> uses this\nmap to create a value for its navigator's <a href=\"widgets\/Navigator\/onGenerateRoute.html\">onGenerateRoute<\/a> callback.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">void main() {\n  runApp(MaterialApp(\n    home: MyAppHome(), \/\/ becomes the route named '\/'\n    routes: &lt;String, WidgetBuilder&gt; {\n      '\/a': (BuildContext context) =&gt; MyPage(title: 'page A'),\n      '\/b': (BuildContext context) =&gt; MyPage(title: 'page B'),\n      '\/c': (BuildContext context) =&gt; MyPage(title: 'page C'),\n    },\n  ));\n}\n<\/code><\/pre>\n<p>To show a route by name:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.pushNamed(context, '\/b');\n<\/code><\/pre>\n<h3 id=\"routes-can-return-a-value\">Routes can return a value<\/h3>\n<p>When a route is pushed to ask the user for a value, the value can be\nreturned via the <a href=\"widgets\/Navigator\/pop.html\">pop<\/a> method's result parameter.<\/p>\n<p>Methods that push a route return a <a href=\"dart-async\/Future-class.html\">Future<\/a>. The Future resolves when the\nroute is popped and the <a href=\"dart-async\/Future-class.html\">Future<\/a>'s value is the <a href=\"widgets\/Navigator\/pop.html\">pop<\/a> method's <code>result<\/code>\nparameter.<\/p>\n<p>For example if we wanted to ask the user to press 'OK' to confirm an\noperation we could <code>await<\/code> the result of <a href=\"widgets\/Navigator\/push.html\">Navigator.push<\/a>:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">bool value = await Navigator.push(context, MaterialPageRoute&lt;bool&gt;(\n  builder: (BuildContext context) {\n    return Center(\n      child: GestureDetector(\n        child: Text('OK'),\n        onTap: () { Navigator.pop(context, true); }\n      ),\n    );\n  }\n));\n<\/code><\/pre>\n<p>If the user presses 'OK' then value will be true. If the user backs\nout of the route, for example by pressing the Scaffold's back button,\nthe value will be null.<\/p>\n<p>When a route is used to return a value, the route's type parameter must\nmatch the type of <a href=\"widgets\/Navigator\/pop.html\">pop<\/a>'s result. That's why we've used\n<code>MaterialPageRoute&lt;bool&gt;<\/code> instead of <code>MaterialPageRoute&lt;void&gt;<\/code> or just\n<code>MaterialPageRoute<\/code>. (If you prefer to not specify the types, though, that's\nfine too.)<\/p>\n<h3 id=\"popup-routes\">Popup routes<\/h3>\n<p>Routes don't have to obscure the entire screen. <a href=\"widgets\/PopupRoute-class.html\">PopupRoute<\/a>s cover the\nscreen with a <a href=\"widgets\/ModalRoute\/barrierColor.html\">ModalRoute.barrierColor<\/a> that can be only partially opaque to\nallow the current screen to show through. Popup routes are \"modal\" because\nthey block input to the widgets below.<\/p>\n<p>There are functions which create and show popup routes. For\nexample: <a href=\"material\/showDialog.html\">showDialog<\/a>, <a href=\"material\/showMenu.html\">showMenu<\/a>, and <a href=\"material\/showModalBottomSheet.html\">showModalBottomSheet<\/a>. These\nfunctions return their pushed route's Future as described above.\nCallers can await the returned value to take an action when the\nroute is popped, or to discover the route's value.<\/p>\n<p>There are also widgets which create popup routes, like <a href=\"material\/PopupMenuButton-class.html\">PopupMenuButton<\/a> and\n<a href=\"material\/DropdownButton-class.html\">DropdownButton<\/a>. These widgets create internal subclasses of PopupRoute\nand use the Navigator's push and pop methods to show and dismiss them.<\/p>\n<h3 id=\"custom-routes\">Custom routes<\/h3>\n<p>You can create your own subclass of one of the widget library route classes\nlike <a href=\"widgets\/PopupRoute-class.html\">PopupRoute<\/a>, <a href=\"widgets\/ModalRoute-class.html\">ModalRoute<\/a>, or <a href=\"widgets\/PageRoute-class.html\">PageRoute<\/a>, to control the animated\ntransition employed to show the route, the color and behavior of the route's\nmodal barrier, and other aspects of the route.<\/p>\n<p>The <a href=\"widgets\/PageRouteBuilder-class.html\">PageRouteBuilder<\/a> class makes it possible to define a custom route\nin terms of callbacks. Here's an example that rotates and fades its child\nwhen the route appears or disappears. This route does not obscure the entire\nscreen because it specifies <code>opaque: false<\/code>, just as a popup route does.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">Navigator.push(context, PageRouteBuilder(\n  opaque: false,\n  pageBuilder: (BuildContext context, _, __) {\n    return Center(child: Text('My PageRoute'));\n  },\n  transitionsBuilder: (___, Animation&lt;double&gt; animation, ____, Widget child) {\n    return FadeTransition(\n      opacity: animation,\n      child: RotationTransition(\n        turns: Tween&lt;double&gt;(begin: 0.5, end: 1.0).animate(animation),\n        child: child,\n      ),\n    );\n  }\n));\n<\/code><\/pre>\n<p>The page route is built in two parts, the \"page\" and the\n\"transitions\". The page becomes a descendant of the child passed to\nthe <code>transitionsBuilder<\/code> function. Typically the page is only built once,\nbecause it doesn't depend on its animation parameters (elided with <code>_<\/code>\nand <code>__<\/code> in this example). The transition is built on every frame\nfor its duration.<\/p>\n<h3 id=\"nesting-navigators\">Nesting Navigators<\/h3>\n<p>An app can use more than one Navigator. Nesting one Navigator below\nanother Navigator can be used to create an \"inner journey\" such as tabbed\nnavigation, user registration, store checkout, or other independent journeys\nthat represent a subsection of your overall application.<\/p>\n<h4 id=\"real-world-example\">Real World Example<\/h4>\n<p>It is standard practice for iOS apps to use tabbed navigation where each\ntab maintains its own navigation history. Therefore, each tab has its own\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a>, creating a kind of \"parallel navigation.\"<\/p>\n<p>In addition to the parallel navigation of the tabs, it is still possible to\nlaunch full-screen pages that completely cover the tabs. For example: an\non-boarding flow, or an alert dialog. Therefore, there must exist a \"root\"\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a> that sits above the tab navigation. As a result, each of the\ntab's <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s are actually nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s sitting below a single\nroot <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>.<\/p>\n<p>The nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s for tabbed navigation sit in <code>WidgetApp<\/code> and\n<a href=\"cupertino\/CupertinoTabView-class.html\">CupertinoTabView<\/a>, so you don't need to worry about nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s\nin this situation, but it's a real world example where nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s\nare used.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <script>var visibleSnippet1 = \"shortSnippet1\";<\/script><button id=\"shortSnippet1Button\" onclick=\"visibleSnippet1 = showSnippet('shortSnippet1', visibleSnippet1);\" selected>Sample<\/button>\n  <button id=\"longSnippet1Button\" onclick=\"visibleSnippet1 = showSnippet('longSnippet1', visibleSnippet1);\">Sample in an App<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\" id=\"shortSnippet1\">\n    <div class=\"snippet-description\">\nThe following example demonstrates how a nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> can be used to\npresent a standalone user registration journey.\n<p>Even though this example uses two <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s to demonstrate nested\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s, a similar result is possible using only a single <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>.<\/p>\n<p>Run this example with <code>flutter run --route=\/signup<\/code> to start it with\nthe signup flow instead of on the home page.\n<\/p>\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(visibleSnippet1);\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\"><code class=\"language-dart\">import 'package:flutter\/material.dart';\n\n\/\/ ...\n\nvoid main() =&gt; runApp(new MyApp());\n\n\/\/ ...\n\nclass MyApp extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Flutter Code Sample for Navigator',\n      \/\/ MaterialApp contains our top-level Navigator\n      initialRoute: '\/',\n      routes: {\n        '\/': (BuildContext context) =&gt; HomePage(),\n        '\/signup': (BuildContext context) =&gt; SignUpPage(),\n      },\n    );\n  }\n}\n\nclass HomePage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return DefaultTextStyle(\n      style: Theme.of(context).textTheme.display1,\n      child: Container(\n        color: Colors.white,\n        alignment: Alignment.center,\n        child: Text('Home Page'),\n      ),\n    );\n  }\n}\n\nclass CollectPersonalInfoPage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return DefaultTextStyle(\n      style: Theme.of(context).textTheme.display1,\n      child: GestureDetector(\n        onTap: () {\n          \/\/ This moves from the personal info page to the credentials page,\n          \/\/ replacing this page with that one.\n          Navigator.of(context)\n            .pushReplacementNamed('signup\/choose_credentials');\n        },\n        child: Container(\n          color: Colors.lightBlue,\n          alignment: Alignment.center,\n          child: Text('Collect Personal Info Page'),\n        ),\n      ),\n    );\n  }\n}\n\nclass ChooseCredentialsPage extends StatelessWidget {\n  const ChooseCredentialsPage({\n    this.onSignupComplete,\n  });\n\n  final VoidCallback onSignupComplete;\n\n  @override\n  Widget build(BuildContext context) {\n    return GestureDetector(\n      onTap: onSignupComplete,\n      child: DefaultTextStyle(\n        style: Theme.of(context).textTheme.display1,\n        child: Container(\n          color: Colors.pinkAccent,\n          alignment: Alignment.center,\n          child: Text('Choose Credentials Page'),\n        ),\n      ),\n    );\n  }\n}\n\nclass SignUpPage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    \/\/ SignUpPage builds its own Navigator which ends up being a nested\n    \/\/ Navigator in our app.\n    return Navigator(\n      initialRoute: 'signup\/personal_info',\n      onGenerateRoute: (RouteSettings settings) {\n        WidgetBuilder builder;\n        switch (settings.name) {\n          case 'signup\/personal_info':\n          \/\/ Assume CollectPersonalInfoPage collects personal info and then\n          \/\/ navigates to 'signup\/choose_credentials'.\n            builder = (BuildContext _) =&gt; CollectPersonalInfoPage();\n            break;\n          case 'signup\/choose_credentials':\n          \/\/ Assume ChooseCredentialsPage collects new credentials and then\n          \/\/ invokes 'onSignupComplete()'.\n            builder = (BuildContext _) =&gt; ChooseCredentialsPage(\n              onSignupComplete: () {\n                \/\/ Referencing Navigator.of(context) from here refers to the\n                \/\/ top level Navigator because SignUpPage is above the\n                \/\/ nested Navigator that it created. Therefore, this pop()\n                \/\/ will pop the entire \"sign up\" journey and return to the\n                \/\/ \"\/\" route, AKA HomePage.\n                Navigator.of(context).pop();\n              },\n            );\n            break;\n          default:\n            throw Exception('Invalid route: ${settings.name}');\n        }\n        return MaterialPageRoute(builder: builder, settings: settings);\n      },\n    );\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n  <div class=\"snippet\" id=\"longSnippet1\" hidden>\n    <div class=\"snippet-description\">To create a sample project with this code snippet, run:<br><span class=\"snippet-create-command\">flutter create --sample=widgets.Navigator.1 mysample<\/span>\n    <\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(visibleSnippet1);\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/ Flutter code sample for widgets.Navigator.1\n\n\/\/ The following example demonstrates how a nested [Navigator] can be used to\n\/\/ present a standalone user registration journey.\n\/\/\n\/\/ Even though this example uses two [Navigator]s to demonstrate nested\n\/\/ [Navigator]s, a similar result is possible using only a single [Navigator].\n\/\/\n\/\/ Run this example with `flutter run --route=\/signup` to start it with\n\/\/ the signup flow instead of on the home page.\n\nimport 'package:flutter\/material.dart';\n\nvoid main() =&gt; runApp(MyApp());\n\nclass MyApp extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Flutter Code Sample for Navigator',\n      \/\/ MaterialApp contains our top-level Navigator\n      initialRoute: '\/',\n      routes: {\n        '\/': (BuildContext context) =&gt; HomePage(),\n        '\/signup': (BuildContext context) =&gt; SignUpPage(),\n      },\n    );\n  }\n}\n\nclass HomePage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return DefaultTextStyle(\n      style: Theme.of(context).textTheme.display1,\n      child: Container(\n        color: Colors.white,\n        alignment: Alignment.center,\n        child: Text('Home Page'),\n      ),\n    );\n  }\n}\n\nclass CollectPersonalInfoPage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return DefaultTextStyle(\n      style: Theme.of(context).textTheme.display1,\n      child: GestureDetector(\n        onTap: () {\n          \/\/ This moves from the personal info page to the credentials page,\n          \/\/ replacing this page with that one.\n          Navigator.of(context)\n              .pushReplacementNamed('signup\/choose_credentials');\n        },\n        child: Container(\n          color: Colors.lightBlue,\n          alignment: Alignment.center,\n          child: Text('Collect Personal Info Page'),\n        ),\n      ),\n    );\n  }\n}\n\nclass ChooseCredentialsPage extends StatelessWidget {\n  const ChooseCredentialsPage({\n    this.onSignupComplete,\n  });\n\n  final VoidCallback onSignupComplete;\n\n  @override\n  Widget build(BuildContext context) {\n    return GestureDetector(\n      onTap: onSignupComplete,\n      child: DefaultTextStyle(\n        style: Theme.of(context).textTheme.display1,\n        child: Container(\n          color: Colors.pinkAccent,\n          alignment: Alignment.center,\n          child: Text('Choose Credentials Page'),\n        ),\n      ),\n    );\n  }\n}\n\nclass SignUpPage extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    \/\/ SignUpPage builds its own Navigator which ends up being a nested\n    \/\/ Navigator in our app.\n    return Navigator(\n      initialRoute: 'signup\/personal_info',\n      onGenerateRoute: (RouteSettings settings) {\n        WidgetBuilder builder;\n        switch (settings.name) {\n          case 'signup\/personal_info':\n            \/\/ Assume CollectPersonalInfoPage collects personal info and then\n            \/\/ navigates to 'signup\/choose_credentials'.\n            builder = (BuildContext _) =&gt; CollectPersonalInfoPage();\n            break;\n          case 'signup\/choose_credentials':\n            \/\/ Assume ChooseCredentialsPage collects new credentials and then\n            \/\/ invokes 'onSignupComplete()'.\n            builder = (BuildContext _) =&gt; ChooseCredentialsPage(\n                  onSignupComplete: () {\n                    \/\/ Referencing Navigator.of(context) from here refers to the\n                    \/\/ top level Navigator because SignUpPage is above the\n                    \/\/ nested Navigator that it created. Therefore, this pop()\n                    \/\/ will pop the entire \"sign up\" journey and return to the\n                    \/\/ \"\/\" route, AKA HomePage.\n                    Navigator.of(context).pop();\n                  },\n                );\n            break;\n          default:\n            throw Exception('Invalid route: ${settings.name}');\n        }\n        return MaterialPageRoute(builder: builder, settings: settings);\n      },\n    );\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p><a href=\"widgets\/Navigator\/of.html\">Navigator.of<\/a> operates on the nearest ancestor <a href=\"widgets\/Navigator-class.html\">Navigator<\/a> from the given\n<a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a>. Be sure to provide a <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> below the intended\n<a href=\"widgets\/Navigator-class.html\">Navigator<\/a>, especially in large <code>build<\/code> methods where nested <a href=\"widgets\/Navigator-class.html\">Navigator<\/a>s\nare created. The <a href=\"widgets\/Builder-class.html\">Builder<\/a> widget can be used to access a <a href=\"widgets\/BuildContext-class.html\">BuildContext<\/a> at\na desired location in the widget subtree.<\/p>\n    ",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "widgets\/Navigator-class.html",
     "isAbstract": "0",
     "isConstant": "0",
@@ -54,7 +54,7 @@
                 {
                     "name": "initialRoute",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -63,7 +63,7 @@
                 {
                     "name": "key",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -72,7 +72,7 @@
                 {
                     "name": "observers",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -81,7 +81,7 @@
                 {
                     "name": "onGenerateRoute",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -90,7 +90,7 @@
                 {
                     "name": "onUnknownRoute",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -112,7 +112,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -146,7 +146,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -155,7 +155,7 @@
                 {
                     "name": "result",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -177,7 +177,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -186,7 +186,7 @@
                 {
                     "name": "nullOk",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -195,7 +195,7 @@
                 {
                     "name": "rootNavigator",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -217,7 +217,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -226,7 +226,7 @@
                 {
                     "name": "result",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -248,7 +248,7 @@
                 {
                     "name": "arguments",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -257,7 +257,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -266,7 +266,7 @@
                 {
                     "name": "result",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -275,7 +275,7 @@
                 {
                     "name": "routeName",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -297,7 +297,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -306,7 +306,7 @@
                 {
                     "name": "predicate",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -328,7 +328,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -337,7 +337,7 @@
                 {
                     "name": "route",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -359,7 +359,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -368,7 +368,7 @@
                 {
                     "name": "newRoute",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -377,7 +377,7 @@
                 {
                     "name": "predicate",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -399,7 +399,7 @@
                 {
                     "name": "arguments",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -408,7 +408,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -417,7 +417,7 @@
                 {
                     "name": "routeName",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -439,7 +439,7 @@
                 {
                     "name": "arguments",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -448,7 +448,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -457,7 +457,7 @@
                 {
                     "name": "newRouteName",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -466,7 +466,7 @@
                 {
                     "name": "predicate",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -488,7 +488,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -497,7 +497,7 @@
                 {
                     "name": "newRoute",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -506,7 +506,7 @@
                 {
                     "name": "result",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -528,7 +528,7 @@
                 {
                     "name": "arguments",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -537,7 +537,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -546,7 +546,7 @@
                 {
                     "name": "result",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -555,7 +555,7 @@
                 {
                     "name": "routeName",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -577,7 +577,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -586,7 +586,7 @@
                 {
                     "name": "route",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -608,7 +608,7 @@
                 {
                     "name": "anchorRoute",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -617,7 +617,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -639,7 +639,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -648,7 +648,7 @@
                 {
                     "name": "newRoute",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -657,7 +657,7 @@
                 {
                     "name": "oldRoute",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -679,7 +679,7 @@
                 {
                     "name": "anchorRoute",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -688,7 +688,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -697,7 +697,7 @@
                 {
                     "name": "newRoute",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

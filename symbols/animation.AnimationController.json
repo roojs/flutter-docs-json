@@ -1,7 +1,7 @@
 {
     "desc": "<p>A controller for an animation.<\/p>\n<p>This class lets you perform tasks such as:<\/p>\n<ul>\n<li>Play an animation <a href=\"animation\/AnimationController\/forward.html\">forward<\/a> or in <a href=\"animation\/AnimationController\/reverse.html\">reverse<\/a>, or <a href=\"animation\/AnimationController\/stop.html\">stop<\/a> an animation.<\/li>\n<li>Set the animation to a specific <a href=\"animation\/AnimationController\/value.html\">value<\/a>.<\/li>\n<li>Define the <a href=\"animation\/AnimationController\/upperBound.html\">upperBound<\/a> and <a href=\"animation\/AnimationController\/lowerBound.html\">lowerBound<\/a> values of an animation.<\/li>\n<li>Create a <a href=\"animation\/AnimationController\/fling.html\">fling<\/a> animation effect using a physics simulation.<\/li>\n<\/ul>\n<p>By default, an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> linearly produces values that range\nfrom 0.0 to 1.0, during a given duration. The animation controller generates\na new value whenever the device running your app is ready to display a new\nframe (typically, this rate is around 60 values per second).<\/p>\n<h2 id=\"ticker-providers\">Ticker providers<\/h2>\n<p>An <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> needs a <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a>, which is configured using\nthe <code>vsync<\/code> argument on the constructor.<\/p>\n<p>The <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> interface describes a factory for <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> objects. A\n<a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> is an object that knows how to register itself with the\n<a href=\"scheduler\/SchedulerBinding-mixin.html\">SchedulerBinding<\/a> and fires a callback every frame. The\n<a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> class uses a <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> to step through the animation\nthat it controls.<\/p>\n<p>If an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> is being created from a <a href=\"widgets\/State-class.html\">State<\/a>, then the State\ncan use the <a href=\"widgets\/TickerProviderStateMixin-mixin.html\">TickerProviderStateMixin<\/a> and <a href=\"widgets\/SingleTickerProviderStateMixin-mixin.html\">SingleTickerProviderStateMixin<\/a>\nclasses to implement the <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> interface. The\n<a href=\"widgets\/TickerProviderStateMixin-mixin.html\">TickerProviderStateMixin<\/a> class always works for this purpose; the\n<a href=\"widgets\/SingleTickerProviderStateMixin-mixin.html\">SingleTickerProviderStateMixin<\/a> is slightly more efficient in the case of\nthe class only ever needing one <a href=\"scheduler\/Ticker-class.html\">Ticker<\/a> (e.g. if the class creates only a\nsingle <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> during its entire lifetime).<\/p>\n<p>The widget test framework <a href=\"flutter_test\/WidgetTester-class.html\">WidgetTester<\/a> object can be used as a ticker\nprovider in the context of tests. In other contexts, you will have to either\npass a <a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> from a higher level (e.g. indirectly from a <a href=\"widgets\/State-class.html\">State<\/a>\nthat mixes in <a href=\"widgets\/TickerProviderStateMixin-mixin.html\">TickerProviderStateMixin<\/a>), or create a custom\n<a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a> subclass.<\/p>\n<h2 id=\"life-cycle\">Life cycle<\/h2>\n<p>An <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> should be <a href=\"animation\/AnimationController\/dispose.html\">dispose<\/a>d when it is no longer needed.\nThis reduces the likelihood of leaks. When used with a <a href=\"widgets\/StatefulWidget-class.html\">StatefulWidget<\/a>, it\nis common for an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> to be created in the\n<a href=\"widgets\/State\/initState.html\">State.initState<\/a> method and then disposed in the <a href=\"animation\/AnimationController\/dispose.html\">State.dispose<\/a> method.<\/p>\n<h2 id=\"using-futures-with-animationcontroller\">Using <a href=\"dart-async\/Future-class.html\">Future<\/a>s with <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a>\n<\/h2>\n<p>The methods that start animations return a <a href=\"scheduler\/TickerFuture-class.html\">TickerFuture<\/a> object which\ncompletes when the animation completes successfully, and never throws an\nerror; if the animation is canceled, the future never completes. This object\nalso has a <a href=\"scheduler\/TickerFuture\/orCancel.html\">TickerFuture.orCancel<\/a> property which returns a future that\ncompletes when the animation completes successfully, and completes with an\nerror when the animation is aborted.<\/p>\n<p>This can be used to write code such as the <code>fadeOutAndUpdateState<\/code> method\nbelow.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nHere is a stateful <code>Foo<\/code> widget. Its <a href=\"widgets\/State-class.html\">State<\/a> uses the\n<a href=\"widgets\/SingleTickerProviderStateMixin-mixin.html\">SingleTickerProviderStateMixin<\/a> to implement the necessary\n<a href=\"scheduler\/TickerProvider-class.html\">TickerProvider<\/a>, creating its controller in the <code>initState<\/code> method and\ndisposing of it in the <a href=\"animation\/AnimationController\/dispose.html\">dispose<\/a> method. The duration of the controller is\nconfigured from a property in the <code>Foo<\/code> widget; as that changes, the\n<code>didUpdateWidget<\/code> method is used to update the controller.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">class Foo extends StatefulWidget {\n  Foo({ Key key, this.duration }) : super(key: key);\n\n  final Duration duration;\n\n  @override\n  _FooState createState() =&gt; _FooState();\n}\n\nclass _FooState extends State&lt;Foo&gt; with SingleTickerProviderStateMixin {\n  AnimationController _controller;\n\n  @override\n  void initState() {\n    super.initState();\n    _controller = AnimationController(\n      vsync: this, \/\/ the SingleTickerProviderStateMixin\n      duration: widget.duration,\n    );\n  }\n\n  @override\n  void didUpdateWidget(Foo oldWidget) {\n    super.didUpdateWidget(oldWidget);\n    _controller.duration = widget.duration;\n  }\n\n  @override\n  void dispose() {\n    _controller.dispose();\n    super.dispose();\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return Container(); \/\/ ...\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <button id=\"shortSnippetButton\" selected>Sample<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\">\n<div class=\"snippet-description\">\nThe following method (for a <a href=\"widgets\/State-class.html\">State<\/a> subclass) drives two animation\ncontrollers using Dart's asynchronous syntax for awaiting <a href=\"dart-async\/Future-class.html\">Future<\/a> objects:\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(findSiblingWithId(this, 'sample-code'));\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\" id=\"sample-code\"><code class=\"language-dart\">Future&lt;void&gt; fadeOutAndUpdateState() async {\n  try {\n    await fadeAnimationController.forward().orCancel;\n    await sizeAnimationController.forward().orCancel;\n    setState(() {\n      dismissed = true;\n    });\n  } on TickerCanceled {\n    \/\/ the animation got canceled, probably because we were disposed\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>The assumption in the code above is that the animation controllers are being\ndisposed in the <a href=\"widgets\/State-class.html\">State<\/a> subclass' override of the <a href=\"animation\/AnimationController\/dispose.html\">State.dispose<\/a> method.\nSince disposing the controller cancels the animation (raising a\n<a href=\"scheduler\/TickerCanceled-class.html\">TickerCanceled<\/a> exception), the code here can skip verifying whether\n<a href=\"widgets\/State\/mounted.html\">State.mounted<\/a> is still true at each step. (Again, this assumes that the\ncontrollers are created in <a href=\"widgets\/State\/initState.html\">State.initState<\/a> and disposed in\n<a href=\"animation\/AnimationController\/dispose.html\">State.dispose<\/a>, as described in the previous section.)<\/p>\n<p>See also:<\/p>\n<ul><li>\n<a href=\"animation\/Tween-class.html\">Tween<\/a>, the base class for converting an <a href=\"animation\/AnimationController-class.html\">AnimationController<\/a> to a\nrange of values of other types.<\/li><\/ul>",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "animation\/AnimationController-class.html",
     "isAbstract": "0",
     "isConstant": "0",
@@ -34,7 +34,7 @@
                 {
                     "name": "animationBehavior",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -43,7 +43,7 @@
                 {
                     "name": "debugLabel",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -52,7 +52,7 @@
                 {
                     "name": "duration",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -61,7 +61,7 @@
                 {
                     "name": "lowerBound",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -70,7 +70,7 @@
                 {
                     "name": "upperBound",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -79,7 +79,7 @@
                 {
                     "name": "value",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -88,7 +88,7 @@
                 {
                     "name": "vsync",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -110,7 +110,7 @@
                 {
                     "name": "curve",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -119,7 +119,7 @@
                 {
                     "name": "duration",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -128,7 +128,7 @@
                 {
                     "name": "target",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -150,7 +150,7 @@
                 {
                     "name": "curve",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -159,7 +159,7 @@
                 {
                     "name": "duration",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -168,7 +168,7 @@
                 {
                     "name": "target",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -190,7 +190,7 @@
                 {
                     "name": "simulation",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -224,7 +224,7 @@
                 {
                     "name": "animationBehavior",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -233,7 +233,7 @@
                 {
                     "name": "velocity",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -255,7 +255,7 @@
                 {
                     "name": "from",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -277,7 +277,7 @@
                 {
                     "name": "max",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -286,7 +286,7 @@
                 {
                     "name": "min",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -295,7 +295,7 @@
                 {
                     "name": "period",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -304,7 +304,7 @@
                 {
                     "name": "reverse",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -338,7 +338,7 @@
                 {
                     "name": "vsync",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -360,7 +360,7 @@
                 {
                     "name": "from",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -382,7 +382,7 @@
                 {
                     "name": "canceled",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

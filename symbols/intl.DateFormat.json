@@ -1,7 +1,7 @@
 {
     "desc": "<p>DateFormat is for formatting and parsing dates in a locale-sensitive\nmanner.<\/p>\n<p>It allows the user to choose from a set of standard date time formats as\nwell as specify a customized pattern under certain locales. Date elements\nthat vary across locales include month name, week name, field order, etc.\nWe also allow the user to use any customized pattern to parse or format\ndate-time strings under certain locales. Date elements that vary across\nlocales include month name, weekname, field, order, etc.<\/p>\n<p>Formatting dates in the default \"en_US\" format does not require any\ninitialization. e.g.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">print(new DateFormat.yMMMd().format(new DateTime.now()));\n<\/code><\/pre>\n<p>But for other locales, the formatting data for the locale must be\nobtained. This can currently be done in one of three ways, determined by\nwhich library you import. In all cases, the \"initializeDateFormatting\"\nmethod must be called and will return a future that is complete once the\nlocale data is available. The result of the future isn't important, but the\ndata for that locale is available to the date formatting and parsing once it\ncompletes.<\/p>\n<p>The easiest option is that the data may be available locally, imported in a\nlibrary that contains data for all the locales.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">import 'package:intl\/date_symbol_data_local.dart';\ninitializeDateFormatting(\"fr_FR\", null).then((_) =&gt; runMyCode());\n<\/code><\/pre>\n<p>If we are running outside of a browser, we may want to read the data\nfrom files in the file system.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">import 'package:intl\/date_symbol_data_file.dart';\ninitializeDateFormatting(\"de_DE\", null).then((_) =&gt; runMyCode());\n<\/code><\/pre>\n<p>If we are running in a browser, we may want to read the data from the\nserver using the XmlHttpRequest mechanism.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">import 'package:intl\/date_symbol_data_http_request.dart';\ninitializeDateFormatting(\"pt_BR\", null).then((_) =&gt; runMyCode());\n<\/code><\/pre>\n<p>The code in example\/basic\/basic_example.dart shows a full example of\nusing this mechanism.<\/p>\n<p>Once we have the locale data, we need to specify the particular format.\nThis library uses the ICU\/JDK date\/time pattern specification both for\ncomplete format specifications and also the abbreviated \"skeleton\" form\nwhich can also adapt to different locales and is preferred where available.<\/p>\n<p>Skeletons: These can be specified either as the ICU constant name or as the\nskeleton to which it resolves. The supported set of skeletons is as follows.\nFor each skeleton there is a named constructor that can be used to create\nit.  It's also possible to pass the skeleton as a string, but the\nconstructor is preferred.<\/p>\n<pre class=\"language-dart\"><code> ICU Name                   Skeleton\n --------                   --------\n DAY                          d\n ABBR_WEEKDAY                 E\n WEEKDAY                      EEEE\n ABBR_STANDALONE_MONTH        LLL\n STANDALONE_MONTH             LLLL\n NUM_MONTH                    M\n NUM_MONTH_DAY                Md\n NUM_MONTH_WEEKDAY_DAY        MEd\n ABBR_MONTH                   MMM\n ABBR_MONTH_DAY               MMMd\n ABBR_MONTH_WEEKDAY_DAY       MMMEd\n MONTH                        MMMM\n MONTH_DAY                    MMMMd\n MONTH_WEEKDAY_DAY            MMMMEEEEd\n ABBR_QUARTER                 QQQ\n QUARTER                      QQQQ\n YEAR                         y\n YEAR_NUM_MONTH               yM\n YEAR_NUM_MONTH_DAY           yMd\n YEAR_NUM_MONTH_WEEKDAY_DAY   yMEd\n YEAR_ABBR_MONTH              yMMM\n YEAR_ABBR_MONTH_DAY          yMMMd\n YEAR_ABBR_MONTH_WEEKDAY_DAY  yMMMEd\n YEAR_MONTH                   yMMMM\n YEAR_MONTH_DAY               yMMMMd\n YEAR_MONTH_WEEKDAY_DAY       yMMMMEEEEd\n YEAR_ABBR_QUARTER            yQQQ\n YEAR_QUARTER                 yQQQQ\n HOUR24                       H\n HOUR24_MINUTE                Hm\n HOUR24_MINUTE_SECOND         Hms\n HOUR                         j\n HOUR_MINUTE                  jm\n HOUR_MINUTE_SECOND           jms\n HOUR_MINUTE_GENERIC_TZ       jmv\n HOUR_MINUTE_TZ               jmz\n HOUR_GENERIC_TZ              jv\n HOUR_TZ                      jz\n MINUTE                       m\n MINUTE_SECOND                ms\n SECOND                       s\n<\/code><\/pre>\n<p>Examples Using the US Locale:<\/p>\n<pre class=\"language-dart\"><code> Pattern                           Result\n ----------------                  -------\n new DateFormat.yMd()             -&gt; 7\/10\/1996\n new DateFormat(\"yMd\")            -&gt; 7\/10\/1996\n new DateFormat.yMMMMd(\"en_US\")   -&gt; July 10, 1996\n new DateFormat.jm()              -&gt; 5:08 PM\n new DateFormat.yMd().add_jm()    -&gt; 7\/10\/1996 5:08 PM\n new DateFormat.Hm()              -&gt; 17:08 \/\/ force 24 hour time\n<\/code><\/pre>\n<p>Explicit Pattern Syntax: Formats can also be specified with a pattern\nstring.  This can be used for formats that don't have a skeleton available,\nbut these will not adapt to different locales. For example, in an explicit\npattern the letters \"H\" and \"h\" are available for 24 hour and 12 hour time\nformats respectively. But there isn't a way in an explicit pattern to get\nthe behaviour of the \"j\" skeleton, which prints 24 hour or 12 hour time\naccording to the conventions of the locale, and also includes am\/pm markers\nwhere appropriate. So it is preferable to use the skeletons.<\/p>\n<p>The following characters are available in explicit patterns:<\/p>\n<pre class=\"language-dart\"><code>Symbol   Meaning                Presentation       Example\n------   -------                ------------       -------\nG        era designator         (Text)             AD\ny        year                   (Number)           1996\nM        month in year          (Text &amp; Number)    July &amp; 07\nL        standalone month       (Text &amp; Number)    July &amp; 07\nd        day in month           (Number)           10\nc        standalone day         (Number)           10\nh        hour in am\/pm (1~12)   (Number)           12\nH        hour in day (0~23)     (Number)           0\nm        minute in hour         (Number)           30\ns        second in minute       (Number)           55\nS        fractional second      (Number)           978\nE        day of week            (Text)             Tuesday\nD        day in year            (Number)           189\na        am\/pm marker           (Text)             PM\nk        hour in day (1~24)     (Number)           24\nK        hour in am\/pm (0~11)   (Number)           0\nz        time zone              (Text)             Pacific Standard Time\nZ        time zone (RFC 822)    (Number)           -0800\nv        time zone (generic)    (Text)             Pacific Time\nQ        quarter                (Text)             Q3\n'        escape for text        (Delimiter)        'Date='\n''       single quote           (Literal)          'o''clock'\n<\/code><\/pre>\n<p>The count of pattern letters determine the format.<\/p>\n<p><strong>Text<\/strong>:<\/p>\n<ul>\n<li>5 pattern letters--use narrow form for standalone. Otherwise not used.<\/li>\n<li>4 or more pattern letters--use full form,<\/li>\n<li>3 pattern letters--use short or abbreviated form if one exists<\/li>\n<li>less than 3--use numeric form if one exists<\/li>\n<\/ul>\n<p><strong>Number<\/strong>: the minimum number of digits. Shorter numbers are zero-padded to\nthis amount (e.g. if \"m\" produces \"6\", \"mm\" produces \"06\"). Year is handled\nspecially; that is, if the count of 'y' is 2, the Year will be truncated to\n2 digits. (e.g., if \"yyyy\" produces \"1997\", \"yy\" produces \"97\".) Unlike\nother fields, fractional seconds are padded on the right with zero.<\/p>\n<p><strong>(Text &amp; Number)<\/strong>: 3 or over, use text, otherwise use number.<\/p>\n<p>Any characters not in the pattern will be treated as quoted text. For\ninstance, characters like ':', '.', ' ', '#' and '@' will appear in the\nresulting text even though they are not enclosed in single quotes. In our\ncurrent pattern usage, not all letters have meanings. But those unused\nletters are strongly discouraged to be used as quoted text without quotes,\nbecause we may use other letters as pattern characters in the future.<\/p>\n<p>Examples Using the US Locale:<\/p>\n<pre class=\"language-dart\"><code>Format Pattern                    Result\n--------------                    -------\n\"yyyy.MM.dd G 'at' HH:mm:ss vvvv\" 1996.07.10 AD at 15:08:56 Pacific Time\n\"EEE, MMM d, ''yy\"                Wed, Jul 10, '96\n\"h:mm a\"                          12:08 PM\n\"hh 'o''clock' a, zzzz\"           12 o'clock PM, Pacific Daylight Time\n\"K:mm a, vvv\"                     0:00 PM, PT\n\"yyyyy.MMMMM.dd GGG hh:mm aaa\"    01996.July.10 AD 12:08 PM\n<\/code><\/pre>\n<p>When parsing a date string using the abbreviated year pattern (\"yy\"),\nDateFormat must interpret the abbreviated year relative to some\ncentury. It does this by adjusting dates to be within 80 years before and 20\nyears after the time the parse function is called. For example, using a\npattern of \"MM\/dd\/yy\" and a DateParse instance created on Jan 1, 1997,\nthe string \"01\/11\/12\" would be interpreted as Jan 11, 2012 while the string\n\"05\/04\/64\" would be interpreted as May 4, 1964. During parsing, only\nstrings consisting of exactly two digits will be parsed into the default\ncentury. Any other numeric string, such as a one digit string, a three or\nmore digit string will be interpreted as its face value.<\/p>\n<p>If the year pattern does not have exactly two 'y' characters, the year is\ninterpreted literally, regardless of the number of digits. So using the\npattern \"MM\/dd\/yyyy\", \"01\/11\/12\" parses to Jan 11, 12 A.D.<\/p>\n    ",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "intl\/DateFormat-class.html",
     "isAbstract": "0",
     "isConstant": "0",
@@ -29,7 +29,7 @@
                 {
                     "name": "locale",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -38,7 +38,7 @@
                 {
                     "name": "newPattern",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -60,7 +60,7 @@
                 {
                     "name": "inputPattern",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -69,7 +69,7 @@
                 {
                     "name": "separator",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -595,7 +595,7 @@
                 {
                     "name": "date",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -617,7 +617,7 @@
                 {
                     "name": "reference",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -639,7 +639,7 @@
                 {
                     "name": "date",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -648,7 +648,7 @@
                 {
                     "name": "duration",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -670,7 +670,7 @@
                 {
                     "name": "localeName",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -692,7 +692,7 @@
                 {
                     "name": "inputString",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -701,7 +701,7 @@
                 {
                     "name": "utc",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -723,7 +723,7 @@
                 {
                     "name": "inputString",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -732,7 +732,7 @@
                 {
                     "name": "utc",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -754,7 +754,7 @@
                 {
                     "name": "pattern",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -776,7 +776,7 @@
                 {
                     "name": "inputString",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -785,7 +785,7 @@
                 {
                     "name": "utc",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -807,7 +807,7 @@
                 {
                     "name": "inputString",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -829,7 +829,7 @@
                 {
                     "name": "inputString",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -851,7 +851,7 @@
                 {
                     "name": "locale",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -873,7 +873,7 @@
                 {
                     "name": "locale",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -882,7 +882,7 @@
                 {
                     "name": "value",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,

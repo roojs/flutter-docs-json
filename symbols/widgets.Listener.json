@@ -1,7 +1,7 @@
 {
     "desc": "<p>A widget that calls callbacks in response to pointer events.<\/p>\n<p>Rather than listening for raw pointer events, consider listening for\nhigher-level gestures using <a href=\"widgets\/GestureDetector-class.html\">GestureDetector<\/a>.<\/p>\n<h2 id=\"layout-behavior\">Layout behavior<\/h2>\n<p><em>See <a href=\"rendering\/BoxConstraints-class.html\">BoxConstraints<\/a> for an introduction to box layout models.<\/em><\/p>\n<p>If it has a child, this widget defers to the child for sizing behavior. If\nit does not have a child, it grows to fit the parent instead.<\/p>\n<p>\n<\/p>\n<div class=\"snippet-buttons\">\n  <script>var visibleSnippet1 = \"shortSnippet1\";<\/script><button id=\"shortSnippet1Button\" onclick=\"visibleSnippet1 = showSnippet('shortSnippet1', visibleSnippet1);\" selected>Sample<\/button>\n  <button id=\"longSnippet1Button\" onclick=\"visibleSnippet1 = showSnippet('longSnippet1', visibleSnippet1);\">Sample in an App<\/button>\n<\/div>\n<div class=\"snippet-container\">\n  <div class=\"snippet\" id=\"shortSnippet1\">\n    <div class=\"snippet-description\">\nThis example makes a <a href=\"widgets\/Container-class.html\">Container<\/a> react to being entered by a mouse\npointer, showing a count of the number of entries and exits.\n<\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(visibleSnippet1);\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\"><code class=\"language-dart\">import 'package:flutter\/gestures.dart';\n\n\/\/ ...\n\nint _enterCounter = 0;\nint _exitCounter = 0;\ndouble x = 0.0;\ndouble y = 0.0;\n\nvoid _incrementCounter(PointerEnterEvent details) {\n  setState(() {\n    _enterCounter++;\n  });\n}\n\nvoid _decrementCounter(PointerExitEvent details) {\n  setState(() {\n    _exitCounter++;\n  });\n}\n\nvoid _updateLocation(PointerHoverEvent details) {\n  setState(() {\n    x = details.position.dx;\n    y = details.position.dy;\n  });\n}\n\n@override\nWidget build(BuildContext context) {\n  return Center(\n    child: ConstrainedBox(\n      constraints: new BoxConstraints.tight(Size(300.0, 200.0)),\n      child: Listener(\n        onPointerEnter: _incrementCounter,\n        onPointerHover: _updateLocation,\n        onPointerExit: _decrementCounter,\n        child: Container(\n          color: Colors.lightBlueAccent,\n          child: Column(\n            mainAxisAlignment: MainAxisAlignment.center,\n            children: &lt;Widget&gt;[\n              Text('You have pointed at this box this many times:'),\n              Text(\n                '$_enterCounter Entries\\n$_exitCounter Exits',\n                style: Theme.of(context).textTheme.display1,\n              ),\n              Text(\n                'The cursor is here: (${x.toStringAsFixed(2)}, ${y.toStringAsFixed(2)})',\n              ),\n            ],\n          ),\n        ),\n      ),\n    ),\n  );\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n  <div class=\"snippet\" id=\"longSnippet1\" hidden>\n    <div class=\"snippet-description\">To create a sample project with this code snippet, run:<br><span class=\"snippet-create-command\">flutter create --sample=widgets.Listener.1 mysample<\/span>\n    <\/div>\n    <div class=\"copyable-container\">\n      <button class=\"copy-button-overlay copy-button\" title=\"Copy to clipboard\" onclick=\"copyTextToClipboard(visibleSnippet1);\">\n        <i class=\"material-icons copy-image\">assignment<\/i>\n      <\/button>\n      <pre class=\"language-dart\"><code class=\"language-dart\">\/\/ Flutter code sample for widgets.Listener.1\n\n\/\/ This example makes a [Container] react to being entered by a mouse\n\/\/ pointer, showing a count of the number of entries and exits.\n\nimport 'package:flutter\/material.dart';\n\nimport 'package:flutter\/gestures.dart';\n\nvoid main() =&gt; runApp(MyApp());\n\n\/\/\/ This Widget is the main application widget.\nclass MyApp extends StatelessWidget {\n  static const String _title = 'Flutter Code Sample';\n\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: _title,\n      home: Scaffold(\n        appBar: AppBar(title: Text(_title)),\n        body: MyStatefulWidget(),\n      ),\n    );\n  }\n}\n\nclass MyStatefulWidget extends StatefulWidget {\n  MyStatefulWidget({Key key}) : super(key: key);\n\n  @override\n  _MyStatefulWidgetState createState() =&gt; _MyStatefulWidgetState();\n}\n\nclass _MyStatefulWidgetState extends State&lt;MyStatefulWidget&gt; {\n  int _enterCounter = 0;\n  int _exitCounter = 0;\n  double x = 0.0;\n  double y = 0.0;\n\n  void _incrementCounter(PointerEnterEvent details) {\n    setState(() {\n      _enterCounter++;\n    });\n  }\n\n  void _decrementCounter(PointerExitEvent details) {\n    setState(() {\n      _exitCounter++;\n    });\n  }\n\n  void _updateLocation(PointerHoverEvent details) {\n    setState(() {\n      x = details.position.dx;\n      y = details.position.dy;\n    });\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return Center(\n      child: ConstrainedBox(\n        constraints: BoxConstraints.tight(Size(300.0, 200.0)),\n        child: Listener(\n          onPointerEnter: _incrementCounter,\n          onPointerHover: _updateLocation,\n          onPointerExit: _decrementCounter,\n          child: Container(\n            color: Colors.lightBlueAccent,\n            child: Column(\n              mainAxisAlignment: MainAxisAlignment.center,\n              children: &lt;Widget&gt;[\n                Text('You have pointed at this box this many times:'),\n                Text(\n                  '$_enterCounter Entries\\n$_exitCounter Exits',\n                  style: Theme.of(context).textTheme.display1,\n                ),\n                Text(\n                  'The cursor is here: (${x.toStringAsFixed(2)}, ${y.toStringAsFixed(2)})',\n                ),\n              ],\n            ),\n          ),\n        ),\n      ),\n    );\n  }\n}<\/code><\/pre>\n    <\/div>\n  <\/div>\n<\/div>\n\n<p>See also:<\/p>\n<ul><li>\n<a href=\"gestures\/MouseTracker-class.html\">MouseTracker<\/a> an object that tracks mouse locations in the <a href=\"gestures\/GestureBinding-mixin.html\">GestureBinding<\/a>.<\/li><\/ul>",
     "dtype": "class",
-    "example": null,
+    "example": "",
     "href": "widgets\/Listener-class.html",
     "isAbstract": "0",
     "isConstant": "0",
@@ -109,7 +109,7 @@
                 {
                     "name": "behavior",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -118,7 +118,7 @@
                 {
                     "name": "child",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -127,7 +127,7 @@
                 {
                     "name": "key",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -136,7 +136,7 @@
                 {
                     "name": "onPointerCancel",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -145,7 +145,7 @@
                 {
                     "name": "onPointerDown",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -154,7 +154,7 @@
                 {
                     "name": "onPointerEnter",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -163,7 +163,7 @@
                 {
                     "name": "onPointerExit",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -172,7 +172,7 @@
                 {
                     "name": "onPointerHover",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -181,7 +181,7 @@
                 {
                     "name": "onPointerMove",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -190,7 +190,7 @@
                 {
                     "name": "onPointerSignal",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -199,7 +199,7 @@
                 {
                     "name": "onPointerUp",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": true,
@@ -221,7 +221,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -243,7 +243,7 @@
                 {
                     "name": "properties",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -265,7 +265,7 @@
                 {
                     "name": "context",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
@@ -274,7 +274,7 @@
                 {
                     "name": "renderObject",
                     "desc": null,
-                    "example": null,
+                    "example": "",
                     "href": "",
                     "isDeprecated": "0",
                     "isOptional": false,
