@@ -1,0 +1,739 @@
+{
+    "class": [
+        {
+            "desc": "<p>A simple countdown timer that fires events in regular increments until a\nduration has passed.<\/p>\n<p>CountdownTimer implements <a href=\"dart-async\/Stream-class.html\">Stream<\/a> and sends itself as the event. From the\ntimer you can get the <a href=\"quiver.async\/CountdownTimer\/remaining.html\">remaining<\/a> and <a href=\"quiver.async\/CountdownTimer\/elapsed.html\">elapsed<\/a> time, or <a href=\"quiver.async\/CountdownTimer\/cancel.html\">cancel<\/a> the\ntimer.<\/p>\n    ",
+            "dtype": "class",
+            "example": "",
+            "href": "quiver.async\/CountdownTimer-class.html",
+            "isAbstract": false,
+            "isConstant": false,
+            "isDeprecated": false,
+            "memberOf": "quiver.async",
+            "name": "quiver.async.CountdownTimer",
+            "shortname": "CountdownTimer",
+            "extends": [
+                "quiver.async.CountdownTimer",
+                "dart:async.Stream",
+                "dart:core.Object"
+            ],
+            "is_enum": false,
+            "is_mixin": false,
+            "realImplementors": [
+                "quiver.async.CountdownTimer"
+            ],
+            "events": [],
+            "methods": [
+                {
+                    "desc": "<p>Creates a new <a href=\"quiver.async\/CountdownTimer-class.html\">CountdownTimer<\/a> that fires events in increments of\n<code>increment<\/code>, until the <code>duration<\/code> has passed.<\/p>\n<p><code>stopwatch<\/code> is for testing purposes. If you're using CountdownTimer and\nneed to control time in a test, pass a mock or a fake. See <a href=\"quiver.testing.async\/FakeAsync-class.html\">FakeAsync<\/a>\nand <a href=\"quiver.testing.time\/FakeStopwatch-class.html\">FakeStopwatch<\/a>.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">CountdownTimer(Duration duration, Duration increment, {Stopwatch stopwatch})\n    : _duration = duration,\n      increment = increment,\n      _stopwatch = stopwatch == null ? new Stopwatch() : stopwatch,\n      _controller =\n          new StreamController&lt;CountdownTimer&gt;.broadcast(sync: true) {\n  _timer = new Timer.periodic(increment, _tick);\n  _stopwatch.start();\n}<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/CountdownTimer\/CountdownTimer.html",
+                    "isDeprecated": false,
+                    "type": "",
+                    "name": "CountdownTimer",
+                    "dtype": "constructor",
+                    "isConstructor": true,
+                    "static": false,
+                    "memberOf": "quiver.async.CountdownTimer",
+                    "params": [
+                        {
+                            "name": "duration",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": true,
+                            "type": "dart:core.Duration"
+                        },
+                        {
+                            "name": "increment",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": true,
+                            "type": "dart:core.Duration"
+                        },
+                        {
+                            "name": "stopwatch",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": true,
+                            "type": "dart:core.Stopwatch"
+                        }
+                    ]
+                },
+                {
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">cancel() {\n  _stopwatch.stop();\n  _timer.cancel();\n  _controller.close();\n}<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/CountdownTimer\/cancel.html",
+                    "isDeprecated": false,
+                    "type": "<dynamic>",
+                    "name": "cancel",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "quiver.async.CountdownTimer",
+                    "params": []
+                },
+                {
+                    "desc": "<p>Adds a subscription to this stream.<\/p>\n<p>Returns a <a href=\"dart-async\/StreamSubscription-class.html\">StreamSubscription<\/a> which handles events from this stream using\nthe provided <code>onData<\/code>, <code>onError<\/code> and <code>onDone<\/code> handlers.\nThe handlers can be changed on the subscription, but they start out\nas the provided functions.<\/p>\n<p>On each data event from this stream, the subscriber's <code>onData<\/code> handler\nis called. If <code>onData<\/code> is <code>null<\/code>, nothing happens.<\/p>\n<p>On errors from this stream, the <code>onError<\/code> handler is called with the\nerror object and possibly a stack trace.<\/p>\n<p>The <code>onError<\/code> callback must be of type <code>void onError(error)<\/code> or\n<code>void onError(error, StackTrace stackTrace)<\/code>. If <code>onError<\/code> accepts\ntwo arguments it is called with the error object and the stack trace\n(which could be <code>null<\/code> if this stream itself received an error without\nstack trace).\nOtherwise it is called with just the error object.\nIf <code>onError<\/code> is omitted, any errors on this stream are considered unhandled,\nand will be passed to the current <a href=\"dart-async\/Zone-class.html\">Zone<\/a>'s error handler.\nBy default unhandled async errors are treated\nas if they were uncaught top-level errors.<\/p>\n<p>If this stream closes and sends a done event, the <code>onDone<\/code> handler is\ncalled. If <code>onDone<\/code> is <code>null<\/code>, nothing happens.<\/p>\n<p>If <code>cancelOnError<\/code> is true, the subscription is automatically canceled\nwhen the first error event is delivered. The default is <code>false<\/code>.<\/p>\n<p>While a subscription is paused, or when it has been canceled,\nthe subscription doesn't receive events and none of the\nevent handler functions are called.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamSubscription&lt;CountdownTimer&gt; listen(void onData(CountdownTimer event),\n        {Function onError, void onDone(), bool cancelOnError}) =&gt;\n    _controller.stream.listen(onData, onError: onError, onDone: onDone);<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/CountdownTimer\/listen.html",
+                    "isDeprecated": false,
+                    "type": "dart:async.StreamSubscription<quiver.async.CountdownTimer>",
+                    "name": "listen",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "quiver.async.CountdownTimer",
+                    "params": [
+                        {
+                            "name": "cancelOnError",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.bool"
+                        },
+                        {
+                            "name": "event",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "quiver.async.CountdownTimer"
+                        },
+                        {
+                            "name": "onDone",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "<void>"
+                        },
+                        {
+                            "name": "onError",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.Function"
+                        }
+                    ]
+                }
+            ],
+            "props": [
+                {
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Duration get elapsed =&gt; _stopwatch.elapsed;<\/code><\/pre>\n        ",
+                    "href": "quiver.async\/CountdownTimer\/elapsed.html",
+                    "name": "elapsed",
+                    "isDeprecated": false,
+                    "type": "dart:core.Duration",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "quiver.async.CountdownTimer",
+                    "params": []
+                },
+                {
+                    "desc": "<p>The duration between timer events.<\/p>\n        ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Duration increment\n\n<\/code><\/pre>\n        ",
+                    "href": "quiver.async\/CountdownTimer\/increment.html",
+                    "name": "increment",
+                    "isDeprecated": false,
+                    "type": "dart:core.Duration",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "quiver.async.CountdownTimer",
+                    "params": []
+                },
+                {
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isRunning =&gt; _stopwatch.isRunning;<\/code><\/pre>\n        ",
+                    "href": "quiver.async\/CountdownTimer\/isRunning.html",
+                    "name": "isRunning",
+                    "isDeprecated": false,
+                    "type": "dart:core.bool",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "quiver.async.CountdownTimer",
+                    "params": []
+                },
+                {
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Duration get remaining =&gt; _duration - _stopwatch.elapsed;<\/code><\/pre>\n        ",
+                    "href": "quiver.async\/CountdownTimer\/remaining.html",
+                    "name": "remaining",
+                    "isDeprecated": false,
+                    "type": "dart:core.Duration",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "quiver.async.CountdownTimer",
+                    "params": []
+                }
+            ]
+        },
+        {
+            "desc": "<p>A Stream that will emit the same values as the stream returned by <code>future<\/code>\nonce <code>future<\/code> completes.<\/p>\n<p>If <code>future<\/code> completes to an error, the return value will emit that error\nand then close.<\/p>\n<p>If <code>broadcast<\/code> is true, this will be a broadcast stream. This assumes that\nthe stream returned by <code>future<\/code> will be a broadcast stream as well.\n<code>broadcast<\/code> defaults to false.<\/p>\n<h1 id=\"example\">Example<\/h1>\n<p>This class is useful when you need to retreive some object via a <code>Future<\/code>,\nthen return a <code>Stream<\/code> from that object:<\/p>\n<pre class=\"language-dart\"><code>var futureOfStream = getResource().then((resource) =&gt; resource.stream);\nreturn new FutureStream(futureOfStream);\n<\/code><\/pre>\n    ",
+            "dtype": "class",
+            "example": "",
+            "href": "quiver.async\/FutureStream-class.html",
+            "isAbstract": false,
+            "isConstant": false,
+            "isDeprecated": false,
+            "memberOf": "quiver.async",
+            "name": "quiver.async.FutureStream",
+            "shortname": "FutureStream",
+            "extends": [
+                "dart:async.Stream",
+                "dart:core.Object"
+            ],
+            "is_enum": false,
+            "is_mixin": false,
+            "realImplementors": [],
+            "events": [],
+            "methods": [
+                {
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">FutureStream(Future&lt;Stream&lt;T&gt;&gt; future, {bool broadcast: false}) {\n  _future = future.then(_identity, onError: (e, stackTrace) {\n    \/\/ Since [controller] is synchronous, it's likely that emitting an error\n    \/\/ will cause it to be cancelled before we call close.\n    if (_controller != null) {\n      _controller.addError(e, stackTrace);\n      _controller.close();\n    }\n    _controller = null;\n  });\n\n  if (broadcast == true) {\n    _controller = new StreamController.broadcast(\n        sync: true, onListen: _onListen, onCancel: _onCancel);\n  } else {\n    _controller = new StreamController(\n        sync: true, onListen: _onListen, onCancel: _onCancel);\n  }\n}<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/FutureStream\/FutureStream.html",
+                    "isDeprecated": false,
+                    "type": "",
+                    "name": "FutureStream",
+                    "dtype": "constructor",
+                    "isConstructor": true,
+                    "static": false,
+                    "memberOf": "quiver.async.FutureStream",
+                    "params": [
+                        {
+                            "name": "broadcast",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": true,
+                            "type": "dart:core.bool"
+                        },
+                        {
+                            "name": "future",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": true,
+                            "type": "dart:async.Future<dart:async.Stream>"
+                        }
+                    ]
+                },
+                {
+                    "desc": "<p>Adds a subscription to this stream.<\/p>\n<p>Returns a <a href=\"dart-async\/StreamSubscription-class.html\">StreamSubscription<\/a> which handles events from this stream using\nthe provided <code>onData<\/code>, <code>onError<\/code> and <code>onDone<\/code> handlers.\nThe handlers can be changed on the subscription, but they start out\nas the provided functions.<\/p>\n<p>On each data event from this stream, the subscriber's <code>onData<\/code> handler\nis called. If <code>onData<\/code> is <code>null<\/code>, nothing happens.<\/p>\n<p>On errors from this stream, the <code>onError<\/code> handler is called with the\nerror object and possibly a stack trace.<\/p>\n<p>The <code>onError<\/code> callback must be of type <code>void onError(error)<\/code> or\n<code>void onError(error, StackTrace stackTrace)<\/code>. If <code>onError<\/code> accepts\ntwo arguments it is called with the error object and the stack trace\n(which could be <code>null<\/code> if this stream itself received an error without\nstack trace).\nOtherwise it is called with just the error object.\nIf <code>onError<\/code> is omitted, any errors on this stream are considered unhandled,\nand will be passed to the current <a href=\"dart-async\/Zone-class.html\">Zone<\/a>'s error handler.\nBy default unhandled async errors are treated\nas if they were uncaught top-level errors.<\/p>\n<p>If this stream closes and sends a done event, the <code>onDone<\/code> handler is\ncalled. If <code>onDone<\/code> is <code>null<\/code>, nothing happens.<\/p>\n<p>If <code>cancelOnError<\/code> is true, the subscription is automatically canceled\nwhen the first error event is delivered. The default is <code>false<\/code>.<\/p>\n<p>While a subscription is paused, or when it has been canceled,\nthe subscription doesn't receive events and none of the\nevent handler functions are called.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamSubscription&lt;T&gt; listen(void onData(T event),\n    {Function onError, void onDone(), bool cancelOnError}) {\n  return _controller.stream.listen(onData,\n      onError: onError, onDone: onDone, cancelOnError: cancelOnError);\n}<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/FutureStream\/listen.html",
+                    "isDeprecated": false,
+                    "type": "dart:async.StreamSubscription",
+                    "name": "listen",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "quiver.async.FutureStream",
+                    "params": [
+                        {
+                            "name": "cancelOnError",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.bool"
+                        },
+                        {
+                            "name": "event",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "<T>"
+                        },
+                        {
+                            "name": "onDone",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "<void>"
+                        },
+                        {
+                            "name": "onError",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.Function"
+                        }
+                    ]
+                }
+            ],
+            "props": [
+                {
+                    "desc": "<p>Whether this stream is a broadcast stream.<\/p>\n        ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isBroadcast =&gt; _controller.stream.isBroadcast;<\/code><\/pre>\n        ",
+                    "href": "quiver.async\/FutureStream\/isBroadcast.html",
+                    "name": "isBroadcast",
+                    "isDeprecated": false,
+                    "type": "dart:core.bool",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "quiver.async.FutureStream",
+                    "params": []
+                }
+            ]
+        },
+        {
+            "desc": "<p>A stream of <a href=\"dart-core\/DateTime-class.html\">DateTime<\/a> events at <a href=\"quiver.async\/Metronome\/interval.html\">interval<\/a>s centered on <a href=\"quiver.async\/Metronome\/anchor.html\">anchor<\/a>.<\/p>\n<p>This stream accounts for drift but only guarantees that events are\ndelivered on or after the interval. If the system is busy for longer than\ntwo <a href=\"quiver.async\/Metronome\/interval.html\">interval<\/a>s, only one will be delivered.<\/p>\n<p><a href=\"quiver.async\/Metronome\/anchor.html\">anchor<\/a> defaults to <code>clock.now<\/code>, which means the stream represents a\nself-correcting periodic timer. If anchor is the epoch, then the stream is\nsynchronized to wall-clock time. It can be anchored anywhere in time, but\nthis does not delay the first delivery.<\/p>\n<p>Examples:<\/p>\n<pre class=\"language-dart\"><code>new Metronome.epoch(aMinute).listen((d) =&gt; print(d));\n<\/code><\/pre>\n<p>Could print the following stream of events, anchored by epoch, till the\nstream is canceled:<\/p>\n<pre class=\"language-dart\"><code>2014-05-04 14:06:00.001\n2014-05-04 14:07:00.000\n2014-05-04 14:08:00.003\n...\n<\/code><\/pre>\n<p>Example anchored in the future (now = 2014-05-05 20:06:00.123)<\/p>\n<pre class=\"language-dart\"><code>new IsochronousStream.periodic(aMillisecond * 100,\n    anchorMs: DateTime.parse(\"2014-05-05 21:07:00\"))\n    .listen(print);\n\n2014-05-04 20:06:00.223\n2014-05-04 20:06:00.324\n2014-05-04 20:06:00.423\n...\n<\/code><\/pre>\n    ",
+            "dtype": "class",
+            "example": "",
+            "href": "quiver.async\/Metronome-class.html",
+            "isAbstract": false,
+            "isConstant": false,
+            "isDeprecated": false,
+            "memberOf": "quiver.async",
+            "name": "quiver.async.Metronome",
+            "shortname": "Metronome",
+            "extends": [
+                "dart:core.DateTime",
+                "dart:async.Stream",
+                "dart:core.Object"
+            ],
+            "is_enum": false,
+            "is_mixin": false,
+            "realImplementors": [],
+            "events": [],
+            "methods": [
+                {
+                    "desc": "<p>Adds a subscription to this stream.<\/p>\n<p>Returns a <a href=\"dart-async\/StreamSubscription-class.html\">StreamSubscription<\/a> which handles events from this stream using\nthe provided <code>onData<\/code>, <code>onError<\/code> and <code>onDone<\/code> handlers.\nThe handlers can be changed on the subscription, but they start out\nas the provided functions.<\/p>\n<p>On each data event from this stream, the subscriber's <code>onData<\/code> handler\nis called. If <code>onData<\/code> is <code>null<\/code>, nothing happens.<\/p>\n<p>On errors from this stream, the <code>onError<\/code> handler is called with the\nerror object and possibly a stack trace.<\/p>\n<p>The <code>onError<\/code> callback must be of type <code>void onError(error)<\/code> or\n<code>void onError(error, StackTrace stackTrace)<\/code>. If <code>onError<\/code> accepts\ntwo arguments it is called with the error object and the stack trace\n(which could be <code>null<\/code> if this stream itself received an error without\nstack trace).\nOtherwise it is called with just the error object.\nIf <code>onError<\/code> is omitted, any errors on this stream are considered unhandled,\nand will be passed to the current <a href=\"dart-async\/Zone-class.html\">Zone<\/a>'s error handler.\nBy default unhandled async errors are treated\nas if they were uncaught top-level errors.<\/p>\n<p>If this stream closes and sends a done event, the <code>onDone<\/code> handler is\ncalled. If <code>onDone<\/code> is <code>null<\/code>, nothing happens.<\/p>\n<p>If <code>cancelOnError<\/code> is true, the subscription is automatically canceled\nwhen the first error event is delivered. The default is <code>false<\/code>.<\/p>\n<p>While a subscription is paused, or when it has been canceled,\nthe subscription doesn't receive events and none of the\nevent handler functions are called.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamSubscription&lt;DateTime&gt; listen(void onData(DateTime event),\n        {Function onError, void onDone(), bool cancelOnError}) =&gt;\n    _controller.stream.listen(onData,\n        onError: onError, onDone: onDone, cancelOnError: cancelOnError);<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/Metronome\/listen.html",
+                    "isDeprecated": false,
+                    "type": "dart:async.StreamSubscription<dart:core.DateTime>",
+                    "name": "listen",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "quiver.async.Metronome",
+                    "params": [
+                        {
+                            "name": "cancelOnError",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.bool"
+                        },
+                        {
+                            "name": "event",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.DateTime"
+                        },
+                        {
+                            "name": "onDone",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "<void>"
+                        },
+                        {
+                            "name": "onError",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.Function"
+                        }
+                    ]
+                }
+            ],
+            "props": [
+                {
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final DateTime anchor\n\n<\/code><\/pre>\n        ",
+                    "href": "quiver.async\/Metronome\/anchor.html",
+                    "name": "anchor",
+                    "isDeprecated": false,
+                    "type": "dart:core.DateTime",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "quiver.async.Metronome",
+                    "params": []
+                },
+                {
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Clock clock\n\n<\/code><\/pre>\n        ",
+                    "href": "quiver.async\/Metronome\/clock.html",
+                    "name": "clock",
+                    "isDeprecated": false,
+                    "type": "quiver.time.Clock",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "quiver.async.Metronome",
+                    "params": []
+                },
+                {
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">final Duration interval\n\n<\/code><\/pre>\n        ",
+                    "href": "quiver.async\/Metronome\/interval.html",
+                    "name": "interval",
+                    "isDeprecated": false,
+                    "type": "dart:core.Duration",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "quiver.async.Metronome",
+                    "params": []
+                },
+                {
+                    "desc": "<p>Whether this stream is a broadcast stream.<\/p>\n        ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get isBroadcast =&gt; true;<\/code><\/pre>\n        ",
+                    "href": "quiver.async\/Metronome\/isBroadcast.html",
+                    "name": "isBroadcast",
+                    "isDeprecated": false,
+                    "type": "dart:core.bool",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "quiver.async.Metronome",
+                    "params": []
+                }
+            ]
+        },
+        {
+            "desc": "<p>Allow orderly reading of elements from a datastream, such as Socket, which\nmight not receive <code>List&lt;int&gt;<\/code> bytes regular chunks.<\/p>\n<p>Example usage:<\/p>\n<pre class=\"language-dart\"><code>StreamBuffer&lt;int&gt; buffer = new StreamBuffer();\nSocket.connect('127.0.0.1', 5555).then((sock) =&gt; sock.pipe(buffer));\nbuffer.read(100).then((bytes) {\n  \/\/ do something with 100 bytes;\n});\n<\/code><\/pre>\n<p>Throws <a href=\"quiver.async\/UnderflowError-class.html\">UnderflowError<\/a> if <code>throwOnError<\/code> is true. Useful for unexpected\n<a href=\"dart-io\/Socket-class.html\">Socket<\/a> disconnects.<\/p>\n    ",
+            "dtype": "class",
+            "example": "",
+            "href": "quiver.async\/StreamBuffer-class.html",
+            "isAbstract": false,
+            "isConstant": false,
+            "isDeprecated": false,
+            "memberOf": "quiver.async",
+            "name": "quiver.async.StreamBuffer",
+            "shortname": "StreamBuffer",
+            "extends": [],
+            "is_enum": false,
+            "is_mixin": false,
+            "realImplementors": [],
+            "events": [],
+            "methods": [
+                {
+                    "desc": "<p>Create a stream buffer with optional, soft <code>limit<\/code> to the amount of data\nthe buffer will hold before pausing the underlying stream. A limit of 0\nmeans no buffer limits.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamBuffer({bool throwOnError: false, int limit: 0})\n    : this._throwOnError = throwOnError,\n      this._limit = limit;<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/StreamBuffer\/StreamBuffer.html",
+                    "isDeprecated": false,
+                    "type": "",
+                    "name": "StreamBuffer",
+                    "dtype": "constructor",
+                    "isConstructor": true,
+                    "static": false,
+                    "memberOf": "quiver.async.StreamBuffer",
+                    "params": [
+                        {
+                            "name": "limit",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": true,
+                            "type": "dart:core.int"
+                        },
+                        {
+                            "name": "throwOnError",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": true,
+                            "type": "dart:core.bool"
+                        }
+                    ]
+                },
+                {
+                    "desc": "<p>Consumes the elements of <code>stream<\/code>.<\/p>\n<p>Listens on <code>stream<\/code> and does something for each event.<\/p>\n<p>Returns a future which is completed when the stream is done being added,\nand the consumer is ready to accept a new stream.\nNo further calls to <a href=\"quiver.async\/StreamBuffer\/addStream.html\">addStream<\/a> or <a href=\"quiver.async\/StreamBuffer\/close.html\">close<\/a> should happen before the\nreturned future has completed.<\/p>\n<p>The consumer may stop listening to the stream after an error,\nit may consume all the errors and only stop at a done event,\nor it may be canceled early if the receiver don't want any further events.<\/p>\n<p>If the consumer stops listening because of some error preventing it\nfrom continuing, it may report this error in the returned future,\notherwise it will just complete the future with <code>null<\/code>.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">@override\nFuture addStream(Stream&lt;List&lt;T&gt;&gt; stream) {\n  var lastStream = _currentStream == null ? stream : _currentStream;\n  if (_sub != null) {\n    _sub.cancel();\n  }\n  _currentStream = stream;\n  final streamDone = new Completer&lt;Null&gt;();\n  _sub = stream.listen((items) {\n    _chunks.addAll(items);\n    _counter += items is List ? items.length : 1;\n    if (limited &amp;&amp; _counter &gt;= limit) {\n      _sub.pause();\n    }\n\n    while (_readers.isNotEmpty &amp;&amp; _readers.first.size &lt;= _counter) {\n      var waiting = _readers.removeAt(0);\n      waiting.completer.complete(_consume(waiting.size));\n    }\n  }, onDone: () {\n    \/\/ User is piping in a new stream\n    if (stream == lastStream &amp;&amp; _throwOnError) {\n      _closed(new UnderflowError());\n    }\n    streamDone.complete();\n  }, onError: (e, stack) {\n    _closed(e, stack);\n  });\n  return streamDone.future;\n}<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/StreamBuffer\/addStream.html",
+                    "isDeprecated": false,
+                    "type": "dart:async.Future",
+                    "name": "addStream",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "quiver.async.StreamBuffer",
+                    "params": [
+                        {
+                            "name": "stream",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:async.Stream<dart:core.List>"
+                        }
+                    ]
+                },
+                {
+                    "desc": "<p>Tells the consumer that no further streams will be added.<\/p>\n<p>This allows the consumer to complete any remaining work and release\nresources that are no longer needed<\/p>\n<p>Returns a future which is completed when the consumer has shut down.\nIf cleaning up can fail, the error may be reported in the returned future,\notherwise it completes with <code>null<\/code>.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future close() {\n  var ret;\n  if (_sub != null) {\n    ret = _sub.cancel();\n    _sub = null;\n  }\n  return ret is Future ? ret : new Future.value();\n}<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/StreamBuffer\/close.html",
+                    "isDeprecated": false,
+                    "type": "dart:async.Future",
+                    "name": "close",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "quiver.async.StreamBuffer",
+                    "params": []
+                },
+                {
+                    "desc": "<p>Read fully <code>size<\/code> bytes from the stream and return in the future.<\/p>\n<p>Throws <a href=\"dart-core\/ArgumentError-class.html\">ArgumentError<\/a> if size is larger than optional buffer <a href=\"quiver.async\/StreamBuffer\/limit.html\">limit<\/a>.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future&lt;List&lt;T&gt;&gt; read(int size) {\n  if (limited &amp;&amp; size &gt; limit) {\n    throw new ArgumentError(\"Cannot read $size with limit $limit\");\n  }\n\n  \/\/ If we have enough data to consume and there are no other readers, then\n  \/\/ we can return immediately.\n  if (size &lt;= buffered &amp;&amp; _readers.isEmpty) {\n    return new Future.value(_consume(size));\n  }\n  final completer = new Completer&lt;List&lt;T&gt;&gt;();\n  _readers.add(new _ReaderInWaiting&lt;List&lt;T&gt;&gt;(size, completer));\n  return completer.future;\n}<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/StreamBuffer\/read.html",
+                    "isDeprecated": false,
+                    "type": "dart:async.Future<dart:core.List>",
+                    "name": "read",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "quiver.async.StreamBuffer",
+                    "params": [
+                        {
+                            "name": "size",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.int"
+                        }
+                    ]
+                }
+            ],
+            "props": [
+                {
+                    "desc": "<p>The amount of unread data buffered.<\/p>\n        ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get buffered =&gt; _counter;<\/code><\/pre>\n        ",
+                    "href": "quiver.async\/StreamBuffer\/buffered.html",
+                    "name": "buffered",
+                    "isDeprecated": false,
+                    "type": "dart:core.int",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "quiver.async.StreamBuffer",
+                    "params": []
+                },
+                {
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get limit =&gt; _limit;<\/code><\/pre>\n        ",
+                    "href": "quiver.async\/StreamBuffer\/limit.html",
+                    "name": "limit",
+                    "isDeprecated": false,
+                    "type": "dart:core.int",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "quiver.async.StreamBuffer",
+                    "params": []
+                },
+                {
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">bool get limited =&gt; _limit &gt; 0;<\/code><\/pre>\n        ",
+                    "href": "quiver.async\/StreamBuffer\/limited.html",
+                    "name": "limited",
+                    "isDeprecated": false,
+                    "type": "dart:core.bool",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "quiver.async.StreamBuffer",
+                    "params": []
+                }
+            ]
+        },
+        {
+            "desc": "<p>Splits a <a href=\"dart-async\/Stream-class.html\">Stream<\/a> of events into multiple Streams based on a set of\npredicates.<\/p>\n<p>Using StreamRouter differs from <a href=\"dart-async\/Stream\/where.html\">Stream.where<\/a> because events are only sent\nto one Stream. If more than one predicate matches the event, the event is\nsent to the stream created by the earlier call to <a href=\"quiver.async\/StreamRouter\/route.html\">route<\/a>. Events not\nmatched by a call to <a href=\"quiver.async\/StreamRouter\/route.html\">route<\/a> are sent to the <a href=\"quiver.async\/StreamRouter\/defaultStream.html\">defaultStream<\/a>.<\/p>\n<p>Example:<\/p>\n<p>   import 'dart:html';\n   import 'package:quiver\/async.dart';<\/p>\n<p>   var router = new StreamRouter(window.onClick);\n   var onRightClick = router.route((e) =&gt; e.button == 2);\n   var onAltClick = router.route((e) =&gt; e.altKey);\n   var onOtherClick router.defaultStream;<\/p>\n    ",
+            "dtype": "class",
+            "example": "",
+            "href": "quiver.async\/StreamRouter-class.html",
+            "isAbstract": false,
+            "isConstant": false,
+            "isDeprecated": false,
+            "memberOf": "quiver.async",
+            "name": "quiver.async.StreamRouter",
+            "shortname": "StreamRouter",
+            "extends": [],
+            "is_enum": false,
+            "is_mixin": false,
+            "realImplementors": [],
+            "events": [],
+            "methods": [
+                {
+                    "desc": "<p>Create a new StreamRouter that listens to the <code>incoming<\/code> stream.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StreamRouter(Stream&lt;T&gt; incoming) : _incoming = incoming {\n  _subscription = _incoming.listen(_handle, onDone: close);\n}<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/StreamRouter\/StreamRouter.html",
+                    "isDeprecated": false,
+                    "type": "",
+                    "name": "StreamRouter",
+                    "dtype": "constructor",
+                    "isConstructor": true,
+                    "static": false,
+                    "memberOf": "quiver.async.StreamRouter",
+                    "params": [
+                        {
+                            "name": "incoming",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": true,
+                            "type": "dart:async.Stream"
+                        }
+                    ]
+                },
+                {
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Future close() {\n  return Future.wait(_routes.map((r) =&gt; r.controller.close())).then((_) {\n    _subscription.cancel();\n  });\n}<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/StreamRouter\/close.html",
+                    "isDeprecated": false,
+                    "type": "dart:async.Future",
+                    "name": "close",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "quiver.async.StreamRouter",
+                    "params": []
+                },
+                {
+                    "desc": "<p>Events that match <code>predicate<\/code> are sent to the stream created by this\nmethod, and not sent to any other router streams.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; route(bool predicate(T event)) {\n  var controller = new StreamController&lt;T&gt;.broadcast();\n  _routes.add(new _Route(predicate, controller));\n  return controller.stream;\n}<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/StreamRouter\/route.html",
+                    "isDeprecated": false,
+                    "type": "dart:async.Stream",
+                    "name": "route",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "quiver.async.StreamRouter",
+                    "params": [
+                        {
+                            "name": "event",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "<T>"
+                        }
+                    ]
+                }
+            ],
+            "props": [
+                {
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">Stream&lt;T&gt; get defaultStream =&gt; _defaultController.stream;<\/code><\/pre>\n        ",
+                    "href": "quiver.async\/StreamRouter\/defaultStream.html",
+                    "name": "defaultStream",
+                    "isDeprecated": false,
+                    "type": "dart:async.Stream",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "quiver.async.StreamRouter",
+                    "params": []
+                }
+            ]
+        },
+        {
+            "desc": "<p>Underflow errors happen when the socket feeding a buffer is finished while\nthere are still blocked readers. Each reader will complete with this error.<\/p>\n    ",
+            "dtype": "class",
+            "example": "",
+            "href": "quiver.async\/UnderflowError-class.html",
+            "isAbstract": false,
+            "isConstant": false,
+            "isDeprecated": false,
+            "memberOf": "quiver.async",
+            "name": "quiver.async.UnderflowError",
+            "shortname": "UnderflowError",
+            "extends": [
+                "dart:core.Error",
+                "dart:core.Object"
+            ],
+            "is_enum": false,
+            "is_mixin": false,
+            "realImplementors": [],
+            "events": [],
+            "methods": [
+                {
+                    "desc": "<p>The <code>message<\/code> describes the underflow.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">UnderflowError([this.message]);<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/UnderflowError\/UnderflowError.html",
+                    "isDeprecated": false,
+                    "type": "",
+                    "name": "UnderflowError",
+                    "dtype": "constructor",
+                    "isConstructor": true,
+                    "static": false,
+                    "memberOf": "quiver.async.UnderflowError",
+                    "params": [
+                        {
+                            "name": "message",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": true,
+                            "type": "<dynamic>"
+                        }
+                    ]
+                },
+                {
+                    "desc": "<p>Returns a string representation of this object.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() {\n  if (message != null) {\n    return \"StreamBuffer Underflow: $message\";\n  }\n  return \"StreamBuffer Underflow\";\n}<\/code><\/pre>\n    ",
+                    "href": "quiver.async\/UnderflowError\/toString.html",
+                    "isDeprecated": false,
+                    "type": "dart:core.String",
+                    "name": "toString",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "quiver.async.UnderflowError",
+                    "params": []
+                }
+            ],
+            "props": []
+        }
+    ],
+    "mixin": [],
+    "enum": [],
+    "typedef": []
+}

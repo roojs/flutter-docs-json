@@ -1,2928 +1,878 @@
 {
-    "name": "matcher",
-    "href": "package-matcher_matcher\/package-matcher_matcher-library.html",
-    "cn": [
+    "class": [
         {
+            "desc": "<p>A useful utility class for implementing other matchers through inheritance.\nDerived classes should call the base constructor with a feature name and\ndescription, and an instance matcher, and should implement the\n<a href=\"package-matcher_matcher\/CustomMatcher\/featureValueOf.html\">featureValueOf<\/a> abstract method.<\/p>\n<p>The feature description will typically describe the item and the feature,\nwhile the feature name will just name the feature. For example, we may\nhave a Widget class where each Widget has a price; we could make a\n<a href=\"package-matcher_matcher\/CustomMatcher-class.html\">CustomMatcher<\/a> that can make assertions about prices with:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class HasPrice extends CustomMatcher {\n  HasPrice(matcher) : super(\"Widget with price that is\", \"price\", matcher);\n  featureValueOf(actual) =&gt; actual.price;\n}\n<\/code><\/pre>\n<p>and then use this for example like:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">expect(inventoryItem, new HasPrice(greaterThan(0)));\n<\/code><\/pre>\n    ",
+            "dtype": "class",
+            "example": "",
+            "href": "package-matcher_matcher\/CustomMatcher-class.html",
+            "isAbstract": false,
+            "isConstant": false,
+            "isDeprecated": false,
+            "memberOf": "matcher",
             "name": "matcher.CustomMatcher",
+            "shortname": "CustomMatcher",
             "extends": [
                 "matcher.Matcher",
                 "dart:core.Object"
             ],
-            "memberOf": "matcher",
+            "is_enum": false,
+            "is_mixin": false,
+            "realImplementors": [],
             "events": [],
             "methods": [
                 {
-                    "name": "CustomMatcher",
-                    "type": "",
                     "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">CustomMatcher(this._featureDescription, this._featureName, matcher)\n    : this._matcher = wrapMatcher(matcher);<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/CustomMatcher\/CustomMatcher.html",
+                    "isDeprecated": false,
+                    "type": "",
+                    "name": "CustomMatcher",
+                    "dtype": "constructor",
+                    "isConstructor": true,
                     "static": false,
                     "memberOf": "matcher.CustomMatcher",
-                    "sig": "",
                     "params": [
                         {
                             "name": "_featureDescription",
-                            "type": "dart:core.String",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": true,
+                            "type": "dart:core.String"
                         },
                         {
                             "name": "_featureName",
-                            "type": "dart:core.String",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": true,
+                            "type": "dart:core.String"
                         },
                         {
                             "name": "matcher",
-                            "type": "",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
+                            "href": "",
                             "isDeprecated": false,
-                            "types": []
+                            "isOptional": true,
+                            "type": "<dynamic>"
                         }
-                    ],
-                    "isConstructor": true,
-                    "href": "package-matcher_matcher\/CustomMatcher\/CustomMatcher.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">CustomMatcher(this._featureDescription, this._featureName, matcher)\n    : this._matcher = wrapMatcher(matcher);<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 },
                 {
-                    "name": "describe",
-                    "type": "matcher.Description",
                     "desc": "<p>Builds a textual description of the matcher.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description describe(Description description) =&gt;\n    description.add(_featureDescription).add(' ').addDescriptionOf(_matcher);<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/CustomMatcher\/describe.html",
+                    "isDeprecated": false,
+                    "type": "matcher.Description",
+                    "name": "describe",
+                    "dtype": "method",
+                    "isConstructor": false,
                     "static": false,
                     "memberOf": "matcher.CustomMatcher",
-                    "sig": "",
                     "params": [
                         {
                             "name": "description",
-                            "type": "matcher.Description",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "matcher.Description"
                         }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/CustomMatcher\/describe.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description describe(Description description) =&gt;\n    description.add(_featureDescription).add(' ').addDescriptionOf(_matcher);<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 },
                 {
-                    "name": "describeMismatch",
-                    "type": "matcher.Description",
                     "desc": "<p>Builds a textual description of a specific mismatch.<\/p>\n<p><code>item<\/code> is the value that was tested by <a href=\"package-matcher_matcher\/CustomMatcher\/matches.html\">matches<\/a>; <code>matchState<\/code> is\nthe <a href=\"dart-core\/Map-class.html\">Map<\/a> that was passed to and supplemented by <a href=\"package-matcher_matcher\/CustomMatcher\/matches.html\">matches<\/a>\nwith additional information about the mismatch, and <code>mismatchDescription<\/code>\nis the <a href=\"package-matcher_matcher\/Description-class.html\">Description<\/a> that is being built to describe the mismatch.<\/p>\n<p>A few matchers make use of the <code>verbose<\/code> flag to provide detailed\ninformation that is not typically included but can be of help in\ndiagnosing failures, such as stack traces.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description describeMismatch(\n    item, Description mismatchDescription, Map matchState, bool verbose) {\n  if (matchState['custom.exception'] != null) {\n    mismatchDescription\n        .add('threw ')\n        .addDescriptionOf(matchState['custom.exception'])\n        .add('\\n')\n        .add(matchState['custom.stack'].toString());\n    return mismatchDescription;\n  }\n\n  mismatchDescription\n      .add('has ')\n      .add(_featureName)\n      .add(' with value ')\n      .addDescriptionOf(matchState['custom.feature']);\n  var innerDescription = new StringDescription();\n\n  _matcher.describeMismatch(matchState['custom.feature'], innerDescription,\n      matchState['state'] as Map, verbose);\n\n  if (innerDescription.length &gt; 0) {\n    mismatchDescription.add(' which ').add(innerDescription.toString());\n  }\n  return mismatchDescription;\n}<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/CustomMatcher\/describeMismatch.html",
+                    "isDeprecated": false,
+                    "type": "matcher.Description",
+                    "name": "describeMismatch",
+                    "dtype": "method",
+                    "isConstructor": false,
                     "static": false,
                     "memberOf": "matcher.CustomMatcher",
-                    "sig": "",
                     "params": [
                         {
                             "name": "item",
-                            "type": "",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
+                            "href": "",
                             "isDeprecated": false,
-                            "types": []
-                        },
-                        {
-                            "name": "mismatchDescription",
-                            "type": "matcher.Description",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
+                            "isOptional": false,
+                            "type": "<dynamic>"
                         },
                         {
                             "name": "matchState",
-                            "type": "dart:core.Map",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.Map"
+                        },
+                        {
+                            "name": "mismatchDescription",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "matcher.Description"
                         },
                         {
                             "name": "verbose",
-                            "type": "dart:core.bool",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.bool"
                         }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/CustomMatcher\/describeMismatch.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description describeMismatch(\n    item, Description mismatchDescription, Map matchState, bool verbose) {\n  if (matchState['custom.exception'] != null) {\n    mismatchDescription\n        .add('threw ')\n        .addDescriptionOf(matchState['custom.exception'])\n        .add('\\n')\n        .add(matchState['custom.stack'].toString());\n    return mismatchDescription;\n  }\n\n  mismatchDescription\n      .add('has ')\n      .add(_featureName)\n      .add(' with value ')\n      .addDescriptionOf(matchState['custom.feature']);\n  var innerDescription = new StringDescription();\n\n  _matcher.describeMismatch(matchState['custom.feature'], innerDescription,\n      matchState['state'] as Map, verbose);\n\n  if (innerDescription.length &gt; 0) {\n    mismatchDescription.add(' which ').add(innerDescription.toString());\n  }\n  return mismatchDescription;\n}<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 },
                 {
-                    "name": "featureValueOf",
-                    "type": "dart:core.Object",
                     "desc": "<p>Override this to extract the interesting feature.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Object featureValueOf(actual) =&gt; actual;<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/CustomMatcher\/featureValueOf.html",
+                    "isDeprecated": false,
+                    "type": "dart:core.Object",
+                    "name": "featureValueOf",
+                    "dtype": "method",
+                    "isConstructor": false,
                     "static": false,
                     "memberOf": "matcher.CustomMatcher",
-                    "sig": "",
                     "params": [
                         {
                             "name": "actual",
-                            "type": "",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
+                            "href": "",
                             "isDeprecated": false,
-                            "types": []
+                            "isOptional": false,
+                            "type": "<dynamic>"
                         }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/CustomMatcher\/featureValueOf.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Object featureValueOf(actual) =&gt; actual;<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 },
                 {
-                    "name": "matches",
-                    "type": "dart:core.bool",
                     "desc": "<p>Does the matching of the actual vs expected values.<\/p>\n<p><code>item<\/code> is the actual value. <code>matchState<\/code> can be supplied\nand may be used to add details about the mismatch that are too\ncostly to determine in <a href=\"package-matcher_matcher\/CustomMatcher\/describeMismatch.html\">describeMismatch<\/a>.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool matches(item, Map matchState) {\n  try {\n    var f = featureValueOf(item);\n    if (_matcher.matches(f, matchState)) return true;\n    addStateInfo(matchState, {'custom.feature': f});\n  } catch (exception, stack) {\n    addStateInfo(matchState, {\n      'custom.exception': exception.toString(),\n      'custom.stack': new Chain.forTrace(stack)\n          .foldFrames(\n              (frame) =&gt;\n                  frame.package == 'test' ||\n                  frame.package == 'stream_channel' ||\n                  frame.package == 'matcher',\n              terse: true)\n          .toString()\n    });\n  }\n  return false;\n}<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/CustomMatcher\/matches.html",
+                    "isDeprecated": false,
+                    "type": "dart:core.bool",
+                    "name": "matches",
+                    "dtype": "method",
+                    "isConstructor": false,
                     "static": false,
                     "memberOf": "matcher.CustomMatcher",
-                    "sig": "",
                     "params": [
                         {
                             "name": "item",
-                            "type": "",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
+                            "href": "",
                             "isDeprecated": false,
-                            "types": []
+                            "isOptional": false,
+                            "type": "<dynamic>"
                         },
                         {
                             "name": "matchState",
-                            "type": "dart:core.Map",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.Map"
                         }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/CustomMatcher\/matches.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool matches(item, Map matchState) {\n  try {\n    var f = featureValueOf(item);\n    if (_matcher.matches(f, matchState)) return true;\n    addStateInfo(matchState, {'custom.feature': f});\n  } catch (exception, stack) {\n    addStateInfo(matchState, {\n      'custom.exception': exception.toString(),\n      'custom.stack': new Chain.forTrace(stack)\n          .foldFrames(\n              (frame) =&gt;\n                  frame.package == 'test' ||\n                  frame.package == 'stream_channel' ||\n                  frame.package == 'matcher',\n              terse: true)\n          .toString()\n    });\n  }\n  return false;\n}<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 }
             ],
-            "props": [],
-            "isMixin": false,
-            "isEnum": false,
-            "isTypedef": false,
-            "isConstant": false,
-            "isAbstract": false,
-            "implementors": [],
-            "realImplementors": [],
-            "cn": [],
-            "href": "package-matcher_matcher\/CustomMatcher-class.html",
-            "desc": "<p>A useful utility class for implementing other matchers through inheritance.\nDerived classes should call the base constructor with a feature name and\ndescription, and an instance matcher, and should implement the\n<a href=\"package-matcher_matcher\/CustomMatcher\/featureValueOf.html\">featureValueOf<\/a> abstract method.<\/p>\n<p>The feature description will typically describe the item and the feature,\nwhile the feature name will just name the feature. For example, we may\nhave a Widget class where each Widget has a price; we could make a\n<a href=\"package-matcher_matcher\/CustomMatcher-class.html\">CustomMatcher<\/a> that can make assertions about prices with:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">class HasPrice extends CustomMatcher {\n  HasPrice(matcher) : super(\"Widget with price that is\", \"price\", matcher);\n  featureValueOf(actual) =&gt; actual.price;\n}\n<\/code><\/pre>\n<p>and then use this for example like:<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">expect(inventoryItem, new HasPrice(greaterThan(0)));\n<\/code><\/pre>\n    ",
-            "example": "",
-            "isDeprecated": false,
-            "dtype": "class",
-            "shortname": "CustomMatcher"
+            "props": []
         },
         {
-            "name": "matcher.Description",
-            "extends": [],
+            "desc": "<p>Matchers build up their error messages by appending to Description objects.<\/p>\n<p>This interface is implemented by StringDescription.<\/p>\n<p>This interface is unlikely to need other implementations, but could be\nuseful to replace in some cases - e.g. language conversion.<\/p>\n    ",
+            "dtype": "class",
+            "example": "",
+            "href": "package-matcher_matcher\/Description-class.html",
+            "isAbstract": true,
+            "isConstant": false,
+            "isDeprecated": false,
             "memberOf": "matcher",
+            "name": "matcher.Description",
+            "shortname": "Description",
+            "extends": [],
+            "is_enum": false,
+            "is_mixin": false,
+            "realImplementors": [],
             "events": [],
             "methods": [
                 {
-                    "name": "Description",
-                    "type": "",
                     "desc": "",
+                    "example": "",
+                    "href": "package-matcher_matcher\/Description\/Description.html",
+                    "isDeprecated": false,
+                    "type": "",
+                    "name": "Description",
+                    "dtype": "constructor",
+                    "isConstructor": true,
                     "static": false,
                     "memberOf": "matcher.Description",
-                    "sig": "",
-                    "params": [],
-                    "isConstructor": true,
-                    "href": "package-matcher_matcher\/Description\/Description.html",
-                    "example": "",
-                    "isDeprecated": false
+                    "params": []
                 },
                 {
-                    "name": "add",
-                    "type": "matcher.Description",
                     "desc": "<p>This is used to add arbitrary text to the description.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description add(String text);<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/Description\/add.html",
+                    "isDeprecated": false,
+                    "type": "matcher.Description",
+                    "name": "add",
+                    "dtype": "method",
+                    "isConstructor": false,
                     "static": false,
                     "memberOf": "matcher.Description",
-                    "sig": "",
                     "params": [
                         {
                             "name": "text",
-                            "type": "dart:core.String",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.String"
                         }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/Description\/add.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description add(String text);<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 },
                 {
-                    "name": "addAll",
-                    "type": "matcher.Description",
                     "desc": "<p>This is used to add a description of an <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> <code>list<\/code>,\nwith appropriate <code>start<\/code> and <code>end<\/code> markers and inter-element <code>separator<\/code>.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description addAll(String start, String separator, String end, Iterable list);<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/Description\/addAll.html",
+                    "isDeprecated": false,
+                    "type": "matcher.Description",
+                    "name": "addAll",
+                    "dtype": "method",
+                    "isConstructor": false,
                     "static": false,
                     "memberOf": "matcher.Description",
-                    "sig": "",
                     "params": [
                         {
-                            "name": "start",
-                            "type": "dart:core.String",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        },
-                        {
-                            "name": "separator",
-                            "type": "dart:core.String",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        },
-                        {
                             "name": "end",
-                            "type": "dart:core.String",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.String"
                         },
                         {
                             "name": "list",
-                            "type": "dart:core.Iterable",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.Iterable"
+                        },
+                        {
+                            "name": "separator",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.String"
+                        },
+                        {
+                            "name": "start",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.String"
                         }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/Description\/addAll.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description addAll(String start, String separator, String end, Iterable list);<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 },
                 {
-                    "name": "addDescriptionOf",
-                    "type": "matcher.Description",
                     "desc": "<p>This is used to add a meaningful description of a value.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description addDescriptionOf(value);<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/Description\/addDescriptionOf.html",
+                    "isDeprecated": false,
+                    "type": "matcher.Description",
+                    "name": "addDescriptionOf",
+                    "dtype": "method",
+                    "isConstructor": false,
                     "static": false,
                     "memberOf": "matcher.Description",
-                    "sig": "",
                     "params": [
                         {
                             "name": "value",
-                            "type": "",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
+                            "href": "",
                             "isDeprecated": false,
-                            "types": []
+                            "isOptional": false,
+                            "type": "<dynamic>"
                         }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/Description\/addDescriptionOf.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description addDescriptionOf(value);<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 },
                 {
-                    "name": "replace",
-                    "type": "matcher.Description",
                     "desc": "<p>Change the value of the description.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description replace(String text);<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/Description\/replace.html",
+                    "isDeprecated": false,
+                    "type": "matcher.Description",
+                    "name": "replace",
+                    "dtype": "method",
+                    "isConstructor": false,
                     "static": false,
                     "memberOf": "matcher.Description",
-                    "sig": "",
                     "params": [
                         {
                             "name": "text",
-                            "type": "dart:core.String",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.String"
                         }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/Description\/replace.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description replace(String text);<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 }
             ],
             "props": [
                 {
-                    "name": "length",
-                    "type": "dart:core.int",
-                    "types": [],
                     "desc": "",
-                    "memberOf": "matcher.Description",
-                    "isConstant": false,
-                    "href": "package-matcher_matcher\/Description\/length.html",
                     "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get length;<\/code><\/pre>\n        ",
-                    "isDeprecated": false
+                    "href": "package-matcher_matcher\/Description\/length.html",
+                    "name": "length",
+                    "isDeprecated": false,
+                    "type": "dart:core.int",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "matcher.Description",
+                    "params": []
                 }
-            ],
-            "isMixin": false,
-            "isEnum": false,
-            "isTypedef": false,
-            "isConstant": false,
-            "isAbstract": true,
-            "implementors": [],
-            "realImplementors": [],
-            "cn": [],
-            "href": "package-matcher_matcher\/Description-class.html",
-            "desc": "<p>Matchers build up their error messages by appending to Description objects.<\/p>\n<p>This interface is implemented by StringDescription.<\/p>\n<p>This interface is unlikely to need other implementations, but could be\nuseful to replace in some cases - e.g. language conversion.<\/p>\n    ",
-            "example": "",
-            "isDeprecated": false,
-            "dtype": "class",
-            "shortname": "Description"
+            ]
         },
         {
-            "name": "matcher.Matcher",
-            "extends": [],
-            "memberOf": "matcher",
-            "events": [],
-            "methods": [
-                {
-                    "name": "Matcher",
-                    "type": "",
-                    "desc": "",
-                    "static": false,
-                    "memberOf": "matcher.Matcher",
-                    "sig": "",
-                    "params": [],
-                    "isConstructor": true,
-                    "href": "package-matcher_matcher\/Matcher\/Matcher.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Matcher();<\/code><\/pre>\n    ",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "describe",
-                    "type": "matcher.Description",
-                    "desc": "<p>Builds a textual description of the matcher.<\/p>\n    ",
-                    "static": false,
-                    "memberOf": "matcher.Matcher",
-                    "sig": "",
-                    "params": [
-                        {
-                            "name": "description",
-                            "type": "matcher.Description",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/Matcher\/describe.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description describe(Description description);<\/code><\/pre>\n    ",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "describeMismatch",
-                    "type": "matcher.Description",
-                    "desc": "<p>Builds a textual description of a specific mismatch.<\/p>\n<p><code>item<\/code> is the value that was tested by <a href=\"package-matcher_matcher\/Matcher\/matches.html\">matches<\/a>; <code>matchState<\/code> is\nthe <a href=\"dart-core\/Map-class.html\">Map<\/a> that was passed to and supplemented by <a href=\"package-matcher_matcher\/Matcher\/matches.html\">matches<\/a>\nwith additional information about the mismatch, and <code>mismatchDescription<\/code>\nis the <a href=\"package-matcher_matcher\/Description-class.html\">Description<\/a> that is being built to describe the mismatch.<\/p>\n<p>A few matchers make use of the <code>verbose<\/code> flag to provide detailed\ninformation that is not typically included but can be of help in\ndiagnosing failures, such as stack traces.<\/p>\n    ",
-                    "static": false,
-                    "memberOf": "matcher.Matcher",
-                    "sig": "",
-                    "params": [
-                        {
-                            "name": "item",
-                            "type": "",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false,
-                            "types": []
-                        },
-                        {
-                            "name": "mismatchDescription",
-                            "type": "matcher.Description",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        },
-                        {
-                            "name": "matchState",
-                            "type": "dart:core.Map",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        },
-                        {
-                            "name": "verbose",
-                            "type": "dart:core.bool",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/Matcher\/describeMismatch.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description describeMismatch(item, Description mismatchDescription,\n        Map matchState, bool verbose) =&gt;\n    mismatchDescription;<\/code><\/pre>\n    ",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "matches",
-                    "type": "dart:core.bool",
-                    "desc": "<p>Does the matching of the actual vs expected values.<\/p>\n<p><code>item<\/code> is the actual value. <code>matchState<\/code> can be supplied\nand may be used to add details about the mismatch that are too\ncostly to determine in <a href=\"package-matcher_matcher\/Matcher\/describeMismatch.html\">describeMismatch<\/a>.<\/p>\n    ",
-                    "static": false,
-                    "memberOf": "matcher.Matcher",
-                    "sig": "",
-                    "params": [
-                        {
-                            "name": "item",
-                            "type": "",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false,
-                            "types": []
-                        },
-                        {
-                            "name": "matchState",
-                            "type": "dart:core.Map",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/Matcher\/matches.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool matches(item, Map matchState);<\/code><\/pre>\n    ",
-                    "isDeprecated": false
-                }
-            ],
-            "props": [],
-            "isMixin": false,
-            "isEnum": false,
-            "isTypedef": false,
-            "isConstant": false,
+            "desc": "<p>The base class for all matchers.<\/p>\n<p><a href=\"package-matcher_matcher\/Matcher\/matches.html\">matches<\/a> and <a href=\"package-matcher_matcher\/Matcher\/describe.html\">describe<\/a> must be implemented by subclasses.<\/p>\n<p>Subclasses can override <a href=\"package-matcher_matcher\/Matcher\/describeMismatch.html\">describeMismatch<\/a> if a more specific description is\nrequired when the matcher fails.<\/p>\n    ",
+            "dtype": "class",
+            "example": "",
+            "href": "package-matcher_matcher\/Matcher-class.html",
             "isAbstract": true,
-            "implementors": [
+            "isConstant": false,
+            "isDeprecated": false,
+            "memberOf": "matcher",
+            "name": "matcher.Matcher",
+            "shortname": "Matcher",
+            "extends": [],
+            "is_enum": false,
+            "is_mixin": false,
+            "realImplementors": [
                 "matcher.CustomMatcher",
                 "matcher.TypeMatcher",
                 "matcher.isInstanceOf",
-                "test_api.StreamMatcher",
                 "test_api.Throws"
             ],
-            "realImplementors": [
-                "matcher.CustomMatcher",
-                "matcher.TypeMatcher",
-                "matcher.isInstanceOf"
-            ],
-            "cn": [],
-            "href": "package-matcher_matcher\/Matcher-class.html",
-            "desc": "<p>The base class for all matchers.<\/p>\n<p><a href=\"package-matcher_matcher\/Matcher\/matches.html\">matches<\/a> and <a href=\"package-matcher_matcher\/Matcher\/describe.html\">describe<\/a> must be implemented by subclasses.<\/p>\n<p>Subclasses can override <a href=\"package-matcher_matcher\/Matcher\/describeMismatch.html\">describeMismatch<\/a> if a more specific description is\nrequired when the matcher fails.<\/p>\n    ",
-            "example": "",
-            "isDeprecated": false,
-            "dtype": "class",
-            "shortname": "Matcher"
-        },
-        {
-            "name": "matcher.StringDescription",
-            "extends": [],
-            "memberOf": "matcher",
             "events": [],
             "methods": [
                 {
-                    "name": "StringDescription",
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const Matcher();<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/Matcher\/Matcher.html",
+                    "isDeprecated": false,
                     "type": "",
+                    "name": "Matcher",
+                    "dtype": "constructor",
+                    "isConstructor": true,
+                    "static": false,
+                    "memberOf": "matcher.Matcher",
+                    "params": []
+                },
+                {
+                    "desc": "<p>Builds a textual description of the matcher.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description describe(Description description);<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/Matcher\/describe.html",
+                    "isDeprecated": false,
+                    "type": "matcher.Description",
+                    "name": "describe",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "matcher.Matcher",
+                    "params": [
+                        {
+                            "name": "description",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "matcher.Description"
+                        }
+                    ]
+                },
+                {
+                    "desc": "<p>Builds a textual description of a specific mismatch.<\/p>\n<p><code>item<\/code> is the value that was tested by <a href=\"package-matcher_matcher\/Matcher\/matches.html\">matches<\/a>; <code>matchState<\/code> is\nthe <a href=\"dart-core\/Map-class.html\">Map<\/a> that was passed to and supplemented by <a href=\"package-matcher_matcher\/Matcher\/matches.html\">matches<\/a>\nwith additional information about the mismatch, and <code>mismatchDescription<\/code>\nis the <a href=\"package-matcher_matcher\/Description-class.html\">Description<\/a> that is being built to describe the mismatch.<\/p>\n<p>A few matchers make use of the <code>verbose<\/code> flag to provide detailed\ninformation that is not typically included but can be of help in\ndiagnosing failures, such as stack traces.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description describeMismatch(item, Description mismatchDescription,\n        Map matchState, bool verbose) =&gt;\n    mismatchDescription;<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/Matcher\/describeMismatch.html",
+                    "isDeprecated": false,
+                    "type": "matcher.Description",
+                    "name": "describeMismatch",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "matcher.Matcher",
+                    "params": [
+                        {
+                            "name": "item",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "<dynamic>"
+                        },
+                        {
+                            "name": "matchState",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.Map"
+                        },
+                        {
+                            "name": "mismatchDescription",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "matcher.Description"
+                        },
+                        {
+                            "name": "verbose",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.bool"
+                        }
+                    ]
+                },
+                {
+                    "desc": "<p>Does the matching of the actual vs expected values.<\/p>\n<p><code>item<\/code> is the actual value. <code>matchState<\/code> can be supplied\nand may be used to add details about the mismatch that are too\ncostly to determine in <a href=\"package-matcher_matcher\/Matcher\/describeMismatch.html\">describeMismatch<\/a>.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool matches(item, Map matchState);<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/Matcher\/matches.html",
+                    "isDeprecated": false,
+                    "type": "dart:core.bool",
+                    "name": "matches",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "matcher.Matcher",
+                    "params": [
+                        {
+                            "name": "item",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "<dynamic>"
+                        },
+                        {
+                            "name": "matchState",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.Map"
+                        }
+                    ]
+                }
+            ],
+            "props": []
+        },
+        {
+            "desc": "<p>The default implementation of <a href=\"package-matcher_matcher\/Description-class.html\">Description<\/a>. This should rarely need\nsubstitution, although conceivably it is a place where other languages\ncould be supported.<\/p>\n    ",
+            "dtype": "class",
+            "example": "",
+            "href": "package-matcher_matcher\/StringDescription-class.html",
+            "isAbstract": false,
+            "isConstant": false,
+            "isDeprecated": false,
+            "memberOf": "matcher",
+            "name": "matcher.StringDescription",
+            "shortname": "StringDescription",
+            "extends": [],
+            "is_enum": false,
+            "is_mixin": false,
+            "realImplementors": [],
+            "events": [],
+            "methods": [
+                {
                     "desc": "<p>Initialize the description with initial contents <code>init<\/code>.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StringDescription([String init = '']) {\n  _out.write(init);\n}<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/StringDescription\/StringDescription.html",
+                    "isDeprecated": false,
+                    "type": "",
+                    "name": "StringDescription",
+                    "dtype": "constructor",
+                    "isConstructor": true,
                     "static": false,
                     "memberOf": "matcher.StringDescription",
-                    "sig": "",
                     "params": [
                         {
                             "name": "init",
-                            "type": "dart:core.String",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": true,
+                            "type": "dart:core.String"
                         }
-                    ],
-                    "isConstructor": true,
-                    "href": "package-matcher_matcher\/StringDescription\/StringDescription.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">StringDescription([String init = '']) {\n  _out.write(init);\n}<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 },
                 {
-                    "name": "add",
-                    "type": "matcher.Description",
                     "desc": "<p>Append <code>text<\/code> to the description.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description add(String text) {\n  _out.write(text);\n  return this;\n}<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/StringDescription\/add.html",
+                    "isDeprecated": false,
+                    "type": "matcher.Description",
+                    "name": "add",
+                    "dtype": "method",
+                    "isConstructor": false,
                     "static": false,
                     "memberOf": "matcher.StringDescription",
-                    "sig": "",
                     "params": [
                         {
                             "name": "text",
-                            "type": "dart:core.String",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.String"
                         }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/StringDescription\/add.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description add(String text) {\n  _out.write(text);\n  return this;\n}<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 },
                 {
-                    "name": "addAll",
-                    "type": "matcher.Description",
                     "desc": "<p>Append an <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a> <code>list<\/code> of objects to the description, using the\nspecified <code>separator<\/code> and framing the list with <code>start<\/code>\nand <code>end<\/code>.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description addAll(\n    String start, String separator, String end, Iterable list) {\n  var separate = false;\n  add(start);\n  for (var item in list) {\n    if (separate) {\n      add(separator);\n    }\n    addDescriptionOf(item);\n    separate = true;\n  }\n  add(end);\n  return this;\n}<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/StringDescription\/addAll.html",
+                    "isDeprecated": false,
+                    "type": "matcher.Description",
+                    "name": "addAll",
+                    "dtype": "method",
+                    "isConstructor": false,
                     "static": false,
                     "memberOf": "matcher.StringDescription",
-                    "sig": "",
                     "params": [
                         {
-                            "name": "start",
-                            "type": "dart:core.String",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        },
-                        {
-                            "name": "separator",
-                            "type": "dart:core.String",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        },
-                        {
                             "name": "end",
-                            "type": "dart:core.String",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.String"
                         },
                         {
                             "name": "list",
-                            "type": "dart:core.Iterable",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.Iterable"
+                        },
+                        {
+                            "name": "separator",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.String"
+                        },
+                        {
+                            "name": "start",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.String"
                         }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/StringDescription\/addAll.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description addAll(\n    String start, String separator, String end, Iterable list) {\n  var separate = false;\n  add(start);\n  for (var item in list) {\n    if (separate) {\n      add(separator);\n    }\n    addDescriptionOf(item);\n    separate = true;\n  }\n  add(end);\n  return this;\n}<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 },
                 {
-                    "name": "addDescriptionOf",
-                    "type": "matcher.Description",
                     "desc": "<p>Appends a description of <code>value<\/code>. If it is an IMatcher use its\ndescribe method; if it is a string use its literal value after\nescaping any embedded control characters; otherwise use its\ntoString() value and wrap it in angular \"quotes\".<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description addDescriptionOf(value) {\n  if (value is Matcher) {\n    value.describe(this);\n  } else {\n    add(prettyPrint(value, maxLineLength: 80, maxItems: 25));\n  }\n  return this;\n}<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/StringDescription\/addDescriptionOf.html",
+                    "isDeprecated": false,
+                    "type": "matcher.Description",
+                    "name": "addDescriptionOf",
+                    "dtype": "method",
+                    "isConstructor": false,
                     "static": false,
                     "memberOf": "matcher.StringDescription",
-                    "sig": "",
                     "params": [
                         {
                             "name": "value",
-                            "type": "",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
+                            "href": "",
                             "isDeprecated": false,
-                            "types": []
+                            "isOptional": false,
+                            "type": "<dynamic>"
                         }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/StringDescription\/addDescriptionOf.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description addDescriptionOf(value) {\n  if (value is Matcher) {\n    value.describe(this);\n  } else {\n    add(prettyPrint(value, maxLineLength: 80, maxItems: 25));\n  }\n  return this;\n}<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 },
                 {
-                    "name": "replace",
-                    "type": "matcher.Description",
                     "desc": "<p>Change the value of the description.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description replace(String text) {\n  _out.clear();\n  return add(text);\n}<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/StringDescription\/replace.html",
+                    "isDeprecated": false,
+                    "type": "matcher.Description",
+                    "name": "replace",
+                    "dtype": "method",
+                    "isConstructor": false,
                     "static": false,
                     "memberOf": "matcher.StringDescription",
-                    "sig": "",
                     "params": [
                         {
                             "name": "text",
-                            "type": "dart:core.String",
                             "desc": "",
-                            "isOptional": true,
-                            "href": "",
                             "example": "",
-                            "isDeprecated": false
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.String"
                         }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/StringDescription\/replace.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description replace(String text) {\n  _out.clear();\n  return add(text);\n}<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    ]
                 },
                 {
-                    "name": "toString",
-                    "type": "dart:core.String",
                     "desc": "<p>Get the description as a string.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() =&gt; _out.toString();<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/StringDescription\/toString.html",
+                    "isDeprecated": false,
+                    "type": "dart:core.String",
+                    "name": "toString",
+                    "dtype": "method",
+                    "isConstructor": false,
                     "static": false,
                     "memberOf": "matcher.StringDescription",
-                    "sig": "",
-                    "params": [],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/StringDescription\/toString.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String toString() =&gt; _out.toString();<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    "params": []
                 }
             ],
             "props": [
                 {
-                    "name": "length",
-                    "type": "dart:core.int",
-                    "types": [],
                     "desc": "",
-                    "memberOf": "matcher.StringDescription",
-                    "isConstant": false,
-                    "href": "package-matcher_matcher\/StringDescription\/length.html",
                     "example": "<h2><span>Implementation<\/span><\/h2>\n          <pre class=\"language-dart\"><code class=\"language-dart\">int get length =&gt; _out.length;<\/code><\/pre>\n        ",
-                    "isDeprecated": false
+                    "href": "package-matcher_matcher\/StringDescription\/length.html",
+                    "name": "length",
+                    "isDeprecated": false,
+                    "type": "dart:core.int",
+                    "dtype": "property",
+                    "isStatic": false,
+                    "isConstant": false,
+                    "memberOf": "matcher.StringDescription",
+                    "params": []
                 }
-            ],
-            "isMixin": false,
-            "isEnum": false,
-            "isTypedef": false,
-            "isConstant": false,
-            "isAbstract": false,
-            "implementors": [],
-            "realImplementors": [],
-            "cn": [],
-            "href": "package-matcher_matcher\/StringDescription-class.html",
-            "desc": "<p>The default implementation of <a href=\"package-matcher_matcher\/Description-class.html\">Description<\/a>. This should rarely need\nsubstitution, although conceivably it is a place where other languages\ncould be supported.<\/p>\n    ",
-            "example": "",
-            "isDeprecated": false,
-            "dtype": "class",
-            "shortname": "StringDescription"
+            ]
         },
         {
+            "desc": "<p>A <a href=\"package-matcher_matcher\/Matcher-class.html\">Matcher<\/a> subclass that supports validating the <a href=\"dart-core\/Type-class.html\">Type<\/a> of the target\nobject.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">expect(shouldBeDuration, new TypeMatcher&lt;Duration&gt;());\n<\/code><\/pre>\n<p>If you want to further validate attributes of the specified <a href=\"dart-core\/Type-class.html\">Type<\/a>, use the\n<a href=\"package-matcher_matcher\/TypeMatcher\/having.html\">having<\/a> function.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">void shouldThrowRangeError(int value) {\n  throw new RangeError.range(value, 10, 20);\n}\n\nexpect(\n    () =&gt; shouldThrowRangeError(5),\n    throwsA(const TypeMatcher&lt;RangeError&gt;()\n        .having((e) =&gt; e.start, 'start', greaterThanOrEqualTo(10))\n        .having((e) =&gt; e.end, 'end', lessThanOrEqualTo(20))));\n<\/code><\/pre>\n<p>Notice that you can chain multiple calls to <a href=\"package-matcher_matcher\/TypeMatcher\/having.html\">having<\/a> to verify multiple\naspects of an object.<\/p>\n<p>Note: All of the top-level <code>isType<\/code> matchers exposed by this package are\ninstances of <a href=\"package-matcher_matcher\/TypeMatcher-class.html\">TypeMatcher<\/a>, so you can use the <a href=\"package-matcher_matcher\/TypeMatcher\/having.html\">having<\/a> function without\ncreating your own instance.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">expect(\n    () =&gt; shouldThrowRangeError(5),\n    throwsA(isRangeError\n        .having((e) =&gt; e.start, 'start', greaterThanOrEqualTo(10))\n        .having((e) =&gt; e.end, 'end', lessThanOrEqualTo(20))));\n<\/code><\/pre>\n    ",
+            "dtype": "class",
+            "example": "",
+            "href": "package-matcher_matcher\/TypeMatcher-class.html",
+            "isAbstract": false,
+            "isConstant": false,
+            "isDeprecated": false,
+            "memberOf": "matcher",
             "name": "matcher.TypeMatcher",
+            "shortname": "TypeMatcher",
             "extends": [
                 "matcher.Matcher",
                 "dart:core.Object"
             ],
-            "memberOf": "matcher",
-            "events": [],
-            "methods": [
-                {
-                    "name": "TypeMatcher",
-                    "type": "",
-                    "desc": "",
-                    "static": false,
-                    "memberOf": "matcher.TypeMatcher",
-                    "sig": "",
-                    "params": [
-                        {
-                            "name": "name",
-                            "type": "dart:core.String",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        }
-                    ],
-                    "isConstructor": true,
-                    "href": "package-matcher_matcher\/TypeMatcher\/TypeMatcher.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const TypeMatcher(\n    [@Deprecated('Provide a type argument to TypeMatcher and omit the name. '\n        'This argument will be removed in the next release.')\n        String name])\n    : this._name =\n          \/\/ ignore: deprecated_member_use\n          name;<\/code><\/pre>\n    ",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "describe",
-                    "type": "matcher.Description",
-                    "desc": "<p>Builds a textual description of the matcher.<\/p>\n    ",
-                    "static": false,
-                    "memberOf": "matcher.TypeMatcher",
-                    "sig": "",
-                    "params": [
-                        {
-                            "name": "description",
-                            "type": "matcher.Description",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/TypeMatcher\/describe.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description describe(Description description) {\n  var name = _name ?? _stripDynamic(T);\n  return description.add(\"&lt;Instance of '$name'&gt;\");\n}<\/code><\/pre>\n    ",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "having",
-                    "type": "matcher.TypeMatcher",
-                    "desc": "<p>Returns a new <a href=\"package-matcher_matcher\/TypeMatcher-class.html\">TypeMatcher<\/a> that validates the existing type as well as\na specific <code>feature<\/code> of the object with the provided <code>matcher<\/code>.<\/p>\n<p>Provides a human-readable <code>description<\/code> of the <code>feature<\/code> to make debugging\nfailures easier.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">\/\/\/ Validates that the object is a [RangeError] with a message containing\n\/\/\/ the string 'details' and `start` and `end` properties that are `null`.\nfinal _rangeMatcher = isRangeError\n   .having((e) =&gt; e.message, 'message', contains('details'))\n   .having((e) =&gt; e.start, 'start', isNull)\n   .having((e) =&gt; e.end, 'end', isNull);\n<\/code><\/pre>\n    ",
-                    "static": false,
-                    "memberOf": "matcher.TypeMatcher",
-                    "sig": "",
-                    "params": [
-                        {
-                            "name": "source",
-                            "type": "",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false,
-                            "types": []
-                        },
-                        {
-                            "name": "source",
-                            "type": "",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false,
-                            "types": []
-                        },
-                        {
-                            "name": "description",
-                            "type": "dart:core.String",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        },
-                        {
-                            "name": "matcher",
-                            "type": "dart:core.Object",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/TypeMatcher\/having.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TypeMatcher&lt;T&gt; having(\n        Object feature(T source), String description, Object matcher) =&gt;\n    new HavingMatcher(this, description, feature, matcher);<\/code><\/pre>\n    ",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "matches",
-                    "type": "dart:core.bool",
-                    "desc": "<p>Does the matching of the actual vs expected values.<\/p>\n<p><code>item<\/code> is the actual value. <code>matchState<\/code> can be supplied\nand may be used to add details about the mismatch that are too\ncostly to determine in <a href=\"package-matcher_matcher\/Matcher\/describeMismatch.html\">describeMismatch<\/a>.<\/p>\n    ",
-                    "static": false,
-                    "memberOf": "matcher.TypeMatcher",
-                    "sig": "",
-                    "params": [
-                        {
-                            "name": "item",
-                            "type": "dart:core.Object",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        },
-                        {
-                            "name": "matchState",
-                            "type": "dart:core.Map",
-                            "desc": "",
-                            "isOptional": true,
-                            "href": "",
-                            "example": "",
-                            "isDeprecated": false
-                        }
-                    ],
-                    "isConstructor": false,
-                    "href": "package-matcher_matcher\/TypeMatcher\/matches.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool matches(Object item, Map matchState) =&gt; item is T;<\/code><\/pre>\n    ",
-                    "isDeprecated": false
-                }
-            ],
-            "props": [],
-            "isMixin": false,
-            "isEnum": false,
-            "isTypedef": false,
-            "isConstant": false,
-            "isAbstract": false,
-            "implementors": [
-                "matcher.isInstanceOf"
-            ],
+            "is_enum": false,
+            "is_mixin": false,
             "realImplementors": [
                 "matcher.isInstanceOf"
             ],
-            "cn": [],
-            "href": "package-matcher_matcher\/TypeMatcher-class.html",
-            "desc": "<p>A <a href=\"package-matcher_matcher\/Matcher-class.html\">Matcher<\/a> subclass that supports validating the <a href=\"dart-core\/Type-class.html\">Type<\/a> of the target\nobject.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">expect(shouldBeDuration, new TypeMatcher&lt;Duration&gt;());\n<\/code><\/pre>\n<p>If you want to further validate attributes of the specified <a href=\"dart-core\/Type-class.html\">Type<\/a>, use the\n<a href=\"package-matcher_matcher\/TypeMatcher\/having.html\">having<\/a> function.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">void shouldThrowRangeError(int value) {\n  throw new RangeError.range(value, 10, 20);\n}\n\nexpect(\n    () =&gt; shouldThrowRangeError(5),\n    throwsA(const TypeMatcher&lt;RangeError&gt;()\n        .having((e) =&gt; e.start, 'start', greaterThanOrEqualTo(10))\n        .having((e) =&gt; e.end, 'end', lessThanOrEqualTo(20))));\n<\/code><\/pre>\n<p>Notice that you can chain multiple calls to <a href=\"package-matcher_matcher\/TypeMatcher\/having.html\">having<\/a> to verify multiple\naspects of an object.<\/p>\n<p>Note: All of the top-level <code>isType<\/code> matchers exposed by this package are\ninstances of <a href=\"package-matcher_matcher\/TypeMatcher-class.html\">TypeMatcher<\/a>, so you can use the <a href=\"package-matcher_matcher\/TypeMatcher\/having.html\">having<\/a> function without\ncreating your own instance.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">expect(\n    () =&gt; shouldThrowRangeError(5),\n    throwsA(isRangeError\n        .having((e) =&gt; e.start, 'start', greaterThanOrEqualTo(10))\n        .having((e) =&gt; e.end, 'end', lessThanOrEqualTo(20))));\n<\/code><\/pre>\n    ",
-            "example": "",
-            "isDeprecated": false,
+            "events": [],
+            "methods": [
+                {
+                    "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const TypeMatcher(\n    [@Deprecated('Provide a type argument to TypeMatcher and omit the name. '\n        'This argument will be removed in the next release.')\n        String name])\n    : this._name =\n          \/\/ ignore: deprecated_member_use\n          name;<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/TypeMatcher\/TypeMatcher.html",
+                    "isDeprecated": false,
+                    "type": "",
+                    "name": "TypeMatcher",
+                    "dtype": "constructor",
+                    "isConstructor": true,
+                    "static": false,
+                    "memberOf": "matcher.TypeMatcher",
+                    "params": [
+                        {
+                            "name": "name",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": true,
+                            "type": "dart:core.String"
+                        }
+                    ]
+                },
+                {
+                    "desc": "<p>Builds a textual description of the matcher.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Description describe(Description description) {\n  var name = _name ?? _stripDynamic(T);\n  return description.add(\"&lt;Instance of '$name'&gt;\");\n}<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/TypeMatcher\/describe.html",
+                    "isDeprecated": false,
+                    "type": "matcher.Description",
+                    "name": "describe",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "matcher.TypeMatcher",
+                    "params": [
+                        {
+                            "name": "description",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "matcher.Description"
+                        }
+                    ]
+                },
+                {
+                    "desc": "<p>Returns a new <a href=\"package-matcher_matcher\/TypeMatcher-class.html\">TypeMatcher<\/a> that validates the existing type as well as\na specific <code>feature<\/code> of the object with the provided <code>matcher<\/code>.<\/p>\n<p>Provides a human-readable <code>description<\/code> of the <code>feature<\/code> to make debugging\nfailures easier.<\/p>\n<pre class=\"language-dart\"><code class=\"language-dart\">\/\/\/ Validates that the object is a [RangeError] with a message containing\n\/\/\/ the string 'details' and `start` and `end` properties that are `null`.\nfinal _rangeMatcher = isRangeError\n   .having((e) =&gt; e.message, 'message', contains('details'))\n   .having((e) =&gt; e.start, 'start', isNull)\n   .having((e) =&gt; e.end, 'end', isNull);\n<\/code><\/pre>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">TypeMatcher&lt;T&gt; having(\n        Object feature(T source), String description, Object matcher) =&gt;\n    new HavingMatcher(this, description, feature, matcher);<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/TypeMatcher\/having.html",
+                    "isDeprecated": false,
+                    "type": "matcher.TypeMatcher",
+                    "name": "having",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "matcher.TypeMatcher",
+                    "params": [
+                        {
+                            "name": "description",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.String"
+                        },
+                        {
+                            "name": "matcher",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.Object"
+                        },
+                        {
+                            "name": "source",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "<T>"
+                        }
+                    ]
+                },
+                {
+                    "desc": "<p>Does the matching of the actual vs expected values.<\/p>\n<p><code>item<\/code> is the actual value. <code>matchState<\/code> can be supplied\nand may be used to add details about the mismatch that are too\ncostly to determine in <a href=\"package-matcher_matcher\/Matcher\/describeMismatch.html\">describeMismatch<\/a>.<\/p>\n    ",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">bool matches(Object item, Map matchState) =&gt; item is T;<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/TypeMatcher\/matches.html",
+                    "isDeprecated": false,
+                    "type": "dart:core.bool",
+                    "name": "matches",
+                    "dtype": "method",
+                    "isConstructor": false,
+                    "static": false,
+                    "memberOf": "matcher.TypeMatcher",
+                    "params": [
+                        {
+                            "name": "item",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.Object"
+                        },
+                        {
+                            "name": "matchState",
+                            "desc": "",
+                            "example": "",
+                            "href": "",
+                            "isDeprecated": false,
+                            "isOptional": false,
+                            "type": "dart:core.Map"
+                        }
+                    ]
+                }
+            ],
+            "props": []
+        },
+        {
+            "desc": "<p><strong>DEPRECATED<\/strong> Use <a href=\"package-matcher_matcher\/TypeMatcher-class.html\">TypeMatcher<\/a> instead.<\/p>\n<p>Returns a matcher that matches if an object is an instance\nof <code>T<\/code> (or a subtype).<\/p>\n    ",
             "dtype": "class",
-            "shortname": "TypeMatcher"
-        },
-        {
-            "name": "addStateInfo",
-            "type": "",
-            "desc": "<p>Useful utility for nesting match states.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "matchState",
-                    "type": "dart:core.Map",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "values",
-                    "type": "dart:core.Map",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "matchState",
-                    "type": "dart:core.Map",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "values",
-                    "type": "dart:core.Map",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/addStateInfo.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">void addStateInfo(Map matchState, Map values) {\n  var innerState = new Map.from(matchState);\n  matchState.clear();\n  matchState['state'] = innerState;\n  matchState.addAll(values);\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false,
-            "types": []
-        },
-        {
-            "name": "allOf",
-            "type": "matcher.Matcher",
-            "desc": "<p>This returns a matcher that matches if all of the matchers passed as\narguments (up to 7) match.<\/p>\n<p>Instead of passing the matchers separately they can be passed as a single\nList argument. Any argument that is not a matcher is implicitly wrapped in a\nMatcher to check for equality.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "arg0",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg1",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg3",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg4",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg5",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg6",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg0",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg1",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg3",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg4",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg5",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg6",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/allOf.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher allOf(arg0, [arg1, arg2, arg3, arg4, arg5, arg6]) {\n  return new _AllOf(_wrapArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "anyElement",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>s in which at least one\nelement matches the given <code>matcher<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "matcher",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "matcher",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/anyElement.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher anyElement(matcher) =&gt; new _AnyElement(wrapMatcher(matcher));<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "anyOf",
-            "type": "matcher.Matcher",
-            "desc": "<p>Matches if any of the given matchers evaluate to true.<\/p>\n<p>The arguments can be a set of matchers as separate parameters\n(up to 7), or a List of matchers.<\/p>\n<p>The matchers are evaluated from left to right using short-circuit\nevaluation, so evaluation stops as soon as a matcher returns true.<\/p>\n<p>Any argument that is not a matcher is implicitly wrapped in a\nMatcher to check for equality.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "arg0",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg1",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg3",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg4",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg5",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg6",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg0",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg1",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg2",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg3",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg4",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg5",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "arg6",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/anyOf.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher anyOf(arg0, [arg1, arg2, arg3, arg4, arg5, arg6]) {\n  return new _AnyOf(_wrapArgs(arg0, arg1, arg2, arg3, arg4, arg5, arg6));\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/anything-constant.html",
-            "desc": "",
             "example": "",
+            "href": "package-matcher_matcher\/isInstanceOf-class.html",
+            "isAbstract": false,
+            "isConstant": false,
             "isDeprecated": false,
-            "name": "anything",
-            "memberOf": "matcher"
-        },
-        {
-            "name": "closeTo",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches if the match argument is within <code>delta<\/code>\nof some <code>value<\/code>.<\/p>\n<p>In other words, this matches if the match argument is greater than\nthan or equal <code>value<\/code>-<code>delta<\/code> and less than or equal to <code>value<\/code>+<code>delta<\/code>.<\/p>\n    ",
-            "static": false,
             "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "delta",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "value",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "delta",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/closeTo.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher closeTo(num value, num delta) =&gt; new _IsCloseTo(value, delta);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "collapseWhitespace",
-            "type": "dart:core.String",
-            "desc": "<p>Utility function to collapse whitespace runs to single spaces\nand strip leading\/trailing whitespace.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "string",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "string",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/collapseWhitespace.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String collapseWhitespace(String string) {\n  var result = new StringBuffer();\n  var skipSpace = true;\n  for (var i = 0; i &lt; string.length; i++) {\n    var character = string[i];\n    if (_isWhitespace(character)) {\n      if (!skipSpace) {\n        result.write(' ');\n        skipSpace = true;\n      }\n    } else {\n      result.write(character);\n      skipSpace = false;\n    }\n  }\n  return result.toString().trim();\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "contains",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher that matches if the match argument contains the expected\nvalue.<\/p>\n<p>For <a href=\"dart-core\/String-class.html\">String<\/a>s this means substring matching;\nfor <a href=\"dart-core\/Map-class.html\">Map<\/a>s it means the map has the key, and for <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>s\nit means the iterable has a matching element. In the case of iterables,\n<code>expected<\/code> can itself be a matcher.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "expected",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "expected",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/contains.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher contains(expected) =&gt; new _Contains(expected);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "containsAll",
-            "type": "matcher.Matcher",
-            "desc": "<p>Matches <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>s which contain an element matching every value in\n<code>expected<\/code> in any order, and may contain additional values.<\/p>\n<p>For example: <code>[0, 1, 0, 2, 0]<\/code> matches <code>containsAll([1, 2])<\/code> and\n<code>containsAll([2, 1])<\/code> but not <code>containsAll([1, 2, 3])<\/code>.<\/p>\n<p>Will only match values which implement <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>.<\/p>\n<p>Each element in the value will only be considered a match for a single\nmatcher in <code>expected<\/code> even if it could satisfy more than one. For instance\n<code>containsAll([greaterThan(1), greaterThan(2)])<\/code> will not be satisfied by\n<code>[3]<\/code>. To check that all matchers are satisfied within an iterable and allow\nthe same element to satisfy multiple matchers use\n<code>allOf(matchers.map(contains))<\/code>.<\/p>\n<p>Note that this is worst case O(n^2) runtime and memory usage so it should\nonly be used on small iterables.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "expected",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "expected",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/containsAll.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher containsAll(Iterable expected) =&gt; new _ContainsAll(expected);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "containsAllInOrder",
-            "type": "matcher.Matcher",
-            "desc": "<p>Matches <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>s which contain an element matching every value in\n<code>expected<\/code> in the same order, but may contain additional values interleaved\nthroughout.<\/p>\n<p>For example: <code>[0, 1, 0, 2, 0]<\/code> matches <code>containsAllInOrder([1, 2])<\/code> but not\n<code>containsAllInOrder([2, 1])<\/code> or <code>containsAllInOrder([1, 2, 3])<\/code>.<\/p>\n<p>Will only match values which implement <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "expected",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "expected",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/containsAllInOrder.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher containsAllInOrder(Iterable expected) =&gt;\n    new _ContainsAllInOrder(expected);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "containsPair",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches maps containing the key-value pair\nwith <code>key<\/code> =&gt; <code>value<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "key",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/containsPair.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher containsPair(key, value) =&gt;\n    new _ContainsMapping(key, wrapMatcher(value));<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "containsValue",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches maps containing the given <code>value<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/containsValue.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher containsValue(value) =&gt; new _ContainsValue(value);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "endsWith",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher that matches if the match argument is a string and\nends with <code>suffixString<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "suffixString",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "suffixString",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/endsWith.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher endsWith(String suffixString) =&gt; new _StringEndsWith(suffixString);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "equals",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher that matches if the value is structurally equal to\n<code>expected<\/code>.<\/p>\n<p>If <code>expected<\/code> is a <a href=\"package-matcher_matcher\/Matcher-class.html\">Matcher<\/a>, then it matches using that. Otherwise it tests\nfor equality using <code>==<\/code> on the expected value.<\/p>\n<p>For <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>s and <a href=\"dart-core\/Map-class.html\">Map<\/a>s, this will recursively match the elements. To\nhandle cyclic structures a recursion depth <code>limit<\/code> can be provided. The\ndefault limit is 100. <a href=\"dart-core\/Set-class.html\">Set<\/a>s will be compared order-independently.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "expected",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "limit",
-                    "type": "dart:core.int",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/equals.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher equals(expected, [int limit = 100]) =&gt; expected is String\n    ? new _StringEqualsMatcher(expected)\n    : new _DeepMatcher(expected, limit);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "equalsIgnoringCase",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches if the match argument is a string and\nis equal to <code>value<\/code> when compared case-insensitively.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "value",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/equalsIgnoringCase.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher equalsIgnoringCase(String value) =&gt; new _IsEqualIgnoringCase(value);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "equalsIgnoringWhitespace",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches if the match argument is a string and\nis equal to <code>value<\/code>, ignoring whitespace.<\/p>\n<p>In this matcher, \"ignoring whitespace\" means comparing with all runs of\nwhitespace collapsed to single space characters and leading and trailing\nwhitespace removed.<\/p>\n<p>For example, the following will all match successfully:<\/p>\n<pre class=\"language-dart\"><code>expect(\"hello   world\", equalsIgnoringWhitespace(\"hello world\"));\nexpect(\"  hello world\", equalsIgnoringWhitespace(\"hello world\"));\nexpect(\"hello world  \", equalsIgnoringWhitespace(\"hello world\"));\n<\/code><\/pre>\n<p>The following will not match:<\/p>\n<pre class=\"language-dart\"><code>expect(\"helloworld\", equalsIgnoringWhitespace(\"hello world\"));\nexpect(\"he llo world\", equalsIgnoringWhitespace(\"hello world\"));\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "value",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/equalsIgnoringWhitespace.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher equalsIgnoringWhitespace(String value) =&gt;\n    new _IsEqualIgnoringWhitespace(value);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "escape",
-            "type": "dart:core.String",
-            "desc": "<p>Returns <code>str<\/code> with all whitespace characters represented as their escape\nsequences.<\/p>\n<p>Backslash characters are escaped as <code>\\\\<\/code><\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "str",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "str",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/escape.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">String escape(String str) {\n  str = str.replaceAll('\\\\', r'\\\\');\n  return str.replaceAllMapped(_escapeRegExp, (match) {\n    var mapped = _escapeMap[match[0]];\n    if (mapped != null) return mapped;\n    return _getHexLiteral(match[0]);\n  });\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "everyElement",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>s in which all elements\nmatch the given <code>matcher<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "matcher",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "matcher",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/everyElement.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher everyElement(matcher) =&gt; new _EveryElement(wrapMatcher(matcher));<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "greaterThan",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches if the match argument is greater\nthan the given <code>value<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/greaterThan.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher greaterThan(value) =&gt;\n    new _OrderingMatcher(value, false, false, true, 'a value greater than');<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "greaterThanOrEqualTo",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches if the match argument is greater\nthan or equal to the given <code>value<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/greaterThanOrEqualTo.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher greaterThanOrEqualTo(value) =&gt; new _OrderingMatcher(\n    value, true, false, true, 'a value greater than or equal to');<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "hasLength",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher that matches if an object has a length property\nthat matches <code>matcher<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "matcher",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "matcher",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/hasLength.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher hasLength(matcher) =&gt; new _HasLength(wrapMatcher(matcher));<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "inClosedOpenRange",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches if the match argument is greater\nthan or equal to a <code>low<\/code> and less than <code>high<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "low",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "high",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "low",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "high",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/inClosedOpenRange.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher inClosedOpenRange(num low, num high) =&gt;\n    new _InRange(low, high, true, false);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "inExclusiveRange",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches if the match argument is greater\nthan <code>low<\/code> and less than <code>high<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "low",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "high",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "low",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "high",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/inExclusiveRange.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher inExclusiveRange(num low, num high) =&gt;\n    new _InRange(low, high, false, false);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "inInclusiveRange",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches if the match argument is greater\nthan or equal to <code>low<\/code> and less than or equal to <code>high<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "low",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "high",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "low",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "high",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/inInclusiveRange.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher inInclusiveRange(num low, num high) =&gt;\n    new _InRange(low, high, true, true);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "inOpenClosedRange",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches if the match argument is greater\nthan <code>low<\/code> and less than or equal to <code>high<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "low",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "high",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "low",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "high",
-                    "type": "dart:core.num",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/inOpenClosedRange.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher inOpenClosedRange(num low, num high) =&gt;\n    new _InRange(low, high, false, true);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isArgumentError-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isArgumentError",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isConcurrentModificationError-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isConcurrentModificationError",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isCyclicInitializationError-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isCyclicInitializationError",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isEmpty-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isEmpty",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isException-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isException",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isFalse-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isFalse",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isFormatException-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isFormatException",
-            "memberOf": "matcher"
-        },
-        {
-            "name": "isIn",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher that matches if the match argument is in\nthe expected value. This is the converse of <a href=\"package-matcher_matcher\/contains.html\">contains<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "expected",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "expected",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/isIn.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher isIn(expected) {\n  if (expected is Iterable) {\n    return new _In(expected, expected.contains);\n  } else if (expected is String) {\n    return new _In&lt;Pattern&gt;(expected, expected.contains);\n  } else if (expected is Map) {\n    return new _In(expected, expected.containsKey);\n  }\n\n  throw new ArgumentError.value(\n      expected, 'expected', 'Only Iterable, Map, and String are supported.');\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
             "name": "matcher.isInstanceOf",
+            "shortname": "isInstanceOf",
             "extends": [
                 "matcher.TypeMatcher",
                 "matcher.Matcher",
                 "dart:core.Object"
             ],
-            "memberOf": "matcher",
+            "is_enum": false,
+            "is_mixin": false,
+            "realImplementors": [],
             "events": [],
             "methods": [
                 {
-                    "name": "isInstanceOf",
-                    "type": "",
                     "desc": "",
+                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const isInstanceOf();<\/code><\/pre>\n    ",
+                    "href": "package-matcher_matcher\/isInstanceOf\/isInstanceOf.html",
+                    "isDeprecated": false,
+                    "type": "",
+                    "name": "isInstanceOf",
+                    "dtype": "constructor",
+                    "isConstructor": true,
                     "static": false,
                     "memberOf": "matcher.isInstanceOf",
-                    "sig": "",
-                    "params": [],
-                    "isConstructor": true,
-                    "href": "package-matcher_matcher\/isInstanceOf\/isInstanceOf.html",
-                    "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">const isInstanceOf();<\/code><\/pre>\n    ",
-                    "isDeprecated": false
+                    "params": []
                 }
             ],
-            "props": [],
-            "isMixin": false,
-            "isEnum": false,
-            "isTypedef": false,
-            "isConstant": false,
-            "isAbstract": false,
-            "implementors": [],
-            "realImplementors": [],
-            "cn": [],
-            "href": "package-matcher_matcher\/isInstanceOf-class.html",
-            "desc": "<p><strong>DEPRECATED<\/strong> Use <a href=\"package-matcher_matcher\/TypeMatcher-class.html\">TypeMatcher<\/a> instead.<\/p>\n<p>Returns a matcher that matches if an object is an instance\nof <code>T<\/code> (or a subtype).<\/p>\n    ",
-            "example": "",
-            "isDeprecated": false,
-            "dtype": "class",
-            "shortname": "isInstanceOf"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isList-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isList",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isMap-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isMap",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isNaN-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isNaN",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isNegative-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isNegative",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isNoSuchMethodError-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isNoSuchMethodError",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isNonNegative-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isNonNegative",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isNonPositive-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isNonPositive",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isNonZero-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isNonZero",
-            "memberOf": "matcher"
-        },
-        {
-            "name": "isNot",
-            "type": "matcher.Matcher",
-            "desc": "<p>This returns a matcher that inverts <code>matcher<\/code> to its logical negation.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "matcher",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "matcher",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/isNot.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher isNot(matcher) =&gt; new _IsNot(wrapMatcher(matcher));<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isNotEmpty-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isNotEmpty",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isNotNaN-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isNotNaN",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isNotNull-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isNotNull",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isNull-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isNull",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isNullThrownError-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isNullThrownError",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isPositive-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isPositive",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isRangeError-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isRangeError",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isStateError-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isStateError",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isTrue-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isTrue",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isUnimplementedError-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isUnimplementedError",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isUnsupportedError-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isUnsupportedError",
-            "memberOf": "matcher"
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/isZero-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "isZero",
-            "memberOf": "matcher"
-        },
-        {
-            "name": "lessThan",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches if the match argument is less\nthan the given <code>value<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/lessThan.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher lessThan(value) =&gt;\n    new _OrderingMatcher(value, false, true, false, 'a value less than');<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "lessThanOrEqualTo",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches if the match argument is less\nthan or equal to the given <code>value<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/lessThanOrEqualTo.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher lessThanOrEqualTo(value) =&gt; new _OrderingMatcher(\n    value, true, true, false, 'a value less than or equal to');<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "matches",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher that matches if the match argument is a string and\nmatches the regular expression given by <code>re<\/code>.<\/p>\n<p><code>re<\/code> can be a <a href=\"dart-core\/RegExp-class.html\">RegExp<\/a> instance or a <a href=\"dart-core\/String-class.html\">String<\/a>; in the latter case it will be\nused to create a RegExp instance.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "re",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "re",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/matches.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher matches(re) =&gt; new _MatchesRegExp(re);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "orderedEquals",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>s that have the same\nlength and the same elements as <code>expected<\/code>, in the same order.<\/p>\n<p>This is equivalent to <a href=\"package-matcher_matcher\/equals.html\">equals<\/a> but does not recurse.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "expected",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "expected",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/orderedEquals.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher orderedEquals(Iterable expected) =&gt; new _OrderedEquals(expected);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "pairwiseCompare",
-            "type": "matcher.Matcher",
-            "desc": "<p>A pairwise matcher for <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>s.<\/p>\n<p>The <code>comparator<\/code> function, taking an expected and an actual argument, and\nreturning whether they match, will be applied to each pair in order.\n<code>description<\/code> should be a meaningful name for the comparator.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "expected",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "b",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "a",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "b",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "description",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "expected",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "b",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "a",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "b",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "description",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/pairwiseCompare.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher pairwiseCompare&lt;S, T&gt;(\n        Iterable&lt;S&gt; expected, bool comparator(S a, T b), String description) =&gt;\n    new _PairwiseCompare(expected, comparator, description);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "predicate",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher that uses an arbitrary function that returns\ntrue or false for the actual value.<\/p>\n<p>For example:<\/p>\n<pre class=\"language-dart\"><code>expect(v, predicate((x) =&gt; ((x % 2) == 0), \"is even\"))\n<\/code><\/pre>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "description",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "value",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "description",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/predicate.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher predicate&lt;T&gt;(bool f(T value),\n        [String description = 'satisfies function']) =&gt;\n    new _Predicate(f, description);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "type": "",
-            "href": "package-matcher_matcher\/returnsNormally-constant.html",
-            "desc": "",
-            "example": "",
-            "isDeprecated": false,
-            "name": "returnsNormally",
-            "memberOf": "matcher"
-        },
-        {
-            "name": "same",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matches that matches if the value is the same instance\nas <code>expected<\/code>, using <a href=\"dart-core\/identical.html\">identical<\/a>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "expected",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "expected",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/same.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher same(expected) =&gt; new _IsSameAs(expected);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "startsWith",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher that matches if the match argument is a string and\nstarts with <code>prefixString<\/code>.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "prefixString",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "prefixString",
-                    "type": "dart:core.String",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/startsWith.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher startsWith(String prefixString) =&gt; new _StringStartsWith(prefixString);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "stringContainsInOrder",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher that matches if the match argument is a string and\ncontains a given list of <code>substrings<\/code> in relative order.<\/p>\n<p>For example, <code>stringContainsInOrder([\"a\", \"e\", \"i\", \"o\", \"u\"])<\/code> will match\n\"abcdefghijklmnopqrstuvwxyz\".<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "substrings",
-                    "type": "dart:core.List<dart:core.String>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.List",
-                        "dart:core.String"
-                    ]
-                },
-                {
-                    "name": "substrings",
-                    "type": "dart:core.List<dart:core.String>",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": [
-                        "dart:core.List",
-                        "dart:core.String"
-                    ]
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/stringContainsInOrder.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher stringContainsInOrder(List&lt;String&gt; substrings) =&gt;\n    new _StringContainsInOrder(substrings);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "unorderedEquals",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>s that have the same length and\nthe same elements as <code>expected<\/code>, but not necessarily in the same order.<\/p>\n<p>Note that this is worst case O(n^2) runtime and memory usage so it should\nonly be used on small iterables.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "expected",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "expected",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/unorderedEquals.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher unorderedEquals(Iterable expected) =&gt; new _UnorderedEquals(expected);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "unorderedMatches",
-            "type": "matcher.Matcher",
-            "desc": "<p>Returns a matcher which matches <a href=\"dart-core\/Iterable-class.html\">Iterable<\/a>s whose elements match the\nmatchers in <code>expected<\/code>, but not necessarily in the same order.<\/p>\n<p>Note that this is worst case O(n^2) runtime and memory usage so it should\nonly be used on small iterables.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "expected",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                },
-                {
-                    "name": "expected",
-                    "type": "dart:core.Iterable",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/unorderedMatches.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher unorderedMatches(Iterable expected) =&gt; new _UnorderedMatches(expected);<\/code><\/pre>\n    ",
-            "isDeprecated": false
-        },
-        {
-            "name": "wrapMatcher",
-            "type": "matcher.Matcher",
-            "desc": "<p>Takes an argument and returns an equivalent <a href=\"package-matcher_matcher\/Matcher-class.html\">Matcher<\/a>.<\/p>\n<p>If the argument is already a matcher this does nothing,\nelse if the argument is a function, it generates a predicate\nfunction matcher, else it generates an equals matcher.<\/p>\n    ",
-            "static": false,
-            "memberOf": "matcher",
-            "sig": "",
-            "params": [
-                {
-                    "name": "x",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                },
-                {
-                    "name": "x",
-                    "type": "",
-                    "desc": "",
-                    "isOptional": true,
-                    "href": "",
-                    "example": "",
-                    "isDeprecated": false,
-                    "types": []
-                }
-            ],
-            "isConstructor": false,
-            "href": "package-matcher_matcher\/wrapMatcher.html",
-            "example": "<h2><span>Implementation<\/span><\/h2>\n      <pre class=\"language-dart\"><code class=\"language-dart\">Matcher wrapMatcher(x) {\n  if (x is Matcher) {\n    return x;\n  } else if (x is _Predicate&lt;Object&gt;) {\n    \/\/ x is already a predicate that can handle anything\n    return predicate(x);\n  } else if (x is _Predicate&lt;Null&gt;) {\n    \/\/ x is a unary predicate, but expects a specific type\n    \/\/ so wrap it.\n    \/\/ ignore: unnecessary_lambdas\n    return predicate((a) =&gt; (x as dynamic)(a));\n  } else {\n    return equals(x);\n  }\n}<\/code><\/pre>\n    ",
-            "isDeprecated": false
+            "props": []
         }
     ],
-    "isFakeNamespace": false,
-    "desc": "",
-    "example": "",
-    "isDeprecated": false
+    "mixin": [],
+    "enum": [],
+    "typedef": []
 }
